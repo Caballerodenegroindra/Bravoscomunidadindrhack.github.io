@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Comunidad — Legión Bravos IndRHack</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg: #0a0c0e;
+  --panel: #12161c;
+  --panel-alt: #0e1116;
+  --border: #232a33;
+  --text: #cdd5dc;
+  --muted: #6e7681;
+  --red: #c5262e;
+  --red-dim: #6e1a1f;
+  --grey: #9aa3ad;
+  --green: #39d97a;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.6; overflow-x:hidden; min-height:100vh; }
+a{ color:var(--red); text-decoration:none; }
+::selection{ background:var(--red); color:#fff; }
+
+/* scanline overlay */
+body::after{
+  content:'';
+  position:fixed; inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.0) 0px,
+    rgba(255,255,255,0.0) 2px,
+    rgba(0,0,0,0.06) 3px,
+    rgba(0,0,0,0.06) 4px
+  );
+  z-index:9999;
+  mix-blend-mode:overlay;
+}
+
+/* ============ HEADER ============ */
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(10,12,14,0.95);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+}
+nav{
+  max-width:1100px; margin:0 auto; padding:14px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:20px;
+}
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-name{
+  font-family:var(--mono); font-weight:700; letter-spacing:.06em;
+  font-size:1rem; color:#fff;
+}
+.brand-name .blink{ color:var(--green); }
+.topbar-back{
+  margin-left:auto; font-family:var(--mono); font-size:.85rem;
+  color:var(--text); border:1px solid var(--border); 
+  padding:.45rem 1rem; border-radius:3px; transition:.18s;
+}
+.topbar-back:hover{ border-color:var(--red); color:var(--red); }
+
+#topbar-user{
+  display:none; align-items:center; gap:1.5rem; margin-left:auto;
+}
+.user-info{
+  display:flex; flex-direction:column; gap:2px; font-size:.85rem;
+}
+.user-name{ font-weight:700; color:#fff; font-family:var(--mono); }
+.user-rango{ font-size:.75rem; color:var(--muted); }
+.btn-logout{
+  font-family:var(--mono); font-size:.85rem;
+  background:var(--red); color:#fff;
+  border:none; padding:.45rem 1rem; border-radius:3px;
+  cursor:pointer; transition:.18s;
+}
+.btn-logout:hover{ background:#e0333c; }
+
+/* ============ AUTH SECTION ============ */
+#auth-section{
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:2rem 1rem;
+}
+.auth-box{
+  background:var(--panel); border:1px solid var(--border); border-radius:8px;
+  width:100%; max-width:420px; padding:2.5rem;
+}
+.auth-box h2{
+  font-family:var(--mono); font-size:1.4rem; font-weight:700;
+  color:#fff; margin-bottom:.5rem; text-align:center; letter-spacing:.04em;
+}
+.auth-box p{
+  font-size:.9rem; color:var(--grey); text-align:center;
+  margin-bottom:2rem;
+}
+.auth-tabs{
+  display:flex; border-bottom:1px solid var(--border);
+  margin-bottom:2rem;
+}
+.auth-tab{
+  flex:1; padding:.75rem; font-family:var(--mono);
+  font-size:.85rem; font-weight:600; background:none;
+  border:none; color:var(--muted); cursor:pointer;
+  border-bottom:2px solid transparent; transition:.18s;
+  text-transform:lowercase;
+}
+.auth-tab.active{
+  color:var(--red); border-bottom-color:var(--red);
+}
+.auth-form{ display:none; }
+.auth-form.active{ display:block; }
+
+.form-group{
+  margin-bottom:1.25rem;
+}
+.form-group label{
+  display:block; font-family:var(--mono); font-size:.75rem;
+  font-weight:700; color:var(--green); margin-bottom:.5rem;
+  letter-spacing:.1em; text-transform:uppercase;
+}
+.form-group input{
+  width:100%; background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:3px; padding:.75rem 1rem; font-size:.9rem; color:var(--text);
+  font-family:var(--sans); outline:none; transition:.18s;
+}
+.form-group input:focus{
+  border-color:var(--red);
+}
+
+.btn-primary{
+  width:100%; background:var(--red); color:#fff;
+  border:none; padding:.9rem; border-radius:3px;
+  font-family:var(--mono); font-size:.85rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  cursor:pointer; transition:.18s;
+}
+.btn-primary:hover{ background:#e0333c; }
+.btn-primary:disabled{ background:#333; color:#555; cursor:not-allowed; }
+
+.auth-alert{
+  padding:.75rem 1rem; border-radius:3px; font-size:.85rem;
+  margin-bottom:1rem; display:none;
+}
+.auth-alert.show{ display:block; }
+.auth-alert.error{
+  background:rgba(197,38,46,0.15); border:1px solid var(--red-dim);
+  color:#ff6b6b;
+}
+.auth-alert.success{
+  background:rgba(57,217,122,0.15); border:1px solid rgba(57,217,122,0.3);
+  color:var(--green);
+}
+
+/* ============ COMUNIDAD SECTION ============ */
+#comunidad-section{ display:none; }
+.page{ max-width:1100px; margin:0 auto; padding:2rem; }
+
+/* TABS NAV */
+.main-tabs{
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  margin-bottom:2rem; flex-wrap:wrap;
+}
+.main-tab{
+  font-family:var(--mono); font-size:.85rem; font-weight:600;
+  padding:.75rem 1.5rem; border:none; background:none;
+  color:var(--text); cursor:pointer; border-bottom:2px solid transparent;
+  transition:.18s; text-transform:lowercase; letter-spacing:.02em;
+}
+.main-tab.active{
+  color:var(--red); border-bottom-color:var(--red);
+}
+.main-tab:hover:not(.active){ color:var(--grey); }
+
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; }
+
+/* ============ PERFIL PANEL ============ */
+.perfil-header{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:8px; padding:2rem; margin-bottom:2rem;
+  display:grid; grid-template-columns:100px 1fr; gap:2rem; align-items:center;
+}
+.perfil-avatar{
+  width:100px; height:100px; border-radius:50%;
+  background:linear-gradient(135deg, var(--red), #6a0010);
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem; font-weight:800; color:#fff;
+  border:3px solid var(--border);
+}
+.perfil-info h2{
+  font-family:var(--mono); font-size:1.5rem; color:#fff;
+  margin-bottom:.5rem;
+}
+.perfil-meta{ font-size:.9rem; color:var(--grey); }
+.rango-badge{
+  display:inline-block; font-family:var(--mono);
+  font-size:.75rem; font-weight:700; letter-spacing:.1em;
+  padding:.35rem .85rem; border-radius:3px; margin-top:.75rem;
+  text-transform:uppercase;
+}
+.rango-Recluta{ background:rgba(139,90,43,.2); color:#cd853f; }
+.rango-Aprendiz{ background:rgba(150,150,150,.2); color:#aaa; }
+.rango-Operador{ background:rgba(255,200,0,.15); color:#ffd700; }
+.rango-Bravo{ background:rgba(197,38,46,.15); color:#ff6b6b; }
+.rango-Instructor{ background:rgba(100,130,255,.15); color:#6482ff; }
+.rango-Comandante{ background:rgba(138,43,226,.15); color:#b06aff; }
+.rango-Pendiente{ background:rgba(255,160,0,.15); color:#ffa000; }
+
+.perfil-stats{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;
+  margin-bottom:2rem;
+}
+.stat-card{
+  background:var(--panel); border:1px solid var(--border);
+  padding:1.5rem; text-align:center; border-radius:8px;
+}
+.stat-num{
+  font-family:var(--mono); font-size:2rem; font-weight:800;
+  color:var(--red); margin-bottom:.5rem;
+}
+.stat-lbl{
+  font-family:var(--mono); font-size:.75rem;
+  color:var(--muted); letter-spacing:.1em; text-transform:uppercase;
+}
+
+/* ============ MIEMBROS PANEL ============ */
+.sec-title{
+  font-family:var(--mono); font-size:1rem; font-weight:700;
+  color:#fff; margin-bottom:1.5rem; letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.miembros-filter{
+  display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:2rem;
+}
+.filter-btn{
+  font-family:var(--mono); font-size:.75rem; font-weight:600;
+  padding:.5rem 1rem; border-radius:3px; border:1px solid var(--border);
+  background:none; color:var(--text); cursor:pointer; transition:.18s;
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.filter-btn.active, .filter-btn:hover{
+  border-color:var(--red); background:rgba(197,38,46,0.1); color:var(--red);
+}
+
+.miembros-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1rem;
+}
+.miembro-card{
+  background:var(--panel); border:1px solid var(--border);
+  padding:1.5rem; text-align:center; border-radius:8px;
+  transition:.18s;
+}
+.miembro-card:hover{
+  border-color:var(--red); background:rgba(197,38,46,0.05);
+}
+.m-avatar{
+  width:60px; height:60px; border-radius:50%;
+  background:linear-gradient(135deg, var(--red), #6a0010);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem; font-weight:800; color:#fff;
+  margin:0 auto 1rem;
+}
+.m-name{
+  font-family:var(--mono); font-size:.95rem; font-weight:700;
+  color:#fff; margin-bottom:.5rem;
+}
+.m-rango{
+  font-size:.75rem; color:var(--muted);
+  margin-bottom:.75rem;
+}
+.m-fecha{
+  font-size:.75rem; color:var(--muted);
+}
+
+/* ============ CHAT PANEL ============ */
+.chat-container{
+  display:flex; flex-direction:column; height:calc(100vh - 300px);
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:8px; overflow:hidden;
+}
+.chat-messages{
+  flex:1; overflow-y:auto; padding:1.5rem;
+  display:flex; flex-direction:column; gap:1rem;
+}
+.chat-messages::-webkit-scrollbar{
+  width:6px;
+}
+.chat-messages::-webkit-scrollbar-thumb{
+  background:var(--border); border-radius:3px;
+}
+.msg{
+  display:flex; gap:1rem; align-items:flex-start;
+  margin-bottom:.5rem;
+}
+.msg.mine{ flex-direction:row-reverse; }
+
+.msg-avatar{
+  width:40px; height:40px; border-radius:50%;
+  background:linear-gradient(135deg, var(--red), #6a0010);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; font-weight:700; color:#fff;
+  flex-shrink:0;
+}
+.msg-body{
+  max-width:65%;
+}
+.msg-meta{
+  font-size:.75rem; color:var(--muted); margin-bottom:.35rem;
+  display:flex; gap:.5rem;
+}
+.msg.mine .msg-meta{ justify-content:flex-end; }
+
+.msg-bubble{
+  background:var(--panel-alt); border:1px solid var(--border);
+  padding:.75rem 1rem; border-radius:6px;
+  font-size:.9rem; color:var(--text); word-break:break-word;
+  line-height:1.5;
+}
+.msg.mine .msg-bubble{
+  background:rgba(197,38,46,0.15); border-color:var(--red-dim);
+  color:var(--text);
+}
+
+.chat-input-group{
+  display:flex; gap:.75rem; padding:1.5rem;
+  border-top:1px solid var(--border);
+  background:var(--panel);
+}
+.chat-input{
+  flex:1; background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:3px; padding:.75rem 1rem;
+  font-size:.9rem; color:var(--text); font-family:var(--sans);
+  outline:none; resize:none; max-height:100px; transition:.18s;
+}
+.chat-input:focus{ border-color:var(--red); }
+.btn-send{
+  font-family:var(--mono); font-size:.85rem; font-weight:700;
+  background:var(--red); color:#fff; border:none;
+  padding:.75rem 1.5rem; border-radius:3px;
+  cursor:pointer; transition:.18s; white-space:nowrap;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.btn-send:hover{ background:#e0333c; }
+.btn-send:disabled{ background:#333; color:#555; cursor:not-allowed; }
+
+.chat-empty{
+  text-align:center; padding:3rem; color:var(--muted);
+}
+
+/* ============ ADMIN PANEL ============ */
+.admin-section{
+  background:rgba(197,38,46,0.08); border:1px solid var(--red-dim);
+  border-radius:8px; padding:2rem; margin-bottom:2rem;
+}
+.admin-title{
+  font-family:var(--mono); font-size:.8rem; font-weight:700;
+  color:var(--red); margin-bottom:1.5rem;
+  letter-spacing:.1em; text-transform:uppercase;
+}
+
+.solicitud-card{
+  background:var(--panel-alt); border:1px solid var(--border);
+  padding:1.25rem; margin-bottom:1rem; border-radius:6px;
+  display:flex; gap:1rem; align-items:center; flex-wrap:wrap;
+}
+.sol-info{ flex:1; min-width:200px; }
+.sol-nombre{
+  font-family:var(--mono); font-size:.95rem; font-weight:700;
+  color:#fff;
+}
+.sol-email{
+  font-size:.85rem; color:var(--muted); margin-top:.25rem;
+}
+.sol-fecha{
+  font-size:.75rem; color:var(--muted); margin-top:.25rem;
+}
+.sol-actions{
+  display:flex; gap:.75rem; flex-wrap:wrap;
+  align-items:center;
+}
+.rango-select{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:3px; color:var(--text); font-family:var(--mono);
+  font-size:.85rem; padding:.5rem .75rem; outline:none;
+  cursor:pointer;
+}
+.btn-aprobar{
+  font-family:var(--mono); font-size:.75rem; font-weight:700;
+  background:var(--green); color:#000; border:none;
+  padding:.5rem 1rem; border-radius:3px; cursor:pointer;
+  transition:.18s; text-transform:uppercase; letter-spacing:.05em;
+}
+.btn-aprobar:hover{ opacity:.8; }
+.btn-rechazar{
+  font-family:var(--mono); font-size:.75rem; font-weight:700;
+  background:none; border:1px solid var(--red);
+  color:var(--red); padding:.5rem 1rem; border-radius:3px;
+  cursor:pointer; transition:.18s; text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.btn-rechazar:hover{
+  background:rgba(197,38,46,0.15);
+}
+
+.empty-state{
+  text-align:center; padding:3rem; color:var(--muted);
+}
+.empty-icon{
+  font-size:2.5rem; margin-bottom:1rem;
+}
+
+.no-aprobado{
+  background:rgba(255,160,0,0.08); border:1px solid rgba(255,160,0,.25);
+  border-radius:6px; padding:1.25rem; margin-bottom:2rem;
+  font-size:.9rem; color:#ffa000; line-height:1.6;
+}
+
+/* ============ FLOATING CHAT ============ */
+#float-chat-btn{
+  position:fixed; bottom:1.75rem; right:1.75rem; z-index:999;
+  width:56px; height:56px; border-radius:50%;
+  background:var(--red); color:#fff; border:none;
+  font-size:1.5rem; cursor:pointer;
+  display:none; align-items:center; justify-content:center;
+  transition:.18s;
+}
+#float-chat-btn:hover{ background:#e0333c; transform:scale(1.1); }
+#float-chat-btn .fc-badge{
+  position:absolute; top:-4px; right:-4px;
+  width:20px; height:20px; border-radius:50%;
+  background:#ffa000; color:#000; font-size:.65rem;
+  font-weight:800; display:none; align-items:center;
+  justify-content:center;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .perfil-header{
+    grid-template-columns:1fr; text-align:center;
+  }
+  .perfil-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+  .miembros-grid{
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  }
+  .sol-actions{
+    flex-direction:column; width:100%;
+  }
+  .rango-select, .btn-aprobar, .btn-rechazar{
+    width:100%;
+  }
+  .msg-body{
+    max-width:85%;
+  }
+}
+@media(max-width:600px){
+  .perfil-header{
+    padding:1.5rem;
+  }
+  .main-tabs{
+    margin-bottom:1rem;
+  }
+  .main-tab{
+    padding:.5rem 1rem; font-size:.75rem;
+  }
+}
+
+.loading{
+  text-align:center; padding:3rem; color:var(--muted);
+}
+.spinner{
+  width:32px; height:32px; border:3px solid var(--border);
+  border-top-color:var(--red); border-radius:50%;
+  animation:spin .8s linear infinite; margin:0 auto 1rem;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <nav>
+    <div class="brand">
+      <div class="brand-name">Legión <span class="blink">▪</span> Bravos · Comunidad</div>
+    </div>
+    <a href="index.html" class="topbar-back">← inicio</a>
+    <div id="topbar-user">
+      <div class="user-info">
+        <div class="user-name" id="topbar-user-name">—</div>
+        <div class="user-rango" id="topbar-user-rango">—</div>
+      </div>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </nav>
+</header>
+
+<!-- AUTH SECTION -->
+<div id="auth-section">
+  <div class="auth-box">
+    <h2>▪ Legión Bravos</h2>
+    <p>Accede a la comunidad</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">Iniciar sesión</button>
+      <button class="auth-tab" onclick="switchAuthTab('registro',this)">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="form-login" class="auth-form active">
+      <div id="alert-login" class="auth-alert"></div>
+      <div class="form-group">
+        <label>Correo</label>
+        <input type="email" id="login-email" placeholder="tu@correo.com" onkeydown="if(event.key==='Enter')iniciarSesion()"/>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')iniciarSesion()"/>
+      </div>
+      <button class="btn-primary" id="btn-login" onclick="iniciarSesion()">Entrar</button>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="form-registro" class="auth-form">
+      <div id="alert-reg" class="auth-alert"></div>
+      <div class="form-group">
+        <label>Nombre o alias</label>
+        <input type="text" id="reg-nombre" placeholder="Tu nombre en la comunidad" maxlength="30"/>
+      </div>
+      <div class="form-group">
+        <label>Correo</label>
+        <input type="email" id="reg-email" placeholder="tu@correo.com"/>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="reg-pass" placeholder="••••••••" minlength="6"/>
+      </div>
+      <button class="btn-primary" id="btn-reg" onclick="registrarse()">Crear Cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMUNIDAD SECTION -->
+<div id="comunidad-section">
+  <div class="page">
+    <!-- TABS -->
+    <div class="main-tabs">
+      <button class="main-tab active" onclick="switchMainTab('perfil',this)">Perfil</button>
+      <button class="main-tab" onclick="switchMainTab('miembros',this)">Miembros</button>
+      <button class="main-tab" onclick="switchMainTab('chat',this)">Chat</button>
+      <button class="main-tab" id="tab-admin" style="display:none;" onclick="switchMainTab('admin',this)">Admin</button>
+    </div>
+
+    <!-- PERFIL PANEL -->
+    <div id="panel-perfil" class="tab-panel active">
+      <div class="no-aprobado" id="no-aprobado-banner" style="display:none;">
+        ⏳ Tu solicitud está pendiente de aprobación. Los administradores revisarán tu cuenta y te enviarán un mensaje cuando esté lista.
+      </div>
+      
+      <div class="perfil-header">
+        <div class="perfil-avatar" id="perfil-avatar">—</div>
+        <div class="perfil-info">
+          <h2 id="perfil-nombre">Cargando...</h2>
+          <div class="perfil-meta" id="perfil-meta">—</div>
+          <div class="rango-badge" id="perfil-rango">—</div>
+        </div>
+      </div>
+
+      <div class="perfil-stats">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-mensajes">0</div>
+          <div class="stat-lbl">Mensajes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-miembros">0</div>
+          <div class="stat-lbl">Miembros</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-unido">—</div>
+          <div class="stat-lbl">Fecha de unión</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIEMBROS PANEL -->
+    <div id="panel-miembros" class="tab-panel">
+      <div class="sec-title">Miembros de la Legión</div>
+      <div class="miembros-filter">
+        <button class="filter-btn active" onclick="filtrarMiembros('todos',this)">Todos</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Recluta',this)">🥉 Recluta</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Aprendiz',this)">🥈 Aprendiz</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Operador',this)">🥇 Operador</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Bravo',this)">⚔️ Bravo</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Instructor',this)">🛡️ Instructor</button>
+        <button class="filter-btn" onclick="filtrarMiembros('Comandante',this)">👑 Comandante</button>
+      </div>
+      <div class="miembros-grid" id="miembros-list">
+        <div class="loading"><div class="spinner"></div>Cargando...</div>
+      </div>
+    </div>
+
+    <!-- CHAT PANEL -->
+    <div id="panel-chat" class="tab-panel">
+      <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-empty">Conectando al chat...</div>
+        </div>
+        <div class="chat-input-group">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Escribe un mensaje..." onkeydown="if(event.key==='Enter' && !event.shiftKey) enviarMensaje()"/>
+          <button class="btn-send" onclick="enviarMensaje()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="panel-admin" class="tab-panel">
+      <div class="admin-section">
+        <div class="admin-title">Solicitudes Pendientes</div>
+        <div id="solicitudes-list">
+          <div class="loading"><div class="spinner"></div>Cargando...</div>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-title">Miembros Aprobados</div>
+        <div id="admin-miembros-list">
+          <div class="loading"><div class="spinner"></div>Cargando...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="float-chat-btn" onclick="goToChat()" title="Ir al chat">
+  💬
+  <div class="fc-badge"></div>
+</button>
+
+<!-- FIREBASE CONFIG -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getDatabase, ref, onChildAdded, push, serverTimestamp as dbServerTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// TU CONFIGURACIÓN DE FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyAV_9D_F4L8xK2mN3oP5qR6sT7uV8wX9yZ",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  projectId: "tu-proyecto",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcd1234"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const rtdb = getDatabase(app);
+
+let currentUser = null;
+let chatUnsub = null;
+let miembrosFiltrados = [];
+const RANGO_ICONS = {
+  'Recluta':'🥉', 'Aprendiz':'🥈', 'Operador':'🥇',
+  'Bravo':'⚔️', 'Instructor':'🛡️', 'Comandante':'👑'
+};
+const ADMIN_EMAILS = ['indr_hack@outlook.com'];
+
+function esAdmin(email){
+  return ADMIN_EMAILS.includes(email?.toLowerCase());
+}
+
+// AUTH STATE
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if(user){
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('comunidad-section').style.display = 'block';
+    document.getElementById('topbar-user').style.display = 'flex';
+    
+    // Cargar datos del usuario
+    const docRef = doc(db, 'usuarios', user.uid);
+    const docSnap = await getDoc(docRef);
+    
+    if(docSnap.exists()){
+      const datos = docSnap.data();
+      const inicial = (datos.nombre || user.email).charAt(0).toUpperCase();
+      document.getElementById('perfil-avatar').textContent = inicial;
+      document.getElementById('perfil-nombre').textContent = datos.nombre || user.email;
+      document.getElementById('perfil-meta').textContent = user.email;
+      document.getElementById('topbar-user-name').textContent = datos.nombre || 'Usuario';
+      
+      if(datos.rango){
+        document.getElementById('perfil-rango').className = 'rango-badge rango-' + datos.rango;
+        document.getElementById('perfil-rango').textContent = RANGO_ICONS[datos.rango] + ' ' + datos.rango;
+        document.getElementById('topbar-user-rango').textContent = 'Rango: ' + datos.rango;
+        document.getElementById('no-aprobado-banner').style.display = 'none';
+      } else {
+        document.getElementById('perfil-rango').textContent = '⏳ Pendiente';
+        document.getElementById('topbar-user-rango').textContent = 'Pendiente';
+        document.getElementById('no-aprobado-banner').style.display = 'block';
+      }
+
+      if(datos.fecha) {
+        const d = datos.fecha.toDate ? datos.fecha.toDate() : new Date(datos.fecha);
+        document.getElementById('stat-unido').textContent = d.toLocaleDateString('es-ES');
+      }
+
+      if(esAdmin(user.email)){
+        document.getElementById('tab-admin').style.display = 'block';
+      }
+    }
+  } else {
+    document.getElementById('auth-section').style.display = 'flex';
+    document.getElementById('comunidad-section').style.display = 'none';
+    document.getElementById('topbar-user').style.display = 'none';
+    if(chatUnsub) chatUnsub();
+  }
+});
+
+// AUTH FUNCTIONS
+window.iniciarSesion = async function(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if(!email || !pass) return showAuthAlert('alert-login','error','Completa todos los campos');
+  
+  document.getElementById('btn-login').disabled = true;
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    showAuthAlert('alert-login','success','¡Bienvenido!');
+  }catch(e){
+    showAuthAlert('alert-login','error',firebaseError(e.code));
+  }
+  document.getElementById('btn-login').disabled = false;
+};
+
+window.registrarse = async function(){
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  if(!nombre || !email || !pass) return showAuthAlert('alert-reg','error','Completa todos los campos');
+  
+  document.getElementById('btn-reg').disabled = true;
+  try{
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, 'usuarios', res.user.uid), {
+      nombre, email, fecha: serverTimestamp()
+    });
+    await setDoc(doc(db, 'solicitudes', res.user.uid), {
+      uid: res.user.uid, nombre, email, estado: 'pendiente', fecha: serverTimestamp()
+    });
+    showAuthAlert('alert-reg','success','Cuenta creada. Pendiente de aprobación.');
+    setTimeout(()=>{ document.getElementById('reg-nombre').value = ''; document.getElementById('reg-email').value = ''; document.getElementById('reg-pass').value = ''; }, 1000);
+  }catch(e){
+    showAuthAlert('alert-reg','error',firebaseError(e.code));
+  }
+  document.getElementById('btn-reg').disabled = false;
+};
+
+window.cerrarSesion = async function(){
+  if(chatUnsub) chatUnsub();
+  await signOut(auth);
+};
+
+// TABS
+window.switchAuthTab = function(id, btn){
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('form-'+id).classList.add('active');
+};
+
+window.switchMainTab = function(id, btn){
+  document.querySelectorAll('.main-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+  if(id==='chat') iniciarChat();
+  if(id==='miembros') cargarMiembros();
+  if(id==='admin') cargarAdmin();
+};
+
+// MIEMBROS
+async function cargarMiembros(){
+  const list = document.getElementById('miembros-list');
+  try{
+    const snap = await getDocs(query(collection(db, 'miembros'), orderBy('fecha', 'desc')));
+    if(snap.empty){
+      list.innerHTML = '<div class="empty-state"><p>Sin miembros aún.</p></div>';
+      return;
+    }
+    miembrosFiltrados = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderMiembros('todos');
+  }catch(e){
+    list.innerHTML = '<div class="empty-state"><p>Error: '+e.message+'</p></div>';
+  }
+}
+
+function renderMiembros(filtro){
+  const list = document.getElementById('miembros-list');
+  const filtrados = filtro === 'todos' ? miembrosFiltrados : miembrosFiltrados.filter(m=>m.rango===filtro);
+  if(filtrados.length === 0){
+    list.innerHTML = '<div class="empty-state"><p>Sin miembros en este rango.</p></div>';
+    return;
+  }
+  list.innerHTML = filtrados.map(m=>{
+    const fecha = m.fecha ? (m.fecha.toDate ? m.fecha.toDate() : new Date(m.fecha)).toLocaleDateString('es-ES') : '—';
+    const inicial = (m.nombre || '?').charAt(0).toUpperCase();
+    return `<div class="miembro-card">
+      <div class="m-avatar">${inicial}</div>
+      <div class="m-name">${m.nombre || '—'}</div>
+      <div class="m-rango">${RANGO_ICONS[m.rango]} ${m.rango}</div>
+      <div class="m-fecha">${fecha}</div>
+    </div>`;
+  }).join('');
+}
+
+window.filtrarMiembros = function(filtro, btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMiembros(filtro);
+};
+
+// CHAT
+function iniciarChat(){
+  const msgBox = document.getElementById('chat-messages');
+  if(chatUnsub) chatUnsub();
+  msgBox.innerHTML = '';
+  
+  const messagesRef = ref(rtdb, 'mensajes');
+  let initialLoad = true;
+  
+  chatUnsub = onChildAdded(messagesRef, (snapshot) => {
+    if(initialLoad){
+      initialLoad = false;
+      return;
+    }
+    const data = snapshot.val();
+    const isMine = data.uid === currentUser.uid;
+    const inicial = (data.nombre || '?').charAt(0).toUpperCase();
+    const ts = data.timestamp ? new Date(data.timestamp).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) : '';
+    
+    const div = document.createElement('div');
+    div.className = 'msg' + (isMine ? ' mine' : '');
+    div.innerHTML = `
+      <div class="msg-avatar">${inicial}</div>
+      <div class="msg-body">
+        <div class="msg-meta">${data.nombre || '—'} ${ts}</div>
+        <div class="msg-bubble">${escHtml(data.texto)}</div>
+      </div>
+    `;
+    msgBox.appendChild(div);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  });
+}
+
+window.enviarMensaje = async function(){
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if(!texto || !currentUser) return;
+  
+  const userDoc = await getDoc(doc(db, 'usuarios', currentUser.uid));
+  const nombre = userDoc.data()?.nombre || currentUser.email;
+  
+  await push(ref(rtdb, 'mensajes'), {
+    uid: currentUser.uid,
+    nombre: nombre,
+    texto: texto,
+    timestamp: Date.now()
+  });
+  input.value = '';
+  input.focus();
+};
+
+// ADMIN
+async function cargarAdmin(){
+  if(!currentUser || !esAdmin(currentUser.email)) return;
+  
+  const listEl = document.getElementById('solicitudes-list');
+  try{
+    const snap = await getDocs(query(collection(db,'solicitudes'), where('estado','==','pendiente'), orderBy('fecha','asc')));
+    if(snap.empty){
+      listEl.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div><p>No hay solicitudes pendientes.</p></div>';
+    } else {
+      listEl.innerHTML = snap.docs.map(d=>{
+        const s = d.data();
+        const fecha = s.fecha ? formatFecha(s.fecha) : '—';
+        return `<div class="solicitud-card" id="sol-${d.id}">
+          <div class="sol-info">
+            <div class="sol-nombre">${s.nombre||'—'}</div>
+            <div class="sol-email">${s.email||s.uid||'—'}</div>
+            <div class="sol-fecha">Solicitó: ${fecha}</div>
+          </div>
+          <div class="sol-actions">
+            <select class="rango-select" id="rango-sel-${d.id}">
+              <option value="Recluta">🥉 Recluta</option>
+              <option value="Aprendiz">🥈 Aprendiz</option>
+              <option value="Operador">🥇 Operador</option>
+              <option value="Bravo">⚔️ Bravo</option>
+              <option value="Instructor">🛡️ Instructor</option>
+              <option value="Comandante">👑 Comandante</option>
+            </select>
+            <button class="btn-aprobar" onclick="aprobarSolicitud('${d.id}','${s.uid}','${s.nombre||''}')">✔ Aprobar</button>
+            <button class="btn-rechazar" onclick="rechazarSolicitud('${d.id}')">✘ Rechazar</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }catch(e){
+    listEl.innerHTML='<div class="empty-state"><p>Error: '+e.message+'</p></div>';
+  }
+
+  const admEl = document.getElementById('admin-miembros-list');
+  try{
+    const snap2 = await getDocs(query(collection(db,'usuarios'), orderBy('fecha','desc')));
+    const aprobados = snap2.docs.filter(d=>d.data().rango);
+    if(aprobados.length===0){
+      admEl.innerHTML='<div class="empty-state"><p>Sin miembros aprobados.</p></div>';
+    } else {
+      admEl.innerHTML = aprobados.map(d=>{
+        const u = d.data();
+        return `<div class="solicitud-card">
+          <div class="sol-info">
+            <div class="sol-nombre">${u.nombre||'—'}</div>
+            <div class="sol-email">${u.email||d.id}</div>
+          </div>
+          <div class="sol-actions">
+            <select class="rango-select" id="rango-edit-${d.id}">
+              ${['Recluta','Aprendiz','Operador','Bravo','Instructor','Comandante'].map(r=>`<option value="${r}" ${u.rango===r?'selected':''}>${RANGO_ICONS[r]} ${r}</option>`).join('')}
+            </select>
+            <button class="btn-aprobar" onclick="cambiarRango('${d.id}')">💾 Guardar</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }catch(e){
+    admEl.innerHTML='<div class="empty-state"><p>Error: '+e.message+'</p></div>';
+  }
+}
+
+window.aprobarSolicitud = async function(solId, uid, nombre){
+  const rango = document.getElementById('rango-sel-'+solId)?.value || 'Recluta';
+  try{
+    await setDoc(doc(db,'usuarios',uid), {rango}, {merge:true});
+    await setDoc(doc(db,'miembros',uid), {nombre, rango, fecha: serverTimestamp()});
+    await updateDoc(doc(db,'solicitudes',solId), {estado:'aprobado'});
+    document.getElementById('sol-'+solId)?.remove();
+  }catch(e){
+    alert('Error: '+e.message);
+  }
+};
+
+window.rechazarSolicitud = async function(solId){
+  if(!confirm('¿Rechazar solicitud?')) return;
+  try{
+    await updateDoc(doc(db,'solicitudes',solId), {estado:'rechazado'});
+    document.getElementById('sol-'+solId)?.remove();
+  }catch(e){
+    alert('Error: '+e.message);
+  }
+};
+
+window.cambiarRango = async function(uid){
+  const rango = document.getElementById('rango-edit-'+uid)?.value;
+  if(!rango) return;
+  try{
+    await setDoc(doc(db,'usuarios',uid), {rango}, {merge:true});
+    await setDoc(doc(db,'miembros',uid), {rango}, {merge:true});
+    alert('✅ Rango actualizado');
+  }catch(e){
+    alert('Error: '+e.message);
+  }
+};
+
+window.goToChat = function(){
+  const btn = document.querySelector('.main-tab[onclick*="chat"]');
+  if(btn){ btn.click(); }
+};
+
+// HELPERS
+function showAuthAlert(id, type, msg){
+  const el = document.getElementById(id);
+  el.className = `auth-alert ${type} show`;
+  el.textContent = msg;
+  if(type!=='info') setTimeout(()=>{ el.className='auth-alert'; }, 5000);
+}
+
+function formatFecha(ts){
+  if(!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function escHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function firebaseError(code){
+  const map = {
+    'auth/email-already-in-use':'Ese correo ya existe.',
+    'auth/invalid-email':'Correo inválido.',
+    'auth/weak-password':'Contraseña muy débil (mín. 6 caracteres).',
+    'auth/user-not-found':'Correo o contraseña incorrectos.',
+    'auth/wrong-password':'Correo o contraseña incorrectos.',
+    'auth/invalid-credential':'Correo o contraseña incorrectos.',
+    'auth/too-many-requests':'Demasiados intentos. Espera un momento.',
+  };
+  return map[code] || code;
+}
+
+// Exponer globalmente
+window.firebase = { initializeApp, getAuth, getFirestore, getDatabase };
+</script>
+</body>
+</html>
