@@ -181,16 +181,35 @@
     requireApprovedUser('login.html').then(async (profile) => {
       if (!profile) return;
 
+      // Si hay uid en la URL y es diferente al propio, cargar perfil de ese usuario
+      const params = new URLSearchParams(window.location.search);
+      const viewingUid = params.get('uid');
+      const isViewingOther = viewingUid && viewingUid !== profile.uid;
+
+      let target = profile;
+      if (isViewingOther) {
+        const snap = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+          .then(m => m.getDoc(m.doc(db, 'users', viewingUid)));
+        if (snap.exists()) target = { uid: viewingUid, ...snap.data() };
+      }
+
       // Cargar datos
-      if (profile.photoURL) document.getElementById('foto-perfil').src = profile.photoURL;
-      document.getElementById('info-rango').textContent = profile.rango || 'Recluta';
-      document.getElementById('info-phone').textContent = profile.phone || '—';
-      const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      if (target.photoURL) document.getElementById('foto-perfil').src = target.photoURL;
+      document.getElementById('info-rango').textContent = target.rango || 'Recluta';
+      document.getElementById('info-phone').textContent = target.phone || '—';
+      const fecha = target.fechaIngreso?.toDate ? target.fechaIngreso.toDate() : null;
       document.getElementById('info-fecha').textContent = fecha
         ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' })
         : '—';
 
-      profileForm['displayName'].value = profile.displayName || '';
+      // Si estamos viendo el perfil de otro usuario, deshabilitar formularios
+      if (isViewingOther) {
+        profileForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+        pwdForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+        document.querySelector('h1.section-title').innerHTML = 'Perfil de <span class="accent">' + (target.username || target.displayName || 'usuario') + '</span>';
+      }
+
+      profileForm['displayName'].value = target.displayName || '';
       profileForm['sobreMi'].value = profile.sobreMi || '';
       profileForm['loQueSe'].value = profile.loQueSe || '';
       profileForm['experiencia'].value = profile.experiencia || '';
@@ -202,7 +221,7 @@
       profileForm['extra'].value = profile.extra || '';
 
       // Guardar datos personales
-      profileForm.addEventListener('submit', async (e) => {
+      if (!isViewingOther) profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
           await updateDoc(doc(db, 'users', profile.uid), {
