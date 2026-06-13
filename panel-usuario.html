@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi panel — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Mi panel</p>
+      <nav class="sidebar__links">
+        <a href="panel-usuario.html" class="active">Resumen</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="redes.html">Redes</a>
+        <a href="configuracion.html">Configuración</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+      <div class="panel-header">
+        <div>
+          <h1 class="section-title">Hola, <span class="accent" data-user-name>—</span></h1>
+          <p class="section-subtitle">Este es el estado de tu cuenta en Academia Indrhack.</p>
+        </div>
+        <span class="badge badge--aprobado">Cuenta aprobada</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-rango>—</div>
+          <div class="stat-card__label">Rango</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-fecha>—</div>
+          <div class="stat-card__label">Fecha de ingreso</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-username>—</div>
+          <div class="stat-card__label">Usuario</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="card-grid">
+        <a href="cursos.html" class="card">
+          <h3>Cursos</h3>
+          <p class="section-subtitle">Continúa tu formación en ciberseguridad y hacking ético.</p>
+        </a>
+        <a href="perfil.html" class="card">
+          <h3>Mi perfil</h3>
+          <p class="section-subtitle">Actualiza tu foto, motivaciones y gustos.</p>
+        </a>
+        <a href="redes.html" class="card">
+          <h3>Redes</h3>
+          <p class="section-subtitle">Únete a la comunidad en nuestros canales oficiales.</p>
+        </a>
+      </div>
+    </section>
+
+      <!-- Cambiar contraseña -->
+      <div class="card" style="max-width:480px;margin-top:2rem">
+        <h2 class="section-title">Cambiar <span class="accent">contraseña</span></h2>
+        <form id="pwd-form">
+          <div class="field">
+            <label for="pwd-nueva">Nueva contraseña</label>
+            <div style="position:relative;display:flex;align-items:center">
+              <input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" />
+              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem">👁</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="pwd-confirmar">Confirmar nueva contraseña</label>
+            <div style="position:relative;display:flex;align-items:center">
+              <input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la contraseña" />
+              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary">Cambiar contraseña</button>
+          <div class="form-message" id="pwd-message"></div>
+        </form>
+      </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { requireApprovedUser } from './js/auth.js';
+
+    requireApprovedUser('login.html').then((profile) => {
+      if (!profile) return;
+
+      document.querySelector('[data-user-name]').textContent = profile.displayName || profile.username;
+      document.querySelector('[data-user-username]').textContent = profile.username;
+      document.querySelector('[data-user-rango]').textContent = profile.rango || 'Iniciado';
+
+      const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      document.querySelector('[data-user-fecha]').textContent = fecha
+        ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' })
+        : '—';
+    });
+  </script>
+
+  <script>
+  function togglePwd(id) {
+    const input = document.getElementById(id);
+    if (input) input.type = input.type === 'password' ? 'text' : 'password';
+  }
+  </script>
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { updatePassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const form = document.getElementById('pwd-form');
+    const msg = document.getElementById('pwd-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'form-message';
+      const nueva = form.nueva.value;
+      const confirmar = form.confirmar.value;
+
+      if (nueva !== confirmar) {
+        msg.textContent = '❌ Las contraseñas no coinciden.';
+        msg.className = 'form-message show form-message--error';
+        return;
+      }
+
+      try {
+        await updatePassword(auth.currentUser, nueva);
+        msg.textContent = '✅ Contraseña cambiada correctamente.';
+        msg.className = 'form-message show form-message--success';
+        alert('✅ Contraseña cambiada correctamente.');
+        form.reset();
+      } catch (err) {
+        msg.textContent = '❌ ' + (err.message || 'Error al cambiar contraseña.');
+        msg.className = 'form-message show form-message--error';
+      }
+    });
+  </script>
+</body>
+</html>
