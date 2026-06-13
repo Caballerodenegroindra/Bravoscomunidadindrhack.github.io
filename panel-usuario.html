@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi panel — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Mi panel</p>
+      <nav class="sidebar__links">
+        <a href="panel-usuario.html" class="active">Resumen</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="redes.html">Redes</a>
+        <a href="configuracion.html">Configuración</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+      <div class="panel-header">
+        <div>
+          <h1 class="section-title">Hola, <span class="accent" data-user-name>—</span></h1>
+          <p class="section-subtitle">Este es el estado de tu cuenta en Academia Indrhack.</p>
+        </div>
+        <span class="badge badge--aprobado">Cuenta aprobada</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-rango>—</div>
+          <div class="stat-card__label">Rango</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-fecha>—</div>
+          <div class="stat-card__label">Fecha de ingreso</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" data-user-username>—</div>
+          <div class="stat-card__label">Usuario</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="card-grid">
+        <a href="cursos.html" class="card">
+          <h3>Cursos</h3>
+          <p class="section-subtitle">Continúa tu formación en ciberseguridad y hacking ético.</p>
+        </a>
+        <a href="perfil.html" class="card">
+          <h3>Mi perfil</h3>
+          <p class="section-subtitle">Actualiza tu foto, motivaciones y gustos.</p>
+        </a>
+        <a href="redes.html" class="card">
+          <h3>Redes</h3>
+          <p class="section-subtitle">Únete a la comunidad en nuestros canales oficiales.</p>
+        </a>
+      </div>
+      <!-- Noticias recientes -->
+      <h2 class="section-title" style="margin-top:2rem">Últimas <span class="accent">noticias</span></h2>
+      <div id="noticias-recientes" style="margin-top:1rem">
+        <p class="section-subtitle">Cargando noticias...</p>
+      </div>
+
+    </section>
+
+      <!-- Cambiar contraseña -->
+      <div class="card" style="max-width:480px;margin-top:2rem">
+        <h2 class="section-title">Cambiar <span class="accent">contraseña</span></h2>
+        <form id="pwd-form">
+          <div class="field">
+            <label for="pwd-nueva">Nueva contraseña</label>
+            <div class="pwd-wrap" style="position:relative"><input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" /><button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button></div>
+          </div>
+          <div class="field">
+            <label for="pwd-confirmar">Confirmar nueva contraseña</label>
+            <div class="pwd-wrap" style="position:relative"><input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la contraseña" /><button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button></div>
+          </div>
+          <button type="submit" class="btn btn--primary">Cambiar contraseña</button>
+          <div class="form-message" id="pwd-message"></div>
+        </form>
+      </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { requireApprovedUser } from './js/auth.js';
+
+    requireApprovedUser('login.html').then((profile) => {
+      if (!profile) return;
+
+      document.querySelector('[data-user-name]').textContent = profile.displayName || profile.username;
+      document.querySelector('[data-user-username]').textContent = profile.username;
+      document.querySelector('[data-user-rango]').textContent = profile.rango || 'Iniciado';
+
+      const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      document.querySelector('[data-user-fecha]').textContent = fecha
+        ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' })
+        : '—';
+    });
+  </script>
+
+  <script>
+  function togglePwd(id) {
+    const input = document.getElementById(id);
+    if (input) input.type = input.type === 'password' ? 'text' : 'password';
+  }
+  </script>
+    <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const form = document.getElementById('pwd-form');
+    const msg = document.getElementById('pwd-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'form-message';
+      const nueva = form.nueva.value;
+      const confirmar = form.confirmar.value;
+
+      if (nueva !== confirmar) {
+        msg.textContent = '❌ Las contraseñas no coinciden.';
+        msg.className = 'form-message show form-message--error';
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        msg.textContent = '❌ No hay sesión activa.';
+        msg.className = 'form-message show form-message--error';
+        return;
+      }
+
+      try {
+        // Re-autenticar primero con la contraseña actual
+        const actual = prompt('Ingresa tu contraseña actual para confirmar:');
+        if (!actual) return;
+        const credential = EmailAuthProvider.credential(user.email, actual);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, nueva);
+        msg.textContent = '✅ Contraseña cambiada correctamente.';
+        msg.className = 'form-message show form-message--success';
+        alert('✅ Contraseña cambiada correctamente.');
+        form.reset();
+      } catch (err) {
+        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+          msg.textContent = '❌ Contraseña actual incorrecta.';
+        } else {
+          msg.textContent = '❌ ' + (err.message || 'Error al cambiar contraseña.');
+        }
+        msg.className = 'form-message show form-message--error';
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, orderBy, query, where, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const grid = document.getElementById('noticias-recientes');
+    const CATEGORIAS = {
+      clase: { label: 'Clase', color: '#00bfff' },
+      evento: { label: 'Evento', color: '#ff6b35' },
+      anuncio: { label: 'Anuncio', color: '#a855f7' },
+      importante: { label: '⚠️ Importante', color: '#ff3b3b' },
+    };
+
+    try {
+      const q = query(collection(db, 'noticias'), where('publicado', '==', true), orderBy('fecha', 'desc'), limit(3));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        grid.innerHTML = '<p class="section-subtitle">No hay noticias aún.</p>';
+      } else {
+        grid.innerHTML = snap.docs.map(d => {
+          const n = d.data();
+          const cat = CATEGORIAS[n.categoria] || { label: n.categoria, color: '#aaa' };
+          const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+          return `<div class="card" style="margin-bottom:1rem">
+            <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap">
+              <span style="background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color};border-radius:20px;padding:2px 10px;font-size:0.75rem;font-weight:600">${cat.label}</span>
+              <span style="color:#888;font-size:0.78rem">${fecha}</span>
+            </div>
+            <h3 style="margin:0 0 0.25rem">${n.titulo}</h3>
+            <p class="section-subtitle" style="margin:0">${n.contenido.substring(0,120)}${n.contenido.length > 120 ? '...' : ''}</p>
+          </div>`;
+        }).join('') + '<a href="noticias.html" class="btn btn--small btn--outline" style="margin-top:0.5rem">Ver todas →</a>';
+      }
+    } catch(e) {
+      grid.innerHTML = '<p class="section-subtitle">No se pudieron cargar las noticias.</p>';
+    }
+  </script>
+</body>
+</html>
