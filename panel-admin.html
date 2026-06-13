@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel administrador — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Administrador</p>
+      <nav class="sidebar__links">
+        <a href="#resumen" class="active" data-tab="resumen">Resumen</a>
+        <a href="#solicitudes" data-tab="solicitudes">Solicitudes</a>
+        <a href="#miembros" data-tab="miembros">Miembros</a>
+        <a href="#cursos" data-tab="cursos">Cursos</a>
+        <a href="#configuracion" data-tab="configuracion">Configuración</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+
+      <!-- RESUMEN -->
+      <div class="tab-section" id="resumen">
+        <div class="panel-header">
+          <h1 class="section-title">Resumen</h1>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="usuarios">—</div>
+            <div class="stat-card__label">Usuarios registrados</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="solicitudes">—</div>
+            <div class="stat-card__label">Solicitudes pendientes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="cursos">—</div>
+            <div class="stat-card__label">Cursos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="aprobados">—</div>
+            <div class="stat-card__label">Miembros activos</div>
+          </div>
+        </div>
+        <p class="section-subtitle">Actividad reciente y métricas generales de la academia se mostrarán aquí.</p>
+      </div>
+
+      <!-- SOLICITUDES -->
+      <div class="tab-section hidden" id="solicitudes">
+        <div class="panel-header">
+          <h1 class="section-title">Solicitudes</h1>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Usuario</th>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody data-requests-body>
+              <tr><td colspan="6">Cargando solicitudes…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MIEMBROS -->
+      <div class="tab-section hidden" id="miembros">
+        <div class="panel-header">
+          <h1 class="section-title">Miembros</h1>
+          <input type="search" placeholder="Buscar por usuario…" class="field" style="max-width:260px" data-member-search />
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Rol</th>
+                <th>Rango</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody data-members-body>
+              <tr><td colspan="6">Cargando miembros…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div class="tab-section hidden" id="cursos">
+        <div class="panel-header">
+          <h1 class="section-title">Cursos</h1>
+          <button class="btn btn--primary btn--small" data-new-course>Crear curso</button>
+        </div>
+        <div class="card-grid" data-courses-grid>
+          <p class="section-subtitle">Cargando cursos…</p>
+        </div>
+      </div>
+
+      <!-- CONFIGURACIÓN -->
+      <div class="tab-section hidden" id="configuracion">
+        <div class="panel-header">
+          <h1 class="section-title">Configuración</h1>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Logo</h3>
+            <p class="section-subtitle">Sube una nueva imagen para el logo de la academia.</p>
+            <button class="btn btn--outline btn--small">Cambiar logo</button>
+          </div>
+          <div class="card">
+            <h3>Textos</h3>
+            <p class="section-subtitle">Edita el subtítulo y el lema mostrados en la pantalla de inicio.</p>
+            <button class="btn btn--outline btn--small">Editar textos</button>
+          </div>
+          <div class="card">
+            <h3>Enlaces</h3>
+            <p class="section-subtitle">Configura los enlaces de redes sociales y descargas de cursos.</p>
+            <button class="btn btn--outline btn--small">Editar enlaces</button>
+          </div>
+          <div class="card">
+            <h3>Apariencia</h3>
+            <p class="section-subtitle">Ajusta colores, tipografías y animaciones del sitio.</p>
+            <button class="btn btn--outline btn--small">Editar apariencia</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+
+  <!-- MODAL CURSO -->
+  <div id="course-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:90%;max-width:500px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="modal-title" class="section-title" style="margin:0">Crear curso</h2>
+        <button id="modal-close" class="btn btn--small btn--danger">&#10005;</button>
+      </div>
+      <form id="course-form">
+        <div class="field"><label>Título</label><input type="text" name="titulo" required /></div>
+        <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3"></textarea></div>
+        <div class="field"><label>Nivel</label>
+          <select name="nivel">
+            <option value="Básico">Básico</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
+          </select>
+        </div>
+        <div class="field"><label>Material (texto o URL)</label><input type="text" name="material" /></div>
+        <div class="field"><label>Enlace de descarga</label><input type="url" name="descarga" /></div>
+        <div class="field"><label>URL de imagen</label><input type="url" name="imagen" /></div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="publicado" />
+          <label for="publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar curso</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      fetchAllUsers,
+      fetchAllCourses,
+      approveUser,
+      rejectUser,
+      suspendUser,
+      deleteUserProfile,
+      formatFecha,
+    } from './js/admin.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, updateDoc, addDoc, deleteDoc, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    /* --- Navegación entre pestañas --- */
+    const tabs = document.querySelectorAll('[data-tab]');
+    const sections = document.querySelectorAll('.tab-section');
+
+    function activateTab(name) {
+      tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === name));
+      sections.forEach((s) => s.classList.toggle('hidden', s.id !== name));
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateTab(tab.dataset.tab);
+      });
+    });
+
+    const initial = window.location.hash.replace('#', '') || 'resumen';
+    activateTab(initial);
+
+    /* --- Carga de datos protegida por rol administrador --- */
+    requireAdmin('index.html').then(async (admin) => {
+      if (!admin) return;
+
+      const users = await fetchAllUsers();
+      renderStats(users);
+      renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
+      renderMembers(users);
+
+      const courses = await fetchAllCourses();
+      renderCourses(courses);
+    });
+
+    function badge(estado) {
+      const labels = {
+        [ESTADOS.PENDIENTE]: 'Pendiente',
+        [ESTADOS.APROBADO]: 'Aprobado',
+        [ESTADOS.SUSPENDIDO]: 'Suspendido',
+        [ESTADOS.RECHAZADO]: 'Rechazado',
+      };
+      return `<span class="badge badge--${estado}">${labels[estado] || estado}</span>`;
+    }
+
+    function renderStats(users) {
+      document.querySelector('[data-stat="usuarios"]').textContent = users.length;
+      document.querySelector('[data-stat="solicitudes"]').textContent =
+        users.filter((u) => u.estado === ESTADOS.PENDIENTE).length;
+      document.querySelector('[data-stat="aprobados"]').textContent =
+        users.filter((u) => u.estado === ESTADOS.APROBADO).length;
+    }
+
+    function renderRequests(requests) {
+      const body = document.querySelector('[data-requests-body]');
+
+      if (requests.length === 0) {
+        body.innerHTML = '<tr><td colspan="6">No hay solicitudes pendientes.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = requests.map((u) => `
+        <tr data-uid="${u.uid}">
+          <td><img src="${u.photoURL || 'assets/img/avatar-placeholder.svg'}" alt="" width="36" height="36" style="border-radius:50%"></td>
+          <td>${u.username}</td>
+          <td>${u.phone || '—'}</td>
+          <td>${formatFecha(u.fechaIngreso)}</td>
+          <td>${badge(u.estado)}</td>
+          <td class="table-actions">
+            <button class="btn btn--small btn--outline" data-action="aprobar">Aprobar</button>
+            <button class="btn btn--small btn--danger" data-action="rechazar">Rechazar</button>
+            <a class="btn btn--small btn--ghost" href="perfil.html?uid=${u.uid}">Ver perfil</a>
+          </td>
+        </tr>
+      `).join('');
+
+      body.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          const row = e.target.closest('tr');
+          const uid = row.dataset.uid;
+          if (btn.dataset.action === 'aprobar') await approveUser(uid);
+          if (btn.dataset.action === 'rechazar') await rejectUser(uid);
+          row.remove();
+        });
+      });
+    }
+
+    function renderMembers(users) {
+      const body = document.querySelector('[data-members-body]');
+
+      function paint(list) {
+        if (list.length === 0) {
+          body.innerHTML = '<tr><td colspan="6">Sin resultados.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = list.map((u) => `
+          <tr data-uid="${u.uid}">
+            <td><img src="${u.photoURL || 'assets/img/avatar-placeholder.svg'}" alt="" width="36" height="36" style="border-radius:50%"></td>
+            <td>${u.username}</td>
+            <td>${formatFecha(u.fechaIngreso)}</td>
+            <td>${u.rol}</td>
+            <td>${badge(u.estado)}</td>
+            <td class="table-actions">
+              <a class="btn btn--small btn--ghost" href="perfil.html?uid=${u.uid}">Ver</a>
+              <button class="btn btn--small btn--outline" data-action="suspender">Suspender</button>
+              <button class="btn btn--small btn--danger" data-action="eliminar">Eliminar</button>
+            </td>
+          </tr>
+        `).join('');
+
+        body.querySelectorAll('[data-action]').forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            const row = e.target.closest('tr');
+            const uid = row.dataset.uid;
+            if (btn.dataset.action === 'suspender') {
+              await suspendUser(uid);
+              row.querySelector('td:nth-child(6)').innerHTML = badge(ESTADOS.SUSPENDIDO);
+            }
+            if (btn.dataset.action === 'eliminar') {
+              if (confirm('¿Eliminar este perfil de la base de datos?')) {
+                await deleteUserProfile(uid);
+                row.remove();
+              }
+            }
+          });
+        });
+
+        // Rango selector
+        body.querySelectorAll('.rango-select').forEach((sel) => {
+          sel.addEventListener('change', async () => {
+            await updateDoc(doc(db, 'users', sel.dataset.uid), { rango: sel.value });
+            alert('✅ Rango actualizado a: ' + sel.value);
+          });
+        });
+      }
+
+      paint(users);
+
+      document.querySelector('[data-member-search]').addEventListener('input', (e) => {
+        const term = e.target.value.trim().toLowerCase();
+        paint(users.filter((u) => u.username.toLowerCase().includes(term)));
+      });
+    }
+
+    // --- Modal crear/editar curso ---
+    const modal = document.getElementById('course-modal');
+    const modalForm = document.getElementById('course-form');
+    const modalTitle = document.getElementById('modal-title');
+    let editingCourseId = null;
+
+    document.querySelector('[data-new-course]').addEventListener('click', () => {
+      editingCourseId = null;
+      modalTitle.textContent = 'Crear curso';
+      modalForm.reset();
+      modal.style.display = 'flex';
+    });
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: modalForm.titulo.value.trim(),
+        descripcion: modalForm.descripcion.value.trim(),
+        nivel: modalForm.nivel.value.trim(),
+        material: modalForm.material.value.trim(),
+        descarga: modalForm.descarga.value.trim(),
+        imagen: modalForm.imagen.value.trim(),
+        publicado: modalForm.publicado.checked,
+      };
+
+      try {
+        if (editingCourseId) {
+          await updateDoc(doc(db, 'courses', editingCourseId), data);
+          alert('✅ Curso actualizado.');
+        } else {
+          await addDoc(collection(db, 'courses'), data);
+          alert('✅ Curso creado.');
+        }
+        modal.style.display = 'none';
+        location.reload();
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+
+    function renderCourses(courses) {
+      const grid = document.querySelector('[data-courses-grid]');
+
+      if (courses.length === 0) {
+        grid.innerHTML = '<p class="section-subtitle">Aún no hay cursos creados.</p>';
+        return;
+      }
+
+      grid.innerHTML = courses.map((c) => `
+        <div class="card" data-course-id="${c.id}">
+          <h3>${c.titulo || 'Sin título'}</h3>
+          <p class="section-subtitle">${c.descripcion || ''}</p>
+          <p class="section-subtitle"><strong>Nivel:</strong> ${c.nivel || '—'} · <strong>Material:</strong> ${c.material || '—'}</p>
+          <p class="section-subtitle">${c.publicado ? '✅ Publicado' : '⛔ Oculto'}</p>
+          <div class="table-actions">
+            <button class="btn btn--small btn--outline" data-action="editar">Editar</button>
+            <button class="btn btn--small btn--ghost" data-action="toggle">${c.publicado ? 'Ocultar' : 'Publicar'}</button>
+            <button class="btn btn--small btn--danger" data-action="eliminar">Eliminar</button>
+          </div>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          const card = e.target.closest('[data-course-id]');
+          const id = card.dataset.courseId;
+          const course = courses.find((c) => c.id === id);
+
+          if (btn.dataset.action === 'editar') {
+            editingCourseId = id;
+            modalTitle.textContent = 'Editar curso';
+            modalForm.titulo.value = course.titulo || '';
+            modalForm.descripcion.value = course.descripcion || '';
+            modalForm.nivel.value = course.nivel || '';
+            modalForm.material.value = course.material || '';
+            modalForm.descarga.value = course.descarga || '';
+            modalForm.imagen.value = course.imagen || '';
+            modalForm.publicado.checked = course.publicado || false;
+            modal.style.display = 'flex';
+          }
+
+          if (btn.dataset.action === 'toggle') {
+            await updateDoc(doc(db, 'courses', id), { publicado: !course.publicado });
+            alert(course.publicado ? '⛔ Curso ocultado.' : '✅ Curso publicado.');
+            location.reload();
+          }
+
+          if (btn.dataset.action === 'eliminar') {
+            if (confirm('¿Eliminar este curso?')) {
+              await deleteDoc(doc(db, 'courses', id));
+              card.remove();
+            }
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
