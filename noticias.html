@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noticias — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <div class="container section">
+      <h1 class="section-title">Noticias y <span class="accent">Novedades</span></h1>
+      <p class="section-subtitle">Enterate de las últimas clases, eventos y anuncios importantes de la academia.</p>
+
+      <div id="noticias-grid" style="margin-top:2rem">
+        <p class="section-subtitle">Cargando noticias...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, orderBy, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const grid = document.getElementById('noticias-grid');
+
+    const CATEGORIAS = {
+      clase: { label: 'Clase', color: '#00bfff' },
+      evento: { label: 'Evento', color: '#ff6b35' },
+      anuncio: { label: 'Anuncio', color: '#a855f7' },
+      importante: { label: '⚠️ Importante', color: '#ff3b3b' },
+    };
+
+    try {
+      const q = query(collection(db, 'noticias'), where('publicado', '==', true), orderBy('fecha', 'desc'));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        grid.innerHTML = '<p class="section-subtitle">No hay noticias publicadas aún.</p>';
+        return;
+      }
+
+      grid.innerHTML = snap.docs.map(d => {
+        const n = d.data();
+        const cat = CATEGORIAS[n.categoria] || { label: n.categoria, color: '#aaa' };
+        const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+        return `
+          <div class="card" style="margin-bottom:1.5rem">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;flex-wrap:wrap">
+              <span style="background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color};border-radius:20px;padding:2px 12px;font-size:0.78rem;font-weight:600">${cat.label}</span>
+              <span style="color:#888;font-size:0.82rem">${fecha}</span>
+            </div>
+            <h3 style="margin:0 0 0.5rem">${n.titulo}</h3>
+            <p class="section-subtitle" style="white-space:pre-wrap">${n.contenido}</p>
+            ${n.enlace ? `<a href="${n.enlace}" target="_blank" class="btn btn--small btn--outline" style="margin-top:0.75rem">Ver más →</a>` : ''}
+          </div>`;
+      }).join('');
+    } catch (err) {
+      grid.innerHTML = '<p class="section-subtitle">Error al cargar noticias.</p>';
+    }
+  </script>
+</body>
+</html>

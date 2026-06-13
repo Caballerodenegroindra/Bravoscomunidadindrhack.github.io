@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi perfil — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Mi panel</p>
+      <nav class="sidebar__links">
+        <a href="panel-usuario.html">Resumen</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="perfil.html" class="active">Perfil</a>
+        <a href="redes.html">Redes</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+      <h1 class="section-title">Mi <span class="accent">perfil</span></h1>
+
+      <!-- Info del perfil -->
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <img id="foto-perfil" src="assets/img/avatar-placeholder.svg" alt="Foto" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #333" />
+        <div>
+          <p style="margin:0;color:#aaa;font-size:0.85rem">Rango: <strong id="info-rango">—</strong></p>
+          <p style="margin:0;color:#aaa;font-size:0.85rem">Miembro desde: <strong id="info-fecha">—</strong></p>
+          <p style="margin:0;color:#aaa;font-size:0.85rem">Teléfono: <strong id="info-phone">—</strong></p>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <div class="card" style="max-width:560px;margin-bottom:1.5rem">
+        <h2 class="section-title" style="font-size:1.1rem">Datos <span class="accent">personales</span></h2>
+        <form id="profile-form">
+          <div class="field">
+            <label for="display-name">Nombre visible</label>
+            <input type="text" id="display-name" name="displayName" placeholder="Tu nombre en la academia" />
+          </div>
+
+          <div class="field">
+            <label for="sobre-mi">Sobre mí</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Cómo te gustaría que te conozca la comunidad? (Ej: Programador, aprendiz, curioso, creador, etc.)</small>
+            <textarea id="sobre-mi" name="sobreMi" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="lo-que-se">Lo que sé</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué conocimientos tienes actualmente? (Cuéntanos qué sabes o qué te gusta hacer)</small>
+            <textarea id="lo-que-se" name="loQueSe" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="experiencia">Experiencia</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿En qué proyectos o cosas has trabajado? (Programación, servidores, diseño, hardware, estudio, etc.)</small>
+            <textarea id="experiencia" name="experiencia" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="intereses">Intereses</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué temas te interesan dentro de la informática?</small>
+            <textarea id="intereses" name="intereses" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="aprendizaje">Aprendizaje</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué te gustaría aprender aquí?</small>
+            <textarea id="aprendizaje" name="aprendizaje" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Cuál es tu objetivo dentro de IndrHack?</small>
+            <textarea id="objetivo" name="objetivo" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="compartir">Compartir conocimiento</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Hay algo que te gustaría enseñar a otros miembros?</small>
+            <textarea id="compartir" name="compartir" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="estilo">Estilo de trabajo</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Cómo te gusta trabajar o aprender?</small>
+            <textarea id="estilo" name="estilo" rows="2"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="extra">Extra</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">Cuéntanos algo sobre ti que te represente</small>
+            <textarea id="extra" name="extra" rows="2"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary">Guardar cambios</button>
+          <div class="form-message" id="profile-message"></div>
+        </form>
+      </div>
+
+      <!-- Cambiar contraseña -->
+      <div class="card" style="max-width:560px">
+        <h2 class="section-title" style="font-size:1.1rem">Cambiar <span class="accent">contraseña</span></h2>
+        <form id="pwd-form">
+          <div class="field">
+            <label for="pwd-actual">Contraseña actual</label>
+            <div style="position:relative">
+              <input type="password" id="pwd-actual" name="actual" required placeholder="Tu contraseña actual" style="padding-right:2.5rem" />
+              <button type="button" onclick="togglePwd('pwd-actual')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="pwd-nueva">Nueva contraseña</label>
+            <div style="position:relative">
+              <input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" style="padding-right:2.5rem" />
+              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="pwd-confirmar">Confirmar nueva contraseña</label>
+            <div style="position:relative">
+              <input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la nueva contraseña" style="padding-right:2.5rem" />
+              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary">Cambiar contraseña</button>
+          <div class="form-message" id="pwd-message"></div>
+        </form>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script>
+  function togglePwd(id) {
+    const el = document.getElementById(id);
+    if (el) el.type = el.type === 'password' ? 'text' : 'password';
+  }
+  </script>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { requireApprovedUser } from './js/auth.js';
+
+    const profileForm = document.getElementById('profile-form');
+    const profileMsg = document.getElementById('profile-message');
+    const pwdForm = document.getElementById('pwd-form');
+    const pwdMsg = document.getElementById('pwd-message');
+
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+
+      // Cargar datos
+      if (profile.photoURL) document.getElementById('foto-perfil').src = profile.photoURL;
+      document.getElementById('info-rango').textContent = profile.rango || 'Recluta';
+      document.getElementById('info-phone').textContent = profile.phone || '—';
+      const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      document.getElementById('info-fecha').textContent = fecha
+        ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' })
+        : '—';
+
+      profileForm['displayName'].value = profile.displayName || '';
+      profileForm['sobreMi'].value = profile.sobreMi || '';
+      profileForm['loQueSe'].value = profile.loQueSe || '';
+      profileForm['experiencia'].value = profile.experiencia || '';
+      profileForm['intereses'].value = profile.intereses || '';
+      profileForm['aprendizaje'].value = profile.aprendizaje || '';
+      profileForm['objetivo'].value = profile.objetivo || '';
+      profileForm['compartir'].value = profile.compartir || '';
+      profileForm['estilo'].value = profile.estilo || '';
+      profileForm['extra'].value = profile.extra || '';
+
+      // Guardar datos personales
+      profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          await updateDoc(doc(db, 'users', profile.uid), {
+            displayName: profileForm.displayName.value.trim(),
+            sobreMi: profileForm.sobreMi.value.trim(),
+            loQueSe: profileForm.loQueSe.value.trim(),
+            experiencia: profileForm.experiencia.value.trim(),
+            intereses: profileForm.intereses.value.trim(),
+            aprendizaje: profileForm.aprendizaje.value.trim(),
+            objetivo: profileForm.objetivo.value.trim(),
+            compartir: profileForm.compartir.value.trim(),
+            estilo: profileForm.estilo.value.trim(),
+            extra: profileForm.extra.value.trim(),
+          });
+          profileMsg.textContent = '✅ Cambios guardados.';
+          profileMsg.className = 'form-message show form-message--success';
+          alert('✅ Cambios guardados correctamente.');
+        } catch (err) {
+          profileMsg.textContent = '❌ ' + (err.message || 'Error al guardar.');
+          profileMsg.className = 'form-message show form-message--error';
+        }
+      });
+
+      // Cambiar contraseña
+      pwdForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        pwdMsg.className = 'form-message';
+        const actual = pwdForm.actual.value;
+        const nueva = pwdForm.nueva.value;
+        const confirmar = pwdForm.confirmar.value;
+
+        if (nueva !== confirmar) {
+          pwdMsg.textContent = '❌ Las contraseñas nuevas no coinciden.';
+          pwdMsg.className = 'form-message show form-message--error';
+          return;
+        }
+
+        try {
+          const user = auth.currentUser;
+          const credential = EmailAuthProvider.credential(user.email, actual);
+          await reauthenticateWithCredential(user, credential);
+          await updatePassword(user, nueva);
+          pwdMsg.textContent = '✅ Contraseña cambiada correctamente.';
+          pwdMsg.className = 'form-message show form-message--success';
+          alert('✅ Contraseña cambiada correctamente.');
+          pwdForm.reset();
+        } catch (err) {
+          if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+            pwdMsg.textContent = '❌ Contraseña actual incorrecta.';
+          } else {
+            pwdMsg.textContent = '❌ ' + (err.message || 'Error al cambiar contraseña.');
+          }
+          pwdMsg.className = 'form-message show form-message--error';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
