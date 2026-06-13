@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academia Indrhack — Formación en Informática, Ciberseguridad y Hacking Ético</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html" class="active">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="hero__logo">ACADEMIA <span class="mark">INDRHACK</span></h1>
+      <p class="hero__subtitle">Formación en Informática • Ciberseguridad • Hacking Ético</p>
+      <p class="hero__motto">⚘️ EL CONOCIMIENTO ES LA BASE ⚘️</p>
+      <div class="hero__actions">
+        <a href="login.html" class="btn btn--primary">Iniciar sesión</a>
+        <a href="registro.html" class="btn btn--outline">Registrarte</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
