@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrarte — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <div class="auth-shell">
+      <div class="auth-card">
+        <h1 class="auth-card__title">Crear cuenta</h1>
+        <p class="auth-card__subtitle">Tu solicitud será revisada por un administrador antes de activarse.</p>
+
+        <form id="register-form" novalidate>
+          <div class="field">
+            <label for="phone">Número de teléfono</label>
+            <input type="tel" id="phone" name="phone" required placeholder="+52 55 0000 0000" />
+          </div>
+
+          <div class="field">
+            <label for="username">Nombre de usuario</label>
+            <input type="text" id="username" name="username" required minlength="3" placeholder="usuario_indrhack" />
+          </div>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+             style="position:relative">
+              <div class="pwd-wrap" style="position:relative"><input type="password" id="password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres" /><button type="button" onclick="togglePwd('password')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button></div>
+              <button type="button" onclick="togglePwd('password')" style="position:absolute;right:12px;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;line-height:1">👁</button>
+            </div><button type="button" onclick="togglePwd(\'password\')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem">👁</button></div>
+          </div>
+
+          <div class="field">
+            <label for="confirm-password">Confirmar contraseña</label>
+             style="position:relative">
+              <div class="pwd-wrap" style="position:relative"><input type="password" id="confirm-password" name="confirm-password" required minlength="8" placeholder="Repite tu contraseña" /><button type="button" onclick="togglePwd('confirm-password')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button></div>
+              <button type="button" onclick="togglePwd('confirm-password')" style="position:absolute;right:12px;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;line-height:1">👁</button>
+            </div><button type="button" onclick="togglePwd(\'confirm-password\')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem">👁</button></div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">Enviar solicitud</button>
+
+          <div class="form-message" id="form-message"></div>
+        </form>
+
+        <p class="form-footer">
+          ¿Ya tienes cuenta aprobada? <a href="login.html">Inicia sesión</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { registerUser } from './js/auth.js';
+
+    const form = document.getElementById('register-form');
+    const message = document.getElementById('form-message');
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = `form-message show form-message--${type}`;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      message.className = 'form-message';
+
+      const phone = form.phone.value.trim();
+      const username = form.username.value.trim();
+      const password = form.password.value;
+      const confirmPassword = form['confirm-password'].value;
+
+      if (!phone) {
+        showMessage('El número de teléfono es obligatorio.', 'error');
+        return;
+      }
+
+      if (username.length < 3) {
+        showMessage('El nombre de usuario debe tener al menos 3 caracteres.', 'error');
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage('La contraseña debe tener al menos 8 caracteres.', 'error');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage('Las contraseñas no coinciden.', 'error');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+
+      try {
+        await registerUser({ phone, username, password });
+        form.reset();
+        showMessage('✅ Solicitud enviada. Espera aprobación del administrador.', 'success');
+        alert('✅ Solicitud enviada correctamente. Un administrador revisará tu cuenta pronto.');
+      } catch (error) {
+        const msg = error.message || 'No se pudo enviar la solicitud.';
+        showMessage('❌ ' + msg, 'error');
+        alert('❌ Error: ' + msg);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+
+  <script>
+  function togglePwd(id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  }
+  </script>
+</body>
+</html>
