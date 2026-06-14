@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel administrador — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <span class="mark">⚘</span> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="redes.html">Redes</a>
+      <a href="configuracion.html">Configuración</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Administrador</p>
+      <nav class="sidebar__links">
+        <a href="#resumen" class="active" data-tab="resumen">Resumen</a>
+        <a href="#solicitudes" data-tab="solicitudes">Solicitudes</a>
+        <a href="#miembros" data-tab="miembros">Miembros</a>
+        <a href="#cursos" data-tab="cursos">Cursos</a>
+        <a href="#noticias" data-tab="noticias">Noticias</a>
+        <a href="#configuracion" data-tab="configuracion">Configuración</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+
+      <!-- RESUMEN -->
+      <div class="tab-section" id="resumen">
+        <div class="panel-header">
+          <h1 class="section-title">Resumen</h1>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="usuarios">—</div>
+            <div class="stat-card__label">Usuarios registrados</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="solicitudes">—</div>
+            <div class="stat-card__label">Solicitudes pendientes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="cursos">—</div>
+            <div class="stat-card__label">Cursos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" data-stat="aprobados">—</div>
+            <div class="stat-card__label">Miembros activos</div>
+          </div>
+        </div>
+        <p class="section-subtitle">Actividad reciente y métricas generales de la academia se mostrarán aquí.</p>
+      </div>
+
+      <!-- SOLICITUDES -->
+      <div class="tab-section hidden" id="solicitudes">
+        <div class="panel-header">
+          <h1 class="section-title">Solicitudes</h1>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Usuario</th>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody data-requests-body>
+              <tr><td colspan="6">Cargando solicitudes…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MIEMBROS -->
+      <div class="tab-section hidden" id="miembros">
+        <div class="panel-header">
+          <h1 class="section-title">Miembros</h1>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center">
+          <input type="search" placeholder="Buscar por usuario o teléfono…" class="field" style="flex:1;min-width:180px" data-member-search />
+          <select data-member-sort class="field" style="min-width:160px;padding:0.5rem">
+            <option value="nuevo">Más nuevos primero</option>
+            <option value="viejo">Más viejos primero</option>
+            <option value="rango-asc">Menor rango primero</option>
+            <option value="rango-desc">Mayor rango primero</option>
+          </select>
+        </div>
+        <div data-members-body style="margin-top:1rem">
+          <p class="section-subtitle">Cargando miembros…</p>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div class="tab-section hidden" id="cursos">
+        <div class="panel-header">
+          <h1 class="section-title">Cursos</h1>
+          <button class="btn btn--primary btn--small" data-new-course>Crear curso</button>
+        </div>
+        <div class="card-grid" data-courses-grid>
+          <p class="section-subtitle">Cargando cursos…</p>
+        </div>
+      </div>
+
+      <!-- CONFIGURACIÓN -->
+      <div class="tab-section hidden" id="configuracion">
+        <div class="panel-header">
+          <h1 class="section-title">Configuración</h1>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Logo</h3>
+            <p class="section-subtitle">Sube una nueva imagen para el logo de la academia.</p>
+            <button class="btn btn--outline btn--small">Cambiar logo</button>
+          </div>
+          <div class="card">
+            <h3>Textos</h3>
+            <p class="section-subtitle">Edita el subtítulo y el lema mostrados en la pantalla de inicio.</p>
+            <button class="btn btn--outline btn--small">Editar textos</button>
+          </div>
+          <div class="card">
+            <h3>Enlaces</h3>
+            <p class="section-subtitle">Configura los enlaces de redes sociales y descargas de cursos.</p>
+            <button class="btn btn--outline btn--small">Editar enlaces</button>
+          </div>
+          <div class="card">
+            <h3>Apariencia</h3>
+            <p class="section-subtitle">Ajusta colores, tipografías y animaciones del sitio.</p>
+            <button class="btn btn--outline btn--small">Editar apariencia</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="tab-section hidden" id="noticias">
+        <div class="panel-header">
+          <h1 class="section-title">Noticias</h1>
+          <button class="btn btn--primary btn--small" id="btn-nueva-noticia">+ Nueva noticia</button>
+        </div>
+        <div id="noticias-admin-grid">
+          <p class="section-subtitle">Cargando...</p>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- MODAL NOTICIA -->
+  <div id="noticia-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="noticia-modal-title" class="section-title" style="margin:0;font-size:1.1rem">Nueva noticia</h2>
+        <button id="noticia-modal-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="noticia-form">
+        <div class="field">
+          <label>Título</label>
+          <input type="text" name="titulo" required placeholder="Ej: Nueva clase de Linux este viernes" />
+        </div>
+        <div class="field">
+          <label>Categoría</label>
+          <select name="categoria">
+            <option value="anuncio">Anuncio</option>
+            <option value="clase">Clase</option>
+            <option value="evento">Evento</option>
+            <option value="importante">⚠️ Importante</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Contenido</label>
+          <textarea name="contenido" rows="5" required placeholder="Escribe el contenido de la noticia..."></textarea>
+        </div>
+        <div class="field">
+          <label>Enlace (opcional)</label>
+          <input type="url" name="enlace" placeholder="https://..." />
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="noticia-publicado" checked />
+          <label for="noticia-publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar noticia</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+
+  <!-- MODAL CURSO -->
+  <div id="course-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:90%;max-width:500px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="modal-title" class="section-title" style="margin:0">Crear curso</h2>
+        <button id="modal-close" class="btn btn--small btn--danger">&#10005;</button>
+      </div>
+      <form id="course-form">
+        <div class="field"><label>Título</label><input type="text" name="titulo" required placeholder="Ej: Clase 1 - Introducción a Linux" /></div>
+        <div class="field"><label>Carpeta / Categoría</label><input type="text" name="categoria" placeholder="Ej: Hacking Ético, Linux, WhatsApp..." required /></div>
+        <div class="field"><label>Orden dentro de la carpeta</label><input type="number" name="orden" placeholder="1, 2, 3..." min="1" value="1" /></div>
+        <div class="field"><label>Nivel</label>
+          <select name="nivel">
+            <option value="Básico">Básico</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
+          </select>
+        </div>
+        <div class="field"><label>Descripción / Contenido de la clase</label><textarea name="descripcion" rows="5" placeholder="Escribe el contenido completo de la clase aquí..."></textarea></div>
+        <div class="field"><label>Material (texto o URL)</label><input type="text" name="material" placeholder="Ej: PDF adjunto, link de drive..." /></div>
+        <div class="field"><label>Enlace de la clase (YouTube, Drive, etc.)</label><input type="url" name="enlace" placeholder="https://..." /></div>
+        <div class="field"><label>Enlace de descarga</label><input type="url" name="descarga" placeholder="https://..." /></div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="publicado" checked />
+          <label for="publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar clase</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      fetchAllUsers,
+      fetchAllCourses,
+      approveUser,
+      rejectUser,
+      suspendUser,
+      deleteUserProfile,
+      formatFecha,
+    } from './js/admin.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, updateDoc, addDoc, deleteDoc, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    /* --- Navegación entre pestañas --- */
+    const tabs = document.querySelectorAll('[data-tab]');
+    const sections = document.querySelectorAll('.tab-section');
+
+    function activateTab(name) {
+      tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === name));
+      sections.forEach((s) => s.classList.toggle('hidden', s.id !== name));
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateTab(tab.dataset.tab);
+      });
+    });
+
+    const initial = window.location.hash.replace('#', '') || 'resumen';
+    activateTab(initial);
+
+    /* --- Carga de datos protegida por rol administrador --- */
+    requireAdmin('index.html').then(async (admin) => {
+      if (!admin) return;
+
+      const users = await fetchAllUsers();
+      renderStats(users);
+      renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
+      renderMembers(users);
+
+      const courses = await fetchAllCourses();
+      renderCourses(courses);
+    });
+
+    function badge(estado) {
+      const labels = {
+        [ESTADOS.PENDIENTE]: 'Pendiente',
+        [ESTADOS.APROBADO]: 'Aprobado',
+        [ESTADOS.SUSPENDIDO]: 'Suspendido',
+        [ESTADOS.RECHAZADO]: 'Rechazado',
+      };
+      return `<span class="badge badge--${estado}">${labels[estado] || estado}</span>`;
+    }
+
+    function renderStats(users) {
+      document.querySelector('[data-stat="usuarios"]').textContent = users.length;
+      document.querySelector('[data-stat="solicitudes"]').textContent =
+        users.filter((u) => u.estado === ESTADOS.PENDIENTE).length;
+      document.querySelector('[data-stat="aprobados"]').textContent =
+        users.filter((u) => u.estado === ESTADOS.APROBADO).length;
+    }
+
+    function renderRequests(requests) {
+      const body = document.querySelector('[data-requests-body]');
+
+      if (requests.length === 0) {
+        body.innerHTML = '<tr><td colspan="6">No hay solicitudes pendientes.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = requests.map((u) => `
+        <tr data-uid="${u.uid}">
+          <td><img src="${u.photoURL || 'assets/img/avatar-placeholder.svg'}" alt="" width="36" height="36" style="border-radius:50%"></td>
+          <td>${u.username}</td>
+          <td>${u.phone || '—'}</td>
+          <td>${formatFecha(u.fechaIngreso)}</td>
+          <td>${badge(u.estado)}</td>
+          <td class="table-actions">
+            <button class="btn btn--small btn--outline" data-action="aprobar">Aprobar</button>
+            <button class="btn btn--small btn--danger" data-action="rechazar">Rechazar</button>
+            <a class="btn btn--small btn--ghost" href="perfil.html?uid=${u.uid}">Ver perfil</a>
+          </td>
+        </tr>
+      `).join('');
+
+      body.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          const row = e.target.closest('tr');
+          const uid = row.dataset.uid;
+          if (btn.dataset.action === 'aprobar') await approveUser(uid);
+          if (btn.dataset.action === 'rechazar') await rejectUser(uid);
+          row.remove();
+        });
+      });
+    }
+
+    function renderMembers(users) {
+      const body = document.querySelector('[data-members-body]');
+
+      function paint(list) {
+        if (list.length === 0) {
+          body.innerHTML = '<p class="section-subtitle">Sin resultados.</p>';
+          return;
+        }
+
+        const RANGOS = ['Recluta','Aprendiz','Iniciado','Operador','Especialista','Leyenda','Colaborador','Mentor','Coordinador','Moderador','Administrador','Director','Fundador'];
+
+        body.innerHTML = list.map((u) => `
+          <div class="card" data-uid="${u.uid}" style="margin-bottom:1rem;padding:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
+              <div>
+                <strong>${u.username}</strong>
+                <small style="color:#888;display:block">${u.rol}</small>
+              </div>
+              ${badge(u.estado)}
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
+              <label style="color:#aaa;font-size:0.8rem">Rango:</label>
+              <select class="rango-select" data-uid="${u.uid}" style="background:#111;color:#fff;border:1px solid #444;border-radius:6px;padding:5px 10px;font-size:0.82rem;flex:1;min-width:130px">
+                ${RANGOS.map(r => '<option value="' + r + '" ' + (u.rango === r ? 'selected' : '') + '>' + r + '</option>').join('')}
+              </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
+              <label style="color:#aaa;font-size:0.8rem">WhatsApp:</label>
+              <button class="whatsapp-toggle" data-uid="${u.uid}" data-en-grupo="${u.enGrupo ? 'true' : 'false'}"
+                style="background:${u.enGrupo ? '#25d36622' : '#ff3b3b22'};color:${u.enGrupo ? '#25d366' : '#ff3b3b'};border:1px solid ${u.enGrupo ? '#25d366' : '#ff3b3b'};border-radius:20px;padding:4px 12px;font-size:0.78rem;cursor:pointer">
+                ${u.enGrupo ? '✅ En el grupo' : '❌ Fuera del grupo'}
+              </button>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <a class="btn btn--small btn--ghost" href="perfil.html?uid=${u.uid}">Ver perfil</a>
+              <button class="btn btn--small btn--outline" data-action="suspender">Suspender</button>
+              <button class="btn btn--small btn--danger" data-action="eliminar">Eliminar</button>
+            </div>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('[data-action]').forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            const card = e.target.closest('[data-uid]');
+            const uid = card.dataset.uid;
+            if (btn.dataset.action === 'suspender') {
+              await suspendUser(uid);
+              alert('Usuario suspendido.');
+              location.reload();
+            }
+            if (btn.dataset.action === 'eliminar') {
+              if (confirm('¿Eliminar este perfil de la base de datos?')) {
+                await deleteUserProfile(uid);
+                card.remove();
+              }
+            }
+          });
+        });
+
+        // Rango selector
+        document.querySelectorAll('.rango-select').forEach((sel) => {
+          sel.addEventListener('change', async () => {
+            await updateDoc(doc(db, 'users', sel.dataset.uid), { rango: sel.value });
+            alert('✅ Rango actualizado a: ' + sel.value);
+          });
+        });
+
+        // WhatsApp toggle
+        document.querySelectorAll('.whatsapp-toggle').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const enGrupo = btn.dataset.enGrupo === 'true';
+            const nuevoEstado = !enGrupo;
+            await updateDoc(doc(db, 'users', btn.dataset.uid), { enGrupo: nuevoEstado });
+            btn.dataset.enGrupo = nuevoEstado ? 'true' : 'false';
+            btn.textContent = nuevoEstado ? '✅ En el grupo' : '❌ Fuera del grupo';
+            btn.style.background = nuevoEstado ? '#25d36622' : '#ff3b3b22';
+            btn.style.color = nuevoEstado ? '#25d366' : '#ff3b3b';
+            btn.style.borderColor = nuevoEstado ? '#25d366' : '#ff3b3b';
+          });
+        });
+      }
+
+      const RANGOS_ORDER = ['Recluta','Aprendiz','Iniciado','Operador','Especialista','Leyenda','Colaborador','Mentor','Coordinador','Moderador','Administrador','Director','Fundador'];
+
+      function getSorted(list) {
+        const sort = document.querySelector('[data-member-sort]').value;
+        const sorted = [...list];
+        if (sort === 'nuevo') sorted.sort((a,b) => (b.fechaIngreso?.seconds||0) - (a.fechaIngreso?.seconds||0));
+        if (sort === 'viejo') sorted.sort((a,b) => (a.fechaIngreso?.seconds||0) - (b.fechaIngreso?.seconds||0));
+        if (sort === 'rango-asc') sorted.sort((a,b) => RANGOS_ORDER.indexOf(a.rango||'Recluta') - RANGOS_ORDER.indexOf(b.rango||'Recluta'));
+        if (sort === 'rango-desc') sorted.sort((a,b) => RANGOS_ORDER.indexOf(b.rango||'Recluta') - RANGOS_ORDER.indexOf(a.rango||'Recluta'));
+        return sorted;
+      }
+
+      function filterAndPaint() {
+        const term = document.querySelector('[data-member-search]').value.trim().toLowerCase();
+        const filtered = term
+          ? users.filter(u =>
+              (u.username||'').toLowerCase().includes(term) ||
+              (u.phone||'').toLowerCase().includes(term) ||
+              (u.displayName||'').toLowerCase().includes(term)
+            )
+          : users;
+        paint(getSorted(filtered));
+      }
+
+      paint(getSorted(users));
+
+      document.querySelector('[data-member-search]').addEventListener('input', filterAndPaint);
+      document.querySelector('[data-member-sort]').addEventListener('change', filterAndPaint);
+    }
+
+    // --- Modal crear/editar curso ---
+    const modal = document.getElementById('course-modal');
+    const modalForm = document.getElementById('course-form');
+    const modalTitle = document.getElementById('modal-title');
+    let editingCourseId = null;
+
+    document.querySelector('[data-new-course]').addEventListener('click', () => {
+      editingCourseId = null;
+      modalTitle.textContent = 'Crear curso';
+      modalForm.reset();
+      modal.style.display = 'flex';
+    });
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: modalForm.titulo.value.trim(),
+        categoria: modalForm.categoria.value.trim() || 'General',
+        orden: parseInt(modalForm.orden.value) || 1,
+        nivel: modalForm.nivel.value.trim(),
+        descripcion: modalForm.descripcion.value.trim(),
+        material: modalForm.material.value.trim(),
+        enlace: modalForm.enlace.value.trim(),
+        descarga: modalForm.descarga.value.trim(),
+        publicado: modalForm.publicado.checked,
+      };
+
+      try {
+        if (editingCourseId) {
+          await updateDoc(doc(db, 'courses', editingCourseId), data);
+          alert('✅ Clase actualizada.');
+        } else {
+          await addDoc(collection(db, 'courses'), data);
+          alert('✅ Clase creada.');
+        }
+        modal.style.display = 'none';
+        location.reload();
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+
+    function renderCourses(courses) {
+      const grid = document.querySelector('[data-courses-grid]');
+
+      if (courses.length === 0) {
+        grid.innerHTML = '<p class="section-subtitle">Aún no hay cursos creados.</p>';
+        return;
+      }
+
+      // Agrupar por categoría
+      const grupos = {};
+      courses.forEach(c => {
+        const cat = c.categoria || 'General';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(c);
+      });
+
+      grid.innerHTML = Object.entries(grupos).map(([cat, clases]) => `
+        <div style="margin-bottom:1.5rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid #cc220044">
+            <span>📁</span>
+            <strong style="color:#fff">${cat}</strong>
+            <span style="color:#888;font-size:0.8rem">${clases.length} clase${clases.length !== 1 ? 's' : ''}</span>
+          </div>
+          ${clases.sort((a,b) => (a.orden||1)-(b.orden||1)).map(c => `
+            <div class="card" data-course-id="${c.id}" style="margin-bottom:0.75rem;padding:0.75rem">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
+                <div>
+                  <span style="color:#888;font-size:0.75rem">Clase ${c.orden || 1} · ${c.nivel || 'Básico'}</span>
+                  <h3 style="margin:0.25rem 0;font-size:0.95rem">${c.titulo || 'Sin título'}</h3>
+                  <p style="color:#666;font-size:0.82rem;margin:0">${(c.descripcion || '').substring(0,80)}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
+                </div>
+                <span style="color:${c.publicado ? '#25d366' : '#888'};font-size:0.78rem">${c.publicado ? '✅' : '⛔'}</span>
+              </div>
+              <div class="table-actions" style="margin-top:0.5rem">
+                <button class="btn btn--small btn--outline" data-action="editar">Editar</button>
+                <button class="btn btn--small btn--ghost" data-action="toggle">${c.publicado ? 'Ocultar' : 'Publicar'}</button>
+                <button class="btn btn--small btn--danger" data-action="eliminar">🗑</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          const card = e.target.closest('[data-course-id]');
+          const id = card.dataset.courseId;
+          const course = courses.find((c) => c.id === id);
+
+          if (btn.dataset.action === 'editar') {
+            editingCourseId = id;
+            modalTitle.textContent = 'Editar clase';
+            modalForm.titulo.value = course.titulo || '';
+            modalForm.categoria.value = course.categoria || '';
+            modalForm.orden.value = course.orden || 1;
+            modalForm.nivel.value = course.nivel || 'Básico';
+            modalForm.descripcion.value = course.descripcion || '';
+            modalForm.material.value = course.material || '';
+            modalForm.enlace.value = course.enlace || '';
+            modalForm.descarga.value = course.descarga || '';
+            modalForm.publicado.checked = course.publicado !== false;
+            modal.style.display = 'flex';
+          }
+
+          if (btn.dataset.action === 'toggle') {
+            await updateDoc(doc(db, 'courses', id), { publicado: !course.publicado });
+            alert(course.publicado ? '⛔ Curso ocultado.' : '✅ Curso publicado.');
+            location.reload();
+          }
+
+          if (btn.dataset.action === 'eliminar') {
+            if (confirm('¿Eliminar este curso?')) {
+              await deleteDoc(doc(db, 'courses', id));
+              card.remove();
+            }
+          }
+        });
+      });
+    }
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const modal = document.getElementById('noticia-modal');
+    const form = document.getElementById('noticia-form');
+    const grid = document.getElementById('noticias-admin-grid');
+    let editingId = null;
+
+    const CATEGORIAS = {
+      clase: { label: 'Clase', color: '#00bfff' },
+      evento: { label: 'Evento', color: '#ff6b35' },
+      anuncio: { label: 'Anuncio', color: '#a855f7' },
+      importante: { label: '⚠️ Importante', color: '#ff3b3b' },
+    };
+
+    async function loadNoticias() {
+      const q = query(collection(db, 'noticias'), orderBy('fecha', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        grid.innerHTML = '<p class="section-subtitle">No hay noticias aún. ¡Crea la primera!</p>';
+        return;
+      }
+      grid.innerHTML = snap.docs.map(d => {
+        const n = d.data();
+        const cat = CATEGORIAS[n.categoria] || { label: n.categoria, color: '#aaa' };
+        const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+        return `
+          <div class="card" style="margin-bottom:1rem" data-noticia-id="${d.id}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
+              <div>
+                <span style="background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color};border-radius:20px;padding:2px 10px;font-size:0.75rem;font-weight:600">${cat.label}</span>
+                <span style="color:#888;font-size:0.78rem;margin-left:0.5rem">${fecha}</span>
+                ${n.publicado ? '' : '<span style="color:#f59e0b;font-size:0.78rem;margin-left:0.5rem">⛔ Oculta</span>'}
+              </div>
+              <div style="display:flex;gap:0.5rem">
+                <button class="btn btn--small btn--outline" data-action="editar">Editar</button>
+                <button class="btn btn--small btn--ghost" data-action="toggle">${n.publicado ? 'Ocultar' : 'Publicar'}</button>
+                <button class="btn btn--small btn--danger" data-action="eliminar">🗑</button>
+              </div>
+            </div>
+            <h3 style="margin:0.5rem 0 0.25rem">${n.titulo}</h3>
+            <p class="section-subtitle" style="margin:0;white-space:pre-wrap">${n.contenido.substring(0,150)}${n.contenido.length > 150 ? '...' : ''}</p>
+          </div>`;
+      }).join('');
+
+      grid.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const card = btn.closest('[data-noticia-id]');
+          const id = card.dataset.noticiaId;
+          const noticia = snap.docs.find(d => d.id === id)?.data();
+
+          if (btn.dataset.action === 'editar') {
+            editingId = id;
+            document.getElementById('noticia-modal-title').textContent = 'Editar noticia';
+            form.titulo.value = noticia.titulo || '';
+            form.categoria.value = noticia.categoria || 'anuncio';
+            form.contenido.value = noticia.contenido || '';
+            form.enlace.value = noticia.enlace || '';
+            form.publicado.checked = noticia.publicado !== false;
+            modal.style.display = 'flex';
+          }
+          if (btn.dataset.action === 'toggle') {
+            await updateDoc(doc(db, 'noticias', id), { publicado: !noticia.publicado });
+            await loadNoticias();
+          }
+          if (btn.dataset.action === 'eliminar') {
+            if (confirm('¿Eliminar esta noticia?')) {
+              await deleteDoc(doc(db, 'noticias', id));
+              await loadNoticias();
+            }
+          }
+        });
+      });
+    }
+
+    document.getElementById('btn-nueva-noticia').addEventListener('click', () => {
+      editingId = null;
+      document.getElementById('noticia-modal-title').textContent = 'Nueva noticia';
+      form.reset();
+      form.publicado.checked = true;
+      modal.style.display = 'flex';
+    });
+
+    document.getElementById('noticia-modal-close').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: form.titulo.value.trim(),
+        categoria: form.categoria.value,
+        contenido: form.contenido.value.trim(),
+        enlace: form.enlace.value.trim(),
+        publicado: form.publicado.checked,
+        fecha: serverTimestamp(),
+      };
+      try {
+        if (editingId) {
+          await updateDoc(doc(db, 'noticias', editingId), data);
+          alert('✅ Noticia actualizada.');
+        } else {
+          await addDoc(collection(db, 'noticias'), data);
+          alert('✅ Noticia publicada.');
+        }
+        modal.style.display = 'none';
+        await loadNoticias();
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+
+    // Load on tab click
+    document.querySelectorAll('[data-tab="noticias"]').forEach(t => {
+      t.addEventListener('click', loadNoticias);
+    });
+  </script>
+</body>
+</html>
