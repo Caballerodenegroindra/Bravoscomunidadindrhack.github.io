@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cursos — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .curso-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .curso-card:hover { border-color: #cc2200; box-shadow: 0 0 12px #cc220033; }
+    .curso-card.expanded { border-color: #00bfff; }
+    .curso-descripcion {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      color: #aaa;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+      white-space: pre-wrap;
+    }
+    .curso-descripcion.full {
+      display: block;
+      -webkit-line-clamp: unset;
+    }
+    .categoria-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #cc220044;
+    }
+    .categoria-icon { font-size: 1.4rem; }
+    .nivel-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .nivel-basico { background: #00bfff22; color: #00bfff; border: 1px solid #00bfff; }
+    .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b; }
+    .nivel-avanzado { background: #cc220022; color: #cc2200; border: 1px solid #cc2200; }
+    .expand-hint { color: #555; font-size: 0.75rem; margin-top: 0.25rem; }
+    .curso-actions { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand"><span class="mark">⚘</span> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </header>
+
+  <main>
+    <div class="container section">
+      <h1 class="section-title">Nuestros <span class="accent">Cursos</span></h1>
+      <p class="section-subtitle">Rutas de aprendizaje en informática, ciberseguridad, hacking ético y privacidad digital.</p>
+
+      <!-- Filtro por categoría -->
+      <div id="filtros" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:1.5rem 0"></div>
+
+      <div id="cursos-container">
+        <p class="section-subtitle">Cargando cursos...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal detalle curso -->
+  <div id="curso-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem">
+    <div class="card" style="width:100%;max-width:600px;margin:auto;position:relative">
+      <button id="curso-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.5rem">✕</button>
+      <div id="curso-modal-content"></div>
+    </div>
+  </div>
+
+  <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético</footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, orderBy, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const container = document.getElementById('cursos-container');
+    const filtrosEl = document.getElementById('filtros');
+    const modal = document.getElementById('curso-modal');
+    const modalContent = document.getElementById('curso-modal-content');
+    document.getElementById('curso-modal-close').onclick = () => modal.style.display = 'none';
+
+    const nivelClass = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
+
+    let allCursos = [];
+    let categorias = [];
+    let filtroActivo = 'todos';
+
+    try {
+      // Simple query without composite index
+      const snap = await getDocs(collection(db, 'courses'));
+
+      if (snap.empty) {
+        container.innerHTML = '<p class="section-subtitle">No hay cursos publicados aún.</p>';
+        return;
+      }
+
+      allCursos = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.publicado !== false);
+      categorias = [...new Set(allCursos.map(c => c.categoria || 'General'))];
+
+      // Render filtros
+      filtrosEl.innerHTML = `<button class="btn btn--small btn--primary" data-filtro="todos">Todos</button>` +
+        categorias.map(cat => `<button class="btn btn--small btn--outline" data-filtro="${cat}">${cat}</button>`).join('');
+
+      filtrosEl.querySelectorAll('[data-filtro]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filtroActivo = btn.dataset.filtro;
+          filtrosEl.querySelectorAll('[data-filtro]').forEach(b => b.className = 'btn btn--small btn--outline');
+          btn.className = 'btn btn--small btn--primary';
+          renderCursos();
+        });
+      });
+
+      renderCursos();
+    } catch(e) {
+      container.innerHTML = '<p class="section-subtitle">Error al cargar cursos.</p>';
+    }
+
+    function renderCursos() {
+      const lista = filtroActivo === 'todos'
+        ? allCursos
+        : allCursos.filter(c => (c.categoria || 'General') === filtroActivo);
+
+      if (lista.length === 0) {
+        container.innerHTML = '<p class="section-subtitle">No hay cursos en esta categoría.</p>';
+        return;
+      }
+
+      // Agrupar por categoría
+      const grupos = {};
+      lista.forEach(c => {
+        const cat = c.categoria || 'General';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(c);
+      });
+
+      container.innerHTML = Object.entries(grupos).map(([cat, cursos]) => `
+        <div class="categoria-header">
+          <span class="categoria-icon">📁</span>
+          <h2 style="margin:0;font-size:1.1rem;color:#fff">${cat}</h2>
+          <span style="color:#888;font-size:0.82rem">${cursos.length} clase${cursos.length !== 1 ? 's' : ''}</span>
+        </div>
+        ${cursos.map(c => `
+          <div class="curso-card" data-id="${c.id}">
+            <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}">${c.nivel || 'Básico'}</span>
+            <h3 style="margin:0.25rem 0;font-size:1rem">${c.titulo}</h3>
+            <p class="curso-descripcion">${c.descripcion || ''}</p>
+            <p class="expand-hint">Toca para ver más →</p>
+          </div>
+        `).join('')}
+      `).join('');
+
+      container.querySelectorAll('.curso-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const curso = allCursos.find(c => c.id === card.dataset.id);
+          abrirModal(curso);
+        });
+      });
+    }
+
+    function abrirModal(c) {
+      modalContent.innerHTML = `
+        <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}" style="margin-bottom:0.75rem;display:inline-block">${c.nivel || 'Básico'}</span>
+        <h2 style="margin:0 0 0.75rem;padding-right:2rem">${c.titulo}</h2>
+        <p style="color:#aaa;white-space:pre-wrap;line-height:1.7;margin-bottom:1.25rem">${c.descripcion || ''}</p>
+        ${c.material ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">📄 <strong style="color:#fff">Material:</strong> ${c.material}</p>` : ''}
+        ${c.enlace ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">🔗 <strong style="color:#fff">Enlace:</strong> <a href="${c.enlace}" target="_blank" style="color:#00bfff">${c.enlace}</a></p>` : ''}
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.25rem">
+          ${c.descarga ? `<a href="${c.descarga}" target="_blank" download class="btn btn--primary">⬇ Descargar material</a>` : ''}
+          ${c.enlace ? `<a href="${c.enlace}" target="_blank" class="btn btn--outline">🔗 Ver clase</a>` : ''}
+        </div>
+      `;
+      modal.style.display = 'flex';
+      modal.scrollTop = 0;
+    }
+  </script>
+</body>
+</html>
