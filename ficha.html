@@ -304,7 +304,7 @@
       document.getElementById('ficha-rango').textContent = profile.rango || 'Recluta';
       document.getElementById('ficha-rango-badge').textContent = (profile.rango || 'Recluta').toUpperCase();
       document.getElementById('ficha-phone').textContent = profile.phone || '—';
-      document.getElementById('ficha-rol').textContent = (profile.rol || 'usuario').toUpperCase();
+      
       document.getElementById('ficha-estado').textContent = (profile.estado || '—').toUpperCase();
 
       if (profile.photoURL) {
@@ -330,13 +330,12 @@
 
       // Cargar proyectos aprobados del usuario
       try {
-        const { collection: col, query: q, where: wh, getDocs: gd } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        const proySnap = await gd(q(col(db, 'proyectos'), wh('uid', '==', profile.uid), wh('aprobado', '==', true)));
+        const proySnap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', profile.uid), where('aprobado', '==', true)));
         const proyEl = document.getElementById('ficha-proyectos');
         if (!proySnap.empty) {
           proyEl.innerHTML = proySnap.docs.map(d => {
             const p = d.data();
-            return `<div class="ficha-curso-item">${p.nombre}</div>`;
+            return '<div class="ficha-curso-item">' + p.nombre + '</div>';
           }).join('');
         }
       } catch(e) {}
