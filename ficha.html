@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Ficha — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ---- Card para descargar ---- */
+    #ficha-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem 1rem;
+    }
+
+    #ficha-card {
+      width: 100%;
+      max-width: 480px;
+      background: #0a0a0f;
+      border: 2px solid #cc2200;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Share Tech Mono', monospace;
+      box-shadow: 0 0 40px #cc220033, 0 0 80px #00bfff11;
+    }
+
+    .ficha-header {
+      background: linear-gradient(135deg, #1a0505 0%, #0a0a1a 100%);
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid #cc220066;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ficha-header::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, #cc220022, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .ficha-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      color: #00bfff;
+      letter-spacing: 4px;
+      opacity: 0.8;
+      margin-bottom: 0.25rem;
+    }
+
+    .ficha-academy {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+
+    .ficha-academy span { color: #cc2200; }
+
+    .ficha-badge-rango {
+      display: inline-block;
+      margin-top: 0.75rem;
+      background: #cc220022;
+      border: 1px solid #cc2200;
+      border-radius: 20px;
+      padding: 3px 14px;
+      font-size: 0.75rem;
+      color: #ff6644;
+      letter-spacing: 2px;
+    }
+
+    .ficha-body {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ficha-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid #00bfff;
+      object-fit: cover;
+      box-shadow: 0 0 12px #00bfff44;
+    }
+
+    .ficha-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .ficha-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 0.2rem;
+    }
+
+    .ficha-label {
+      font-size: 0.65rem;
+      color: #555;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    .ficha-value {
+      font-size: 0.85rem;
+      color: #00bfff;
+    }
+
+    .ficha-divider {
+      border: none;
+      border-top: 1px solid #cc220033;
+      margin: 0;
+    }
+
+    .ficha-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .ficha-cursos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .ficha-curso-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    .ficha-curso-item::before {
+      content: '▸';
+      color: #cc2200;
+    }
+
+    .ficha-footer {
+      background: #050508;
+      border-top: 1px solid #cc220033;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ficha-footer-text {
+      font-size: 0.65rem;
+      color: #333;
+      letter-spacing: 1px;
+    }
+
+    .ficha-watermark {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem;
+      color: #cc220044;
+      letter-spacing: 3px;
+    }
+
+    /* Circuit decoration lines */
+    .circuit-line {
+      position: absolute;
+      background: #00bfff;
+      opacity: 0.15;
+    }
+
+    #download-btn {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    #loading-msg {
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </header>
+
+  <main>
+    <div class="container section">
+      <h1 class="section-title">Mi <span class="accent">Ficha</span></h1>
+      <p class="section-subtitle">Descarga tu ficha de aprendizaje y compártela con la comunidad.</p>
+
+      <div id="ficha-wrapper">
+        <p id="loading-msg">Cargando tu ficha...</p>
+
+        <!-- FICHA CARD -->
+        <div id="ficha-card" style="display:none">
+          <div class="ficha-header">
+            <img src="assets/img/logo-indrhack.png" alt="Logo" style="width:48px;height:48px;object-fit:contain;margin-bottom:0.5rem;filter:grayscale(20%)">
+            <div class="ficha-academy">INDR<span>HACK</span></div>
+            <div class="ficha-badge-rango" id="ficha-rango-badge">RECLUTA</div>
+          </div>
+
+          <div class="ficha-body">
+            <div class="ficha-info-row">
+              <img class="ficha-avatar" src="assets/img/avatar-placeholder.svg" alt="avatar" id="ficha-avatar" />
+              <div>
+                <div class="ficha-name" id="ficha-username">—</div>
+                <div class="ficha-label">Miembro desde</div>
+                <div class="ficha-value" id="ficha-fecha">—</div>
+              </div>
+            </div>
+
+            <hr class="ficha-divider" />
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+              <div class="ficha-field">
+                <div class="ficha-label">Rango</div>
+                <div class="ficha-value" id="ficha-rango">—</div>
+              </div>
+              <div class="ficha-field">
+                <div class="ficha-label">Teléfono</div>
+                <div class="ficha-value" id="ficha-phone">—</div>
+              </div>
+              <div class="ficha-field">
+                <div class="ficha-label">Rol</div>
+                <div class="ficha-value" id="ficha-rol">—</div>
+              </div>
+              <div class="ficha-field">
+                <div class="ficha-label">Estado</div>
+                <div class="ficha-value" style="color:#25d366" id="ficha-estado">—</div>
+              </div>
+            </div>
+
+            <hr class="ficha-divider" />
+
+            <div>
+              <div class="ficha-label" style="margin-bottom:0.5rem">Cursos / Niveles aprobados</div>
+              <div class="ficha-cursos" id="ficha-cursos">
+                <div class="ficha-curso-item">Sin cursos registrados aún</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ficha-footer">
+            <div class="ficha-footer-text">INDRHACK.GITHUB.IO</div>
+            <div class="ficha-watermark">INDRHACK</div>
+          </div>
+        </div>
+
+        <!-- Botón descargar -->
+        <button id="download-btn" class="btn btn--primary" style="display:none">
+          ⬇ Descargar ficha como imagen
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético</footer>
+
+  <!-- html2canvas para convertir a imagen -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { requireApprovedUser } from './js/auth.js';
+
+    const loadingMsg = document.getElementById('loading-msg');
+    const fichaCard = document.getElementById('ficha-card');
+    const downloadBtn = document.getElementById('download-btn');
+
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+
+      // Llenar datos
+      document.getElementById('ficha-username').textContent = profile.username || profile.displayName || '—';
+      document.getElementById('ficha-rango').textContent = profile.rango || 'Recluta';
+      document.getElementById('ficha-rango-badge').textContent = (profile.rango || 'Recluta').toUpperCase();
+      document.getElementById('ficha-phone').textContent = profile.phone || '—';
+      document.getElementById('ficha-rol').textContent = (profile.rol || 'usuario').toUpperCase();
+      document.getElementById('ficha-estado').textContent = (profile.estado || '—').toUpperCase();
+
+      if (profile.photoURL) {
+        document.getElementById('ficha-avatar').src = profile.photoURL;
+      }
+
+      const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      document.getElementById('ficha-fecha').textContent = fecha
+        ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
+        : '—';
+
+      // Cargar cursos aprobados (todos los publicados por ahora)
+      try {
+        const snap = await getDocs(collection(db, 'courses'));
+        const cursos = snap.docs.map(d => d.data()).filter(c => c.publicado !== false);
+        const cursosEl = document.getElementById('ficha-cursos');
+        if (cursos.length > 0) {
+          cursosEl.innerHTML = cursos.slice(0, 5).map(c =>
+            `<div class="ficha-curso-item">${c.categoria || ''} — ${c.titulo}</div>`
+          ).join('');
+        }
+      } catch(e) {}
+
+      loadingMsg.style.display = 'none';
+      fichaCard.style.display = 'block';
+      downloadBtn.style.display = 'block';
+    });
+
+    // Descargar como imagen
+    downloadBtn.addEventListener('click', async () => {
+      downloadBtn.textContent = '⏳ Generando imagen...';
+      downloadBtn.disabled = true;
+
+      try {
+        const canvas = await html2canvas(fichaCard, {
+          backgroundColor: '#0a0a0f',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+        });
+
+        const link = document.createElement('a');
+        link.download = 'ficha-indrhack.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch(e) {
+        alert('Error al generar la imagen: ' + e.message);
+      }
+
+      downloadBtn.textContent = '⬇ Descargar ficha como imagen';
+      downloadBtn.disabled = false;
+    });
+  </script>
+</body>
+</html>
