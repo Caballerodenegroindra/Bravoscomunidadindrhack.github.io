@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi Ficha — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Share+Tech+Mono&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ---- Card para descargar ---- */
@@ -20,19 +20,19 @@
     #ficha-card {
       width: 100%;
       max-width: 480px;
-      background: #0a0a0f;
-      border: 2px solid #cc2200;
+      background: #0d1117;
+      border: 2px solid #b8860b;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       font-family: 'Share Tech Mono', monospace;
-      box-shadow: 0 0 40px #cc220033, 0 0 80px #00bfff11;
+      box-shadow: 0 0 40px #b8860b33, 0 0 80px #ffffff08;
     }
 
     .ficha-header {
-      background: linear-gradient(135deg, #1a0505 0%, #0a0a1a 100%);
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
       padding: 1.5rem 1.5rem 1rem;
-      border-bottom: 1px solid #cc220066;
+      border-bottom: 1px solid #b8860b66;
       position: relative;
       overflow: hidden;
     }
@@ -68,12 +68,12 @@
     .ficha-badge-rango {
       display: inline-block;
       margin-top: 0.75rem;
-      background: #cc220022;
-      border: 1px solid #cc2200;
+      background: #b8860b22;
+      border: 1px solid #b8860b;
       border-radius: 20px;
       padding: 3px 14px;
       font-size: 0.75rem;
-      color: #ff6644;
+      color: #ffd700;
       letter-spacing: 2px;
     }
 
@@ -122,7 +122,7 @@
 
     .ficha-divider {
       border: none;
-      border-top: 1px solid #cc220033;
+      border-top: 1px solid #b8860b33;
       margin: 0;
     }
 
@@ -153,7 +153,7 @@
 
     .ficha-footer {
       background: #050508;
-      border-top: 1px solid #cc220033;
+      border-top: 1px solid #b8860b33;
       padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
@@ -169,7 +169,7 @@
     .ficha-watermark {
       font-family: 'Orbitron', sans-serif;
       font-size: 0.6rem;
-      color: #cc220044;
+      color: #b8860b44;
       letter-spacing: 3px;
     }
 
@@ -218,7 +218,7 @@
         <div id="ficha-card" style="display:none">
           <div class="ficha-header">
             <img src="assets/img/logo-indrhack.png" alt="Logo" style="width:48px;height:48px;object-fit:contain;margin-bottom:0.5rem;filter:grayscale(20%)">
-            <div class="ficha-academy">INDR<span>HACK</span></div>
+            <div class="ficha-academy" style="font-size:0.95rem;letter-spacing:1px">FICHA <span>ACADEMIA INDRHACK</span></div>
             <div class="ficha-badge-rango" id="ficha-rango-badge">RECLUTA</div>
           </div>
 
@@ -244,10 +244,6 @@
                 <div class="ficha-value" id="ficha-phone">—</div>
               </div>
               <div class="ficha-field">
-                <div class="ficha-label">Rol</div>
-                <div class="ficha-value" id="ficha-rol">—</div>
-              </div>
-              <div class="ficha-field">
                 <div class="ficha-label">Estado</div>
                 <div class="ficha-value" style="color:#25d366" id="ficha-estado">—</div>
               </div>
@@ -260,6 +256,13 @@
               <div class="ficha-cursos" id="ficha-cursos">
                 <div class="ficha-curso-item">Sin cursos registrados aún</div>
               </div>
+            </div>
+          </div>
+
+          <div style="padding:0.75rem 1.5rem;border-top:1px solid #b8860b33">
+            <div class="ficha-label" style="margin-bottom:0.5rem">Proyectos aprobados</div>
+            <div id="ficha-proyectos">
+              <div class="ficha-curso-item" style="color:#666">Sin proyectos aprobados aún</div>
             </div>
           </div>
 
@@ -322,6 +325,19 @@
           cursosEl.innerHTML = cursos.slice(0, 5).map(c =>
             `<div class="ficha-curso-item">${c.categoria || ''} — ${c.titulo}</div>`
           ).join('');
+        }
+      } catch(e) {}
+
+      // Cargar proyectos aprobados del usuario
+      try {
+        const { collection: col, query: q, where: wh, getDocs: gd } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const proySnap = await gd(q(col(db, 'proyectos'), wh('uid', '==', profile.uid), wh('aprobado', '==', true)));
+        const proyEl = document.getElementById('ficha-proyectos');
+        if (!proySnap.empty) {
+          proyEl.innerHTML = proySnap.docs.map(d => {
+            const p = d.data();
+            return `<div class="ficha-curso-item">${p.nombre}</div>`;
+          }).join('');
         }
       } catch(e) {}
 
