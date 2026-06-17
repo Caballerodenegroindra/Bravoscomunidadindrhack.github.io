@@ -225,26 +225,38 @@
       <form id="proyecto-form">
         <div class="field"><label>Nombre del proyecto</label><input type="text" name="nombre" required placeholder="Ej: Crear número virtual" /></div>
         <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3" placeholder="¿En qué consistió el proyecto?"></textarea></div>
-        <div class="field"><label>Miembro (username)</label><input type="text" name="username" required placeholder="username del miembro" /></div>
-        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
-          <input type="checkbox" name="aprobado" id="proyecto-aprobado" checked />
-          <label for="proyecto-aprobado">Aprobado (aparece en su ficha)</label>
-        </div>
-        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar proyecto</button>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Crear proyecto</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL APROBAR CURSO -->
-  <div id="aprobar-curso-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center;">
-    <div class="card" style="width:92%;max-width:500px;max-height:85vh;overflow-y:auto">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
-        <h2 class="section-title" style="margin:0;font-size:1rem">Aprobar curso a: <span id="aprobar-curso-para" style="color:#00bfff"></span></h2>
-        <button onclick="document.getElementById('aprobar-curso-modal').style.display='none'" class="btn btn--small btn--danger">✕</button>
+  <!-- MODAL LOGROS -->
+  <div id="logros-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:1rem">
+    <div class="card" style="width:100%;max-width:560px;margin:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 class="section-title" style="margin:0;font-size:1.1rem">🏆 Logros de <span id="logros-modal-para" style="color:var(--primary)"></span></h2>
+        <button onclick="document.getElementById('logros-modal').style.display='none'" class="btn btn--small btn--danger">✕</button>
       </div>
-      <p class="section-subtitle" style="margin-bottom:1rem">Selecciona los cursos que este miembro aprobó. Aparecerán en su ficha.</p>
-      <div id="aprobar-cursos-lista" style="margin-bottom:1rem">Cargando cursos...</div>
-      <button id="aprobar-cursos-guardar" class="btn btn--primary" style="width:100%">Guardar aprobaciones</button>
+
+      <!-- Tabs dentro del modal -->
+      <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;border-bottom:1px solid var(--border);padding-bottom:0.75rem">
+        <button class="btn btn--small btn--primary" id="logros-tab-cursos" onclick="switchLogrosTab('cursos')">📚 Cursos</button>
+        <button class="btn btn--small btn--outline" id="logros-tab-proyectos" onclick="switchLogrosTab('proyectos')">📋 Proyectos</button>
+      </div>
+
+      <!-- Cursos tab -->
+      <div id="logros-seccion-cursos">
+        <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los cursos aprobados y asigna una puntuación del 1 al 10.</p>
+        <div id="logros-cursos-lista">Cargando...</div>
+        <button onclick="guardarLogros('cursos')" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar cursos</button>
+      </div>
+
+      <!-- Proyectos tab -->
+      <div id="logros-seccion-proyectos" style="display:none">
+        <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los proyectos en los que participó y asigna una puntuación del 1 al 10.</p>
+        <div id="logros-proyectos-lista">Cargando...</div>
+        <button onclick="guardarLogros('proyectos')" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar proyectos</button>
+      </div>
     </div>
   </div>
 
@@ -446,13 +458,13 @@
                 card.remove();
               }
             }
-            if (btn.dataset.action === 'aprobar-curso') {
+            if (btn.dataset.action === 'logros') {
               const u = users.find(u => u.uid === uid);
-              window._aprobarCursoUid = uid;
-              window._aprobarCursoUsername = u?.username || uid;
-              document.getElementById('aprobar-curso-modal').style.display = 'flex';
-              document.getElementById('aprobar-curso-para').textContent = u?.username || uid;
-              cargarCursosParaAprobar();
+              window._logrosUid = uid;
+              window._logrosUsername = u?.username || uid;
+              document.getElementById('logros-modal-para').textContent = u?.username || uid;
+              document.getElementById('logros-modal').style.display = 'flex';
+              cargarLogros(uid);
             }
           });
         });
@@ -656,238 +668,46 @@
     }
   </script>
 
-  <script type="module">
-    import { db } from './js/firebase-config.js';
-    import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    const modal = document.getElementById('noticia-modal');
-    const form = document.getElementById('noticia-form');
-    const grid = document.getElementById('noticias-admin-grid');
-    let editingId = null;
-
-    const CATEGORIAS = {
-      clase: { label: 'Clase', color: '#00bfff' },
-      evento: { label: 'Evento', color: '#ff6b35' },
-      anuncio: { label: 'Anuncio', color: '#a855f7' },
-      importante: { label: '⚠️ Importante', color: '#ff3b3b' },
-    };
-
-    async function loadNoticias() {
-      const q = query(collection(db, 'noticias'), orderBy('fecha', 'desc'));
-      const snap = await getDocs(q);
-      if (snap.empty) {
-        grid.innerHTML = '<p class="section-subtitle">No hay noticias aún. ¡Crea la primera!</p>';
-        return;
-      }
-      grid.innerHTML = snap.docs.map(d => {
-        const n = d.data();
-        const cat = CATEGORIAS[n.categoria] || { label: n.categoria, color: '#aaa' };
-        const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
-        return `
-          <div class="card" style="margin-bottom:1rem" data-noticia-id="${d.id}">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
-              <div>
-                <span style="background:${cat.color}22;color:${cat.color};border:1px solid ${cat.color};border-radius:20px;padding:2px 10px;font-size:0.75rem;font-weight:600">${cat.label}</span>
-                <span style="color:#888;font-size:0.78rem;margin-left:0.5rem">${fecha}</span>
-                ${n.publicado ? '' : '<span style="color:#f59e0b;font-size:0.78rem;margin-left:0.5rem">⛔ Oculta</span>'}
-              </div>
-              <div style="display:flex;gap:0.5rem">
-                <button class="btn btn--small btn--outline" data-action="editar">Editar</button>
-                <button class="btn btn--small btn--ghost" data-action="toggle">${n.publicado ? 'Ocultar' : 'Publicar'}</button>
-                <button class="btn btn--small btn--danger" data-action="eliminar">🗑</button>
-              </div>
-            </div>
-            <h3 style="margin:0.5rem 0 0.25rem">${n.titulo}</h3>
-            <p class="section-subtitle" style="margin:0;white-space:pre-wrap">${n.contenido.substring(0,150)}${n.contenido.length > 150 ? '...' : ''}</p>
-          </div>`;
-      }).join('');
-
-      grid.querySelectorAll('[data-action]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const card = btn.closest('[data-noticia-id]');
-          const id = card.dataset.noticiaId;
-          const noticia = snap.docs.find(d => d.id === id)?.data();
-
-          if (btn.dataset.action === 'editar') {
-            editingId = id;
-            document.getElementById('noticia-modal-title').textContent = 'Editar noticia';
-            form.titulo.value = noticia.titulo || '';
-            form.categoria.value = noticia.categoria || 'anuncio';
-            form.contenido.value = noticia.contenido || '';
-            form.enlace.value = noticia.enlace || '';
-            form.publicado.checked = noticia.publicado !== false;
-            modal.style.display = 'flex';
-          }
-          if (btn.dataset.action === 'toggle') {
-            await updateDoc(doc(db, 'noticias', id), { publicado: !noticia.publicado });
-            await loadNoticias();
-          }
-          if (btn.dataset.action === 'eliminar') {
-            if (confirm('¿Eliminar esta noticia?')) {
-              await deleteDoc(doc(db, 'noticias', id));
-              await loadNoticias();
-            }
-          }
-        });
-      });
-    }
-
-    document.getElementById('btn-nueva-noticia').addEventListener('click', () => {
-      editingId = null;
-      document.getElementById('noticia-modal-title').textContent = 'Nueva noticia';
-      form.reset();
-      form.publicado.checked = true;
-      modal.style.display = 'flex';
-    });
-
-    document.getElementById('noticia-modal-close').addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = {
-        titulo: form.titulo.value.trim(),
-        categoria: form.categoria.value,
-        contenido: form.contenido.value.trim(),
-        enlace: form.enlace.value.trim(),
-        publicado: form.publicado.checked,
-        fecha: serverTimestamp(),
-      };
-      try {
-        if (editingId) {
-          await updateDoc(doc(db, 'noticias', editingId), data);
-          alert('✅ Noticia actualizada.');
-        } else {
-          await addDoc(collection(db, 'noticias'), data);
-          alert('✅ Noticia publicada.');
-        }
-        modal.style.display = 'none';
-        await loadNoticias();
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
-    });
-
-    // Load on tab click
-    document.querySelectorAll('[data-tab="noticias"]').forEach(t => {
-      t.addEventListener('click', loadNoticias);
-    });
-  </script>
 
   <script type="module">
     import { db } from './js/firebase-config.js';
-    import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    const modal = document.getElementById('proyecto-modal');
-    const form = document.getElementById('proyecto-form');
-    const grid = document.getElementById('proyectos-admin-grid');
+    // ---- LOGROS (cursos y proyectos aprobados por miembro) ----
 
-    async function loadProyectos() {
-      const snap = await getDocs(collection(db, 'proyectos'));
-      if (snap.empty) {
-        grid.innerHTML = '<p class="section-subtitle">No hay proyectos aún.</p>';
-        return;
-      }
+    let _allCourses = null;
+    let _allProyectos = null;
 
-      // Group by project name
-      const proyectos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const grupos = {};
-      proyectos.forEach(p => {
-        if (!grupos[p.nombre]) grupos[p.nombre] = [];
-        grupos[p.nombre].push(p);
-      });
-
-      grid.innerHTML = Object.entries(grupos).map(([nombre, items]) => `
-        <div class="card" style="margin-bottom:1rem">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
-            <h3 style="margin:0">📋 ${nombre}</h3>
-            <span style="color:#888;font-size:0.8rem">${items.length} miembro${items.length!==1?'s':''}</span>
-          </div>
-          ${items.map(p => `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-top:1px solid #222;flex-wrap:wrap;gap:0.5rem">
-              <span style="color:#aaa;font-size:0.85rem">@${p.username || '—'}</span>
-              <div style="display:flex;gap:0.5rem;align-items:center">
-                <span style="color:${p.aprobado ? '#25d366' : '#888'};font-size:0.78rem">${p.aprobado ? '✅ Aprobado' : '⏳ Pendiente'}</span>
-                <button class="btn btn--small btn--outline" onclick="toggleProyecto('${p.id}', ${p.aprobado})">${p.aprobado ? 'Quitar' : 'Aprobar'}</button>
-                <button class="btn btn--small btn--danger" onclick="deleteProyecto('${p.id}')">🗑</button>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `).join('');
-    }
-
-    window.toggleProyecto = async (id, actual) => {
-      await updateDoc(doc(db, 'proyectos', id), { aprobado: !actual });
-      loadProyectos();
+    window.switchLogrosTab = function(tab) {
+      document.getElementById('logros-seccion-cursos').style.display = tab === 'cursos' ? 'block' : 'none';
+      document.getElementById('logros-seccion-proyectos').style.display = tab === 'proyectos' ? 'block' : 'none';
+      document.getElementById('logros-tab-cursos').className = 'btn btn--small ' + (tab === 'cursos' ? 'btn--primary' : 'btn--outline');
+      document.getElementById('logros-tab-proyectos').className = 'btn btn--small ' + (tab === 'proyectos' ? 'btn--primary' : 'btn--outline');
     };
 
-    window.deleteProyecto = async (id) => {
-      if (confirm('¿Eliminar este proyecto?')) {
-        await deleteDoc(doc(db, 'proyectos', id));
-        loadProyectos();
-      }
+    window.cargarLogros = async function(uid) {
+      await cargarLogrosCursos(uid);
+      await cargarLogrosProyectos(uid);
     };
 
-    document.getElementById('btn-nuevo-proyecto').addEventListener('click', () => {
-      form.reset();
-      form.aprobado.checked = true;
-      modal.style.display = 'flex';
-    });
+    async function cargarLogrosCursos(uid) {
+      const lista = document.getElementById('logros-cursos-lista');
+      lista.innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
 
-    document.getElementById('proyecto-modal-close').addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+      if (!_allCourses) {
+        const snap = await getDocs(collection(db, 'courses'));
+        _allCourses = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.publicado !== false);
+      }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Get UID from username
-      const snap = await getDocs(query(collection(db, 'users'), where('username', '==', form.username.value.trim().toLowerCase())));
-      if (snap.empty) { alert('❌ Usuario no encontrado.'); return; }
-      const uid = snap.docs[0].id;
-
-      await addDoc(collection(db, 'proyectos'), {
-        nombre: form.nombre.value.trim(),
-        descripcion: form.descripcion.value.trim(),
-        username: form.username.value.trim().toLowerCase(),
-        uid: uid,
-        aprobado: form.aprobado.checked,
-        fecha: new Date(),
-      });
-
-      alert('✅ Proyecto guardado.');
-      modal.style.display = 'none';
-      loadProyectos();
-    });
-
-    // Load when tab clicked
-    document.querySelectorAll('[data-tab="proyectos"]').forEach(t => {
-      t.addEventListener('click', loadProyectos);
-    });
-  </script>
-
-  <script type="module">
-    import { db } from './js/firebase-config.js';
-    import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    window.cargarCursosParaAprobar = async function() {
-      const lista = document.getElementById('aprobar-cursos-lista');
-      lista.innerHTML = 'Cargando...';
-      const uid = window._aprobarCursoUid;
-
-      // Get all courses
-      const cursosSnap = await getDocs(collection(db, 'courses'));
-      const cursos = cursosSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.publicado !== false);
-
-      // Get already approved courses for this user
+      // Get existing approvals
       const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', uid)));
-      const aprobados = new Set(aprobSnap.docs.map(d => d.data().cursoId));
+      const aprobados = {};
+      aprobSnap.docs.forEach(d => { aprobados[d.data().cursoId] = { docId: d.id, puntuacion: d.data().puntuacion || 5 }; });
 
-      // Group by categoria
+      // Group by category
       const grupos = {};
-      cursos.forEach(c => {
+      _allCourses.forEach(c => {
         const cat = c.categoria || 'General';
         if (!grupos[cat]) grupos[cat] = [];
         grupos[cat].push(c);
@@ -895,40 +715,166 @@
 
       lista.innerHTML = Object.entries(grupos).map(([cat, items]) => `
         <div style="margin-bottom:1rem">
-          <div style="color:#888;font-size:0.75rem;letter-spacing:2px;margin-bottom:0.4rem">📁 ${cat}</div>
-          ${items.map(c => `
-            <label style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid #1a1a1a;cursor:pointer">
-              <input type="checkbox" value="${c.id}" ${aprobados.has(c.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#cc2200" />
-              <span style="font-size:0.85rem;color:#ccc">${c.titulo}</span>
-            </label>
-          `).join('')}
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem">📁 ${cat}</div>
+          ${items.map(c => {
+            const ap = aprobados[c.id];
+            return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+              <input type="checkbox" value="${c.id}" ${ap ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" />
+              <span style="flex:1;font-size:0.85rem;color:var(--text)">${c.titulo}</span>
+              <div style="display:flex;align-items:center;gap:0.35rem">
+                <label style="font-size:0.72rem;color:var(--text-muted)">Nota:</label>
+                <input type="number" min="1" max="10" value="${ap ? ap.puntuacion : 5}" 
+                  style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
+                  data-curso-nota="${c.id}" />
+                <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
+              </div>
+            </div>`;
+          }).join('')}
         </div>
       `).join('');
-    };
+    }
 
-    document.getElementById('aprobar-cursos-guardar').addEventListener('click', async () => {
-      const uid = window._aprobarCursoUid;
-      const username = window._aprobarCursoUsername;
-      const checkboxes = document.querySelectorAll('#aprobar-cursos-lista input[type="checkbox"]');
+    async function cargarLogrosProyectos(uid) {
+      const lista = document.getElementById('logros-proyectos-lista');
+      lista.innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
 
-      // Delete existing approvals
-      const existing = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', uid)));
-      for (const d of existing.docs) await deleteDoc(doc(db, 'cursos_aprobados', d.id));
-
-      // Add new approvals
-      for (const cb of checkboxes) {
-        if (cb.checked) {
-          await addDoc(collection(db, 'cursos_aprobados'), {
-            uid,
-            username,
-            cursoId: cb.value,
-            fecha: new Date(),
-          });
-        }
+      if (!_allProyectos) {
+        const snap = await getDocs(collection(db, 'proyectos_base'));
+        _allProyectos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       }
 
-      alert('✅ Cursos aprobados guardados.');
-      document.getElementById('aprobar-curso-modal').style.display = 'none';
+      // Get existing project approvals for this user
+      const aprobSnap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', uid)));
+      const aprobados = {};
+      aprobSnap.docs.forEach(d => { aprobados[d.data().proyectoId] = { docId: d.id, puntuacion: d.data().puntuacion || 5 }; });
+
+      if (_allProyectos.length === 0) {
+        lista.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem">No hay proyectos creados aún. Créalos en la pestaña Proyectos.</p>';
+        return;
+      }
+
+      lista.innerHTML = _allProyectos.map(p => {
+        const ap = aprobados[p.id];
+        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+          <input type="checkbox" value="${p.id}" ${ap ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" />
+          <span style="flex:1;font-size:0.85rem;color:var(--text)">${p.nombre}</span>
+          <div style="display:flex;align-items:center;gap:0.35rem">
+            <label style="font-size:0.72rem;color:var(--text-muted)">Nota:</label>
+            <input type="number" min="1" max="10" value="${ap ? ap.puntuacion : 5}"
+              style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
+              data-proyecto-nota="${p.id}" />
+            <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.guardarLogros = async function(tipo) {
+      const uid = window._logrosUid;
+      const username = window._logrosUsername;
+
+      if (tipo === 'cursos') {
+        const checks = document.querySelectorAll('#logros-cursos-lista input[type="checkbox"]');
+        const existing = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', uid)));
+        for (const d of existing.docs) await deleteDoc(doc(db, 'cursos_aprobados', d.id));
+
+        for (const cb of checks) {
+          if (cb.checked) {
+            const nota = document.querySelector('[data-curso-nota="' + cb.value + '"]')?.value || 5;
+            await addDoc(collection(db, 'cursos_aprobados'), {
+              uid, username, cursoId: cb.value,
+              puntuacion: parseInt(nota),
+              fecha: new Date(),
+            });
+          }
+        }
+        alert('✅ Cursos guardados.');
+      }
+
+      if (tipo === 'proyectos') {
+        const checks = document.querySelectorAll('#logros-proyectos-lista input[type="checkbox"]');
+        const existing = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', uid)));
+        for (const d of existing.docs) await deleteDoc(doc(db, 'proyectos', d.id));
+
+        for (const cb of checks) {
+          if (cb.checked) {
+            const nota = document.querySelector('[data-proyecto-nota="' + cb.value + '"]')?.value || 5;
+            const proy = _allProyectos.find(p => p.id === cb.value);
+            await addDoc(collection(db, 'proyectos'), {
+              uid, username,
+              proyectoId: cb.value,
+              nombre: proy?.nombre || '',
+              puntuacion: parseInt(nota),
+              aprobado: true,
+              fecha: new Date(),
+            });
+          }
+        }
+        alert('✅ Proyectos guardados.');
+      }
+    };
+
+    // ---- PROYECTOS BASE (catálogo de proyectos) ----
+    const proyGrid = document.getElementById('proyectos-admin-grid');
+    const proyModal = document.getElementById('proyecto-modal');
+    const proyForm = document.getElementById('proyecto-form');
+
+    async function loadProyectos() {
+      if (!proyGrid) return;
+      proyGrid.innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
+      const snap = await getDocs(collection(db, 'proyectos_base'));
+
+      if (snap.empty) {
+        proyGrid.innerHTML = '<p class="section-subtitle">No hay proyectos creados aún.</p>';
+        return;
+      }
+
+      proyGrid.innerHTML = snap.docs.map(d => {
+        const p = { id: d.id, ...d.data() };
+        return `<div class="card" style="margin-bottom:0.75rem;padding:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem">
+            <div>
+              <h3 style="margin:0 0 0.25rem;font-size:1rem">📋 ${p.nombre}</h3>
+              <p style="color:var(--text-soft);font-size:0.82rem;margin:0">${p.descripcion || ''}</p>
+            </div>
+            <button onclick="deleteProyectoBase('${d.id}')" class="btn btn--small btn--danger">🗑</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.deleteProyectoBase = async (id) => {
+      if (confirm('¿Eliminar este proyecto?')) {
+        await deleteDoc(doc(db, 'proyectos_base', id));
+        loadProyectos();
+      }
+    };
+
+    document.getElementById('btn-nuevo-proyecto')?.addEventListener('click', () => {
+      proyForm?.reset();
+      if (proyModal) proyModal.style.display = 'flex';
+    });
+
+    document.getElementById('proyecto-modal-close')?.addEventListener('click', () => {
+      if (proyModal) proyModal.style.display = 'none';
+    });
+
+    proyForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, 'proyectos_base'), {
+        nombre: proyForm.nombre.value.trim(),
+        descripcion: proyForm.descripcion.value.trim(),
+        fecha: new Date(),
+      });
+      alert('✅ Proyecto creado.');
+      if (proyModal) proyModal.style.display = 'none';
+      _allProyectos = null;
+      loadProyectos();
+    });
+
+    // Load proyectos when tab clicked
+    document.querySelectorAll('[data-tab="proyectos"]').forEach(t => {
+      t.addEventListener('click', loadProyectos);
     });
   </script>
 </body>

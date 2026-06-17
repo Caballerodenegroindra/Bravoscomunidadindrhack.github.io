@@ -259,12 +259,7 @@
             </div>
           </div>
 
-          <div style="padding:0.75rem 1.5rem;border-top:1px solid #b8860b33">
-            <div class="ficha-label" style="margin-bottom:0.5rem">Proyectos aprobados</div>
-            <div id="ficha-proyectos">
-              <div class="ficha-curso-item" style="color:#666">Sin proyectos aprobados aún</div>
-            </div>
-          </div>
+
 
           <div class="ficha-footer">
             <div class="ficha-footer-text">INDRHACK.GITHUB.IO</div>
@@ -316,34 +311,43 @@
         ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
         : '—';
 
-      // Cargar cursos aprobados por el admin para este usuario
+      // Cargar cursos aprobados con puntuación
       try {
         const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', profile.uid)));
         const cursosEl = document.getElementById('ficha-cursos');
         if (!aprobSnap.empty) {
-          const cursoIds = aprobSnap.docs.map(d => d.data().cursoId);
+          const items = aprobSnap.docs.map(d => d.data());
           const cursosData = [];
-          for (const id of cursoIds) {
-            const { getDoc: gd, doc: dc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-            const snap = await gd(dc(db, 'courses', id));
-            if (snap.exists()) cursosData.push(snap.data());
+          for (const item of items) {
+            try {
+              const cSnap = await getDoc(doc(db, 'courses', item.cursoId));
+              if (cSnap.exists()) {
+                cursosData.push({ ...cSnap.data(), puntuacion: item.puntuacion || '—' });
+              }
+            } catch(e) {}
           }
           if (cursosData.length > 0) {
             cursosEl.innerHTML = cursosData.map(c =>
-              '<div class="ficha-curso-item">' + (c.categoria || '') + ' — ' + c.titulo + '</div>'
+              '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
+              '<span>' + (c.categoria || '') + ' — ' + c.titulo + '</span>' +
+              '<span style="color:#b8860b;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + c.puntuacion + '/10</span>' +
+              '</div>'
             ).join('');
           }
         }
       } catch(e) {}
 
-      // Cargar proyectos aprobados del usuario
+      // Cargar proyectos aprobados con puntuación
       try {
-        const proySnap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', profile.uid), where('aprobado', '==', true)));
+        const proySnap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', profile.uid)));
         const proyEl = document.getElementById('ficha-proyectos');
         if (!proySnap.empty) {
           proyEl.innerHTML = proySnap.docs.map(d => {
             const p = d.data();
-            return '<div class="ficha-curso-item">' + p.nombre + '</div>';
+            return '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
+              '<span>' + (p.nombre || '—') + '</span>' +
+              '<span style="color:#b8860b;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + (p.puntuacion || '—') + '/10</span>' +
+              '</div>';
           }).join('');
         }
       } catch(e) {}
