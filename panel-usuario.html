@@ -79,6 +79,19 @@
           <p class="section-subtitle">Únete a la comunidad en nuestros canales oficiales.</p>
         </a>
       </div>
+      <!-- Mis logros -->
+      <h2 class="section-title" style="margin-top:2rem">Mis <span class="accent">Logros</span></h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem">
+        <div class="card" style="padding:1rem">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.75rem">📚 CURSOS APROBADOS</div>
+          <div id="mis-cursos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+        </div>
+        <div class="card" style="padding:1rem">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.75rem">🏆 PROYECTOS</div>
+          <div id="mis-proyectos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+        </div>
+      </div>
+
       <!-- Noticias recientes -->
       <h2 class="section-title" style="margin-top:2rem">Últimas <span class="accent">noticias</span></h2>
       <div id="noticias-recientes" style="margin-top:1rem">
@@ -217,6 +230,59 @@
     } catch(e) {
       grid.innerHTML = '<p class="section-subtitle">No se pudieron cargar las noticias.</p>';
     }
+  </script>
+
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { collection, getDocs, query, where, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      // Load cursos aprobados
+      try {
+        const snap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', user.uid)));
+        const el = document.getElementById('mis-cursos-logros');
+        if (snap.empty) {
+          el.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem">Sin cursos aprobados aún</p>';
+        } else {
+          const items = await Promise.all(snap.docs.map(async d => {
+            const data = d.data();
+            try {
+              const cSnap = await getDoc(doc(db, 'courses', data.cursoId));
+              const titulo = cSnap.exists() ? cSnap.data().titulo : 'Curso';
+              return `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.82rem">
+                <span style="color:var(--text)">${titulo.substring(0,30)}${titulo.length>30?'...':''}</span>
+                <span style="color:var(--gold);font-weight:600">${data.puntuacion || '—'}/10</span>
+              </div>`;
+            } catch(e) { return ''; }
+          }));
+          el.innerHTML = items.join('');
+        }
+      } catch(e) {
+        document.getElementById('mis-cursos-logros').innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem">—</p>';
+      }
+
+      // Load proyectos
+      try {
+        const snap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', user.uid)));
+        const el = document.getElementById('mis-proyectos-logros');
+        if (snap.empty) {
+          el.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem">Sin proyectos aprobados aún</p>';
+        } else {
+          el.innerHTML = snap.docs.map(d => {
+            const p = d.data();
+            return `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.82rem">
+              <span style="color:var(--text)">${(p.nombre||'—').substring(0,30)}</span>
+              <span style="color:var(--gold);font-weight:600">${p.puntuacion || '—'}/10</span>
+            </div>`;
+          }).join('');
+        }
+      } catch(e) {
+        document.getElementById('mis-proyectos-logros').innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem">—</p>';
+      }
+    });
   </script>
 </body>
 </html>
