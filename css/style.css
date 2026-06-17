@@ -562,8 +562,8 @@ tbody tr:hover { background: var(--surface-soft); }
 }
 
 /* ---- TAB SECTION ---- */
-.tab-section { display: none; }
-.tab-section.active { display: block; }
+.tab-section { display: block; }
+.tab-section.hidden { display: none !important; }
 
 /* ---- UTILITIES ---- */
 .text-center { text-align: center; }
