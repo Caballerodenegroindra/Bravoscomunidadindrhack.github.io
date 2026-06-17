@@ -12,10 +12,10 @@
   // Config
   const FONT_SIZE = 13;
   const CHARS = '01010110001010011010010100110100101001';
-  const COLOR = 'rgba(0, 0, 0, 0.08)'; // gris muy suave sobre blanco
-  const COLOR_BRIGHT = 'rgba(139, 0, 0, 0.12)'; // rojo muy suave para algunas columnas
-  const SPEED = 0.4; // lento y sutil
-  const FADE_ALPHA = 0.025; // cuánto se borra cada frame (más bajo = más estela)
+  const COLOR = 'rgba(0, 0, 0, 0.18)'; // gris muy suave sobre blanco
+  const COLOR_BRIGHT = 'rgba(139, 0, 0, 0.22)'; // rojo muy suave para algunas columnas
+  const SPEED = 0.5; // lento y sutil
+  const FADE_ALPHA = 0.04; // cuánto se borra cada frame (más bajo = más estela)
 
   let columns = [];
   let animId;
