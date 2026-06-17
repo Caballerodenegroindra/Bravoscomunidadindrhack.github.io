@@ -235,6 +235,19 @@
     </div>
   </div>
 
+  <!-- MODAL APROBAR CURSO -->
+  <div id="aprobar-curso-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:500px;max-height:85vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+        <h2 class="section-title" style="margin:0;font-size:1rem">Aprobar curso a: <span id="aprobar-curso-para" style="color:#00bfff"></span></h2>
+        <button onclick="document.getElementById('aprobar-curso-modal').style.display='none'" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <p class="section-subtitle" style="margin-bottom:1rem">Selecciona los cursos que este miembro aprobó. Aparecerán en su ficha.</p>
+      <div id="aprobar-cursos-lista" style="margin-bottom:1rem">Cargando cursos...</div>
+      <button id="aprobar-cursos-guardar" class="btn btn--primary" style="width:100%">Guardar aprobaciones</button>
+    </div>
+  </div>
+
   <footer class="footer">
     ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
   </footer>
@@ -426,6 +439,14 @@
                 await deleteUserProfile(uid);
                 card.remove();
               }
+            }
+            if (btn.dataset.action === 'aprobar-curso') {
+              const u = users.find(u => u.uid === uid);
+              window._aprobarCursoUid = uid;
+              window._aprobarCursoUsername = u?.username || uid;
+              document.getElementById('aprobar-curso-modal').style.display = 'flex';
+              document.getElementById('aprobar-curso-para').textContent = u?.username || uid;
+              cargarCursosParaAprobar();
             }
           });
         });
@@ -838,6 +859,70 @@
     // Load when tab clicked
     document.querySelectorAll('[data-tab="proyectos"]').forEach(t => {
       t.addEventListener('click', loadProyectos);
+    });
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    window.cargarCursosParaAprobar = async function() {
+      const lista = document.getElementById('aprobar-cursos-lista');
+      lista.innerHTML = 'Cargando...';
+      const uid = window._aprobarCursoUid;
+
+      // Get all courses
+      const cursosSnap = await getDocs(collection(db, 'courses'));
+      const cursos = cursosSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.publicado !== false);
+
+      // Get already approved courses for this user
+      const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', uid)));
+      const aprobados = new Set(aprobSnap.docs.map(d => d.data().cursoId));
+
+      // Group by categoria
+      const grupos = {};
+      cursos.forEach(c => {
+        const cat = c.categoria || 'General';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(c);
+      });
+
+      lista.innerHTML = Object.entries(grupos).map(([cat, items]) => `
+        <div style="margin-bottom:1rem">
+          <div style="color:#888;font-size:0.75rem;letter-spacing:2px;margin-bottom:0.4rem">📁 ${cat}</div>
+          ${items.map(c => `
+            <label style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid #1a1a1a;cursor:pointer">
+              <input type="checkbox" value="${c.id}" ${aprobados.has(c.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#cc2200" />
+              <span style="font-size:0.85rem;color:#ccc">${c.titulo}</span>
+            </label>
+          `).join('')}
+        </div>
+      `).join('');
+    };
+
+    document.getElementById('aprobar-cursos-guardar').addEventListener('click', async () => {
+      const uid = window._aprobarCursoUid;
+      const username = window._aprobarCursoUsername;
+      const checkboxes = document.querySelectorAll('#aprobar-cursos-lista input[type="checkbox"]');
+
+      // Delete existing approvals
+      const existing = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', uid)));
+      for (const d of existing.docs) await deleteDoc(doc(db, 'cursos_aprobados', d.id));
+
+      // Add new approvals
+      for (const cb of checkboxes) {
+        if (cb.checked) {
+          await addDoc(collection(db, 'cursos_aprobados'), {
+            uid,
+            username,
+            cursoId: cb.value,
+            fecha: new Date(),
+          });
+        }
+      }
+
+      alert('✅ Cursos aprobados guardados.');
+      document.getElementById('aprobar-curso-modal').style.display = 'none';
     });
   </script>
 </body>

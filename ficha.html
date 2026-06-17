@@ -316,15 +316,23 @@
         ? fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
         : '—';
 
-      // Cargar cursos aprobados (todos los publicados por ahora)
+      // Cargar cursos aprobados por el admin para este usuario
       try {
-        const snap = await getDocs(collection(db, 'courses'));
-        const cursos = snap.docs.map(d => d.data()).filter(c => c.publicado !== false);
+        const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', profile.uid)));
         const cursosEl = document.getElementById('ficha-cursos');
-        if (cursos.length > 0) {
-          cursosEl.innerHTML = cursos.slice(0, 5).map(c =>
-            `<div class="ficha-curso-item">${c.categoria || ''} — ${c.titulo}</div>`
-          ).join('');
+        if (!aprobSnap.empty) {
+          const cursoIds = aprobSnap.docs.map(d => d.data().cursoId);
+          const cursosData = [];
+          for (const id of cursoIds) {
+            const { getDoc: gd, doc: dc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+            const snap = await gd(dc(db, 'courses', id));
+            if (snap.exists()) cursosData.push(snap.data());
+          }
+          if (cursosData.length > 0) {
+            cursosEl.innerHTML = cursosData.map(c =>
+              '<div class="ficha-curso-item">' + (c.categoria || '') + ' — ' + c.titulo + '</div>'
+            ).join('');
+          }
         }
       } catch(e) {}
 
