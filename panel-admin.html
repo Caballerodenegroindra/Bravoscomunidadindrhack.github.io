@@ -174,8 +174,34 @@
         </div>
       </div>
 
+      <div class="tab-section hidden" id="proyectos">
+        <div class="panel-header">
+          <h1 class="section-title">Proyectos</h1>
+          <button class="btn btn--primary btn--small" id="btn-nuevo-proyecto">+ Nuevo proyecto</button>
+        </div>
+        <p class="section-subtitle">Crea el catálogo de proyectos. Luego asígnalos a los miembros desde el botón 🏆 Logros en cada miembro.</p>
+        <div id="proyectos-admin-grid">
+          <p class="section-subtitle">Toca la pestaña para cargar...</p>
+        </div>
+      </div>
+
     </section>
   </main>
+
+  <!-- MODAL PROYECTO -->
+  <div id="proyecto-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:480px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 class="section-title" style="margin:0;font-size:1.1rem">Nuevo proyecto</h2>
+        <button id="proyecto-modal-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="proyecto-form">
+        <div class="field"><label>Nombre del proyecto</label><input type="text" name="nombre" required placeholder="Ej: Crear número virtual" /></div>
+        <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3" placeholder="¿En qué consistió el proyecto?"></textarea></div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Crear proyecto</button>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL NOTICIA -->
   <div id="noticia-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
