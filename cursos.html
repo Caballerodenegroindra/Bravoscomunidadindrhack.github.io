@@ -236,5 +236,27 @@
       modal.scrollTop = 0;
     }
   </script>
+
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // Smart inicio link - redirect to panel if logged in
+    onAuthStateChanged(auth, async (user) => {
+      const inicioLinks = document.querySelectorAll('a[href="index.html"]');
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists() && snap.data().estado === 'aprobado') {
+            const panel = snap.data().rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html';
+            inicioLinks.forEach(a => { a.href = panel; a.textContent = 'Mi Panel'; });
+            return;
+          }
+        } catch(e) {}
+      }
+    });
+  </script>
 </body>
 </html>

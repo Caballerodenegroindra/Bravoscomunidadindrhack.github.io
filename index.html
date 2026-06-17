@@ -86,20 +86,32 @@
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+    // Ocultar hero mientras verificamos sesión
+    const hero = document.querySelector('.hero');
+    if (hero) hero.style.opacity = '0';
+
     onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-      try {
-        const snap = await getDoc(doc(db, 'users', user.uid));
-        if (!snap.exists()) return;
-        const profile = snap.data();
-        if (profile.estado === 'aprobado') {
-          if (profile.rol === 'administrador') {
-            window.location.href = 'panel-admin.html';
-          } else {
-            window.location.href = 'panel-usuario.html';
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists()) {
+            const profile = snap.data();
+            if (profile.estado === 'aprobado') {
+              if (profile.rol === 'administrador') {
+                window.location.replace('panel-admin.html');
+              } else {
+                window.location.replace('panel-usuario.html');
+              }
+              return;
+            }
           }
-        }
-      } catch(e) {}
+        } catch(e) {}
+      }
+      // No hay sesión o no está aprobado - mostrar página normal
+      if (hero) {
+        hero.style.transition = 'opacity 0.3s ease';
+        hero.style.opacity = '1';
+      }
     });
   </script>
 </body>
