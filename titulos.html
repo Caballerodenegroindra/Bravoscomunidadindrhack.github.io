@@ -63,20 +63,19 @@
 
     #certificado {
       width: 100%;
-      aspect-ratio: 1.414 / 1;
+      min-height: 480px;
       background: #fdfcf8;
       border: 3px solid #8B0000;
       outline: 1px solid #8B0000;
       outline-offset: -8px;
       position: relative;
-      padding: 2.2rem 2.5rem;
+      padding: 2.2rem 2.5rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       box-sizing: border-box;
       box-shadow: 0 10px 50px rgba(0,0,0,0.4);
-      overflow: hidden;
     }
 
     /* Circuit corner decorations */
@@ -177,7 +176,7 @@
       font-size: 0.68rem;
       letter-spacing: 0.15em;
       color: #1a5276;
-      margin-top: auto;
+      margin-top: 1.25rem;
       margin-bottom: 1rem;
       position: relative; z-index: 2;
     }
@@ -358,7 +357,16 @@
       btn.textContent = '⏳ Generando...';
       btn.disabled = true;
       try {
-        const canvas = await html2canvas(certEl, { backgroundColor: '#fdfcf8', scale: 2, useCORS: true, logging: false });
+        const canvas = await html2canvas(certEl, {
+          backgroundColor: '#fdfcf8',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          width: certEl.offsetWidth,
+          height: certEl.scrollHeight,
+          windowWidth: certEl.scrollWidth,
+          windowHeight: certEl.scrollHeight,
+        });
         const link = document.createElement('a');
         link.download = 'certificado-indrhack.png';
         link.href = canvas.toDataURL('image/png');
