@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Títulos — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Inter:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .titulo-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .titulo-item__info h3 { margin: 0 0 0.25rem; font-size: 1rem; font-family: var(--font-title); }
+    .titulo-item__info p { margin: 0; color: var(--text-soft); font-size: 0.82rem; }
+    .titulo-item__nota {
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 0.85rem;
+    }
+
+    /* ---- CERTIFICADO ---- */
+    #cert-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20,20,20,0.92);
+      z-index: 1000;
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 1.5rem 1rem;
+    }
+
+    #cert-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    #cert-close {
+      align-self: flex-end;
+      background: #fff;
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    #certificado {
+      width: 100%;
+      aspect-ratio: 1.414 / 1;
+      background: #fdfcf8;
+      border: 3px solid #8B0000;
+      outline: 1px solid #8B0000;
+      outline-offset: -8px;
+      position: relative;
+      padding: 2.2rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-sizing: border-box;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    /* Circuit corner decorations */
+    .cert-corner {
+      position: absolute;
+      width: 60px; height: 60px;
+      opacity: 0.5;
+    }
+    .cert-corner svg { width: 100%; height: 100%; }
+    .cert-corner--tl { top: 14px; left: 14px; }
+    .cert-corner--tr { top: 14px; right: 14px; transform: scaleX(-1); }
+    .cert-corner--bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
+    .cert-corner--br { bottom: 14px; right: 14px; transform: scale(-1, -1); }
+
+    .cert-watermark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0.04;
+    }
+    .cert-watermark img { width: 55%; }
+
+    .cert-logo { width: 64px; height: 64px; margin-bottom: 0.4rem; position: relative; z-index: 2; }
+
+    .cert-org {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: #8B0000;
+      position: relative; z-index: 2;
+    }
+
+    .cert-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      color: #1a1a1a;
+      letter-spacing: 0.04em;
+      margin: 0.6rem 0 0.2rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 1.1rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-phrase {
+      font-size: 0.78rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(1.4rem, 5vw, 2.1rem);
+      color: #8B0000;
+      margin: 0.3rem 0 0.8rem;
+      border-bottom: 1.5px solid #8B0000;
+      padding-bottom: 0.3rem;
+      display: inline-block;
+      position: relative; z-index: 2;
+    }
+
+    .cert-curso {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0.3rem 0 0.5rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      color: #555;
+      margin-bottom: 1rem;
+      position: relative; z-index: 2;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cert-meta strong { color: #8B0000; }
+
+    .cert-motto {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: #1a5276;
+      margin-top: auto;
+      margin-bottom: 1rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 100%;
+      margin-top: 0.5rem;
+      position: relative; z-index: 2;
+    }
+
+    .cert-sig {
+      text-align: center;
+      flex: 1;
+    }
+
+    .cert-sig-line {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: #1a1a1a;
+      border-bottom: 1px solid #999;
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.2rem;
+      min-width: 140px;
+    }
+
+    .cert-sig-label {
+      font-size: 0.62rem;
+      color: #888;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cert-id {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: #aaa;
+      position: absolute;
+      bottom: 8px;
+      right: 16px;
+    }
+
+    #download-cert-btn { width: 100%; max-width: 700px; }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Mi panel</p>
+      <nav class="sidebar__links">
+        <a href="panel-usuario.html">Resumen</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="ficha.html">Mi Ficha</a>
+        <a href="titulos.html" class="active">Mis Títulos</a>
+        <a href="redes.html">Redes</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+      <h1 class="section-title">Mis <span class="accent">Títulos</span></h1>
+      <p class="section-subtitle">Descarga tus certificados de cursos y proyectos aprobados.</p>
+
+      <h2 class="section-title" style="font-size:1.15rem;margin-top:1.5rem">📚 Cursos aprobados</h2>
+      <div id="lista-cursos"><p class="section-subtitle">Cargando...</p></div>
+
+      <h2 class="section-title" style="font-size:1.15rem;margin-top:2rem">🏆 Proyectos aprobados</h2>
+      <div id="lista-proyectos"><p class="section-subtitle">Cargando...</p></div>
+    </section>
+  </main>
+
+  <!-- CERTIFICADO OVERLAY -->
+  <div id="cert-overlay">
+    <div id="cert-wrapper">
+      <button id="cert-close">✕</button>
+
+      <div id="certificado">
+        <div class="cert-watermark"><img src="assets/img/logo-indrhack.png" alt=""></div>
+
+        <div class="cert-corner cert-corner--tl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
+        <div class="cert-corner cert-corner--tr"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
+        <div class="cert-corner cert-corner--bl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
+        <div class="cert-corner cert-corner--br"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
+
+        <img class="cert-logo" src="assets/img/logo-indrhack.png" alt="Logo" />
+        <div class="cert-org">ACADEMIA INDRHACK · COMUNIDAD</div>
+        <div class="cert-title" id="cert-tipo-titulo">CERTIFICADO DE APROBACIÓN</div>
+        <div class="cert-subtitle">Comunidad de Ciberseguridad y Hacking Ético</div>
+
+        <p class="cert-phrase">Se otorga el presente certificado a:</p>
+        <div class="cert-name" id="cert-nombre">—</div>
+
+        <p class="cert-phrase">Por haber completado satisfactoriamente:</p>
+        <div class="cert-curso" id="cert-curso">—</div>
+
+        <div class="cert-meta">
+          <span id="cert-nivel-row"><strong>Nivel:</strong> <span id="cert-nivel">—</span></span>
+          <span><strong>Puntuación:</strong> <span id="cert-nota">—</span>/10</span>
+          <span><strong>Fecha:</strong> <span id="cert-fecha">—</span></span>
+        </div>
+
+        <div class="cert-motto">"EL CONOCIMIENTO ES LA BASE" · INDRHACK</div>
+
+        <div class="cert-footer">
+          <div class="cert-sig">
+            <div class="cert-sig-line" id="cert-firma">—</div>
+            <div class="cert-sig-label">Instructor / Maestro</div>
+          </div>
+          <div class="cert-sig">
+            <div class="cert-sig-line">Academia Indrhack</div>
+            <div class="cert-sig-label">Comunidad Oficial</div>
+          </div>
+        </div>
+
+        <div class="cert-id" id="cert-id">IH-000000</div>
+      </div>
+
+      <button id="download-cert-btn" class="btn btn--primary">⬇ Descargar certificado como imagen</button>
+    </div>
+  </div>
+
+  <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético</footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, query, where, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { requireApprovedUser } from './js/auth.js';
+
+    const overlay = document.getElementById('cert-overlay');
+    const certEl = document.getElementById('certificado');
+
+    document.getElementById('cert-close').addEventListener('click', () => overlay.style.display = 'none');
+
+    function generarId(uid, itemId) {
+      const str = uid + itemId;
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
+      return 'IH-' + Math.abs(hash).toString(16).toUpperCase().substring(0, 6);
+    }
+
+    function abrirCertificado(data) {
+      document.getElementById('cert-tipo-titulo').textContent = data.tipo === 'proyecto' ? 'CERTIFICADO DE LOGRO' : 'CERTIFICADO DE APROBACIÓN';
+      document.getElementById('cert-nombre').textContent = data.nombreUsuario;
+      document.getElementById('cert-curso').textContent = data.titulo;
+      document.getElementById('cert-nivel-row').style.display = data.nivel ? 'inline' : 'none';
+      document.getElementById('cert-nivel').textContent = data.nivel || '';
+      document.getElementById('cert-nota').textContent = data.puntuacion || '—';
+      document.getElementById('cert-fecha').textContent = data.fecha;
+      document.getElementById('cert-firma').textContent = data.instructor || 'Academia Indrhack';
+      document.getElementById('cert-id').textContent = generarId(data.uid, data.itemId);
+      overlay.style.display = 'flex';
+      overlay.scrollTop = 0;
+    }
+
+    document.getElementById('download-cert-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('download-cert-btn');
+      btn.textContent = '⏳ Generando...';
+      btn.disabled = true;
+      try {
+        const canvas = await html2canvas(certEl, { backgroundColor: '#fdfcf8', scale: 2, useCORS: true, logging: false });
+        const link = document.createElement('a');
+        link.download = 'certificado-indrhack.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch(e) {
+        alert('Error: ' + e.message);
+      }
+      btn.textContent = '⬇ Descargar certificado como imagen';
+      btn.disabled = false;
+    });
+
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+      const nombreUsuario = profile.username || profile.displayName || '—';
+
+      // --- CURSOS ---
+      const cursosEl = document.getElementById('lista-cursos');
+      try {
+        const snap = await getDocs(query(collection(db, 'cursos_aprobados'), where('uid', '==', profile.uid)));
+        if (snap.empty) {
+          cursosEl.innerHTML = '<p class="section-subtitle">Aún no tienes cursos aprobados.</p>';
+        } else {
+          const items = [];
+          for (const d of snap.docs) {
+            const data = d.data();
+            try {
+              const cSnap = await getDoc(doc(db, 'courses', data.cursoId));
+              if (cSnap.exists()) {
+                const curso = cSnap.data();
+                items.push({
+                  id: d.id, cursoId: data.cursoId, titulo: curso.titulo,
+                  nivel: curso.nivel, categoria: curso.categoria,
+                  puntuacion: data.puntuacion, fecha: data.fecha, instructor: data.instructor,
+                });
+              }
+            } catch(e) {}
+          }
+          cursosEl.innerHTML = items.map(it => `
+            <div class="titulo-item">
+              <div class="titulo-item__info">
+                <h3>📜 ${it.titulo}</h3>
+                <p>${it.categoria || ''} · ${it.nivel || ''}</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem">
+                <span class="titulo-item__nota">${it.puntuacion || '—'}/10</span>
+                <button class="btn btn--primary btn--small" data-curso-id="${it.id}">Ver certificado</button>
+              </div>
+            </div>
+          `).join('');
+
+          cursosEl.querySelectorAll('[data-curso-id]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const it = items.find(i => i.id === btn.dataset.cursoId);
+              const fecha = it.fecha?.toDate ? it.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('es-MX');
+              abrirCertificado({
+                tipo: 'curso', nombreUsuario, titulo: it.titulo, nivel: it.nivel,
+                puntuacion: it.puntuacion, fecha, instructor: it.instructor,
+                uid: profile.uid, itemId: it.cursoId,
+              });
+            });
+          });
+        }
+      } catch(e) {
+        cursosEl.innerHTML = '<p class="section-subtitle">Error al cargar cursos.</p>';
+      }
+
+      // --- PROYECTOS ---
+      const proyEl = document.getElementById('lista-proyectos');
+      try {
+        const snap = await getDocs(query(collection(db, 'proyectos'), where('uid', '==', profile.uid)));
+        if (snap.empty) {
+          proyEl.innerHTML = '<p class="section-subtitle">Aún no tienes proyectos aprobados.</p>';
+        } else {
+          const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          proyEl.innerHTML = items.map(it => `
+            <div class="titulo-item">
+              <div class="titulo-item__info">
+                <h3>🏆 ${it.nombre}</h3>
+                <p>Proyecto de comunidad</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem">
+                <span class="titulo-item__nota">${it.puntuacion || '—'}/10</span>
+                <button class="btn btn--primary btn--small" data-proy-id="${it.id}">Ver certificado</button>
+              </div>
+            </div>
+          `).join('');
+
+          proyEl.querySelectorAll('[data-proy-id]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const it = items.find(i => i.id === btn.dataset.proyId);
+              const fecha = it.fecha?.toDate ? it.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('es-MX');
+              abrirCertificado({
+                tipo: 'proyecto', nombreUsuario, titulo: it.nombre, nivel: null,
+                puntuacion: it.puntuacion, fecha, instructor: it.instructor,
+                uid: profile.uid, itemId: it.proyectoId,
+              });
+            });
+          });
+        }
+      } catch(e) {
+        proyEl.innerHTML = '<p class="section-subtitle">Error al cargar proyectos.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

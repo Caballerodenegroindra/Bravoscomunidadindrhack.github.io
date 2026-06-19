@@ -200,6 +200,10 @@
       </div>
       <p id="curso-miembros-titulo" style="color:var(--primary);font-weight:600;margin-bottom:1rem;font-size:0.9rem"></p>
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que aprobaron este curso y asigna una nota del 1 al 10.</p>
+      <div class="field" style="margin-bottom:1rem">
+        <label>Instructor / Maestro de esta clase</label>
+        <select id="curso-instructor-select"></select>
+      </div>
       <div id="curso-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosCurso()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar</button>
     </div>
@@ -214,6 +218,10 @@
       </div>
       <p id="proyecto-miembros-titulo" style="color:var(--primary);font-weight:600;margin-bottom:0.5rem;font-size:0.9rem"></p>
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que completaron este proyecto y asigna una puntuación del 1 al 10. Aparecerá en su ficha como logro.</p>
+      <div class="field" style="margin-bottom:1rem">
+        <label>Instructor / Responsable del proyecto</label>
+        <select id="proyecto-instructor-select"></select>
+      </div>
       <div id="proyecto-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosProyecto()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar logros</button>
     </div>
@@ -281,6 +289,10 @@
       </div>
       <p id="curso-miembros-titulo" style="color:var(--primary);font-weight:600;margin-bottom:1rem;font-size:0.9rem"></p>
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que aprobaron este curso y asigna una nota del 1 al 10.</p>
+      <div class="field" style="margin-bottom:1rem">
+        <label>Instructor / Maestro de esta clase</label>
+        <select id="curso-instructor-select"></select>
+      </div>
       <div id="curso-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosCurso()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar</button>
     </div>
@@ -295,6 +307,10 @@
       </div>
       <p id="proyecto-miembros-titulo" style="color:var(--primary);font-weight:600;margin-bottom:0.5rem;font-size:0.9rem"></p>
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que completaron este proyecto y asigna una puntuación del 1 al 10. Aparecerá en su ficha como logro.</p>
+      <div class="field" style="margin-bottom:1rem">
+        <label>Instructor / Responsable del proyecto</label>
+        <select id="proyecto-instructor-select"></select>
+      </div>
       <div id="proyecto-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosProyecto()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar logros</button>
     </div>
@@ -993,9 +1009,20 @@
       lista.innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
 
       const users = await getAllUsers();
+      const admins = users.filter(u => u.rol === 'administrador');
+      const selectEl = document.getElementById('curso-instructor-select');
+
       const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('cursoId', '==', cursoId)));
       const aprobados = {};
-      aprobSnap.docs.forEach(d => { aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 }; });
+      let instructorActual = '';
+      aprobSnap.docs.forEach(d => {
+        aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 };
+        if (d.data().instructor) instructorActual = d.data().instructor;
+      });
+
+      selectEl.innerHTML = admins.map(a =>
+        '<option value="' + (a.displayName || a.username) + '" ' + ((a.displayName || a.username) === instructorActual ? 'selected' : '') + '>' + (a.displayName || a.username) + '</option>'
+      ).join('');
 
       lista.innerHTML = users.map(u => {
         const ap = aprobados[u.uid];
@@ -1016,6 +1043,7 @@
     window.guardarMiembrosCurso = async function() {
       const cursoId = window._cursoId;
       const checks = document.querySelectorAll('#curso-miembros-lista input[type="checkbox"]');
+      const instructor = document.getElementById('curso-instructor-select').value;
 
       // Delete existing for this curso
       const existing = await getDocs(query(collection(db, 'cursos_aprobados'), where('cursoId', '==', cursoId)));
@@ -1031,6 +1059,7 @@
             username: user?.username || '',
             cursoId,
             puntuacion: parseInt(nota),
+            instructor,
             fecha: new Date(),
           });
         }
@@ -1064,9 +1093,20 @@
       document.getElementById('proyecto-miembros-lista').innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
 
       const users = await getUsers();
+      const admins = users.filter(u => u.rol === 'administrador');
+      const selectEl = document.getElementById('proyecto-instructor-select');
+
       const aprobSnap = await getDocs(query(collection(db, 'proyectos'), where('proyectoId', '==', proyId)));
       const aprobados = {};
-      aprobSnap.docs.forEach(d => { aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 }; });
+      let instructorActual = '';
+      aprobSnap.docs.forEach(d => {
+        aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 };
+        if (d.data().instructor) instructorActual = d.data().instructor;
+      });
+
+      selectEl.innerHTML = admins.map(a =>
+        '<option value="' + (a.displayName || a.username) + '" ' + ((a.displayName || a.username) === instructorActual ? 'selected' : '') + '>' + (a.displayName || a.username) + '</option>'
+      ).join('');
 
       document.getElementById('proyecto-miembros-lista').innerHTML = users.map(u => {
         const ap = aprobados[u.uid];
@@ -1088,6 +1128,7 @@
       const proyId = window._proyId;
       const proyNombre = window._proyNombre;
       const checks = document.querySelectorAll('#proyecto-miembros-lista input[type="checkbox"]');
+      const instructor = document.getElementById('proyecto-instructor-select').value;
 
       // Delete existing for this proyecto
       const existing = await getDocs(query(collection(db, 'proyectos'), where('proyectoId', '==', proyId)));
@@ -1104,6 +1145,7 @@
             proyectoId: proyId,
             nombre: proyNombre,
             puntuacion: parseInt(nota),
+            instructor,
             aprobado: true,
             fecha: new Date(),
           });
