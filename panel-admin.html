@@ -202,7 +202,8 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que aprobaron este curso y asigna una nota del 1 al 10.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Maestro de esta clase</label>
-        <select id="curso-instructor-select"></select>
+        <input type="text" id="curso-instructor-select" list="curso-instructor-list" placeholder="Ej: Indrhack" />
+        <datalist id="curso-instructor-list"></datalist>
       </div>
       <div id="curso-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosCurso()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar</button>
@@ -220,7 +221,8 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que completaron este proyecto y asigna una puntuación del 1 al 10. Aparecerá en su ficha como logro.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Responsable del proyecto</label>
-        <select id="proyecto-instructor-select"></select>
+        <input type="text" id="proyecto-instructor-select" list="proyecto-instructor-list" placeholder="Ej: Indrhack" />
+        <datalist id="proyecto-instructor-list"></datalist>
       </div>
       <div id="proyecto-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosProyecto()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar logros</button>
@@ -291,7 +293,8 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que aprobaron este curso y asigna una nota del 1 al 10.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Maestro de esta clase</label>
-        <select id="curso-instructor-select"></select>
+        <input type="text" id="curso-instructor-select" list="curso-instructor-list" placeholder="Ej: Indrhack" />
+        <datalist id="curso-instructor-list"></datalist>
       </div>
       <div id="curso-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosCurso()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar</button>
@@ -309,7 +312,8 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que completaron este proyecto y asigna una puntuación del 1 al 10. Aparecerá en su ficha como logro.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Responsable del proyecto</label>
-        <select id="proyecto-instructor-select"></select>
+        <input type="text" id="proyecto-instructor-select" list="proyecto-instructor-list" placeholder="Ej: Indrhack" />
+        <datalist id="proyecto-instructor-list"></datalist>
       </div>
       <div id="proyecto-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosProyecto()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar logros</button>
@@ -1010,7 +1014,8 @@
 
       const users = await getAllUsers();
       const admins = users.filter(u => u.rol === 'administrador');
-      const selectEl = document.getElementById('curso-instructor-select');
+      const inputEl = document.getElementById('curso-instructor-select');
+      const listEl = document.getElementById('curso-instructor-list');
 
       const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('cursoId', '==', cursoId)));
       const aprobados = {};
@@ -1020,9 +1025,8 @@
         if (d.data().instructor) instructorActual = d.data().instructor;
       });
 
-      selectEl.innerHTML = admins.map(a =>
-        '<option value="' + (a.displayName || a.username) + '" ' + ((a.displayName || a.username) === instructorActual ? 'selected' : '') + '>' + (a.displayName || a.username) + '</option>'
-      ).join('');
+      listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
+      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
 
       lista.innerHTML = users.map(u => {
         const ap = aprobados[u.uid];
@@ -1094,7 +1098,8 @@
 
       const users = await getUsers();
       const admins = users.filter(u => u.rol === 'administrador');
-      const selectEl = document.getElementById('proyecto-instructor-select');
+      const inputEl = document.getElementById('proyecto-instructor-select');
+      const listEl = document.getElementById('proyecto-instructor-list');
 
       const aprobSnap = await getDocs(query(collection(db, 'proyectos'), where('proyectoId', '==', proyId)));
       const aprobados = {};
@@ -1104,9 +1109,8 @@
         if (d.data().instructor) instructorActual = d.data().instructor;
       });
 
-      selectEl.innerHTML = admins.map(a =>
-        '<option value="' + (a.displayName || a.username) + '" ' + ((a.displayName || a.username) === instructorActual ? 'selected' : '') + '>' + (a.displayName || a.username) + '</option>'
-      ).join('');
+      listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
+      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
 
       document.getElementById('proyecto-miembros-lista').innerHTML = users.map(u => {
         const ap = aprobados[u.uid];

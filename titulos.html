@@ -357,16 +357,26 @@
       btn.textContent = '⏳ Generando...';
       btn.disabled = true;
       try {
-        const canvas = await html2canvas(certEl, {
+        // Fijamos un ancho de referencia "desktop" para que el certificado
+        // siempre se vea con buenas proporciones, sin importar el ancho real del celular.
+        const REF_WIDTH = 700;
+        const clone = certEl.cloneNode(true);
+        clone.style.width = REF_WIDTH + 'px';
+        clone.style.position = 'fixed';
+        clone.style.top = '-99999px';
+        clone.style.left = '-99999px';
+        document.body.appendChild(clone);
+
+        const canvas = await html2canvas(clone, {
           backgroundColor: '#fdfcf8',
           scale: 2,
           useCORS: true,
           logging: false,
-          width: certEl.offsetWidth,
-          height: certEl.scrollHeight,
-          windowWidth: certEl.scrollWidth,
-          windowHeight: certEl.scrollHeight,
+          width: REF_WIDTH,
+          windowWidth: REF_WIDTH,
         });
+
+        document.body.removeChild(clone);
         const link = document.createElement('a');
         link.download = 'certificado-indrhack.png';
         link.href = canvas.toDataURL('image/png');
