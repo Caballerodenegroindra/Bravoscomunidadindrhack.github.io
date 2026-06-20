@@ -16,6 +16,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
   doc,
@@ -55,21 +56,24 @@ export async function isUsernameTaken(username) {
 /**
  * Crea una solicitud de cuenta nueva con estado "pendiente".
  * No inicia sesión: la cuenta debe ser aprobada por un administrador.
+ * Usa el correo real del usuario como email de autenticación, para
+ * que la recuperación de contraseña funcione de verdad.
  */
-export async function registerUser({ phone, username, password }) {
+export async function registerUser({ phone, username, password, email }) {
   const normalizedUsername = username.trim().toLowerCase();
+  const normalizedEmail = email.trim().toLowerCase();
 
   if (await isUsernameTaken(normalizedUsername)) {
     throw new Error('El nombre de usuario ya está en uso.');
   }
 
-  const email = usernameToEmail(normalizedUsername);
-  const credential = await createUserWithEmailAndPassword(auth, email, password);
+  const credential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
 
   try {
     await setDoc(doc(db, 'users', credential.user.uid), {
       username: normalizedUsername,
       displayName: username.trim(),
+      email: normalizedEmail,
       phone: phone.trim(),
       rol: ROLES.USUARIO,
       estado: ESTADOS.PENDIENTE,
@@ -97,12 +101,33 @@ export async function registerUser({ phone, username, password }) {
 }
 
 /**
+ * Busca el email real de Authentication a partir del username.
+ * Si el perfil es antiguo y no tiene email guardado, usa el
+ * esquema anterior (usuario@indrhack.local) como respaldo.
+ */
+async function getEmailByUsername(username) {
+  const q = query(
+    collection(db, 'users'),
+    where('username', '==', username.trim().toLowerCase())
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  const data = snap.docs[0].data();
+  return data.email || usernameToEmail(username);
+}
+
+/**
  * Inicia sesión validando que la cuenta esté aprobada.
  * Lanza un error con mensaje legible si la cuenta no existe,
  * está pendiente, suspendida o rechazada.
  */
 export async function loginUser({ username, password }) {
-  const email = usernameToEmail(username);
+  const email = await getEmailByUsername(username);
+
+  if (!email) {
+    throw new Error('No se encontró ninguna cuenta con ese nombre de usuario.');
+  }
+
   const credential = await signInWithEmailAndPassword(auth, email, password);
   const profile = await getUserProfile(credential.user.uid);
 
@@ -131,6 +156,20 @@ export async function loginUser({ username, password }) {
 
 export function logoutUser() {
   return signOut(auth);
+}
+
+/**
+ * Envía un correo de restablecimiento de contraseña a partir del
+ * nombre de usuario. Busca el email real asociado y usa el flujo
+ * estándar de Firebase.
+ */
+export async function requestPasswordReset(username) {
+  const email = await getEmailByUsername(username);
+  if (!email) {
+    throw new Error('No se encontró ninguna cuenta con ese nombre de usuario.');
+  }
+  await sendPasswordResetEmail(auth, email);
+  return email;
 }
 
 /**
