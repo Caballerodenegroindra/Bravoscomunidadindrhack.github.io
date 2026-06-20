@@ -52,9 +52,26 @@
           <div class="form-message" id="form-message"></div>
         </form>
 
+        <p class="form-footer" style="margin-bottom:0.5rem">
+          <a href="#" id="forgot-link" style="color:var(--accent)">¿Olvidaste tu contraseña?</a>
+        </p>
+
         <p class="form-footer">
           ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
         </p>
+
+        <!-- Caja de recuperación, oculta por defecto -->
+        <div id="forgot-box" style="display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+          <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.75rem">
+            Escribe tu nombre de usuario. Te enviaremos un enlace al correo con el que te registraste.
+          </p>
+          <div class="field">
+            <label for="forgot-username">Usuario</label>
+            <input type="text" id="forgot-username" placeholder="usuario_indrhack" />
+          </div>
+          <button type="button" id="forgot-submit" class="btn btn--outline btn--block">Enviar enlace de recuperación</button>
+          <div class="form-message" id="forgot-message"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -66,7 +83,7 @@
   <script src="js/particles.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module">
-    import { loginUser, ROLES } from './js/auth.js';
+    import { loginUser, ROLES, requestPasswordReset } from './js/auth.js';
 
     const form = document.getElementById('login-form');
     const message = document.getElementById('form-message');
@@ -99,6 +116,44 @@
         showMessage(error.message || 'No se pudo iniciar sesión.', 'error');
       } finally {
         submitBtn.disabled = false;
+      }
+    });
+
+    // --- Recuperar contraseña ---
+    const forgotLink = document.getElementById('forgot-link');
+    const forgotBox = document.getElementById('forgot-box');
+    const forgotMessage = document.getElementById('forgot-message');
+    const forgotSubmit = document.getElementById('forgot-submit');
+
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotBox.style.display = forgotBox.style.display === 'none' ? 'block' : 'none';
+    });
+
+    forgotSubmit.addEventListener('click', async () => {
+      const username = document.getElementById('forgot-username').value.trim();
+      forgotMessage.className = 'form-message';
+
+      if (!username) {
+        forgotMessage.textContent = 'Escribe tu nombre de usuario.';
+        forgotMessage.className = 'form-message show form-message--error';
+        return;
+      }
+
+      forgotSubmit.disabled = true;
+      forgotSubmit.textContent = 'Enviando...';
+
+      try {
+        const email = await requestPasswordReset(username);
+        const masked = email.replace(/(.{2}).+(@.+)/, '$1***$2');
+        forgotMessage.textContent = '✅ Te enviamos un enlace a ' + masked + '. Revisa también spam.';
+        forgotMessage.className = 'form-message show form-message--success';
+      } catch (error) {
+        forgotMessage.textContent = '❌ ' + (error.message || 'No se pudo enviar el correo.');
+        forgotMessage.className = 'form-message show form-message--error';
+      } finally {
+        forgotSubmit.disabled = false;
+        forgotSubmit.textContent = 'Enviar enlace de recuperación';
       }
     });
   </script>

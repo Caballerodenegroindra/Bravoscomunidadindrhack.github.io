@@ -46,6 +46,12 @@
           </div>
 
           <div class="field">
+            <label for="email">Correo electrónico</label>
+            <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-bottom:0.35rem">Lo usarás para recuperar tu contraseña si la olvidas. Inicia sesión con tu usuario, no con este correo.</small>
+            <input type="email" id="email" name="email" required placeholder="tucorreo@ejemplo.com" />
+          </div>
+
+          <div class="field">
             <label for="password">Contraseña</label>
             <div style="position:relative">
               <input type="password" id="password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres" style="padding-right:2.5rem" />
@@ -96,6 +102,7 @@
 
       const phone = form.phone.value.trim();
       const username = form.username.value.trim();
+      const email = form.email.value.trim();
       const password = form.password.value;
       const confirmPassword = form['confirm-password'].value;
 
@@ -106,6 +113,11 @@
 
       if (username.length < 3) {
         showMessage('El nombre de usuario debe tener al menos 3 caracteres.', 'error');
+        return;
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showMessage('Ingresa un correo electrónico válido. Lo necesitas para recuperar tu contraseña.', 'error');
         return;
       }
 
@@ -123,7 +135,7 @@
       submitBtn.disabled = true;
 
       try {
-        await registerUser({ phone, username, password });
+        await registerUser({ phone, username, password, email });
         form.reset();
         showMessage('✅ Solicitud enviada. Espera aprobación del administrador.', 'success');
         alert('✅ Solicitud enviada correctamente. Un administrador revisará tu cuenta pronto.');
