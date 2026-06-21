@@ -390,6 +390,61 @@
 
     requireApprovedUser('login.html').then(async (profile) => {
       if (!profile) return;
+
+      // --- Vista directa de certificado desde el panel admin ---
+      // Si llega con ?tipo=curso|proyecto&uid=...&itemId=..., y el que mira
+      // es administrador, abrimos el certificado de ese miembro directamente.
+      const params = new URLSearchParams(window.location.search);
+      const tipoParam = params.get('tipo');
+      const uidParam = params.get('uid');
+      const itemIdParam = params.get('itemId');
+
+      if (tipoParam && uidParam && itemIdParam && profile.rol === 'administrador') {
+        try {
+          const targetSnap = await getDoc(doc(db, 'users', uidParam));
+          const targetProfile = targetSnap.exists() ? targetSnap.data() : null;
+          const nombreObjetivo = targetProfile?.username || targetProfile?.displayName || '—';
+
+          if (tipoParam === 'curso') {
+            const aprobSnap = await getDocs(query(
+              collection(db, 'cursos_aprobados'),
+              where('uid', '==', uidParam),
+              where('cursoId', '==', itemIdParam)
+            ));
+            if (!aprobSnap.empty) {
+              const data = aprobSnap.docs[0].data();
+              const cSnap = await getDoc(doc(db, 'courses', itemIdParam));
+              const curso = cSnap.exists() ? cSnap.data() : {};
+              const fecha = data.fecha?.toDate ? data.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('es-MX');
+              abrirCertificado({
+                tipo: 'curso', nombreUsuario: nombreObjetivo, titulo: curso.titulo || '—',
+                nivel: curso.nivel, puntuacion: data.puntuacion, fecha, instructor: data.instructor,
+                uid: uidParam, itemId: itemIdParam,
+              });
+            }
+          }
+
+          if (tipoParam === 'proyecto') {
+            const aprobSnap = await getDocs(query(
+              collection(db, 'proyectos'),
+              where('uid', '==', uidParam),
+              where('proyectoId', '==', itemIdParam)
+            ));
+            if (!aprobSnap.empty) {
+              const data = aprobSnap.docs[0].data();
+              const fecha = data.fecha?.toDate ? data.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('es-MX');
+              abrirCertificado({
+                tipo: 'proyecto', nombreUsuario: nombreObjetivo, titulo: data.nombre || '—', nivel: null,
+                puntuacion: data.puntuacion, fecha, instructor: data.instructor,
+                uid: uidParam, itemId: itemIdParam,
+              });
+            }
+          }
+        } catch (e) {
+          alert('No se pudo cargar el certificado: ' + e.message);
+        }
+      }
+
       const nombreUsuario = profile.username || profile.displayName || '—';
 
       // --- CURSOS ---
