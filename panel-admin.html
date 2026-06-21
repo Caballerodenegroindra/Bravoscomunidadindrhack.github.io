@@ -225,6 +225,10 @@
         <input type="text" id="proyecto-instructor-select" list="proyecto-instructor-list" placeholder="Ej: Indrhack" />
         <datalist id="proyecto-instructor-list"></datalist>
       </div>
+      <div class="field" style="margin-bottom:0.75rem">
+        <label>Buscar miembro</label>
+        <input type="text" id="proyecto-buscar-miembro" placeholder="Nombre de usuario o teléfono..." />
+      </div>
       <div id="proyecto-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosProyecto()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar logros</button>
     </div>
@@ -296,6 +300,10 @@
         <label>Instructor / Maestro de esta clase</label>
         <input type="text" id="curso-instructor-select" list="curso-instructor-list" placeholder="Ej: Indrhack" />
         <datalist id="curso-instructor-list"></datalist>
+      </div>
+      <div class="field" style="margin-bottom:0.75rem">
+        <label>Buscar miembro</label>
+        <input type="text" id="curso-buscar-miembro" placeholder="Nombre de usuario o teléfono..." />
       </div>
       <div id="curso-miembros-lista">Cargando...</div>
       <button onclick="guardarMiembrosCurso()" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar</button>
@@ -994,6 +1002,59 @@
       return _allUsers;
     }
 
+    let _cursoState = {}; // uid -> { checked: bool, puntuacion: number }
+
+    function renderCursoMiembrosLista(users, cursoId, searchTerm) {
+      const lista = document.getElementById('curso-miembros-lista');
+      const term = (searchTerm || '').trim().toLowerCase();
+
+      const filtered = term
+        ? users.filter(u =>
+            (u.username || '').toLowerCase().includes(term) ||
+            (u.displayName || '').toLowerCase().includes(term) ||
+            (u.phone || '').toLowerCase().includes(term)
+          )
+        : users;
+
+      if (filtered.length === 0) {
+        lista.innerHTML = '<p style="color:var(--text-muted)">Sin resultados para esa búsqueda.</p>';
+        return;
+      }
+
+      lista.innerHTML = filtered.map(u => {
+        const st = _cursoState[u.uid] || { checked: false, puntuacion: 5 };
+        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+          <input type="checkbox" value="${u.uid}" ${st.checked ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" data-uid-check="${u.uid}" />
+          <span style="flex:1;font-size:0.88rem;color:var(--text)">@${u.username || u.uid}${u.phone ? ' · ' + u.phone : ''}</span>
+          <div style="display:flex;align-items:center;gap:0.35rem">
+            <label style="font-size:0.72rem;color:var(--text-muted)">Nota:</label>
+            <input type="number" min="1" max="10" value="${st.puntuacion}"
+              style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
+              data-uid-nota="${u.uid}" />
+            <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
+          </div>
+          ${st.checked ? `<button type="button" class="btn btn--small btn--outline" onclick="window.open('titulos.html?tipo=curso&uid=${u.uid}&itemId=${cursoId}','_blank')" title="Ver y descargar certificado" style="padding:0.3rem 0.6rem">📥</button>` : ''}
+        </div>`;
+      }).join('');
+
+      // Sincronizar estado al tocar checkboxes/notas
+      lista.querySelectorAll('[data-uid-check]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const uid = cb.dataset.uidCheck;
+          if (!_cursoState[uid]) _cursoState[uid] = { checked: false, puntuacion: 5 };
+          _cursoState[uid].checked = cb.checked;
+          renderCursoMiembrosLista(users, cursoId, document.getElementById('curso-buscar-miembro').value);
+        });
+      });
+      lista.querySelectorAll('[data-uid-nota]').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const uid = inp.dataset.uidNota;
+          if (!_cursoState[uid]) _cursoState[uid] = { checked: false, puntuacion: 5 };
+          _cursoState[uid].puntuacion = parseInt(inp.value) || 5;
+        });
+      });
+    }
+
     window.cargarMiembrosCurso = async function(cursoId) {
       const lista = document.getElementById('curso-miembros-lista');
       lista.innerHTML = '<p style="color:var(--text-muted)">Cargando...</p>';
@@ -1004,36 +1065,27 @@
       const listEl = document.getElementById('curso-instructor-list');
 
       const aprobSnap = await getDocs(query(collection(db, 'cursos_aprobados'), where('cursoId', '==', cursoId)));
-      const aprobados = {};
+      _cursoState = {};
       let instructorActual = '';
+      users.forEach(u => { _cursoState[u.uid] = { checked: false, puntuacion: 5 }; });
       aprobSnap.docs.forEach(d => {
-        aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 };
-        if (d.data().instructor) instructorActual = d.data().instructor;
+        const data = d.data();
+        _cursoState[data.uid] = { checked: true, puntuacion: data.puntuacion || 5 };
+        if (data.instructor) instructorActual = data.instructor;
       });
 
       listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
       inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
 
-      lista.innerHTML = users.map(u => {
-        const ap = aprobados[u.uid];
-        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
-          <input type="checkbox" value="${u.uid}" ${ap ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" />
-          <span style="flex:1;font-size:0.88rem;color:var(--text)">@${u.username || u.uid}</span>
-          <div style="display:flex;align-items:center;gap:0.35rem">
-            <label style="font-size:0.72rem;color:var(--text-muted)">Nota:</label>
-            <input type="number" min="1" max="10" value="${ap ? ap.puntuacion : 5}"
-              style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
-              data-uid-nota="${u.uid}" />
-            <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
-          </div>
-          ${ap ? `<button type="button" class="btn btn--small btn--outline" onclick="window.open('titulos.html?tipo=curso&uid=${u.uid}&itemId=${cursoId}','_blank')" title="Ver y descargar certificado" style="padding:0.3rem 0.6rem">📥</button>` : ''}
-        </div>`;
-      }).join('') || '<p style="color:var(--text-muted)">No hay miembros aprobados.</p>';
+      const searchBox = document.getElementById('curso-buscar-miembro');
+      searchBox.value = '';
+      searchBox.oninput = () => renderCursoMiembrosLista(users, cursoId, searchBox.value);
+
+      renderCursoMiembrosLista(users, cursoId, '');
     };
 
     window.guardarMiembrosCurso = async function() {
       const cursoId = window._cursoId;
-      const checks = document.querySelectorAll('#curso-miembros-lista input[type="checkbox"]');
       const instructor = document.getElementById('curso-instructor-select').value;
 
       // Delete existing for this curso
@@ -1041,15 +1093,15 @@
       for (const d of existing.docs) await deleteDoc(doc(db, 'cursos_aprobados', d.id));
 
       const users = await getAllUsers();
-      for (const cb of checks) {
-        if (cb.checked) {
-          const nota = document.querySelector('[data-uid-nota="' + cb.value + '"]')?.value || 5;
-          const user = users.find(u => u.uid === cb.value);
+      for (const uid in _cursoState) {
+        const st = _cursoState[uid];
+        if (st.checked) {
+          const user = users.find(u => u.uid === uid);
           await addDoc(collection(db, 'cursos_aprobados'), {
-            uid: cb.value,
+            uid,
             username: user?.username || '',
             cursoId,
-            puntuacion: parseInt(nota),
+            puntuacion: st.puntuacion,
             instructor,
             fecha: new Date(),
           });
@@ -1076,6 +1128,58 @@
       return _usersCache;
     }
 
+    let _proyState = {}; // uid -> { checked: bool, puntuacion: number }
+
+    function renderProyectoMiembrosLista(users, proyId, searchTerm) {
+      const lista = document.getElementById('proyecto-miembros-lista');
+      const term = (searchTerm || '').trim().toLowerCase();
+
+      const filtered = term
+        ? users.filter(u =>
+            (u.username || '').toLowerCase().includes(term) ||
+            (u.displayName || '').toLowerCase().includes(term) ||
+            (u.phone || '').toLowerCase().includes(term)
+          )
+        : users;
+
+      if (filtered.length === 0) {
+        lista.innerHTML = '<p style="color:var(--text-muted)">Sin resultados para esa búsqueda.</p>';
+        return;
+      }
+
+      lista.innerHTML = filtered.map(u => {
+        const st = _proyState[u.uid] || { checked: false, puntuacion: 5 };
+        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+          <input type="checkbox" value="${u.uid}" ${st.checked ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" data-proy-uid-check="${u.uid}" />
+          <span style="flex:1;font-size:0.88rem;color:var(--text)">@${u.username || u.uid}${u.phone ? ' · ' + u.phone : ''}</span>
+          <div style="display:flex;align-items:center;gap:0.35rem">
+            <label style="font-size:0.72rem;color:var(--text-muted)">Puntuación:</label>
+            <input type="number" min="1" max="10" value="${st.puntuacion}"
+              style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
+              data-proy-uid-nota="${u.uid}" />
+            <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
+          </div>
+          ${st.checked ? `<button type="button" class="btn btn--small btn--outline" onclick="window.open('titulos.html?tipo=proyecto&uid=${u.uid}&itemId=${proyId}','_blank')" title="Ver y descargar certificado" style="padding:0.3rem 0.6rem">📥</button>` : ''}
+        </div>`;
+      }).join('');
+
+      lista.querySelectorAll('[data-proy-uid-check]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const uid = cb.dataset.proyUidCheck;
+          if (!_proyState[uid]) _proyState[uid] = { checked: false, puntuacion: 5 };
+          _proyState[uid].checked = cb.checked;
+          renderProyectoMiembrosLista(users, proyId, document.getElementById('proyecto-buscar-miembro').value);
+        });
+      });
+      lista.querySelectorAll('[data-proy-uid-nota]').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const uid = inp.dataset.proyUidNota;
+          if (!_proyState[uid]) _proyState[uid] = { checked: false, puntuacion: 5 };
+          _proyState[uid].puntuacion = parseInt(inp.value) || 5;
+        });
+      });
+    }
+
     window.abrirMiembrosProyecto = async function(proyId, proyNombre) {
       window._proyId = proyId;
       window._proyNombre = proyNombre;
@@ -1089,37 +1193,28 @@
       const listEl = document.getElementById('proyecto-instructor-list');
 
       const aprobSnap = await getDocs(query(collection(db, 'proyectos'), where('proyectoId', '==', proyId)));
-      const aprobados = {};
+      _proyState = {};
       let instructorActual = '';
+      users.forEach(u => { _proyState[u.uid] = { checked: false, puntuacion: 5 }; });
       aprobSnap.docs.forEach(d => {
-        aprobados[d.data().uid] = { docId: d.id, puntuacion: d.data().puntuacion || 5 };
-        if (d.data().instructor) instructorActual = d.data().instructor;
+        const data = d.data();
+        _proyState[data.uid] = { checked: true, puntuacion: data.puntuacion || 5 };
+        if (data.instructor) instructorActual = data.instructor;
       });
 
       listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
       inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
 
-      document.getElementById('proyecto-miembros-lista').innerHTML = users.map(u => {
-        const ap = aprobados[u.uid];
-        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
-          <input type="checkbox" value="${u.uid}" ${ap ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0" />
-          <span style="flex:1;font-size:0.88rem;color:var(--text)">@${u.username || u.uid}</span>
-          <div style="display:flex;align-items:center;gap:0.35rem">
-            <label style="font-size:0.72rem;color:var(--text-muted)">Puntuación:</label>
-            <input type="number" min="1" max="10" value="${ap ? ap.puntuacion : 5}"
-              style="width:50px;padding:0.25rem 0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;text-align:center"
-              data-proy-uid-nota="${u.uid}" />
-            <span style="font-size:0.72rem;color:var(--text-muted)">/10</span>
-          </div>
-          ${ap ? `<button type="button" class="btn btn--small btn--outline" onclick="window.open('titulos.html?tipo=proyecto&uid=${u.uid}&itemId=${proyId}','_blank')" title="Ver y descargar certificado" style="padding:0.3rem 0.6rem">📥</button>` : ''}
-        </div>`;
-      }).join('') || '<p style="color:var(--text-muted)">No hay miembros aprobados aún.</p>';
+      const searchBox = document.getElementById('proyecto-buscar-miembro');
+      searchBox.value = '';
+      searchBox.oninput = () => renderProyectoMiembrosLista(users, proyId, searchBox.value);
+
+      renderProyectoMiembrosLista(users, proyId, '');
     };
 
     window.guardarMiembrosProyecto = async function() {
       const proyId = window._proyId;
       const proyNombre = window._proyNombre;
-      const checks = document.querySelectorAll('#proyecto-miembros-lista input[type="checkbox"]');
       const instructor = document.getElementById('proyecto-instructor-select').value;
 
       // Delete existing for this proyecto
@@ -1127,16 +1222,16 @@
       for (const d of existing.docs) await deleteDoc(doc(db, 'proyectos', d.id));
 
       const users = await getUsers();
-      for (const cb of checks) {
-        if (cb.checked) {
-          const nota = document.querySelector('[data-proy-uid-nota="' + cb.value + '"]')?.value || 5;
-          const user = users.find(u => u.uid === cb.value);
+      for (const uid in _proyState) {
+        const st = _proyState[uid];
+        if (st.checked) {
+          const user = users.find(u => u.uid === uid);
           await addDoc(collection(db, 'proyectos'), {
-            uid: cb.value,
+            uid,
             username: user?.username || '',
             proyectoId: proyId,
             nombre: proyNombre,
-            puntuacion: parseInt(nota),
+            puntuacion: st.puntuacion,
             instructor,
             aprobado: true,
             fecha: new Date(),
