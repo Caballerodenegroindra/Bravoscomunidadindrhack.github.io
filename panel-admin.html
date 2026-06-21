@@ -133,6 +133,10 @@
           <h1 class="section-title">Cursos</h1>
           <button class="btn btn--primary btn--small" data-new-course>Crear curso</button>
         </div>
+        <div class="field" style="margin-bottom:1rem;max-width:420px">
+          <label>Buscar clase</label>
+          <input type="text" id="curso-buscar-clase" placeholder="Título, carpeta o nivel..." />
+        </div>
         <div class="card-grid" data-courses-grid>
           <p class="section-subtitle">Cargando cursos…</p>
         </div>
@@ -437,6 +441,11 @@
       const courses = await fetchAllCourses();
       renderStats(users, courses);
       renderCourses(courses);
+
+      const buscarClaseBox = document.getElementById('curso-buscar-clase');
+      buscarClaseBox.addEventListener('input', () => {
+        renderCourses(courses, buscarClaseBox.value);
+      });
     });
 
     function badge(estado) {
@@ -683,17 +692,32 @@
       }
     });
 
-    function renderCourses(courses) {
+    function renderCourses(courses, searchTerm) {
       const grid = document.querySelector('[data-courses-grid]');
+      const term = (searchTerm || '').trim().toLowerCase();
+
+      const filtered = term
+        ? courses.filter(c =>
+            (c.titulo || '').toLowerCase().includes(term) ||
+            (c.categoria || '').toLowerCase().includes(term) ||
+            (c.nivel || '').toLowerCase().includes(term) ||
+            (c.descripcion || '').toLowerCase().includes(term)
+          )
+        : courses;
 
       if (courses.length === 0) {
         grid.innerHTML = '<p class="section-subtitle">Aún no hay cursos creados.</p>';
         return;
       }
 
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p class="section-subtitle">Sin resultados para esa búsqueda.</p>';
+        return;
+      }
+
       // Agrupar por categoría
       const grupos = {};
-      courses.forEach(c => {
+      filtered.forEach(c => {
         const cat = c.categoria || 'General';
         if (!grupos[cat]) grupos[cat] = [];
         grupos[cat].push(c);
