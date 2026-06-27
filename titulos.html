@@ -224,6 +224,8 @@
 
     #download-cert-btn { width: 100%; max-width: 700px; }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#cc2200" />
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -535,6 +537,13 @@
         proyEl.innerHTML = '<p class="section-subtitle">Error al cargar proyectos.</p>';
       }
     });
+  </script>
+
+  <!-- PWA Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
   </script>
 </body>
 </html>

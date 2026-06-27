@@ -57,6 +57,8 @@
     .expand-hint { color: #555; font-size: 0.75rem; margin-top: 0.25rem; }
     .curso-actions { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#cc2200" />
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -257,6 +259,13 @@
         } catch(e) {}
       }
     });
+  </script>
+
+  <!-- PWA Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
   </script>
 </body>
 </html>
