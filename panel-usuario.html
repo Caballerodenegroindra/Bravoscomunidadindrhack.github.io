@@ -34,7 +34,7 @@
       <a href="cursos.html" class="tabbar__item"><span class="tabbar__icon">📚</span>Cursos</a>
       <a href="noticias.html" class="tabbar__item"><span class="tabbar__icon">📰</span>Noticias</a>
       <a href="perfil.html" class="tabbar__item"><span class="tabbar__icon">👤</span>Perfil</a>
-      <a href="configuracion.html" class="tabbar__item"><span class="tabbar__icon">⚙️</span>Config</a>
+      <a href="#ranking" class="tabbar__item" id="tab-ranking-btn"><span class="tabbar__icon">🏅</span>Ranking</a>
     </div>
   </nav>
 
@@ -48,6 +48,7 @@
         <a href="ficha.html">Mi Ficha</a>
         <a href="titulos.html">Mis Títulos</a>
         <a href="redes.html">Redes</a>
+        <a href="#ranking" id="sidebar-ranking-link">🏅 Ranking</a>
         <a href="configuracion.html">Configuración</a>
       </nav>
     </aside>
@@ -144,6 +145,22 @@
         </form>
       </div>
   </main>
+
+  <!-- RANKING OVERLAY -->
+  <div id="ranking-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;overflow-y:auto;padding:1rem">
+    <div style="max-width:560px;margin:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-top:0.5rem">
+        <div>
+          <h1 class="section-title" style="margin:0">🏅 Ranking <span class="accent">Global</span></h1>
+          <p class="section-subtitle" style="margin:0.25rem 0 0">Clasificación de todos los miembros por puntos</p>
+        </div>
+        <button id="ranking-close" style="background:none;border:1px solid #333;border-radius:8px;color:#aaa;cursor:pointer;font-size:1rem;padding:0.4rem 0.75rem">✕ Cerrar</button>
+      </div>
+      <div id="ranking-lista">
+        <p class="section-subtitle">Cargando ranking…</p>
+      </div>
+    </div>
+  </div>
 
   <footer class="footer">
     ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
@@ -374,6 +391,98 @@
         if (rankEl) rankEl.textContent = myPos > 0 ? '#' + myPos : '—';
       } catch(e) {}
     });
+  </script>
+  <script type="module">
+    /* === RANKING GLOBAL === */
+    import { db, auth } from './js/firebase-config.js';
+    import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const overlay  = document.getElementById('ranking-overlay');
+    const lista    = document.getElementById('ranking-lista');
+    const closeBtn = document.getElementById('ranking-close');
+    const tabBtn   = document.getElementById('tab-ranking-btn');
+    const sideLink = document.getElementById('sidebar-ranking-link');
+
+    let loaded = false;
+
+    async function loadRanking() {
+      if (loaded) return;
+      loaded = true;
+      lista.innerHTML = '<p class="section-subtitle">Cargando…</p>';
+
+      const meUser = auth.currentUser;
+      try {
+        const snap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
+        const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+        users.sort((a, b) => (b.puntos || 0) - (a.puntos || 0));
+
+        const TOPES = [
+          { min: 0,   label: 'Bronce',   color: '#cd7f32' },
+          { min: 100, label: 'Plata',    color: '#c0c0c0' },
+          { min: 250, label: 'Oro',      color: '#ffcc00' },
+          { min: 500, label: 'Platino',  color: '#00e5ff' },
+          { min: 1000,label: 'Diamante', color: '#a855f7' },
+        ];
+
+        function getTope(pts) {
+          let t = TOPES[0];
+          for (const tp of TOPES) { if (pts >= tp.min) t = tp; }
+          return t;
+        }
+
+        const medalIcons = ['🥇', '🥈', '🥉'];
+
+        lista.innerHTML = users.map((u, i) => {
+          const pos   = i + 1;
+          const pts   = u.puntos || 0;
+          const tope  = getTope(pts);
+          const esYo  = meUser && u.uid === meUser.uid;
+          const medal = pos <= 3 ? medalIcons[pos - 1] : `<span style="font-size:0.85rem;font-weight:700;color:#888">#${pos}</span>`;
+
+          return `<div style="
+              display:flex;align-items:center;gap:0.75rem;
+              padding:0.75rem 1rem;
+              border-radius:10px;
+              margin-bottom:0.5rem;
+              background:${esYo ? '#00bfff11' : '#111'};
+              border:1px solid ${esYo ? '#00bfff55' : '#222'};
+            ">
+            <div style="width:32px;text-align:center;flex-shrink:0;font-size:1.1rem">${medal}</div>
+            <div style="flex:1;min-width:0">
+              <p style="margin:0;font-weight:600;font-size:0.92rem;color:${esYo ? '#00bfff' : '#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                @${u.username || '—'}${esYo ? ' <span style="font-size:0.72rem;background:#00bfff22;color:#00bfff;border-radius:10px;padding:1px 7px;margin-left:4px">Tú</span>' : ''}
+              </p>
+              <p style="margin:0.1rem 0 0;font-size:0.75rem;color:${tope.color}">${tope.label}</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <p style="margin:0;font-weight:700;font-size:1rem;color:#ffcc00">${pts}</p>
+              <p style="margin:0;font-size:0.7rem;color:#666">pts</p>
+            </div>
+          </div>`;
+        }).join('') || '<p class="section-subtitle">No hay miembros aún.</p>';
+      } catch(e) {
+        lista.innerHTML = '<p class="section-subtitle" style="color:#ff6b6b">No se pudo cargar el ranking.</p>';
+      }
+    }
+
+    function openRanking(e) {
+      e && e.preventDefault();
+      overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      loadRanking();
+    }
+
+    function closeRanking() {
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    tabBtn?.addEventListener('click', openRanking);
+    sideLink?.addEventListener('click', openRanking);
+    closeBtn?.addEventListener('click', closeRanking);
+    overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeRanking(); });
+    if (window.location.hash === '#ranking') openRanking();
   </script>
 </body>
 </html>
