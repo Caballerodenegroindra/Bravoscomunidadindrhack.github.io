@@ -2,18 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Academia Indrhack — Formación en Informática, Ciberseguridad y Hacking Ético</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>Academia Indrhack — Ciberseguridad y Hacking Ético</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
 
+  <!-- TOPBAR -->
   <header class="navbar">
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK
+    </a>
     <nav class="navbar__links">
       <a href="index.html" class="active">Inicio</a>
       <a href="cursos.html">Cursos</a>
@@ -27,49 +31,76 @@
     </button>
   </header>
 
+  <!-- TABBAR (móvil) -->
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="index.html" class="tabbar__item active">
+        <span class="tabbar__icon">🏠</span>
+        Inicio
+      </a>
+      <a href="cursos.html" class="tabbar__item">
+        <span class="tabbar__icon">📚</span>
+        Cursos
+      </a>
+      <a href="noticias.html" class="tabbar__item">
+        <span class="tabbar__icon">📰</span>
+        Noticias
+      </a>
+      <a href="redes.html" class="tabbar__item">
+        <span class="tabbar__icon">🌐</span>
+        Redes
+      </a>
+      <a href="configuracion.html" class="tabbar__item">
+        <span class="tabbar__icon">⚙️</span>
+        Config
+      </a>
+    </div>
+  </nav>
+
   <main>
-    <section class="hero"><div style="display:flex;justify-content:center;margin-bottom:1.5rem"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="width:140px;height:140px;object-fit:contain;filter:drop-shadow(0 0 20px #cc220066)"></div>
+    <!-- HERO -->
+    <section class="hero">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" class="hero__logo-img" />
       <h1 class="hero__logo">ACADEMIA <span class="mark">INDRHACK</span></h1>
-      <p class="hero__subtitle">Formación en Informática • Ciberseguridad • Hacking Ético</p>
-      <p class="hero__motto">⚘️ EL CONOCIMIENTO ES LA BASE ⚘️</p>
+      <p class="hero__subtitle">Formación en Informática · Ciberseguridad · Hacking Ético</p>
+      <p class="hero__motto">⚘ EL CONOCIMIENTO ES LA BASE ⚘</p>
       <div class="hero__actions">
         <a href="login.html" class="btn btn--primary">Iniciar sesión</a>
-        <a href="registro.html" class="btn btn--outline">Registrarte</a>
+        <a href="registro.html" class="btn btn--outline">Registrarse</a>
       </div>
     </section>
 
-    <!-- Sección informativa -->
-    <section class="container section" style="padding:3rem 1.5rem">
-
-      <h2 class="section-title" style="text-align:center;margin-bottom:0.5rem">¿Qué es <span class="accent">Academia Indrhack</span>?</h2>
-      <p class="section-subtitle" style="text-align:center;max-width:600px;margin:0 auto 2.5rem">
-        Somos una comunidad dedicada a la formación en informática, ciberseguridad y hacking ético. Aprendés desde cero hasta niveles avanzados, con cursos, recursos y una comunidad activa que te acompaña en cada paso.
+    <!-- SECCIÓN INFORMATIVA -->
+    <section class="container section" style="padding-top:0">
+      <h2 class="section-title" style="text-align:center;margin-bottom:0.4rem">
+        ¿Qué es <span class="accent">Academia Indrhack</span>?
+      </h2>
+      <p class="section-subtitle" style="text-align:center;margin:0 auto 2rem;max-width:540px">
+        Comunidad dedicada a la formación en informática, ciberseguridad y hacking ético. Desde cero hasta niveles avanzados.
       </p>
 
       <div class="card-grid">
         <div class="card">
-          <h3>🛡️ Ciberseguridad</h3>
-          <p class="section-subtitle">Aprende a proteger sistemas, redes y datos contra amenazas reales del mundo digital.</p>
+          <h3 style="margin-bottom:0.5rem">🛡️ Ciberseguridad</h3>
+          <p class="section-subtitle" style="margin:0">Aprende a proteger sistemas, redes y datos contra amenazas reales.</p>
         </div>
         <div class="card">
-          <h3>💻 Hacking Ético</h3>
-          <p class="section-subtitle">Domina las técnicas que usan los atacantes para defenderte mejor. Todo de forma legal y ética.</p>
+          <h3 style="margin-bottom:0.5rem">💻 Hacking Ético</h3>
+          <p class="section-subtitle" style="margin:0">Domina técnicas ofensivas para defenderte mejor. De forma legal y ética.</p>
         </div>
         <div class="card">
-          <h3>📚 Cursos y Recursos</h3>
-          <p class="section-subtitle">Accede a materiales, guías y clases diseñadas para que avances a tu ritmo.</p>
+          <h3 style="margin-bottom:0.5rem">📚 Cursos</h3>
+          <p class="section-subtitle" style="margin:0">Accede a materiales y guías diseñadas para que avances a tu ritmo.</p>
         </div>
         <div class="card">
-          <h3>🤝 Comunidad</h3>
-          <p class="section-subtitle">Forma parte de una comunidad activa donde compartimos conocimiento y nos ayudamos mutuamente.</p>
+          <h3 style="margin-bottom:0.5rem">🤝 Comunidad</h3>
+          <p class="section-subtitle" style="margin:0">Comparte conocimiento con una comunidad activa que te acompaña.</p>
         </div>
       </div>
 
-      <div style="text-align:center;margin-top:2.5rem">
-        <p class="section-subtitle">¿Listo para empezar?</p>
-        <a href="registro.html" class="btn btn--primary" style="margin-top:0.5rem">Unirme a la academia</a>
+      <div style="text-align:center;margin-top:2rem">
+        <a href="registro.html" class="btn btn--primary">Unirme a la academia</a>
       </div>
-
     </section>
   </main>
 
@@ -86,7 +117,6 @@
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // Ocultar hero mientras verificamos sesión
     const hero = document.querySelector('.hero');
     if (hero) hero.style.opacity = '0';
 
@@ -97,21 +127,13 @@
           if (snap.exists()) {
             const profile = snap.data();
             if (profile.estado === 'aprobado') {
-              if (profile.rol === 'administrador') {
-                window.location.replace('panel-admin.html');
-              } else {
-                window.location.replace('panel-usuario.html');
-              }
+              window.location.replace(profile.rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html');
               return;
             }
           }
         } catch(e) {}
       }
-      // No hay sesión o no está aprobado - mostrar página normal
-      if (hero) {
-        hero.style.transition = 'opacity 0.3s ease';
-        hero.style.opacity = '1';
-      }
+      if (hero) { hero.style.transition = 'opacity 0.3s'; hero.style.opacity = '1'; }
     });
   </script>
 </body>

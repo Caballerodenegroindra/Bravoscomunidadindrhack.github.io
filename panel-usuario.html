@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
   <title>Mi panel — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -26,6 +27,16 @@
       <span></span><span></span><span></span>
     </button>
   </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="panel-usuario.html" class="tabbar__item active"><span class="tabbar__icon">🏠</span>Mi Panel</a>
+      <a href="cursos.html" class="tabbar__item"><span class="tabbar__icon">📚</span>Cursos</a>
+      <a href="noticias.html" class="tabbar__item"><span class="tabbar__icon">📰</span>Noticias</a>
+      <a href="perfil.html" class="tabbar__item"><span class="tabbar__icon">👤</span>Perfil</a>
+      <a href="configuracion.html" class="tabbar__item"><span class="tabbar__icon">⚙️</span>Config</a>
+    </div>
+  </nav>
 
   <main class="dashboard">
     <aside class="sidebar">
