@@ -66,6 +66,14 @@
           <div class="stat-card__value" data-user-rango>—</div>
           <div class="stat-card__label">Rango</div>
         </div>
+        <div class="stat-card" style="border-color:#ffcc0044">
+          <div class="stat-card__value" data-user-puntos style="color:#ffcc00">—</div>
+          <div class="stat-card__label">⭐ Puntos totales</div>
+        </div>
+        <div class="stat-card" style="border-color:#00bfff44">
+          <div class="stat-card__value" data-user-ranking style="color:#00bfff">—</div>
+          <div class="stat-card__label">🏅 Posición ranking</div>
+        </div>
         <div class="stat-card">
           <div class="stat-card__value" data-user-fecha>—</div>
           <div class="stat-card__label">Fecha de ingreso</div>
@@ -102,6 +110,13 @@
           <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.75rem">🏆 PROYECTOS</div>
           <div id="mis-proyectos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
         </div>
+      </div>
+
+      <!-- Mis Quizzes -->
+      <h2 class="section-title">Mis <span class="accent">Quizzes</span> 🧠</h2>
+      <p class="section-subtitle" style="margin-bottom:1rem">Estado de los quizzes que enviaste al administrador.</p>
+      <div id="mis-quizzes-lista" style="margin-bottom:2rem">
+        <p class="section-subtitle">Cargando quizzes...</p>
       </div>
 
       <!-- Noticias recientes -->
@@ -294,6 +309,68 @@
       } catch(e) {
         document.getElementById('mis-proyectos-logros').innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem">—</p>';
       }
+    });
+  <script type="module">
+    /* Quiz submissions + Ranking para panel usuario */
+    import { db, auth } from './js/firebase-config.js';
+    import { collection, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const estadoColor = { pendiente: '#f59e0b', aprobado: '#00ff88', rechazado: '#ff6b6b' };
+    const estadoIcon  = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      // --- Mis quizzes ---
+      try {
+        const snap = await getDocs(query(
+          collection(db, 'quiz_submissions'),
+          where('uid', '==', user.uid),
+          orderBy('fechaEnvio', 'desc')
+        ));
+        const el = document.getElementById('mis-quizzes-lista');
+        if (snap.empty) {
+          el.innerHTML = '<p class="section-subtitle">No enviaste ningún quiz todavía. <a href="cursos.html" style="color:#00bfff">Ver cursos →</a></p>';
+        } else {
+          el.innerHTML = snap.docs.map(d => {
+            const s = d.data();
+            const color = estadoColor[s.estado] || '#888';
+            const icon  = estadoIcon[s.estado]  || '?';
+            const fecha = s.fechaEnvio?.toDate ? s.fechaEnvio.toDate().toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '—';
+            return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:0.9rem 1rem;margin-bottom:0.65rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+              <div style="flex:1;min-width:180px">
+                <p style="margin:0;font-size:0.9rem;font-weight:600;color:#fff">${s.cursoTitulo || s.cursoId}</p>
+                <p style="margin:0.2rem 0 0;color:#888;font-size:0.75rem">${fecha}</p>
+                ${s.feedback && s.estado !== 'pendiente' ? `<p style="margin:0.35rem 0 0;color:#aaa;font-size:0.78rem;font-style:italic">"${s.feedback}"</p>` : ''}
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem">
+                <span style="color:${color};font-weight:700;font-size:0.88rem">${icon} ${s.estado}</span>
+                ${s.estado === 'aprobado' ? `<span style="color:#ffcc00;font-size:0.78rem;font-weight:700">+${s.puntos} pts</span>` : ''}
+                ${s.estado !== 'rechazado' ? '' : `<a href="clase.html?id=${s.cursoId}" class="btn btn--small btn--outline" style="font-size:0.72rem;padding:0.25rem 0.6rem">Reintentar →</a>`}
+              </div>
+            </div>`;
+          }).join('');
+        }
+      } catch(e) {
+        const el = document.getElementById('mis-quizzes-lista');
+        if (el) el.innerHTML = '<p class="section-subtitle" style="color:#ff6b6b">Error al cargar quizzes.</p>';
+      }
+
+      // --- Puntos y Ranking ---
+      try {
+        const allUsersSnap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
+        const allUsers = allUsersSnap.docs.map(d => ({ uid: d.id, puntos: d.data().puntos || 0 }));
+        allUsers.sort((a, b) => b.puntos - a.puntos);
+
+        const myPos = allUsers.findIndex(u => u.uid === user.uid) + 1;
+        const myPts = allUsers.find(u => u.uid === user.uid)?.puntos || 0;
+
+        const puntosEl = document.querySelector('[data-user-puntos]');
+        const rankEl   = document.querySelector('[data-user-ranking]');
+        if (puntosEl) puntosEl.textContent = myPts;
+        if (rankEl) rankEl.textContent = myPos > 0 ? '#' + myPos : '—';
+      } catch(e) {}
     });
   </script>
 </body>

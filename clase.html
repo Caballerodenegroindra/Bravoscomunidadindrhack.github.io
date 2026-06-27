@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>Clase — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .clase-hero {
+      background: linear-gradient(135deg, #0a0a0f 0%, #111 100%);
+      border: 1px solid #222;
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .nivel-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .nivel-basico   { background: #00bfff22; color: #00bfff; border: 1px solid #00bfff; }
+    .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b; }
+    .nivel-avanzado { background: #cc220022; color: #cc2200; border: 1px solid #cc2200; }
+
+    .puntos-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #ffcc0022;
+      border: 1px solid #ffcc00;
+      color: #ffcc00;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
+    }
+
+    .content-block {
+      background: #0f0f15;
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: #ccc;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      font-size: 0.93rem;
+    }
+
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      border: 1px solid #222;
+    }
+    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+    /* QUIZ */
+    .quiz-section {
+      background: #0a0a14;
+      border: 1px solid #cc220044;
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-top: 2rem;
+    }
+    .quiz-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      color: #cc2200;
+      margin: 0 0 0.35rem;
+    }
+    .quiz-subtitle { color: #888; font-size: 0.85rem; margin: 0 0 1.5rem; }
+
+    .pregunta-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .pregunta-card h4 {
+      font-size: 0.92rem;
+      color: #fff;
+      margin: 0 0 0.85rem;
+      line-height: 1.5;
+    }
+    .pregunta-card textarea {
+      width: 100%;
+      min-height: 90px;
+      background: #0a0a0f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #eee;
+      font-size: 0.88rem;
+      padding: 0.75rem;
+      resize: vertical;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    .pregunta-card textarea:focus { outline: none; border-color: #cc2200; }
+    .pregunta-num {
+      display: inline-block;
+      background: #cc220022;
+      color: #cc2200;
+      border: 1px solid #cc2200;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .quiz-ya-enviado {
+      background: #00bfff11;
+      border: 1px solid #00bfff44;
+      border-radius: 10px;
+      padding: 1.25rem;
+      color: #00bfff;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .quiz-aprobado {
+      background: #00ff8811;
+      border: 1px solid #00ff8844;
+      border-radius: 10px;
+      padding: 1.25rem;
+      color: #00ff88;
+    }
+    .quiz-rechazado {
+      background: #cc220011;
+      border: 1px solid #cc220044;
+      border-radius: 10px;
+      padding: 1.25rem;
+      color: #ff6b6b;
+    }
+
+    .material-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 0.65rem 1.1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: border-color 0.2s, color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .material-btn:hover { border-color: #00bfff; color: #00bfff; }
+
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #555;
+      white-space: nowrap;
+    }
+    .step.active { color: #cc2200; }
+    .step.done { color: #00ff88; }
+    .step-dot {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step.active .step-dot { border-color: #cc2200; color: #cc2200; }
+    .step.done .step-dot { border-color: #00ff88; color: #00ff88; background: #00ff8811; }
+    .step-line { width: 30px; height: 2px; background: #222; flex-shrink: 0; }
+    .step.done + .step .step-line { background: #00ff8844; }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="index.html" class="tabbar__item"><span class="tabbar__icon">🏠</span>Inicio</a>
+      <a href="cursos.html" class="tabbar__item active"><span class="tabbar__icon">📚</span>Cursos</a>
+      <a href="noticias.html" class="tabbar__item"><span class="tabbar__icon">📰</span>Noticias</a>
+      <a href="redes.html" class="tabbar__item"><span class="tabbar__icon">🌐</span>Redes</a>
+      <a href="configuracion.html" class="tabbar__item"><span class="tabbar__icon">⚙️</span>Config</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container section">
+      <a href="cursos.html" style="color:#888;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem">← Volver a Cursos</a>
+
+      <!-- Pasos -->
+      <div class="progress-steps">
+        <div class="step done" id="step-contenido">
+          <div class="step-dot">1</div> Contenido
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step-quiz">
+          <div class="step-dot">2</div> Quiz
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step-resultado">
+          <div class="step-dot">3</div> Resultado
+        </div>
+      </div>
+
+      <div id="loading" style="color:#888;text-align:center;padding:3rem">Cargando clase…</div>
+      <div id="clase-contenido" style="display:none"></div>
+    </div>
+  </main>
+
+  <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético</footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { doc, getDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const params = new URLSearchParams(location.search);
+    const cursoId = params.get('id');
+    const loading = document.getElementById('loading');
+    const contenidoEl = document.getElementById('clase-contenido');
+
+    const nivelClass = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
+    const puntosMap = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
+
+    if (!cursoId) {
+      loading.innerHTML = '<p style="color:#ff6b6b">No se especificó ninguna clase. <a href="cursos.html" style="color:#00bfff">Volver</a></p>';
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        loading.innerHTML = '<div style="text-align:center;padding:2rem"><p style="color:#ff6b6b;margin-bottom:1rem">⚠️ Debes iniciar sesión para ver esta clase.</p><a href="login.html" class="btn btn--primary">Iniciar sesión</a></div>';
+        return;
+      }
+
+      try {
+        const userSnap = await getDoc(doc(db, 'users', user.uid));
+        const userData = userSnap.data();
+
+        if (!userSnap.exists() || userData.estado !== 'aprobado') {
+          loading.innerHTML = '<p style="color:#ff6b6b;text-align:center">⚠️ Tu cuenta aún no está aprobada. Contacta al administrador.</p>';
+          return;
+        }
+
+        if (!cursoId) return;
+
+        const cursoSnap = await getDoc(doc(db, 'courses', cursoId));
+        if (!cursoSnap.exists()) {
+          loading.innerHTML = '<p style="color:#ff6b6b">Clase no encontrada.</p>';
+          return;
+        }
+
+        const curso = { id: cursoSnap.id, ...cursoSnap.data() };
+
+        // Verificar si ya envió quiz
+        const quizSnap = await getDocs(query(
+          collection(db, 'quiz_submissions'),
+          where('cursoId', '==', cursoId),
+          where('uid', '==', user.uid)
+        ));
+        const submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
+
+        renderClase(curso, userData, user.uid, submission);
+      } catch(e) {
+        loading.innerHTML = '<p style="color:#ff6b6b">Error al cargar: ' + e.message + '</p>';
+      }
+    });
+
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    function renderClase(curso, userData, uid, submission) {
+      loading.style.display = 'none';
+      contenidoEl.style.display = 'block';
+
+      const puntos = puntosMap[curso.nivel] || 100;
+      const ytId = extractYouTubeId(curso.enlace || '');
+
+      // Actualizar pasos
+      if (submission) {
+        document.getElementById('step-quiz').classList.add('done');
+        document.getElementById('step-resultado').classList.add(submission.estado === 'aprobado' ? 'done' : submission.estado === 'rechazado' ? 'active' : 'active');
+      } else {
+        document.getElementById('step-quiz').classList.add('active');
+      }
+
+      // Preguntas del quiz (desde Firestore o defaults)
+      const preguntas = curso.quiz_preguntas || [
+        '¿Cuál es el concepto principal de esta clase?',
+        '¿Qué pasos seguirías para aplicar lo aprendido?',
+        '¿Qué riesgos o precauciones debes tener en cuenta?',
+        '¿Cómo explicarías este tema a alguien que no lo conoce?'
+      ];
+
+      let quizHTML = '';
+
+      if (submission) {
+        if (submission.estado === 'aprobado') {
+          quizHTML = `
+            <div class="quiz-aprobado">
+              <div style="font-size:1.5rem;margin-bottom:0.5rem">🎉</div>
+              <strong>¡Felicidades! Quiz aprobado</strong>
+              <p style="margin:0.5rem 0 0;font-size:0.875rem;opacity:0.85">
+                Ganaste <strong>${puntos} puntos</strong> y desbloqueaste tu certificado y badge de esta clase.
+              </p>
+            </div>
+          `;
+        } else if (submission.estado === 'rechazado') {
+          quizHTML = `
+            <div class="quiz-rechazado">
+              <div style="font-size:1.5rem;margin-bottom:0.5rem">❌</div>
+              <strong>Quiz no aprobado</strong>
+              <p style="margin:0.5rem 0 0;font-size:0.875rem;opacity:0.85">
+                ${submission.feedback || 'El administrador revisó tus respuestas y no aprobó el quiz. Repasa el contenido e intenta nuevamente.'}
+              </p>
+              <button class="btn btn--outline btn--small" style="margin-top:1rem" onclick="location.reload()">🔄 Reintentar</button>
+            </div>
+          `;
+        } else {
+          quizHTML = `
+            <div class="quiz-ya-enviado">
+              <div style="font-size:1.5rem">⏳</div>
+              <div>
+                <strong>Quiz enviado — Pendiente de revisión</strong>
+                <p style="margin:0.35rem 0 0;font-size:0.85rem;opacity:0.8">
+                  El administrador revisará tus respuestas y te notificará el resultado. Revisá tu perfil para ver si ya aprobaste.
+                </p>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        quizHTML = `
+          <p class="quiz-subtitle">Respondé las 4 preguntas. El admin revisará tus respuestas y, si aprobás, te asignará los puntos automáticamente.</p>
+          <form id="quiz-form">
+            ${preguntas.map((p, i) => `
+              <div class="pregunta-card">
+                <h4><span class="pregunta-num">${i + 1}</span>${p}</h4>
+                <textarea name="r${i}" placeholder="Tu respuesta…" required></textarea>
+              </div>
+            `).join('')}
+            <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">
+              📤 Enviar respuestas
+            </button>
+          </form>
+        `;
+      }
+
+      contenidoEl.innerHTML = `
+        <!-- HERO -->
+        <div class="clase-hero">
+          <div>
+            <span class="nivel-badge ${nivelClass[curso.nivel] || 'nivel-basico'}">${curso.nivel || 'Básico'}</span>
+            <span class="puntos-badge">⭐ ${puntos} pts</span>
+          </div>
+          <h1 style="margin:0.5rem 0 0.75rem;font-size:clamp(1.1rem,4vw,1.6rem)">${curso.titulo}</h1>
+          <p style="color:#aaa;font-size:0.9rem;margin:0;line-height:1.6">${curso.categoria || ''}</p>
+        </div>
+
+        <!-- VIDEO -->
+        ${ytId ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>` : ''}
+
+        <!-- DESCRIPCIÓN / CONTENIDO -->
+        ${curso.descripcion ? `<div class="content-block">${curso.descripcion}</div>` : ''}
+
+        <!-- MATERIAL -->
+        ${curso.descarga ? `
+          <a href="${curso.descarga}" target="_blank" download class="material-btn">
+            ⬇ Descargar material de la clase
+          </a>
+        ` : ''}
+        ${curso.enlace && !ytId ? `
+          <a href="${curso.enlace}" target="_blank" class="material-btn">
+            🔗 Acceder al recurso externo
+          </a>
+        ` : ''}
+
+        <!-- QUIZ -->
+        <div class="quiz-section">
+          <h2 class="quiz-title">🧠 Quiz de evaluación</h2>
+          ${quizHTML}
+        </div>
+      `;
+
+      // Bind form
+      const form = document.getElementById('quiz-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = form.querySelector('button[type=submit]');
+          btn.disabled = true;
+          btn.textContent = 'Enviando…';
+          try {
+            const respuestas = preguntas.map((p, i) => ({
+              pregunta: p,
+              respuesta: (form.elements['r' + i]?.value || '').trim()
+            }));
+
+            await addDoc(collection(db, 'quiz_submissions'), {
+              uid,
+              username: userData.username || '',
+              displayName: userData.displayName || '',
+              cursoId: curso.id,
+              cursoTitulo: curso.titulo,
+              nivel: curso.nivel || 'Básico',
+              puntos,
+              respuestas,
+              estado: 'pendiente',
+              fechaEnvio: Timestamp.now(),
+            });
+
+            // Recargar para mostrar estado "pendiente"
+            location.reload();
+          } catch(err) {
+            btn.disabled = false;
+            btn.textContent = '📤 Enviar respuestas';
+            alert('Error al enviar: ' + err.message);
+          }
+        });
+      }
+    }
+  </script>
+
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    onAuthStateChanged(auth, async (user) => {
+      const inicioLinks = document.querySelectorAll('a[href="index.html"]');
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists() && snap.data().estado === 'aprobado') {
+            const panel = snap.data().rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html';
+            inicioLinks.forEach(a => { a.href = panel; a.textContent = 'Mi Panel'; });
+          }
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>
