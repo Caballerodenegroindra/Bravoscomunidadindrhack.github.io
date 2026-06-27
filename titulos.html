@@ -538,12 +538,66 @@
       }
     });
   </script>
+  <!-- ══ PWA: Botón flotante instalar app ══ -->
+  <div id="pwa-fab" style="position:fixed;bottom:1.5rem;right:1.25rem;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
+    <div id="pwa-tooltip" style="display:none;background:#111;border:1px solid #cc2200;border-radius:10px;padding:0.75rem 1rem;max-width:240px;box-shadow:0 0 20px #cc220044;animation:fadeIn 0.2s ease">
+      <p id="pwa-tip-msg" style="margin:0 0 0.65rem;font-size:0.82rem;color:#ccc;line-height:1.5"></p>
+      <div style="display:flex;gap:0.5rem">
+        <button id="pwa-install-btn" style="display:none;flex:1;background:#cc2200;color:#fff;border:none;border-radius:7px;padding:0.45rem 0;font-weight:700;font-size:0.82rem;cursor:pointer">⬇ Instalar</button>
+        <button id="pwa-tip-close" style="flex:1;background:transparent;color:#888;border:1px solid #333;border-radius:7px;padding:0.45rem 0;font-size:0.82rem;cursor:pointer">Cerrar</button>
+      </div>
+    </div>
+    <button id="pwa-fab-btn" title="Instalar app" style="width:52px;height:52px;border-radius:50%;background:#cc2200;border:none;cursor:pointer;box-shadow:0 4px 18px #cc220066;display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:transform 0.15s">📲</button>
+  </div>
+  <style>
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+    #pwa-fab-btn:hover { transform: scale(1.08); }
+  </style>
+  <script>
+  (function(){
+    // Ocultar si ya está instalada como app
+    if(window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone) return;
+
+    const fab     = document.getElementById('pwa-fab');
+    const fabBtn  = document.getElementById('pwa-fab-btn');
+    const tooltip = document.getElementById('pwa-tooltip');
+    const tipMsg  = document.getElementById('pwa-tip-msg');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const closeBtn   = document.getElementById('pwa-tip-close');
+
+    let deferredPrompt = null;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+    if(isIOS){
+      tipMsg.textContent = 'En Safari toca ⬆ (Compartir) y luego "Añadir a pantalla de inicio".';
+    } else {
+      tipMsg.textContent = 'Instala la app en tu dispositivo para acceder sin el navegador.';
+      window.addEventListener('beforeinstallprompt', (e)=>{
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'block';
+      });
+      installBtn.addEventListener('click', async ()=>{
+        if(!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const {outcome} = await deferredPrompt.userChoice;
+        if(outcome==='accepted'){ tooltip.style.display='none'; fab.style.display='none'; }
+        deferredPrompt = null;
+      });
+    }
+
+    fabBtn.addEventListener('click', ()=>{
+      tooltip.style.display = tooltip.style.display==='none' ? 'block' : 'none';
+    });
+    closeBtn.addEventListener('click', ()=>{ tooltip.style.display='none'; });
+    window.addEventListener('appinstalled', ()=>{ fab.style.display='none'; });
+  })();
+  </script>
+  <!-- ══ FIN PWA botón ══ -->
 
   <!-- PWA Service Worker -->
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js");
-    }
+    if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }
   </script>
 </body>
 </html>

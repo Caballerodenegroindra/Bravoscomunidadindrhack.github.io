@@ -116,83 +116,66 @@
       }
     });
   </script>
-  <!-- ══ PWA INSTALL BANNER ══════════════════════════════════ -->
-  <div id="pwa-banner" style="display:none;position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:9999;width:calc(100% - 2rem);max-width:420px;background:#111;border:1px solid #cc2200;border-radius:14px;padding:1rem 1.25rem;box-shadow:0 0 24px #cc220044;animation:slideUp 0.4s ease">
-    <div style="display:flex;align-items:flex-start;gap:0.75rem">
-      <img src="assets/img/logo-indrhack.png" style="width:42px;height:42px;border-radius:10px;flex-shrink:0;object-fit:contain" alt="logo">
-      <div style="flex:1;min-width:0">
-        <p style="margin:0 0 0.15rem;font-weight:700;font-size:0.95rem;color:#fff">Instalar Academia Indrhack</p>
-        <p id="pwa-banner-msg" style="margin:0;font-size:0.8rem;color:#aaa;line-height:1.4">Añade la app a tu pantalla de inicio para acceder más rápido.</p>
+  <!-- ══ PWA: Botón flotante instalar app ══ -->
+  <div id="pwa-fab" style="position:fixed;bottom:1.5rem;right:1.25rem;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
+    <div id="pwa-tooltip" style="display:none;background:#111;border:1px solid #cc2200;border-radius:10px;padding:0.75rem 1rem;max-width:240px;box-shadow:0 0 20px #cc220044;animation:fadeIn 0.2s ease">
+      <p id="pwa-tip-msg" style="margin:0 0 0.65rem;font-size:0.82rem;color:#ccc;line-height:1.5"></p>
+      <div style="display:flex;gap:0.5rem">
+        <button id="pwa-install-btn" style="display:none;flex:1;background:#cc2200;color:#fff;border:none;border-radius:7px;padding:0.45rem 0;font-weight:700;font-size:0.82rem;cursor:pointer">⬇ Instalar</button>
+        <button id="pwa-tip-close" style="flex:1;background:transparent;color:#888;border:1px solid #333;border-radius:7px;padding:0.45rem 0;font-size:0.82rem;cursor:pointer">Cerrar</button>
       </div>
-      <button id="pwa-close" style="background:none;border:none;color:#666;cursor:pointer;font-size:1.2rem;padding:0;line-height:1;flex-shrink:0">✕</button>
     </div>
-    <div style="display:flex;gap:0.6rem;margin-top:0.85rem">
-      <button id="pwa-install-btn" style="flex:1;background:#cc2200;color:#fff;border:none;border-radius:8px;padding:0.55rem 0;font-weight:700;font-size:0.88rem;cursor:pointer;display:none">⬇ Instalar app</button>
-      <button id="pwa-close-btn" style="flex:1;background:transparent;color:#888;border:1px solid #333;border-radius:8px;padding:0.55rem 0;font-size:0.88rem;cursor:pointer">Ahora no</button>
-    </div>
+    <button id="pwa-fab-btn" title="Instalar app" style="width:52px;height:52px;border-radius:50%;background:#cc2200;border:none;cursor:pointer;box-shadow:0 4px 18px #cc220066;display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:transform 0.15s">📲</button>
   </div>
   <style>
-    @keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+    #pwa-fab-btn:hover { transform: scale(1.08); }
   </style>
   <script>
-    (function() {
-      const banner  = document.getElementById('pwa-banner');
-      const msg     = document.getElementById('pwa-banner-msg');
-      const btn     = document.getElementById('pwa-install-btn');
-      const closeX  = document.getElementById('pwa-close');
-      const closeBtn= document.getElementById('pwa-close-btn');
+  (function(){
+    // Ocultar si ya está instalada como app
+    if(window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone) return;
 
-      // No mostrar si ya fue descartado en las últimas 7 días
-      const dismissed = localStorage.getItem('pwa_dismissed');
-      if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+    const fab     = document.getElementById('pwa-fab');
+    const fabBtn  = document.getElementById('pwa-fab-btn');
+    const tooltip = document.getElementById('pwa-tooltip');
+    const tipMsg  = document.getElementById('pwa-tip-msg');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const closeBtn   = document.getElementById('pwa-tip-close');
 
-      // No mostrar si ya está instalada
-      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
+    let deferredPrompt = null;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
 
-      function closeBanner() {
-        banner.style.display = 'none';
-        localStorage.setItem('pwa_dismissed', Date.now());
-      }
-      closeX.addEventListener('click', closeBanner);
-      closeBtn.addEventListener('click', closeBanner);
+    if(isIOS){
+      tipMsg.textContent = 'En Safari toca ⬆ (Compartir) y luego "Añadir a pantalla de inicio".';
+    } else {
+      tipMsg.textContent = 'Instala la app en tu dispositivo para acceder sin el navegador.';
+      window.addEventListener('beforeinstallprompt', (e)=>{
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'block';
+      });
+      installBtn.addEventListener('click', async ()=>{
+        if(!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const {outcome} = await deferredPrompt.userChoice;
+        if(outcome==='accepted'){ tooltip.style.display='none'; fab.style.display='none'; }
+        deferredPrompt = null;
+      });
+    }
 
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-      const isAndroid = /android/i.test(navigator.userAgent);
-
-      if (isIOS) {
-        // iOS: instrucciones manuales (no hay beforeinstallprompt)
-        msg.textContent = 'En Safari: toca el botón compartir (⬆) y luego "Añadir a pantalla de inicio".';
-        setTimeout(() => { banner.style.display = 'block'; }, 2500);
-      } else {
-        // Android / Chrome Desktop: capturar evento beforeinstallprompt
-        let deferredPrompt = null;
-        window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault();
-          deferredPrompt = e;
-          btn.style.display = 'block';
-          setTimeout(() => { banner.style.display = 'block'; }, 1500);
-        });
-        btn.addEventListener('click', async () => {
-          if (!deferredPrompt) return;
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') closeBanner();
-          deferredPrompt = null;
-        });
-      }
-
-      // Ocultar si se instala
-      window.addEventListener('appinstalled', closeBanner);
-    })();
+    fabBtn.addEventListener('click', ()=>{
+      tooltip.style.display = tooltip.style.display==='none' ? 'block' : 'none';
+    });
+    closeBtn.addEventListener('click', ()=>{ tooltip.style.display='none'; });
+    window.addEventListener('appinstalled', ()=>{ fab.style.display='none'; });
+  })();
   </script>
-  <!-- ══ FIN PWA INSTALL BANNER ══════════════════════════════ -->
+  <!-- ══ FIN PWA botón ══ -->
 
   <!-- PWA Service Worker -->
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js");
-    }
+    if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }
   </script>
-
 </body>
 </html>
