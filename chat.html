@@ -569,7 +569,7 @@
       <div class="chat-input-area" id="chat-input-area" style="display:none">
         <div class="chat-input-row">
           <textarea class="chat-input" id="chat-input" placeholder="Escribe un mensaje…" rows="1" maxlength="2000"></textarea>
-          <button class="chat-send-btn" id="btn-send" disabled>➤</button>
+          <button class="chat-send-btn" id="btn-send">➤</button>
         </div>
       </div>
     </div>
@@ -623,7 +623,6 @@
     requireApprovedUser('login.html').then(async (profile) => {
       if (!profile) return;
       ME = profile;
-      document.getElementById('btn-send').disabled = false;
       await loadRooms();
       setupInput();
     });
@@ -948,7 +947,6 @@
 
       input.addEventListener('input', () => {
         autoResize(input);
-        btn.disabled = !input.value.trim();
       });
 
       input.addEventListener('keydown', (e) => {
@@ -995,7 +993,6 @@
         }
         await addDoc(collection(db, 'chat_messages'), payload);
 
-        // Actualizar sala
         await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
           lastMsg: text,
           lastAt:  serverTimestamp(),
@@ -1005,13 +1002,13 @@
         REPLY_TO = null;
         document.getElementById('reply-preview').classList.remove('show');
 
-        // Scroll al fondo
         const msgs = document.getElementById('chat-messages');
         setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 100);
       } catch(e) {
         alert('Error al enviar: ' + e.message);
       } finally {
-        btn.disabled = !input.value.trim();
+        // Dejar habilitado para el próximo mensaje
+        btn.disabled = false;
       }
     }
 
