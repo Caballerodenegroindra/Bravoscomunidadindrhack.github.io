@@ -634,9 +634,10 @@
       const listEl = document.getElementById('rooms-list');
 
       // Suscripción en tiempo real a las salas
-      const q = query(collection(db, 'chat_rooms'), orderBy('lastAt', 'desc'));
+      const q = query(collection(db, 'chat_rooms'));
       onSnapshot(q, async (snap) => {
-        const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
 
         // Garantizar que siempre exista la sala Global
         const globalExists = rooms.find(r => r.type === 'global');
@@ -735,12 +736,16 @@
       const q = query(
         collection(db, 'chat_messages'),
         where('roomId', '==', roomId),
-        orderBy('createdAt', 'asc'),
         limit(200)
       );
 
       UNSUB = onSnapshot(q, (snap) => {
-        renderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+        renderMessages(msgs);
+      }, (err) => {
+        document.getElementById('chat-messages').innerHTML =
+          `<p style="color:#ff6b6b;padding:1rem;font-size:0.85rem">Error al cargar mensajes: ${err.message}</p>`;
       });
     }
 
@@ -854,13 +859,13 @@
       containerEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.75rem;padding:0.25rem">Cargando…</p>';
       const q = query(
         collection(db, 'chat_replies'),
-        where('parentId', '==', parentId),
-        orderBy('createdAt', 'asc')
+        where('parentId', '==', parentId)
       );
       _threadUnsubs[parentId] = onSnapshot(q, (snap) => {
+        const replies = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
         containerEl.innerHTML = '';
-        snap.docs.forEach(d => {
-          const r = { id: d.id, ...d.data() };
+        replies.forEach(r => {
           const isOwn = r.uid === ME?.uid;
           const initials = (r.username || '?').substring(0, 2).toUpperCase();
           const time = r.createdAt?.toDate ? fmtTime(r.createdAt.toDate()) : '';
