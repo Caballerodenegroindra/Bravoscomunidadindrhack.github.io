@@ -8,8 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#cc2200" />
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -115,112 +113,6 @@
         hero.style.opacity = '1';
       }
     });
-  </script>
-  <!-- ══ PWA: Modal instalar app ══ -->
-  <button id="pwa-fab-btn" title="Instalar app" style="position:fixed;bottom:1.5rem;right:1.25rem;z-index:9998;width:56px;height:56px;border-radius:50%;background:#cc2200;border:none;cursor:pointer;box-shadow:0 4px 20px #cc220088;display:flex;align-items:center;justify-content:center;font-size:1.5rem">📲</button>
-
-  <div id="pwa-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:flex-end;justify-content:center">
-    <div style="background:#111;border:1px solid #cc2200;border-radius:18px 18px 0 0;padding:1.5rem 1.25rem 2rem;width:100%;max-width:480px;animation:slideUp2 0.3s ease">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
-        <div style="display:flex;align-items:center;gap:0.65rem">
-          <img src="assets/img/logo-indrhack.png" style="width:38px;height:38px;border-radius:8px;object-fit:contain">
-          <div>
-            <p style="margin:0;font-weight:700;font-size:0.95rem;color:#fff">Academia Indrhack</p>
-            <p style="margin:0;font-size:0.75rem;color:#888">Instalar en tu celular</p>
-          </div>
-        </div>
-        <button id="pwa-modal-close" style="background:none;border:none;color:#666;font-size:1.4rem;cursor:pointer;line-height:1">✕</button>
-      </div>
-
-      <!-- Botón directo Chrome/Edge -->
-      <button id="pwa-install-direct" style="display:none;width:100%;background:#cc2200;color:#fff;border:none;border-radius:10px;padding:0.75rem;font-weight:700;font-size:1rem;cursor:pointer;margin-bottom:1rem">⬇ Instalar app ahora</button>
-
-      <!-- Instrucciones según navegador -->
-      <div id="pwa-steps">
-        <p style="margin:0 0 0.85rem;font-size:0.82rem;color:#aaa;text-align:center">Sigue estos pasos en tu navegador:</p>
-        <div id="pwa-steps-list" style="display:flex;flex-direction:column;gap:0.6rem"></div>
-      </div>
-    </div>
-  </div>
-  <style>
-    @keyframes slideUp2{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-  </style>
-  <script>
-  (function(){
-    if(window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone){
-      var b=document.getElementById('pwa-fab-btn');
-      if(b) b.style.display='none';
-      return;
-    }
-
-    var fabBtn=document.getElementById('pwa-fab-btn');
-    var modal=document.getElementById('pwa-modal');
-    var closeBtn=document.getElementById('pwa-modal-close');
-    var directBtn=document.getElementById('pwa-install-direct');
-    var stepsList=document.getElementById('pwa-steps-list');
-    var deferredPrompt=null;
-
-    var ua=navigator.userAgent;
-    var isIOS=/iphone|ipad|ipod/i.test(ua)&&!window.MSStream;
-    var isSamsung=/SamsungBrowser/i.test(ua);
-    var isFirefox=/Firefox/i.test(ua);
-
-    function makeStep(num,text){
-      return '<div style="display:flex;align-items:flex-start;gap:0.65rem;background:#1a1a1a;border-radius:9px;padding:0.7rem 0.85rem">'
-        +'<span style="background:#cc2200;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">'+num+'</span>'
-        +'<span style="color:#ddd;font-size:0.85rem;line-height:1.45">'+text+'</span></div>';
-    }
-
-    if(isIOS){
-      stepsList.innerHTML=
-        makeStep(1,'Abre esta página en <strong style="color:#fff">Safari</strong> (no Chrome ni otro navegador)')+
-        makeStep(2,'Toca el ícono <strong style="color:#fff">⬆ Compartir</strong> en la barra inferior')+
-        makeStep(3,'Desplázate y toca <strong style="color:#fff">"Añadir a pantalla de inicio"</strong>')+
-        makeStep(4,'Toca <strong style="color:#fff">Añadir</strong> — ¡listo!');
-    } else if(isSamsung){
-      stepsList.innerHTML=
-        makeStep(1,'Toca el ícono <strong style="color:#fff">☰ menú</strong> (tres líneas abajo a la derecha)')+
-        makeStep(2,'Toca <strong style="color:#fff">"Añadir página a"</strong>')+
-        makeStep(3,'Selecciona <strong style="color:#fff">"Pantalla de inicio"</strong>')+
-        makeStep(4,'Confirma tocando <strong style="color:#fff">Agregar</strong>');
-    } else if(isFirefox){
-      stepsList.innerHTML=
-        makeStep(1,'Toca el ícono <strong style="color:#fff">⋮ menú</strong> (tres puntos arriba a la derecha)')+
-        makeStep(2,'Toca <strong style="color:#fff">"Instalar"</strong>')+
-        makeStep(3,'Confirma tocando <strong style="color:#fff">Agregar</strong>');
-    } else {
-      // Chrome / Edge
-      stepsList.innerHTML=
-        makeStep(1,'Toca los <strong style="color:#fff">⋮ tres puntos</strong> arriba a la derecha')+
-        makeStep(2,'Busca y toca <strong style="color:#fff">"Instalar app"</strong> o <strong style="color:#fff">"Añadir a pantalla de inicio"</strong>')+
-        makeStep(3,'Confirma tocando <strong style="color:#fff">Instalar</strong>');
-      window.addEventListener('beforeinstallprompt',function(e){
-        e.preventDefault();
-        deferredPrompt=e;
-        directBtn.style.display='block';
-        document.getElementById('pwa-steps').style.display='none';
-      });
-      directBtn.addEventListener('click',async function(){
-        if(!deferredPrompt)return;
-        deferredPrompt.prompt();
-        var res=await deferredPrompt.userChoice;
-        if(res.outcome==='accepted'){ modal.style.display='none'; fabBtn.style.display='none'; }
-        deferredPrompt=null;
-      });
-    }
-
-    fabBtn.addEventListener('click',function(){
-      modal.style.display='flex';
-    });
-    closeBtn.addEventListener('click',function(){ modal.style.display='none'; });
-    modal.addEventListener('click',function(e){ if(e.target===modal) modal.style.display='none'; });
-    window.addEventListener('appinstalled',function(){ fabBtn.style.display='none'; });
-  })();
-  </script>
-  <!-- ══ FIN PWA modal ══ -->
-
-  <script>
-    if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js"); }
   </script>
 </body>
 </html>
