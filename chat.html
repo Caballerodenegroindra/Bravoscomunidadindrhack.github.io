@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>Chat — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── CHAT LAYOUT ── */
+    .chat-layout {
+      display: flex;
+      height: calc(100dvh - var(--nav-h) - var(--tabbar-h, 0px));
+      overflow: hidden;
+    }
+
+    /* ── PANEL DE SALAS (izquierda) ── */
+    .chat-rooms {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-rooms__header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-rooms__title {
+      font-family: var(--font-brand);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .chat-rooms__list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+    .room-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .room-item:hover { background: var(--bg-elevated); }
+    .room-item.active {
+      background: var(--primary-glow);
+      border-left-color: var(--primary);
+    }
+    .room-item__icon { font-size: 1.1rem; flex-shrink: 0; }
+    .room-item__info { flex: 1; min-width: 0; }
+    .room-item__name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .room-item.active .room-item__name { color: var(--primary); }
+    .room-item__sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .room-item__badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .rooms-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem 0.25rem;
+    }
+
+    /* ── AREA DE MENSAJES (derecha) ── */
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .chat-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .chat-header__back {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    .chat-header__icon { font-size: 1.4rem; }
+    .chat-header__info { flex: 1; min-width: 0; }
+    .chat-header__name {
+      font-family: var(--font-brand);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-header__sub { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── MENSAJES ── */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      max-width: 100%;
+      animation: msgIn 0.18s ease;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .msg--own { flex-direction: row-reverse; }
+
+    .msg__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: var(--font-brand);
+    }
+    .msg__avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .msg__body { max-width: calc(100% - 44px); }
+    .msg__meta {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .msg--own .msg__meta { flex-direction: row-reverse; }
+    .msg__username {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .msg--own .msg__username { color: var(--primary); }
+    .msg__time {
+      font-size: 0.63rem;
+      color: var(--text-muted);
+    }
+    .msg__bubble {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 0 12px 12px 12px;
+      padding: 0.55rem 0.8rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--text);
+      word-break: break-word;
+      white-space: pre-wrap;
+      position: relative;
+    }
+    .msg--own .msg__bubble {
+      background: #200a00;
+      border-color: var(--primary-dim);
+      border-radius: 12px 0 12px 12px;
+    }
+
+    /* Reply quote dentro de burbuja */
+    .msg__reply-quote {
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid var(--cyan);
+      border-radius: 4px;
+      padding: 0.3rem 0.5rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .msg__reply-quote strong { color: var(--cyan); }
+
+    /* Acciones del mensaje */
+    .msg__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .msg:hover .msg__actions,
+    .msg:focus-within .msg__actions { opacity: 1; }
+    .msg__action-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .msg__action-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* Hilo expandido (replies anidadas) */
+    .thread-replies {
+      margin-left: 38px;
+      margin-top: 0.25rem;
+      border-left: 2px solid var(--border);
+      padding-left: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .thread-toggle {
+      margin-left: 38px;
+      margin-top: 0.15rem;
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .thread-toggle:hover { text-decoration: underline; }
+
+    /* Date separator */
+    .date-sep {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .date-sep::before, .date-sep::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── INPUT AREA ── */
+    .chat-input-area {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,15,0.95);
+      flex-shrink: 0;
+    }
+    .chat-reply-preview {
+      display: none;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .chat-reply-preview.show { display: flex; }
+    .chat-reply-preview strong { color: var(--cyan); }
+    .chat-reply-preview__cancel {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .chat-input-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.6rem 1rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      resize: none;
+      max-height: 120px;
+      min-height: 40px;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.4;
+    }
+    .chat-input:focus { border-color: var(--primary); }
+    .chat-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .chat-send-btn:hover { background: #e02800; }
+    .chat-send-btn:active { transform: scale(0.93); }
+    .chat-send-btn:disabled { background: #333; color: #666; cursor: default; }
+
+    /* ── PANTALLA VACÍA ── */
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--text-muted);
+      padding: 2rem;
+      text-align: center;
+    }
+    .chat-empty__icon { font-size: 3rem; opacity: 0.4; }
+    .chat-empty__title { font-size: 1rem; font-weight: 600; color: var(--text-soft); }
+
+    /* ── MODAL SELECTOR DE CLASE ── */
+    .class-picker-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 400;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .class-picker-overlay.show { display: flex; }
+    .class-picker {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 560px;
+      max-height: 80dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.22s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .class-picker__header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .class-picker__title {
+      font-family: var(--font-brand);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .class-picker__search {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .class-picker__search input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .class-picker__list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+    .class-picker__item {
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .class-picker__item:hover {
+      background: var(--bg-elevated);
+      border-left-color: var(--primary);
+    }
+    .class-picker__item-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .class-picker__item-cat {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* ── MOBILE: panel de salas como overlay ── */
+    @media (max-width: 640px) {
+      .chat-rooms {
+        position: fixed;
+        inset: var(--nav-h) 0 var(--tabbar-h) 0;
+        width: 100%;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+      .chat-rooms.mobile-open {
+        transform: translateX(0);
+      }
+      .chat-header__back { display: block; }
+      .chat-layout { height: calc(100dvh - var(--nav-h) - var(--tabbar-h)); }
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding: 0 1rem 0.25rem;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%">
+      ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="chat.html" class="active">Chat</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="panel-usuario.html" class="tabbar__item"><span class="tabbar__icon">🏠</span>Mi Panel</a>
+      <a href="cursos.html" class="tabbar__item"><span class="tabbar__icon">📚</span>Cursos</a>
+      <a href="chat.html" class="tabbar__item active"><span class="tabbar__icon">💬</span>Chat</a>
+      <a href="noticias.html" class="tabbar__item"><span class="tabbar__icon">📰</span>Noticias</a>
+      <a href="perfil.html" class="tabbar__item"><span class="tabbar__icon">👤</span>Perfil</a>
+    </div>
+  </nav>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="chat-layout">
+
+    <!-- PANEL DE SALAS -->
+    <aside class="chat-rooms" id="chat-rooms-panel">
+      <div class="chat-rooms__header">
+        <span class="chat-rooms__title">💬 Canales</span>
+        <button id="btn-nuevo-hilo" title="Abrir hilo sobre una clase" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);cursor:pointer;padding:0.25rem 0.5rem;font-size:0.8rem">+ Clase</button>
+      </div>
+      <div class="chat-rooms__list" id="rooms-list">
+        <!-- Se rellena con JS -->
+        <p style="padding:1rem;color:var(--text-muted);font-size:0.8rem">Cargando…</p>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE CHAT -->
+    <div class="chat-main" id="chat-main">
+
+      <!-- Vacío inicial (móvil: muestra salas) -->
+      <div class="chat-empty" id="chat-empty">
+        <div class="chat-empty__icon">💬</div>
+        <p class="chat-empty__title">Seleccioná un canal para chatear</p>
+        <p style="font-size:0.82rem;color:var(--text-muted)">O tocá <strong>+ Clase</strong> para abrir un hilo sobre una clase.</p>
+        <button class="btn btn--outline btn--small" id="btn-abrir-salas" style="margin-top:0.5rem">Ver canales</button>
+      </div>
+
+      <!-- Header del canal activo -->
+      <div class="chat-header" id="chat-header" style="display:none">
+        <button class="chat-header__back" id="btn-back-salas">‹</button>
+        <div class="chat-header__icon" id="header-icon">💬</div>
+        <div class="chat-header__info">
+          <div class="chat-header__name" id="header-name">—</div>
+          <div class="chat-header__sub" id="header-sub"></div>
+        </div>
+      </div>
+
+      <!-- Mensajes -->
+      <div class="chat-messages" id="chat-messages" style="display:none"></div>
+
+      <!-- Typing indicator -->
+      <div class="typing-indicator" id="typing-indicator" style="display:none"></div>
+
+      <!-- Reply preview -->
+      <div class="chat-reply-preview" id="reply-preview">
+        <span>Respondiendo a <strong id="reply-to-name"></strong>: <span id="reply-to-text"></span></span>
+        <button class="chat-reply-preview__cancel" id="btn-cancel-reply">✕</button>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-area" id="chat-input-area" style="display:none">
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat-input" placeholder="Escribe un mensaje…" rows="1" maxlength="2000"></textarea>
+          <button class="chat-send-btn" id="btn-send" disabled>➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SELECTOR DE CLASE -->
+  <div class="class-picker-overlay" id="class-picker-overlay">
+    <div class="class-picker">
+      <div class="class-picker__header">
+        <span class="class-picker__title">Abrir hilo sobre una clase</span>
+        <button id="btn-close-picker" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.2rem">✕</button>
+      </div>
+      <div class="class-picker__search">
+        <input type="text" id="picker-search" placeholder="Buscar clase…" autocomplete="off" />
+      </div>
+      <div class="class-picker__list" id="picker-list">
+        <p style="padding:1rem;color:var(--text-muted);font-size:0.85rem">Cargando clases…</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { requireApprovedUser } from './js/auth.js';
+    import {
+      collection, doc, addDoc, getDoc, getDocs, onSnapshot,
+      query, where, orderBy, limit, serverTimestamp, updateDoc, increment,
+      Timestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    /* ════════════════════════════════════════════
+       ESTADO GLOBAL
+    ════════════════════════════════════════════ */
+    let ME        = null;   // perfil del usuario actual
+    let ROOM      = null;   // sala activa { id, type:'global'|'class', name, icon }
+    let UNSUB     = null;   // listener activo de mensajes
+    let REPLY_TO  = null;   // mensaje al que se está respondiendo
+    let ALL_COURSES = [];   // cache de cursos para el picker
+
+    // Colecciones Firestore:
+    // - chat_rooms   : { type, courseId?, name, icon, lastMsg, lastAt, msgCount }
+    // - chat_messages: { roomId, uid, username, photoURL, text, replyTo?, createdAt, threadCount }
+    // - chat_replies : { roomId, parentId, uid, username, photoURL, text, createdAt }
+
+    /* ════════════════════════════════════════════
+       INICIO
+    ════════════════════════════════════════════ */
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+      ME = profile;
+      document.getElementById('btn-send').disabled = false;
+      await loadRooms();
+      setupInput();
+    });
+
+    /* ════════════════════════════════════════════
+       SALAS — lista y selección
+    ════════════════════════════════════════════ */
+    async function loadRooms() {
+      const listEl = document.getElementById('rooms-list');
+
+      // Suscripción en tiempo real a las salas
+      const q = query(collection(db, 'chat_rooms'), orderBy('lastAt', 'desc'));
+      onSnapshot(q, async (snap) => {
+        const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Garantizar que siempre exista la sala Global
+        const globalExists = rooms.find(r => r.type === 'global');
+        if (!globalExists) {
+          const ref = await addDoc(collection(db, 'chat_rooms'), {
+            type: 'global',
+            name: 'General',
+            icon: '🌐',
+            lastMsg: '',
+            lastAt: serverTimestamp(),
+            msgCount: 0,
+          });
+          rooms.unshift({ id: ref.id, type: 'global', name: 'General', icon: '🌐' });
+        }
+
+        const globals = rooms.filter(r => r.type === 'global');
+        const clases  = rooms.filter(r => r.type === 'class');
+
+        listEl.innerHTML = '';
+
+        // Sección: canales globales
+        const gl = document.createElement('div');
+        gl.innerHTML = `<div class="rooms-section-label">Canales</div>`;
+        globals.forEach(r => gl.appendChild(buildRoomItem(r)));
+        listEl.appendChild(gl);
+
+        // Sección: hilos por clase
+        if (clases.length > 0) {
+          const cl = document.createElement('div');
+          cl.innerHTML = `<div class="rooms-section-label">Hilos de clases</div>`;
+          clases.forEach(r => cl.appendChild(buildRoomItem(r)));
+          listEl.appendChild(cl);
+        }
+
+        // Marcar activa
+        if (ROOM) {
+          listEl.querySelectorAll('.room-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.roomId === ROOM.id);
+          });
+        }
+      });
+    }
+
+    function buildRoomItem(room) {
+      const el = document.createElement('div');
+      el.className = 'room-item';
+      el.dataset.roomId = room.id;
+      el.innerHTML = `
+        <div class="room-item__icon">${room.icon || '💬'}</div>
+        <div class="room-item__info">
+          <div class="room-item__name">${room.name}</div>
+          <div class="room-item__sub">${room.lastMsg ? truncate(room.lastMsg, 30) : 'Sin mensajes aún'}</div>
+        </div>
+      `;
+      el.addEventListener('click', () => openRoom(room));
+      return el;
+    }
+
+    function openRoom(room) {
+      ROOM = room;
+      REPLY_TO = null;
+
+      // UI: mostrar área de chat
+      document.getElementById('chat-empty').style.display = 'none';
+      document.getElementById('chat-header').style.display = 'flex';
+      document.getElementById('chat-messages').style.display = 'flex';
+      document.getElementById('chat-input-area').style.display = 'block';
+      document.getElementById('typing-indicator').style.display = 'block';
+      document.getElementById('reply-preview').classList.remove('show');
+      document.getElementById('chat-input').value = '';
+      document.getElementById('header-icon').textContent = room.icon || '💬';
+      document.getElementById('header-name').textContent = room.name;
+      document.getElementById('header-sub').textContent =
+        room.type === 'class' ? `Hilo de clase · ${room.categoria || ''}` : 'Canal general';
+
+      // Marcar sala activa
+      document.querySelectorAll('.room-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.roomId === room.id);
+      });
+
+      // En móvil: cerrar panel de salas
+      document.getElementById('chat-rooms-panel').classList.remove('mobile-open');
+
+      // Suscribir mensajes
+      if (UNSUB) UNSUB();
+      loadMessages(room.id);
+    }
+
+    /* ════════════════════════════════════════════
+       MENSAJES
+    ════════════════════════════════════════════ */
+    function loadMessages(roomId) {
+      const el = document.getElementById('chat-messages');
+      el.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;text-align:center;padding:1rem">Cargando…</p>';
+
+      const q = query(
+        collection(db, 'chat_messages'),
+        where('roomId', '==', roomId),
+        orderBy('createdAt', 'asc'),
+        limit(200)
+      );
+
+      UNSUB = onSnapshot(q, (snap) => {
+        renderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    }
+
+    let _lastDate = '';
+    function renderMessages(msgs) {
+      const el = document.getElementById('chat-messages');
+      const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+
+      _lastDate = '';
+      el.innerHTML = '';
+
+      if (msgs.length === 0) {
+        el.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;text-align:center;padding:2rem">Sé el primero en escribir algo 🚀</p>';
+        return;
+      }
+
+      msgs.forEach(msg => {
+        // Separador de fecha
+        const dateStr = msg.createdAt?.toDate ? fmtDate(msg.createdAt.toDate()) : '';
+        if (dateStr && dateStr !== _lastDate) {
+          _lastDate = dateStr;
+          const sep = document.createElement('div');
+          sep.className = 'date-sep';
+          sep.textContent = dateStr;
+          el.appendChild(sep);
+        }
+        el.appendChild(buildMsg(msg));
+      });
+
+      if (wasAtBottom) el.scrollTop = el.scrollHeight;
+    }
+
+    function buildMsg(msg) {
+      const isOwn = msg.uid === ME?.uid;
+      const time  = msg.createdAt?.toDate ? fmtTime(msg.createdAt.toDate()) : '';
+      const initials = (msg.username || '?').substring(0, 2).toUpperCase();
+
+      const wrapper = document.createElement('div');
+      wrapper.dataset.msgId = msg.id;
+
+      const replyHTML = msg.replyTo
+        ? `<div class="msg__reply-quote"><strong>@${msg.replyTo.username}</strong>: ${truncate(msg.replyTo.text, 60)}</div>`
+        : '';
+
+      wrapper.innerHTML = `
+        <div class="msg ${isOwn ? 'msg--own' : ''}">
+          <div class="msg__avatar">${msg.photoURL
+            ? `<img src="${msg.photoURL}" alt="" />`
+            : initials}</div>
+          <div class="msg__body">
+            <div class="msg__meta">
+              <span class="msg__username">@${msg.username || 'anon'}</span>
+              <span class="msg__time">${time}</span>
+            </div>
+            <div class="msg__bubble">
+              ${replyHTML}
+              ${escapeHtml(msg.text)}
+            </div>
+            <div class="msg__actions">
+              <button class="msg__action-btn" data-action="reply">↩ Responder</button>
+              ${msg.threadCount > 0
+                ? `<button class="msg__action-btn" data-action="toggle-thread" style="color:var(--cyan);border-color:var(--cyan)">💬 ${msg.threadCount} respuesta${msg.threadCount !== 1 ? 's' : ''}</button>`
+                : `<button class="msg__action-btn" data-action="toggle-thread">💬 Hilo</button>`
+              }
+            </div>
+          </div>
+        </div>
+        <div class="thread-replies" id="thread-${msg.id}" style="display:none"></div>
+      `;
+
+      // Botón responder
+      wrapper.querySelector('[data-action="reply"]').addEventListener('click', () => {
+        REPLY_TO = { id: msg.id, username: msg.username, text: msg.text };
+        document.getElementById('reply-to-name').textContent = msg.username;
+        document.getElementById('reply-to-text').textContent = truncate(msg.text, 50);
+        document.getElementById('reply-preview').classList.add('show');
+        document.getElementById('chat-input').focus();
+      });
+
+      // Botón abrir hilo
+      wrapper.querySelector('[data-action="toggle-thread"]').addEventListener('click', () => {
+        toggleThread(msg.id, wrapper);
+      });
+
+      return wrapper;
+    }
+
+    /* ════════════════════════════════════════════
+       HILOS ANIDADOS (replies)
+    ════════════════════════════════════════════ */
+    const _openThreads = new Set();
+    const _threadUnsubs = {};
+
+    function toggleThread(msgId, wrapper) {
+      const threadEl = wrapper.querySelector(`#thread-${msgId}`);
+      if (!threadEl) return;
+
+      if (_openThreads.has(msgId)) {
+        _openThreads.delete(msgId);
+        threadEl.style.display = 'none';
+        if (_threadUnsubs[msgId]) { _threadUnsubs[msgId](); delete _threadUnsubs[msgId]; }
+      } else {
+        _openThreads.add(msgId);
+        threadEl.style.display = 'flex';
+        threadEl.style.flexDirection = 'column';
+        loadThread(msgId, threadEl);
+      }
+    }
+
+    function loadThread(parentId, containerEl) {
+      containerEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.75rem;padding:0.25rem">Cargando…</p>';
+      const q = query(
+        collection(db, 'chat_replies'),
+        where('parentId', '==', parentId),
+        orderBy('createdAt', 'asc')
+      );
+      _threadUnsubs[parentId] = onSnapshot(q, (snap) => {
+        containerEl.innerHTML = '';
+        snap.docs.forEach(d => {
+          const r = { id: d.id, ...d.data() };
+          const isOwn = r.uid === ME?.uid;
+          const initials = (r.username || '?').substring(0, 2).toUpperCase();
+          const time = r.createdAt?.toDate ? fmtTime(r.createdAt.toDate()) : '';
+
+          const el = document.createElement('div');
+          el.className = `msg ${isOwn ? 'msg--own' : ''}`;
+          el.style.cssText = 'gap:0.4rem';
+          el.innerHTML = `
+            <div class="msg__avatar" style="width:26px;height:26px;font-size:0.62rem">${
+              r.photoURL ? `<img src="${r.photoURL}" alt="" />` : initials
+            }</div>
+            <div class="msg__body">
+              <div class="msg__meta">
+                <span class="msg__username" style="font-size:0.68rem">@${r.username || 'anon'}</span>
+                <span class="msg__time">${time}</span>
+              </div>
+              <div class="msg__bubble" style="font-size:0.82rem;border-radius:0 10px 10px 10px">
+                ${escapeHtml(r.text)}
+              </div>
+            </div>
+          `;
+          containerEl.appendChild(el);
+        });
+
+        // Input para responder en el hilo
+        if (!containerEl.querySelector('.thread-input-row')) {
+          const inputRow = document.createElement('div');
+          inputRow.className = 'thread-input-row';
+          inputRow.style.cssText = 'display:flex;gap:0.4rem;margin-top:0.4rem;align-items:flex-end';
+          inputRow.innerHTML = `
+            <textarea placeholder="Responder en el hilo…" maxlength="1000"
+              style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:0.4rem 0.75rem;color:var(--text);font-family:var(--font-body);font-size:0.82rem;resize:none;min-height:34px;max-height:80px;outline:none"
+            ></textarea>
+            <button style="width:32px;height:32px;border-radius:50%;background:var(--primary);border:none;color:#fff;font-size:0.9rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">➤</button>
+          `;
+          const ta  = inputRow.querySelector('textarea');
+          const btn = inputRow.querySelector('button');
+
+          ta.addEventListener('input', () => autoResize(ta));
+          ta.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(parentId, ta, btn, containerEl); }
+          });
+          btn.addEventListener('click', () => sendReply(parentId, ta, btn, containerEl));
+
+          containerEl.appendChild(inputRow);
+        }
+      });
+    }
+
+    async function sendReply(parentId, ta, btn, containerEl) {
+      const text = ta.value.trim();
+      if (!text || !ME) return;
+      btn.disabled = true;
+      try {
+        await addDoc(collection(db, 'chat_replies'), {
+          parentId,
+          roomId: ROOM.id,
+          uid: ME.uid,
+          username: ME.username,
+          photoURL: ME.photoURL || '',
+          text,
+          createdAt: serverTimestamp(),
+        });
+        // Incrementar threadCount en el mensaje padre
+        await updateDoc(doc(db, 'chat_messages', parentId), {
+          threadCount: increment(1),
+        });
+        ta.value = '';
+        ta.style.height = '';
+        containerEl.scrollTop = containerEl.scrollHeight;
+      } catch(e) {
+        alert('Error: ' + e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       ENVIAR MENSAJE PRINCIPAL
+    ════════════════════════════════════════════ */
+    function setupInput() {
+      const input = document.getElementById('chat-input');
+      const btn   = document.getElementById('btn-send');
+
+      input.addEventListener('input', () => {
+        autoResize(input);
+        btn.disabled = !input.value.trim();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      btn.addEventListener('click', sendMessage);
+
+      document.getElementById('btn-cancel-reply').addEventListener('click', () => {
+        REPLY_TO = null;
+        document.getElementById('reply-preview').classList.remove('show');
+      });
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text || !ROOM || !ME) return;
+
+      const btn = document.getElementById('btn-send');
+      btn.disabled = true;
+      input.value = '';
+      input.style.height = '';
+
+      try {
+        const payload = {
+          roomId: ROOM.id,
+          uid: ME.uid,
+          username: ME.username,
+          photoURL: ME.photoURL || '',
+          text,
+          createdAt: serverTimestamp(),
+          threadCount: 0,
+        };
+        if (REPLY_TO) {
+          payload.replyTo = {
+            id:       REPLY_TO.id,
+            username: REPLY_TO.username,
+            text:     REPLY_TO.text,
+          };
+        }
+        await addDoc(collection(db, 'chat_messages'), payload);
+
+        // Actualizar sala
+        await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
+          lastMsg: text,
+          lastAt:  serverTimestamp(),
+          msgCount: increment(1),
+        });
+
+        REPLY_TO = null;
+        document.getElementById('reply-preview').classList.remove('show');
+
+        // Scroll al fondo
+        const msgs = document.getElementById('chat-messages');
+        setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 100);
+      } catch(e) {
+        alert('Error al enviar: ' + e.message);
+      } finally {
+        btn.disabled = !input.value.trim();
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       SELECTOR DE CLASE → Crear hilo
+    ════════════════════════════════════════════ */
+    const overlay   = document.getElementById('class-picker-overlay');
+    const pickerList = document.getElementById('picker-list');
+    const pickerSearch = document.getElementById('picker-search');
+
+    document.getElementById('btn-nuevo-hilo').addEventListener('click', openPicker);
+    document.getElementById('btn-close-picker').addEventListener('click', () => overlay.classList.remove('show'));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('show'); });
+
+    async function openPicker() {
+      overlay.classList.add('show');
+      if (ALL_COURSES.length === 0) {
+        pickerList.innerHTML = '<p style="padding:1rem;color:var(--text-muted);font-size:0.85rem">Cargando…</p>';
+        try {
+          const snap = await getDocs(query(collection(db, 'courses'), where('publicado', '==', true)));
+          ALL_COURSES = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => {
+              const ca = (a.categoria || '').localeCompare(b.categoria || '');
+              return ca !== 0 ? ca : ((a.orden || 0) - (b.orden || 0));
+            });
+        } catch(e) {
+          pickerList.innerHTML = '<p style="padding:1rem;color:#ff6b6b;font-size:0.85rem">Error al cargar clases.</p>';
+          return;
+        }
+      }
+      renderPicker('');
+      pickerSearch.value = '';
+      pickerSearch.focus();
+    }
+
+    pickerSearch.addEventListener('input', () => renderPicker(pickerSearch.value));
+
+    function renderPicker(term) {
+      const t = term.trim().toLowerCase();
+      const filtered = t
+        ? ALL_COURSES.filter(c =>
+            (c.titulo || '').toLowerCase().includes(t) ||
+            (c.categoria || '').toLowerCase().includes(t))
+        : ALL_COURSES;
+
+      if (filtered.length === 0) {
+        pickerList.innerHTML = '<p style="padding:1rem;color:var(--text-muted);font-size:0.85rem">Sin resultados.</p>';
+        return;
+      }
+
+      pickerList.innerHTML = filtered.map(c => `
+        <div class="class-picker__item" data-course-id="${c.id}" data-course-title="${escAttr(c.titulo)}" data-course-cat="${escAttr(c.categoria || '')}">
+          <div class="class-picker__item-title">${c.titulo}</div>
+          <div class="class-picker__item-cat">📁 ${c.categoria || 'General'} · ${c.nivel || 'Básico'}</div>
+        </div>
+      `).join('');
+
+      pickerList.querySelectorAll('.class-picker__item').forEach(el => {
+        el.addEventListener('click', () => openOrCreateClassRoom(el.dataset.courseId, el.dataset.courseTitle, el.dataset.courseCat));
+      });
+    }
+
+    async function openOrCreateClassRoom(courseId, courseName, coursecat) {
+      overlay.classList.remove('show');
+
+      // Buscar si ya existe sala para esa clase
+      try {
+        const q = query(collection(db, 'chat_rooms'), where('courseId', '==', courseId));
+        const snap = await getDocs(q);
+        let room;
+        if (!snap.empty) {
+          room = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        } else {
+          // Crear sala nueva
+          const ref = await addDoc(collection(db, 'chat_rooms'), {
+            type: 'class',
+            courseId,
+            name: courseName,
+            categoria: coursecat,
+            icon: '📚',
+            lastMsg: '',
+            lastAt: serverTimestamp(),
+            msgCount: 0,
+          });
+          room = { id: ref.id, type: 'class', courseId, name: courseName, categoria: coursecat, icon: '📚' };
+        }
+        openRoom(room);
+      } catch(e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    /* ════════════════════════════════════════════
+       NAVEGACIÓN MÓVIL
+    ════════════════════════════════════════════ */
+    document.getElementById('btn-abrir-salas')?.addEventListener('click', () => {
+      document.getElementById('chat-rooms-panel').classList.add('mobile-open');
+    });
+    document.getElementById('btn-back-salas')?.addEventListener('click', () => {
+      document.getElementById('chat-rooms-panel').classList.add('mobile-open');
+    });
+
+    /* ════════════════════════════════════════════
+       UTILIDADES
+    ════════════════════════════════════════════ */
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+
+    function truncate(str, n) {
+      return str && str.length > n ? str.substring(0, n) + '…' : str || '';
+    }
+
+    function escapeHtml(str) {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function escAttr(str) {
+      return (str || '').replace(/"/g, '&quot;');
+    }
+
+    function fmtTime(date) {
+      return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function fmtDate(date) {
+      const today = new Date();
+      const d = new Date(date);
+      if (d.toDateString() === today.toDateString()) return 'Hoy';
+      const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+      if (d.toDateString() === yesterday.toDateString()) return 'Ayer';
+      return d.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+  </script>
+</body>
+</html>

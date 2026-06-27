@@ -39,7 +39,7 @@
   <!-- Admin "Más" mini-menu -->
   <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 8px);left:50%;transform:translateX(-50%);background:#111118;border:1px solid #333;border-radius:12px;padding:0.5rem;z-index:300;min-width:200px;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">📰 Noticias</a>
-    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🧠 Quizzes</a>
+    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
@@ -54,7 +54,7 @@
         <a href="#miembros" data-tab="miembros">👥 Miembros</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
-        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes</a>
+        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
@@ -99,6 +99,10 @@
           <div class="stat-card" style="border-color:#ff3b3b44">
             <div class="stat-card__value" data-stat="fuera-grupo" style="color:#ff3b3b">—</div>
             <div class="stat-card__label">❌ Fuera de WhatsApp</div>
+          </div>
+          <div class="stat-card" style="border-color:#f59e0b44;cursor:pointer" onclick="document.querySelector('[data-tab=\'quizzes\']').click()">
+            <div class="stat-card__value" data-stat="quizzes-pendientes" style="color:#f59e0b">—</div>
+            <div class="stat-card__label">⏳ Quizzes pendientes</div>
           </div>
         </div>
 
@@ -215,7 +219,10 @@
 
       <div class="tab-section hidden" id="quizzes">
         <div class="panel-header">
-          <h1 class="section-title">Quizzes 📋</h1>
+          <div>
+            <h1 class="section-title">Quizzes <span class="accent">📋</span></h1>
+            <p class="section-subtitle">Revisá las respuestas enviadas por los miembros y aprobá o rechazá.</p>
+          </div>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
           <button class="btn btn--small btn--primary" data-qfilter="pendiente">⏳ Pendientes <span id="q-count-pendiente" style="background:#ffffff22;padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
@@ -1543,11 +1550,26 @@
     async function updatePendienteCount() {
       try {
         const snap = await getDocs(query(collection(db, 'quiz_submissions'), where('estado', '==', 'pendiente')));
+        const count = snap.size;
+
+        // Badge en botón filtro de quizzes
         const badge = document.getElementById('q-count-pendiente');
-        if (badge) badge.textContent = snap.size;
-        // También actualizar stat en resumen si existe
+        if (badge) badge.textContent = count;
+
+        // Stat card en resumen
         const statEl = document.querySelector('[data-stat="quizzes-pendientes"]');
-        if (statEl) statEl.textContent = snap.size;
+        if (statEl) statEl.textContent = count;
+
+        // Badges visuales en sidebar y menú móvil
+        const sidebarBadge = document.getElementById('sidebar-quiz-badge');
+        const moreBadge    = document.getElementById('more-quiz-badge');
+        if (count > 0) {
+          if (sidebarBadge) { sidebarBadge.textContent = count; sidebarBadge.style.display = 'inline'; }
+          if (moreBadge)    { moreBadge.textContent = count;    moreBadge.style.display = 'inline'; }
+        } else {
+          if (sidebarBadge) sidebarBadge.style.display = 'none';
+          if (moreBadge)    moreBadge.style.display = 'none';
+        }
       } catch(e) {}
     }
 
