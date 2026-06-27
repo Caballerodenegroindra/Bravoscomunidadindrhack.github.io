@@ -90,6 +90,13 @@
             <div class="stat-card__label">❌ Fuera de WhatsApp</div>
           </div>
         </div>
+
+        <!-- RANKING -->
+        <h2 class="section-title" style="margin-top:2rem">🏅 Ranking de <span class="accent">Puntos</span></h2>
+        <p class="section-subtitle" style="margin-bottom:1rem">Posición de todos los miembros según puntos acumulados por quizzes aprobados.</p>
+        <div id="admin-ranking-lista">
+          <p class="section-subtitle">Cargando ranking…</p>
+        </div>
       </div>
 
       <!-- SOLICITUDES -->
@@ -1534,6 +1541,48 @@
 
     // Cargar count al iniciar el panel
     updatePendienteCount();
+
+    // ── RANKING en Resumen ──
+    async function loadRanking() {
+      const el = document.getElementById('admin-ranking-lista');
+      if (!el) return;
+      try {
+        const snap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
+        const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }))
+          .sort((a, b) => (b.puntos || 0) - (a.puntos || 0));
+
+        if (users.length === 0) {
+          el.innerHTML = '<p class="section-subtitle">Ningún miembro tiene puntos todavía.</p>';
+          return;
+        }
+
+        const medalias = ['🥇', '🥈', '🥉'];
+        el.innerHTML = `
+          <div style="background:#0f0f15;border:1px solid #1a1a2a;border-radius:12px;overflow:hidden">
+            ${users.map((u, i) => {
+              const pts = u.puntos || 0;
+              const medalla = medalias[i] || `#${i + 1}`;
+              const isTop = i < 3;
+              return `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;border-bottom:1px solid #1a1a2a;${isTop ? 'background:#ffffff04' : ''}">
+                <span style="font-size:${isTop ? '1.2rem' : '0.85rem'};width:32px;text-align:center;font-weight:700;color:${isTop ? '#fff' : '#555'}">${medalla}</span>
+                <div style="flex:1">
+                  <p style="margin:0;font-size:0.9rem;font-weight:600;color:#fff">@${u.username || u.uid?.substring(0,8)}</p>
+                  <p style="margin:0.1rem 0 0;color:#888;font-size:0.75rem">${u.displayName || ''} ${u.rango ? '· ' + u.rango : ''}</p>
+                </div>
+                <span style="font-size:0.95rem;font-weight:700;color:#ffcc00">⭐ ${pts}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        `;
+      } catch(e) {
+        el.innerHTML = '<p class="section-subtitle" style="color:#ff6b6b">Error al cargar ranking.</p>';
+      }
+    }
+
+    loadRanking();
+    document.querySelectorAll('[data-tab="resumen"]').forEach(t => {
+      t.addEventListener('click', loadRanking);
+    });
   </script>
 </body>
 </html>
