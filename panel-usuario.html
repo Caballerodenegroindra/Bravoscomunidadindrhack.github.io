@@ -287,6 +287,76 @@
       }
     });
   </script>
+  <!-- ══ PWA INSTALL BANNER ══════════════════════════════════ -->
+  <div id="pwa-banner" style="display:none;position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:9999;width:calc(100% - 2rem);max-width:420px;background:#111;border:1px solid #cc2200;border-radius:14px;padding:1rem 1.25rem;box-shadow:0 0 24px #cc220044;animation:slideUp 0.4s ease">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem">
+      <img src="assets/img/logo-indrhack.png" style="width:42px;height:42px;border-radius:10px;flex-shrink:0;object-fit:contain" alt="logo">
+      <div style="flex:1;min-width:0">
+        <p style="margin:0 0 0.15rem;font-weight:700;font-size:0.95rem;color:#fff">Instalar Academia Indrhack</p>
+        <p id="pwa-banner-msg" style="margin:0;font-size:0.8rem;color:#aaa;line-height:1.4">Añade la app a tu pantalla de inicio para acceder más rápido.</p>
+      </div>
+      <button id="pwa-close" style="background:none;border:none;color:#666;cursor:pointer;font-size:1.2rem;padding:0;line-height:1;flex-shrink:0">✕</button>
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.85rem">
+      <button id="pwa-install-btn" style="flex:1;background:#cc2200;color:#fff;border:none;border-radius:8px;padding:0.55rem 0;font-weight:700;font-size:0.88rem;cursor:pointer;display:none">⬇ Instalar app</button>
+      <button id="pwa-close-btn" style="flex:1;background:transparent;color:#888;border:1px solid #333;border-radius:8px;padding:0.55rem 0;font-size:0.88rem;cursor:pointer">Ahora no</button>
+    </div>
+  </div>
+  <style>
+    @keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+  </style>
+  <script>
+    (function() {
+      const banner  = document.getElementById('pwa-banner');
+      const msg     = document.getElementById('pwa-banner-msg');
+      const btn     = document.getElementById('pwa-install-btn');
+      const closeX  = document.getElementById('pwa-close');
+      const closeBtn= document.getElementById('pwa-close-btn');
+
+      // No mostrar si ya fue descartado en las últimas 7 días
+      const dismissed = localStorage.getItem('pwa_dismissed');
+      if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+
+      // No mostrar si ya está instalada
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
+
+      function closeBanner() {
+        banner.style.display = 'none';
+        localStorage.setItem('pwa_dismissed', Date.now());
+      }
+      closeX.addEventListener('click', closeBanner);
+      closeBtn.addEventListener('click', closeBanner);
+
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+      const isAndroid = /android/i.test(navigator.userAgent);
+
+      if (isIOS) {
+        // iOS: instrucciones manuales (no hay beforeinstallprompt)
+        msg.textContent = 'En Safari: toca el botón compartir (⬆) y luego "Añadir a pantalla de inicio".';
+        setTimeout(() => { banner.style.display = 'block'; }, 2500);
+      } else {
+        // Android / Chrome Desktop: capturar evento beforeinstallprompt
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          btn.style.display = 'block';
+          setTimeout(() => { banner.style.display = 'block'; }, 1500);
+        });
+        btn.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') closeBanner();
+          deferredPrompt = null;
+        });
+      }
+
+      // Ocultar si se instala
+      window.addEventListener('appinstalled', closeBanner);
+    })();
+  </script>
+  <!-- ══ FIN PWA INSTALL BANNER ══════════════════════════════ -->
 
   <!-- PWA Service Worker -->
   <script>
@@ -294,5 +364,6 @@
       navigator.serviceWorker.register("/sw.js");
     }
   </script>
+
 </body>
 </html>
