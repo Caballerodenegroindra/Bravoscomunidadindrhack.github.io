@@ -7,1100 +7,1082 @@
   <title>Chat — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ════════════════════════════════════════════
-       NUEVA INTERFAZ DE CHAT - ULTRA PREMIUM
-    ════════════════════════════════════════════ */
+    /* ── VARIABLES EXTRA ── */
+    :root {
+      --chat-sidebar-w: 260px;
+    }
 
+    /* ── CHAT LAYOUT ── */
     .chat-layout {
       display: flex;
       height: calc(100dvh - var(--nav-h) - var(--tabbar-h, 0px));
       overflow: hidden;
-      background: linear-gradient(135deg, #0a0a0f 0%, #0f0f18 100%);
     }
 
-    /* ── PANEL DE SALAS (IZQUIERDA) - REDISEÑADO ── */
+    /* ── PANEL DE SALAS ── */
     .chat-rooms {
-      width: 280px;
+      width: var(--chat-sidebar-w);
       flex-shrink: 0;
-      background: rgba(15, 15, 25, 0.8);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(204, 34, 0, 0.15);
+      background: #09090e;
+      border-right: 1px solid rgba(204,34,0,0.15);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: inset -1px 0 0 rgba(0, 200, 255, 0.08);
     }
 
     .chat-rooms__header {
-      padding: 1.2rem;
-      border-bottom: 2px solid rgba(204, 34, 0, 0.2);
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(204, 34, 0, 0.15) 0%, transparent 100%);
+      gap: 0.5rem;
+      flex-shrink: 0;
     }
 
     .chat-rooms__title {
       font-family: var(--font-brand);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      color: var(--cyan);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
       text-transform: uppercase;
-      font-weight: 800;
-      text-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
+
+    .chat-rooms__title svg {
+      width: 13px; height: 13px;
+      stroke: var(--primary); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .btn-nuevo-hilo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: 1px solid rgba(204,34,0,0.4);
+      border-radius: 6px;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: var(--font-brand);
+      letter-spacing: 0.05em;
+      transition: background 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+    .btn-nuevo-hilo:hover {
+      background: var(--primary-glow);
+      box-shadow: 0 0 10px rgba(204,34,0,0.2);
+    }
+    .btn-nuevo-hilo svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+    /* Search bar */
+    .chat-rooms__search {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
+    .chat-rooms__search input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.35rem 0.65rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .chat-rooms__search input::placeholder { color: var(--text-muted); }
+    .chat-rooms__search input:focus { border-color: rgba(204,34,0,0.4); }
 
     .chat-rooms__list {
       flex: 1;
       overflow-y: auto;
-      padding: 0.8rem 0;
+      padding: 0.4rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(204,34,0,0.2) transparent;
     }
+    .chat-rooms__list::-webkit-scrollbar { width: 3px; }
+    .chat-rooms__list::-webkit-scrollbar-track { background: transparent; }
+    .chat-rooms__list::-webkit-scrollbar-thumb { background: rgba(204,34,0,0.25); border-radius: 3px; }
 
-    .chat-rooms__list::-webkit-scrollbar {
-      width: 6px;
+    .rooms-section-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.7rem 1rem 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-
-    .chat-rooms__list::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .chat-rooms__list::-webkit-scrollbar-thumb {
-      background: rgba(0, 200, 255, 0.25);
-      border-radius: 3px;
-    }
-
-    .chat-rooms__list::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 200, 255, 0.4);
+    .rooms-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.05);
     }
 
     .room-item {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
+      gap: 0.6rem;
+      padding: 0.55rem 1rem;
       cursor: pointer;
-      border-left: 4px solid transparent;
-      border-radius: 0 8px 8px 0;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 2px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
       -webkit-tap-highlight-color: transparent;
-      margin: 0.35rem 0.5rem 0.35rem 0;
       position: relative;
     }
-
-    .room-item::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, rgba(0, 200, 255, 0.05) 0%, transparent 100%);
-      border-radius: 0 8px 8px 0;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-    }
-
-    .room-item:hover {
-      background: rgba(0, 200, 255, 0.08);
-      border-left-color: rgba(0, 200, 255, 0.4);
-      transform: translateX(4px);
-    }
-
+    .room-item:hover { background: rgba(255,255,255,0.03); }
     .room-item.active {
-      background: linear-gradient(90deg, rgba(204, 34, 0, 0.25) 0%, rgba(204, 34, 0, 0.1) 100%);
+      background: linear-gradient(90deg, rgba(204,34,0,0.1) 0%, transparent 100%);
       border-left-color: var(--primary);
-      box-shadow: 0 0 20px rgba(204, 34, 0, 0.2);
     }
-
-    .room-item.active::before {
-      opacity: 1;
-    }
+    .room-item.active .room-item__name { color: var(--primary); }
 
     .room-item__icon {
-      font-size: 1.3rem;
+      width: 34px; height: 34px;
       flex-shrink: 0;
-      filter: drop-shadow(0 0 4px rgba(0, 200, 255, 0.3));
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
     }
-
     .room-item.active .room-item__icon {
-      filter: drop-shadow(0 0 8px var(--primary));
-      animation: pulse-icon 2s infinite;
+      border-color: rgba(204,34,0,0.35);
+      background: rgba(204,34,0,0.08);
     }
 
-    @keyframes pulse-icon {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    .room-item__info {
-      flex: 1;
-      min-width: 0;
-      position: relative;
-      z-index: 1;
-    }
-
+    .room-item__info { flex: 1; min-width: 0; }
     .room-item__name {
-      font-size: 0.9rem;
-      font-weight: 700;
+      font-size: 0.83rem;
+      font-weight: 600;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: color 0.2s;
+      line-height: 1.3;
     }
-
-    .room-item:hover .room-item__name {
-      color: var(--cyan);
-    }
-
-    .room-item.active .room-item__name {
-      color: var(--primary);
-      font-weight: 800;
-      letter-spacing: 0.05em;
-    }
-
     .room-item__sub {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-top: 0.15rem;
+      margin-top: 1px;
     }
-
-    .room-item.active .room-item__sub {
-      color: rgba(204, 34, 0, 0.7);
-    }
-
     .room-item__badge {
-      background: linear-gradient(135deg, var(--primary), #ff4400);
+      background: var(--primary);
       color: #fff;
       font-size: 0.6rem;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 12px;
-      flex-shrink: 0;
-      box-shadow: 0 0 12px rgba(204, 34, 0, 0.5);
-      font-family: var(--font-brand);
-      letter-spacing: 0.05em;
-    }
-
-    .rooms-section-label {
-      font-size: 0.6rem;
       font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      padding: 1rem 1.2rem 0.5rem;
-      text-shadow: 0 0 8px rgba(0, 200, 255, 0.3);
+      padding: 2px 6px;
+      border-radius: 99px;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(204,34,0,0.5);
     }
 
-    /* ── ÁREA DE MENSAJES (DERECHA) ── */
+    /* ── CHAT MAIN ── */
     .chat-main {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: radial-gradient(circle at 20% 50%, rgba(204, 34, 0, 0.05) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(0, 200, 255, 0.05) 0%, transparent 50%);
+      position: relative;
+      background: var(--bg);
+    }
+
+    /* Grid de fondo sutil */
+    .chat-main::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(204,34,0,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(204,34,0,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .chat-header {
-      padding: 1rem 1.5rem;
-      border-bottom: 2px solid rgba(0, 200, 255, 0.15);
-      background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.8) 100%);
-      backdrop-filter: blur(20px);
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(9,9,14,0.95);
+      backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
       flex-shrink: 0;
-      box-shadow: 0 4px 20px rgba(204, 34, 0, 0.1);
+      position: relative;
+      z-index: 2;
     }
 
     .chat-header__back {
       display: none;
       background: none;
-      border: none;
-      color: var(--cyan);
-      font-size: 1.4rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 1rem;
       cursor: pointer;
-      padding: 0.4rem;
+      padding: 0.3rem 0.5rem;
+      transition: color 0.15s, border-color 0.15s;
     }
+    .chat-header__back:hover { color: var(--primary); border-color: var(--primary); }
 
     .chat-header__icon {
-      font-size: 1.8rem;
-      filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.3));
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: rgba(204,34,0,0.1);
+      border: 1px solid rgba(204,34,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
     }
 
-    .chat-header__info {
-      flex: 1;
-      min-width: 0;
-    }
+    .chat-header__info { flex: 1; min-width: 0; }
 
     .chat-header__name {
       font-family: var(--font-brand);
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-shadow: 0 0 10px rgba(204, 34, 0, 0.4);
     }
 
     .chat-header__sub {
-      font-size: 0.75rem;
-      color: var(--cyan);
-      margin-top: 0.2rem;
-      font-weight: 600;
-    }
-
-    .chat-header__actions {
+      font-size: 0.68rem;
+      color: var(--text-muted);
       display: flex;
-      gap: 0.5rem;
       align-items: center;
+      gap: 5px;
     }
 
-    .chat-header-btn {
-      background: rgba(0, 200, 255, 0.1);
-      border: 1px solid rgba(0, 200, 255, 0.3);
-      color: var(--cyan);
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      display: none;
+    .online-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      display: inline-block;
     }
 
-    .chat-header-btn:hover {
-      background: rgba(0, 200, 255, 0.2);
-      box-shadow: 0 0 12px rgba(0, 200, 255, 0.3);
+    /* Members count */
+    .chat-header__members {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      white-space: nowrap;
     }
+    .chat-header__members svg { width: 12px; height: 12px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
 
     /* ── MENSAJES ── */
     .chat-messages {
       flex: 1;
       overflow-y: auto;
-      padding: 1.5rem;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 0.15rem;
       scroll-behavior: smooth;
-    }
-
-    .chat-messages::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .chat-messages::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: rgba(0, 200, 255, 0.2);
-      border-radius: 4px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 200, 255, 0.4);
-    }
-
-    /* Separador de fecha */
-    .msg-date-separator {
-      text-align: center;
-      margin: 1rem 0;
-      font-size: 0.7rem;
-      color: var(--text-muted);
       position: relative;
+      z-index: 1;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(204,34,0,0.15) transparent;
     }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(204,34,0,0.2); border-radius: 4px; }
 
-    .msg-date-separator::before {
-      content: '';
+    /* Scroll-to-bottom button */
+    .scroll-bottom-btn {
+      display: none;
       position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(0, 200, 255, 0.2) 50%, transparent 100%);
+      bottom: 80px; right: 16px;
+      z-index: 10;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid rgba(204,34,0,0.4);
+      color: var(--primary);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      transition: background 0.15s;
     }
+    .scroll-bottom-btn.visible { display: flex; }
+    .scroll-bottom-btn:hover { background: var(--primary-glow); }
+    .scroll-bottom-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-    .msg-date-separator span {
-      background: linear-gradient(135deg, #0a0a0f 0%, #0f0f18 100%);
-      padding: 0 1rem;
-      position: relative;
-    }
-
-    /* MENSAJE */
+    /* Mensaje */
     .msg {
       display: flex;
-      gap: 0.8rem;
-      align-items: flex-end;
-      animation: msgIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 85%;
+      gap: 0.6rem;
+      align-items: flex-start;
+      max-width: 100%;
+      padding: 0.15rem 0;
+      animation: msgIn 0.15s ease;
     }
-
     @keyframes msgIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+    .msg--own { flex-direction: row-reverse; }
 
-    .msg--own {
-      flex-direction: row-reverse;
-      align-self: flex-end;
-    }
+    /* Group messages - reduce spacing between same user */
+    .msg--grouped { padding-top: 0; }
+    .msg--grouped .msg__avatar { opacity: 0; }
+    .msg--grouped .msg__meta { display: none; }
 
-    /* Avatar */
     .msg__avatar {
-      width: 40px;
-      height: 40px;
+      width: 34px; height: 34px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(0, 200, 255, 0.2), rgba(204, 34, 0, 0.2));
-      border: 2px solid var(--cyan);
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.08);
       overflow: hidden;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
-      color: var(--cyan);
+      color: var(--primary);
       font-family: var(--font-brand);
-      box-shadow: 0 0 12px rgba(0, 200, 255, 0.3);
-      position: relative;
+      letter-spacing: 0.05em;
     }
+    .msg__avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .msg--own .msg__avatar { border-color: rgba(204,34,0,0.3); }
 
-    .msg--own .msg__avatar {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, rgba(204, 34, 0, 0.3), rgba(0, 200, 255, 0.1));
-      box-shadow: 0 0 12px rgba(204, 34, 0, 0.4);
-    }
+    .msg__body { max-width: min(78%, 520px); }
+    .msg--own .msg__body { align-items: flex-end; display: flex; flex-direction: column; }
 
-    .msg__avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Body del mensaje */
-    .msg__body {
-      max-width: calc(100% - 50px);
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    /* Meta (usuario + hora) */
     .msg__meta {
       display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      margin-bottom: 0.15rem;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
+      flex-wrap: wrap;
     }
-
-    .msg--own .msg__meta {
-      flex-direction: row-reverse;
-    }
+    .msg--own .msg__meta { flex-direction: row-reverse; }
 
     .msg__username {
       font-size: 0.75rem;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--cyan);
       font-family: var(--font-brand);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .msg--own .msg__username {
-      color: var(--primary);
-    }
-
-    .msg__rango {
-      font-size: 0.65rem;
-      color: var(--gold);
-      font-weight: 700;
-      font-family: var(--font-brand);
       letter-spacing: 0.04em;
-      margin-left: 0.4rem;
     }
+    .msg--own .msg__username { color: var(--primary); }
 
     .msg__time {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       color: var(--text-muted);
-      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Burbuja de mensaje */
+    /* Rank inline badge */
+    .msg__rank-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.57rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .msg__rank-inline svg { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* Burbuja */
     .msg__bubble {
-      background: linear-gradient(135deg, rgba(0, 200, 255, 0.08), rgba(0, 200, 255, 0.04));
-      border: 1px solid rgba(0, 200, 255, 0.25);
-      border-radius: 4px 16px 16px 4px;
-      padding: 0.8rem 1rem;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      background: rgba(22,22,31,0.9);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px 14px 14px 14px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
       color: var(--text);
       word-break: break-word;
       white-space: pre-wrap;
       position: relative;
-      box-shadow: 0 4px 16px rgba(0, 200, 255, 0.08);
-      transition: all 0.2s;
+      backdrop-filter: blur(4px);
     }
-
-    .msg__bubble:hover {
-      border-color: rgba(0, 200, 255, 0.4);
-      box-shadow: 0 6px 24px rgba(0, 200, 255, 0.12);
-    }
-
     .msg--own .msg__bubble {
-      background: linear-gradient(135deg, rgba(204, 34, 0, 0.15), rgba(204, 34, 0, 0.08));
-      border-color: rgba(204, 34, 0, 0.3);
-      border-radius: 16px 4px 16px 16px;
-      box-shadow: 0 4px 16px rgba(204, 34, 0, 0.1);
+      background: linear-gradient(135deg, rgba(30,8,0,0.95) 0%, rgba(28,10,4,0.9) 100%);
+      border-color: rgba(204,34,0,0.25);
+      border-radius: 14px 4px 14px 14px;
+      box-shadow: 0 0 18px rgba(204,34,0,0.06);
     }
 
-    .msg--own .msg__bubble:hover {
-      border-color: rgba(204, 34, 0, 0.5);
-      box-shadow: 0 6px 24px rgba(204, 34, 0, 0.15);
-    }
-
-    /* Reply quote dentro de burbuja */
+    /* Reply quote */
     .msg__reply-quote {
-      background: rgba(0, 200, 255, 0.08);
+      background: rgba(255,255,255,0.04);
       border-left: 3px solid var(--cyan);
       border-radius: 4px;
-      padding: 0.4rem 0.6rem;
+      padding: 0.3rem 0.6rem;
       margin-bottom: 0.5rem;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      font-style: italic;
-    }
-
-    .msg__reply-quote strong {
-      color: var(--cyan);
-      font-style: normal;
-    }
-
-    /* Archivos/Certificados */
-    .msg__file {
-      background: rgba(212, 160, 23, 0.1);
-      border: 1px solid rgba(212, 160, 23, 0.3);
-      border-radius: 8px;
-      padding: 0.6rem;
-      margin-top: 0.5rem;
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.1s;
     }
+    .msg__reply-quote:hover { background: rgba(0,200,255,0.06); }
+    .msg__reply-quote strong { color: var(--cyan); font-family: var(--font-brand); font-size: 0.68rem; letter-spacing: 0.04em; }
+    .msg--own .msg__reply-quote { border-left-color: var(--primary); }
+    .msg--own .msg__reply-quote strong { color: var(--primary); }
 
-    .msg__file:hover {
-      background: rgba(212, 160, 23, 0.15);
-      border-color: rgba(212, 160, 23, 0.5);
+    /* Mensaje especial: rango compartido */
+    .msg__shared-rank {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-top: 5px;
+      max-width: 240px;
     }
+    .msg__shared-rank__icon { font-size: 1.5rem; }
+    .msg__shared-rank__info { flex: 1; }
+    .msg__shared-rank__label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .msg__shared-rank__name { font-family: var(--font-brand); font-size: 0.82rem; font-weight: 700; }
 
-    .msg__file-icon {
-      font-size: 1.2rem;
+    /* Mensaje especial: certificado */
+    .msg__cert-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(212,160,23,0.07) 0%, rgba(120,80,0,0.05) 100%);
+      border: 1px solid rgba(212,160,23,0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-top: 5px;
+      max-width: 300px;
     }
-
-    .msg__file-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .msg__file-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--gold);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .msg__file-size {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
+    .msg__cert-icon { font-size: 1.8rem; }
+    .msg__cert-info { flex: 1; min-width: 0; }
+    .msg__cert-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .msg__cert-title { font-size: 0.85rem; font-weight: 700; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .msg__cert-sub { font-size: 0.68rem; color: var(--text-muted); }
 
     /* Acciones del mensaje */
     .msg__actions {
       display: flex;
-      gap: 0.4rem;
-      margin-top: 0.5rem;
+      gap: 0.35rem;
+      margin-top: 0.3rem;
       opacity: 0;
-      transition: opacity 0.2s;
-      flex-wrap: wrap;
+      transition: opacity 0.12s;
     }
-
     .msg:hover .msg__actions,
-    .msg:focus-within .msg__actions {
-      opacity: 1;
-    }
+    .msg:focus-within .msg__actions { opacity: 1; }
+    .msg--own .msg__actions { flex-direction: row-reverse; }
 
     .msg__action-btn {
-      background: rgba(0, 200, 255, 0.12);
-      border: 1px solid rgba(0, 200, 255, 0.3);
-      border-radius: 6px;
-      color: var(--cyan);
-      font-size: 0.7rem;
-      padding: 4px 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
-    }
-
-    .msg__action-btn:hover {
-      background: rgba(0, 200, 255, 0.25);
-      border-color: var(--cyan);
-      box-shadow: 0 0 12px rgba(0, 200, 255, 0.3);
-    }
-
-    /* HILO (replies anidadas) */
-    .thread-replies {
-      margin-left: 48px;
-      padding: 0.8rem 0 0;
-      border-left: 2px solid rgba(0, 200, 255, 0.2);
-      padding-left: 1rem;
-      display: none;
-    }
-
-    .thread-replies.show {
-      display: block;
-      animation: threadSlideIn 0.3s ease;
-    }
-
-    @keyframes threadSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* INPUT AREA - REDISEÑADO */
-    .chat-input-area {
-      padding: 1.2rem 1.5rem;
-      border-top: 2px solid rgba(0, 200, 255, 0.15);
-      background: linear-gradient(180deg, rgba(10, 10, 15, 0.8) 0%, rgba(15, 15, 25, 0.95) 100%);
-      backdrop-filter: blur(20px);
-      flex-shrink: 0;
-      box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .reply-preview {
-      background: rgba(0, 200, 255, 0.08);
-      border: 1px solid rgba(0, 200, 255, 0.2);
-      border-radius: 8px;
-      padding: 0.8rem;
-      margin-bottom: 1rem;
-      display: none;
-      gap: 0.8rem;
+      display: inline-flex;
       align-items: center;
+      gap: 3px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-size: 0.67rem;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+      font-family: var(--font-body);
     }
+    .msg__action-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,200,255,0.06); }
+    .msg__action-btn svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    .reply-preview.show {
+    .btn-thread { font-size: 0.67rem; }
+    .btn-thread.has-replies { color: var(--cyan); border-color: rgba(0,200,255,0.25); }
+
+    /* ── HILOS ── */
+    .thread-replies {
+      margin-left: 46px;
+      margin-top: 0.25rem;
+      border-left: 2px solid rgba(0,200,255,0.15);
+      padding-left: 0.85rem;
       display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
     }
 
-    .reply-preview__icon {
+    .thread-header {
+      font-size: 0.67rem;
       color: var(--cyan);
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .reply-preview__content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .reply-preview__user {
-      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--cyan);
+      letter-spacing: 0.05em;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(0,200,255,0.1);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
+    .thread-header svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-    .reply-preview__text {
+    .thread-input-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      align-items: flex-end;
+    }
+    .thread-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text);
+      font-family: var(--font-body);
       font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-top: 0.15rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      resize: none;
+      min-height: 34px;
+      max-height: 80px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .thread-input:focus { border-color: rgba(0,200,255,0.4); }
+    .thread-send-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .thread-send-btn:hover { background: #e02800; box-shadow: 0 0 12px rgba(204,34,0,0.4); }
+    .thread-send-btn:disabled { background: #2a2a2a; color: #555; cursor: default; }
+    .thread-send-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Date separator */
+    .date-sep {
+      text-align: center;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      margin: 0.6rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .date-sep::before, .date-sep::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
     }
 
-    .reply-preview__close {
+    /* New messages indicator */
+    .new-msgs-indicator {
+      display: none;
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.3rem 1rem;
+      background: rgba(204,34,0,0.08);
+      border: 1px solid rgba(204,34,0,0.2);
+      border-radius: 20px;
+      margin: 0.4rem auto;
+      cursor: pointer;
+      max-width: 200px;
+      animation: pulse 2s infinite;
+    }
+    .new-msgs-indicator.show { display: block; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ── INPUT AREA ── */
+    .chat-input-area {
+      padding: 0.6rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(9,9,14,0.97);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .chat-reply-preview {
+      display: none;
+      background: rgba(0,200,255,0.05);
+      border: 1px solid rgba(0,200,255,0.2);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: -4px;
+    }
+    .chat-reply-preview.show { display: flex; }
+    .chat-reply-preview strong { color: var(--cyan); font-family: var(--font-brand); font-size: 0.68rem; }
+    .chat-reply-preview__cancel {
+      margin-left: auto;
       background: none;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 1.2rem;
-      padding: 0;
-      flex-shrink: 0;
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 2px;
+      transition: color 0.1s;
     }
+    .chat-reply-preview__cancel:hover { color: var(--text); }
+    .chat-reply-preview svg { width: 11px; height: 11px; stroke: var(--cyan); fill: none; stroke-width: 2; flex-shrink: 0; }
 
-    /* Input box */
-    .input-row {
+    /* Attach bar */
+    .chat-attach-bar {
       display: flex;
-      gap: 0.8rem;
+      gap: 0.4rem;
+      padding: 0 0 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chat-attach-bar::-webkit-scrollbar { display: none; }
+
+    .attach-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 11px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+      white-space: nowrap;
+      font-family: var(--font-body);
+    }
+    .attach-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
+    .attach-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Input row */
+    .chat-input-row {
+      display: flex;
+      gap: 0.5rem;
       align-items: flex-end;
     }
 
-    .input-actions {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .input-action-btn {
-      background: rgba(0, 200, 255, 0.1);
-      border: 1px solid rgba(0, 200, 255, 0.3);
-      color: var(--cyan);
-      border-radius: 8px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.2s;
-    }
-
-    .input-action-btn:hover {
-      background: rgba(0, 200, 255, 0.25);
-      box-shadow: 0 0 16px rgba(0, 200, 255, 0.3);
-    }
-
-    .input-action-btn.badge::after {
-      content: '';
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: var(--gold);
-      border-radius: 50%;
-      top: 0;
-      right: 0;
-      box-shadow: 0 0 8px var(--gold);
-    }
-
-    #chat-input {
+    .chat-input {
       flex: 1;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(0, 200, 255, 0.2);
-      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 22px;
+      padding: 0.65rem 1.1rem;
       color: var(--text);
-      padding: 0.8rem 1rem;
       font-family: var(--font-body);
       font-size: 0.9rem;
       resize: none;
-      min-height: 40px;
       max-height: 120px;
+      min-height: 42px;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      line-height: 1.45;
+    }
+    .chat-input::placeholder { color: var(--text-muted); font-size: 0.85rem; }
+    .chat-input:focus {
+      border-color: rgba(204,34,0,0.5);
+      box-shadow: 0 0 0 1px rgba(204,34,0,0.15), 0 0 20px rgba(204,34,0,0.08);
     }
 
-    #chat-input:focus {
-      border-color: rgba(0, 200, 255, 0.5);
-      background: rgba(0, 200, 255, 0.05);
-      box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
-    }
-
-    #chat-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    /* Botón enviar */
-    #btn-send {
-      background: linear-gradient(135deg, var(--primary), #ff4400);
+    .chat-send-btn {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--primary);
       border: none;
       color: #fff;
-      border-radius: 10px;
-      width: 44px;
-      height: 44px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 16px rgba(204, 34, 0, 0.3);
+      flex-shrink: 0;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+      box-shadow: 0 2px 12px rgba(204,34,0,0.3);
+    }
+    .chat-send-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .chat-send-btn:hover:not(:disabled) { background: #e02800; box-shadow: 0 0 24px rgba(204,34,0,0.5); }
+    .chat-send-btn:active:not(:disabled) { transform: scale(0.92); }
+    .chat-send-btn:disabled { background: #222230; color: #444; cursor: default; box-shadow: none; }
+
+    /* Char counter */
+    .char-counter {
+      text-align: right;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.2rem 0.5rem 0;
+      min-height: 14px;
+    }
+    .char-counter.warn { color: var(--warning); }
+    .char-counter.limit { color: var(--primary); }
+
+    /* ── PANTALLA VACÍA ── */
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      text-align: center;
       position: relative;
-      overflow: hidden;
+      z-index: 1;
     }
 
-    #btn-send::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 80%);
-      opacity: 0;
+    .chat-empty__glyph {
+      width: 72px; height: 72px;
+      border-radius: 18px;
+      background: rgba(204,34,0,0.08);
+      border: 1px solid rgba(204,34,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(204,34,0,0.1);
+    }
+    .chat-empty__glyph svg { width: 34px; height: 34px; stroke: var(--primary); fill: none; stroke-width: 1.5; opacity: 0.7; }
+
+    .chat-empty__title {
+      font-family: var(--font-brand);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+    .chat-empty__sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      max-width: 260px;
+      line-height: 1.6;
     }
 
-    #btn-send:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(204, 34, 0, 0.5);
+    /* Typing */
+    .typing-indicator {
+      padding: 0 1rem 0.3rem;
+      min-height: 20px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    .typing-dots span {
+      width: 4px; height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      display: inline-block;
+      animation: dotBounce 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
     }
 
-    #btn-send:active {
-      transform: translateY(0);
-    }
-
-    #btn-send:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* MODAL SELECTOR DE CLASE */
+    /* ── MODAL CLASE PICKER ── */
     .class-picker-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      align-items: center;
+      background: rgba(0,0,0,0.88);
+      z-index: 400;
+      align-items: flex-end;
       justify-content: center;
-      animation: fadeIn 0.2s;
     }
-
-    .class-picker-overlay.show {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    .class-picker-overlay.show { display: flex; }
 
     .class-picker {
-      background: linear-gradient(135deg, #16161f 0%, #0f0f18 100%);
-      border: 2px solid rgba(0, 200, 255, 0.3);
-      border-radius: 16px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
+      background: var(--bg-card);
+      border: 1px solid rgba(204,34,0,0.2);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 560px;
+      max-height: 80dvh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 0 40px rgba(0, 200, 255, 0.2), inset 0 0 40px rgba(204, 34, 0, 0.05);
-      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      animation: slideUp 0.22s ease;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
     }
-
     @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
     }
 
     .class-picker__header {
-      padding: 1.5rem;
-      border-bottom: 2px solid rgba(0, 200, 255, 0.2);
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(0, 200, 255, 0.1) 0%, transparent 100%);
     }
-
     .class-picker__title {
       font-family: var(--font-brand);
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    .class-picker__title svg { width: 14px; height: 14px; stroke: var(--primary); fill: none; stroke-width: 2; }
 
     .class-picker__close {
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 1.5rem;
       cursor: pointer;
+      padding: 0.2rem;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: color 0.1s;
     }
+    .class-picker__close:hover { color: var(--text); }
 
     .class-picker__search {
-      padding: 1rem;
-      border-bottom: 1px solid rgba(0, 200, 255, 0.1);
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
     }
-
     .class-picker__search input {
       width: 100%;
-      background: rgba(0, 200, 255, 0.05);
-      border: 1px solid rgba(0, 200, 255, 0.2);
-      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
       color: var(--text);
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.15s;
     }
-
-    .class-picker__search input:focus {
-      border-color: var(--cyan);
-      background: rgba(0, 200, 255, 0.1);
-      box-shadow: 0 0 16px rgba(0, 200, 255, 0.2);
-    }
+    .class-picker__search input:focus { border-color: rgba(204,34,0,0.4); }
+    .class-picker__search input::placeholder { color: var(--text-muted); }
 
     .class-picker__list {
       flex: 1;
       overflow-y: auto;
-      padding: 0.8rem;
+      padding: 0.5rem 0;
     }
 
     .class-picker__item {
-      background: rgba(0, 200, 255, 0.05);
-      border: 1px solid rgba(0, 200, 255, 0.15);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
+      padding: 0.7rem 1.25rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.12s;
+      border-left: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
-
-    .class-picker__item:hover {
-      background: rgba(0, 200, 255, 0.12);
-      border-color: rgba(0, 200, 255, 0.4);
-      transform: translateX(4px);
-      box-shadow: 0 4px 16px rgba(0, 200, 255, 0.15);
+    .class-picker__item:hover { background: rgba(255,255,255,0.03); border-left-color: var(--primary); }
+    .class-picker__item-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(204,34,0,0.08);
+      border: 1px solid rgba(204,34,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
     }
-
+    .class-picker__item-info { flex: 1; min-width: 0; }
     .class-picker__item-title {
-      font-size: 0.95rem;
-      font-weight: 700;
+      font-size: 0.875rem;
+      font-weight: 600;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+    .class-picker__item-cat { font-size: 0.68rem; color: var(--text-muted); margin-top: 1px; }
 
-    .class-picker__item-cat {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    /* MODAL ENVIAR CERTIFICADOS/RANGO */
-    .share-modal {
+    /* ── SHARE PICKER (rango / certificado) ── */
+    .share-picker-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 1001;
-      align-items: center;
+      background: rgba(0,0,0,0.88);
+      z-index: 500;
+      align-items: flex-end;
       justify-content: center;
     }
+    .share-picker-overlay.show { display: flex; }
 
-    .share-modal.show {
+    .share-picker {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 560px;
+      max-height: 70dvh;
       display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.22s ease;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
     }
 
-    .share-modal__content {
-      background: linear-gradient(135deg, #16161f 0%, #0f0f18 100%);
-      border: 2px solid rgba(0, 200, 255, 0.3);
-      border-radius: 16px;
-      padding: 2rem;
-      width: 90%;
-      max-width: 450px;
-      box-shadow: 0 0 40px rgba(0, 200, 255, 0.2);
-      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    .share-picker__header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-
-    .share-modal__title {
+    .share-picker__title {
       font-family: var(--font-brand);
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
-    }
-
-    .share-modal__tabs {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid rgba(0, 200, 255, 0.1);
+      align-items: center;
+      gap: 6px;
     }
-
-    .share-modal__tab {
+    .share-picker__title svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .share-picker__close {
       background: none;
       border: none;
       color: var(--text-muted);
-      padding: 0.75rem 1rem;
       cursor: pointer;
-      font-weight: 600;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: color 0.1s;
     }
+    .share-picker__close:hover { color: var(--text); }
 
-    .share-modal__tab.active {
-      color: var(--cyan);
-      border-bottom-color: var(--cyan);
-    }
-
-    .share-modal__form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .share-modal__label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.04em;
-    }
-
-    .share-modal__input,
-    .share-modal__select {
-      width: 100%;
-      background: rgba(0, 200, 255, 0.05);
-      border: 1px solid rgba(0, 200, 255, 0.2);
-      border-radius: 8px;
-      color: var(--text);
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .share-modal__input:focus,
-    .share-modal__select:focus {
-      border-color: var(--cyan);
-      background: rgba(0, 200, 255, 0.1);
-      box-shadow: 0 0 16px rgba(0, 200, 255, 0.2);
-    }
-
-    .share-modal__file-input {
-      position: relative;
-      cursor: pointer;
-    }
-
-    .share-modal__file-input input[type="file"] {
-      display: none;
-    }
-
-    .share-modal__file-label {
-      display: block;
-      background: rgba(212, 160, 23, 0.1);
-      border: 2px dashed rgba(212, 160, 23, 0.3);
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .share-modal__file-label:hover {
-      background: rgba(212, 160, 23, 0.15);
-      border-color: rgba(212, 160, 23, 0.5);
-    }
-
-    .share-modal__file-text {
-      color: var(--gold);
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .share-modal__actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .share-modal__btn {
+    .share-picker__body {
       flex: 1;
-      border: none;
-      border-radius: 8px;
-      padding: 0.8rem;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .share-picker__section-label {
+      font-size: 0.6rem;
       font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding-top: 0.5rem;
+    }
+
+    .rank-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
       cursor: pointer;
-      transition: all 0.2s;
-      font-size: 0.9rem;
+      transition: border-color 0.12s, background 0.12s;
+      background: rgba(255,255,255,0.02);
     }
+    .rank-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); }
+    .rank-option__icon { font-size: 1.4rem; }
+    .rank-option__info { flex: 1; }
+    .rank-option__name { font-family: var(--font-brand); font-size: 0.82rem; font-weight: 700; }
+    .rank-option__desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
 
-    .share-modal__btn--primary {
-      background: linear-gradient(135deg, var(--primary), #ff4400);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(204, 34, 0, 0.3);
+    .cert-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(212,160,23,0.2);
+      background: rgba(212,160,23,0.04);
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s;
     }
+    .cert-option:hover { border-color: var(--gold); background: rgba(212,160,23,0.09); }
+    .cert-option__icon { font-size: 1.3rem; }
+    .cert-option__info { flex: 1; min-width: 0; }
+    .cert-option__title { font-size: 0.83rem; font-weight: 700; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cert-option__sub { font-size: 0.68rem; color: var(--text-muted); }
 
-    .share-modal__btn--primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(204, 34, 0, 0.5);
-    }
-
-    .share-modal__btn--secondary {
-      background: rgba(0, 200, 255, 0.1);
-      color: var(--cyan);
-      border: 1px solid rgba(0, 200, 255, 0.3);
-    }
-
-    .share-modal__btn--secondary:hover {
-      background: rgba(0, 200, 255, 0.2);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
+    /* ── MOBILE ── */
+    @media (max-width: 640px) {
       .chat-rooms {
-        position: absolute;
-        left: 0;
-        top: var(--nav-h);
-        width: 75%;
-        max-width: 280px;
-        height: calc(100dvh - var(--nav-h));
-        z-index: 99;
+        position: fixed;
+        inset: var(--nav-h) 0 var(--tabbar-h) 0;
+        width: 100%;
+        z-index: 100;
         transform: translateX(-100%);
-        transition: transform 0.3s;
-        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
       }
-
-      .chat-rooms.mobile-open {
-        transform: translateX(0);
-      }
-
-      .chat-header__back {
-        display: block;
-      }
-
-      .msg {
-        max-width: 95%;
-      }
-
-      .chat-messages {
-        padding: 1rem;
-      }
+      .chat-rooms.mobile-open { transform: translateX(0); }
+      .chat-header__back { display: block; }
+      .chat-layout { height: calc(100dvh - var(--nav-h) - var(--tabbar-h)); }
+      .msg__body { max-width: 88%; }
     }
   </style>
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
 
-  <!-- TOPBAR -->
   <header class="navbar">
-    <a href="panel-usuario.html" class="navbar__brand">
-      🔒 INDRHACK CHAT
+    <a href="index.html" class="navbar__brand">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%">
+      ACADEMIA INDRHACK
     </a>
     <nav class="navbar__links">
-      <a href="panel-usuario.html">Panel</a>
+      <a href="index.html">Inicio</a>
+      <a href="cursos.html">Cursos</a>
       <a href="chat.html" class="active">Chat</a>
-      <a href="configuracion.html">Config</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="redes.html">Redes</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
     <button class="navbar__toggle" aria-label="Abrir menú">
@@ -1108,159 +1090,156 @@
     </button>
   </header>
 
-  <!-- CHAT LAYOUT -->
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="panel-usuario.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span><span class="tabbar__label">Mi Panel</span></a>
+      <a href="cursos.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="tabbar__label">Cursos</span></a>
+      <a href="chat.html" class="tabbar__item active"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><span class="tabbar__label">Chat</span></a>
+      <a href="noticias.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span><span class="tabbar__label">Noticias</span></a>
+      <a href="perfil.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tabbar__label">Perfil</span></a>
+    </div>
+  </nav>
+
+  <!-- LAYOUT PRINCIPAL -->
   <div class="chat-layout">
-    <!-- PANEL DE SALAS (IZQUIERDA) -->
-    <div id="chat-rooms-panel" class="chat-rooms">
+
+    <!-- PANEL DE SALAS -->
+    <aside class="chat-rooms" id="chat-rooms-panel">
       <div class="chat-rooms__header">
-        <div class="chat-rooms__title">💬 SALAS ACTIVAS</div>
-        <button id="btn-new-room" style="background: rgba(0, 200, 255, 0.2); border: none; color: var(--cyan); border-radius: 6px; padding: 0.35rem 0.6rem; font-size: 1rem; cursor: pointer;">
-          ➕
+        <span class="chat-rooms__title">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Canales
+        </span>
+        <button class="btn-nuevo-hilo" id="btn-nuevo-hilo">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Clase
         </button>
       </div>
-      <div class="chat-rooms__list">
-        <div class="rooms-section-label">GENERAL</div>
-        <!-- Salas generales se cargan aquí -->
-
-        <div class="rooms-section-label">CURSOS</div>
-        <!-- Salas de clases se cargan aquí -->
-
-        <div class="rooms-section-label">PRIVADAS</div>
-        <!-- Salas privadas se cargan aquí -->
+      <div class="chat-rooms__search">
+        <input type="text" id="room-search" placeholder="Buscar canal…" autocomplete="off" />
       </div>
-    </div>
+      <div class="chat-rooms__list" id="rooms-list">
+        <p style="padding:1.25rem;color:var(--text-muted);font-size:0.8rem;text-align:center">
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+        </p>
+      </div>
+    </aside>
 
-    <!-- ÁREA PRINCIPAL DE CHAT -->
-    <div class="chat-main">
-      <!-- HEADER DEL CHAT -->
-      <div class="chat-header">
-        <button id="btn-abrir-salas" class="chat-header__back" title="Abrir salas">←</button>
-        <div class="chat-header__icon" id="room-icon">💬</div>
+    <!-- ÁREA PRINCIPAL -->
+    <div class="chat-main" id="chat-main">
+
+      <!-- Botón scroll bottom -->
+      <button class="scroll-bottom-btn" id="scroll-bottom-btn" aria-label="Ir al fondo">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+
+      <!-- Estado vacío -->
+      <div class="chat-empty" id="chat-empty">
+        <div class="chat-empty__glyph">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="chat-empty__title">Seleccioná un canal</div>
+        <p class="chat-empty__sub">Elegí un canal de la lista o iniciá un hilo sobre una clase específica.</p>
+        <button class="btn btn--outline btn--small" id="btn-abrir-salas" style="margin-top:0.5rem">
+          Ver canales
+        </button>
+      </div>
+
+      <!-- Header del canal -->
+      <div class="chat-header" id="chat-header" style="display:none">
+        <button class="chat-header__back" id="btn-back-salas" aria-label="Volver">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="chat-header__icon" id="header-icon">💬</div>
         <div class="chat-header__info">
-          <div class="chat-header__name" id="room-name">Selecciona una sala</div>
-          <div class="chat-header__sub" id="room-subtitle">Bienvenido a Academia Indrhack</div>
+          <div class="chat-header__name" id="header-name">—</div>
+          <div class="chat-header__sub" id="header-sub">
+            <span class="online-dot"></span>
+            <span>En línea</span>
+          </div>
         </div>
-        <div class="chat-header__actions">
-          <button class="chat-header-btn" id="btn-nuevo-hilo" title="Crear hilo en curso">
-            🧵 Hilo
-          </button>
-          <button class="chat-header-btn" id="btn-share-rank" title="Compartir rango">
-            ⭐ Rango
-          </button>
-          <button class="chat-header-btn" id="btn-share-cert" title="Compartir certificado">
-            📜 Cert
-          </button>
+        <div class="chat-header__members" id="header-members" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          <span id="members-count">—</span>
         </div>
       </div>
 
-      <!-- ÁREA DE MENSAJES -->
-      <div id="chat-messages" class="chat-messages">
-        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
-          <p style="font-size: 0.9rem;">Selecciona una sala para comenzar</p>
-        </div>
+      <!-- Mensajes -->
+      <div class="chat-messages" id="chat-messages" style="display:none"></div>
+
+      <!-- Indicador typing -->
+      <div class="typing-indicator" id="typing-indicator" style="display:none"></div>
+
+      <!-- New messages indicator -->
+      <div class="new-msgs-indicator" id="new-msgs-indicator">↓ Nuevos mensajes</div>
+
+      <!-- Reply preview -->
+      <div class="chat-reply-preview" id="reply-preview">
+        <svg viewBox="0 0 24 24" width="11" height="11"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+        <span>Respondiendo a <strong id="reply-to-name"></strong>: <span id="reply-to-text" style="opacity:0.7"></span></span>
+        <button class="chat-reply-preview__cancel" id="btn-cancel-reply" aria-label="Cancelar respuesta">✕</button>
       </div>
 
-      <!-- ÁREA DE INPUT -->
-      <div class="chat-input-area">
-        <div id="reply-preview" class="reply-preview">
-          <div class="reply-preview__icon">↪️</div>
-          <div class="reply-preview__content">
-            <div class="reply-preview__user" id="reply-user"></div>
-            <div class="reply-preview__text" id="reply-text"></div>
-          </div>
-          <button id="btn-cancel-reply" class="reply-preview__close">✕</button>
+      <!-- Input -->
+      <div class="chat-input-area" id="chat-input-area" style="display:none">
+        <div class="chat-attach-bar" id="attach-bar">
+          <button class="attach-btn" id="btn-share-rank">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Compartir Rango
+          </button>
+          <button class="attach-btn" id="btn-share-cert">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            Certificado
+          </button>
         </div>
-
-        <div class="input-row">
-          <div class="input-actions">
-            <button id="btn-nuevo-hilo" class="input-action-btn" title="Nuevo hilo en clase">🧵</button>
-            <button id="btn-share-rank" class="input-action-btn" title="Enviar rango">⭐</button>
-            <button id="btn-share-cert" class="input-action-btn" title="Enviar certificado">📜</button>
-            <input type="file" id="file-input" style="display:none;">
-          </div>
-          <textarea id="chat-input" placeholder="Escribe tu mensaje aquí... (Shift+Enter para nueva línea)" maxlength="5000"></textarea>
-          <button id="btn-send" title="Enviar (Enter)">📤</button>
+        <div class="chat-input-row">
+          <textarea
+            class="chat-input"
+            id="chat-input"
+            placeholder="Escribe un mensaje… (Enter para enviar)"
+            rows="1"
+            maxlength="2000"
+          ></textarea>
+          <button class="chat-send-btn" id="btn-send" disabled aria-label="Enviar">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
         </div>
+        <div class="char-counter" id="char-counter"></div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: SELECTOR DE CLASE -->
-  <div id="class-picker-overlay" class="class-picker-overlay">
+  <!-- MODAL: Selector de clase -->
+  <div class="class-picker-overlay" id="class-picker-overlay">
     <div class="class-picker">
       <div class="class-picker__header">
-        <div class="class-picker__title">📚 CREAR HILO EN CURSO</div>
-        <button id="btn-close-picker" class="class-picker__close">✕</button>
+        <span class="class-picker__title">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Hilo de clase
+        </span>
+        <button class="class-picker__close" id="btn-close-picker">✕</button>
       </div>
       <div class="class-picker__search">
-        <input id="picker-search" type="text" placeholder="Busca un curso...">
+        <input type="text" id="picker-search" placeholder="Buscar clase…" autocomplete="off" />
       </div>
-      <div id="picker-list" class="class-picker__list"></div>
+      <div class="class-picker__list" id="picker-list">
+        <p style="padding:1rem;color:var(--text-muted);font-size:0.85rem;text-align:center">Cargando clases…</p>
+      </div>
     </div>
   </div>
 
-  <!-- MODAL: COMPARTIR RANGO/CERTIFICADO -->
-  <div id="share-modal" class="share-modal">
-    <div class="share-modal__content">
-      <div class="share-modal__title">📤 COMPARTIR LOGROS</div>
-
-      <div class="share-modal__tabs">
-        <button class="share-modal__tab active" data-tab="rank">⭐ Rango</button>
-        <button class="share-modal__tab" data-tab="cert">📜 Certificado</button>
+  <!-- MODAL: Compartir rango / certificado -->
+  <div class="share-picker-overlay" id="share-picker-overlay">
+    <div class="share-picker">
+      <div class="share-picker__header">
+        <span class="share-picker__title" id="share-picker-title">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Compartir
+        </span>
+        <button class="share-picker__close" id="btn-close-share">✕</button>
       </div>
-
-      <!-- TAB: RANGO -->
-      <div id="tab-rank" class="share-modal__tab-content" style="display: block;">
-        <div class="share-modal__form-group">
-          <label class="share-modal__label">Tu Rango Actual</label>
-          <select class="share-modal__select" id="rank-select">
-            <option value="principiante">🟩 Principiante</option>
-            <option value="aprendiz">🟦 Aprendiz</option>
-            <option value="avanzado">🟪 Avanzado</option>
-            <option value="experto">🟥 Experto</option>
-            <option value="maestro">⭐ Maestro Hacker</option>
-          </select>
-        </div>
-
-        <div class="share-modal__form-group">
-          <label class="share-modal__label">Mensaje Personalizado (opcional)</label>
-          <textarea class="share-modal__input" id="rank-message" placeholder="Comparte tu progreso..." maxlength="200" style="resize: vertical; min-height: 80px;"></textarea>
-        </div>
-
-        <div class="share-modal__actions">
-          <button class="share-modal__btn share-modal__btn--secondary" onclick="document.getElementById('share-modal').classList.remove('show')">Cancelar</button>
-          <button class="share-modal__btn share-modal__btn--primary" onclick="shareRank()">Enviar Rango</button>
-        </div>
-      </div>
-
-      <!-- TAB: CERTIFICADO -->
-      <div id="tab-cert" class="share-modal__tab-content" style="display: none;">
-        <div class="share-modal__form-group">
-          <label class="share-modal__label">Curso Completado</label>
-          <input class="share-modal__input" id="cert-course" type="text" placeholder="Nombre del curso">
-        </div>
-
-        <div class="share-modal__form-group">
-          <label class="share-modal__label">Certificado (Imagen o PDF)</label>
-          <div class="share-modal__file-input">
-            <label class="share-modal__file-label" for="cert-file">
-              <div class="share-modal__file-text">📁 Arrastra tu certificado aquí</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">o haz clic para seleccionar</div>
-            </label>
-            <input type="file" id="cert-file" accept="image/*,application/pdf">
-          </div>
-        </div>
-
-        <div class="share-modal__form-group">
-          <label class="share-modal__label">Mensaje de Logro (opcional)</label>
-          <textarea class="share-modal__input" id="cert-message" placeholder="Cuéntale a la comunidad tu logro..." maxlength="200" style="resize: vertical; min-height: 80px;"></textarea>
-        </div>
-
-        <div class="share-modal__actions">
-          <button class="share-modal__btn share-modal__btn--secondary" onclick="document.getElementById('share-modal').classList.remove('show')">Cancelar</button>
-          <button class="share-modal__btn share-modal__btn--primary" onclick="shareCertificate()">Compartir Certificado</button>
-        </div>
+      <div class="share-picker__body" id="share-picker-body">
+        <!-- Se rellena con JS -->
       </div>
     </div>
   </div>
@@ -1268,560 +1247,771 @@
   <script src="js/particles.js"></script>
   <script type="module" src="js/main.js"></script>
 
-  <!-- Firebase + Chat Logic -->
   <script type="module">
-    import { auth, db } from './js/firebase-config.js';
-    import { 
-      onAuthStateChanged,
-      signOut 
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { db, auth } from './js/firebase-config.js';
+    import { requireApprovedUser } from './js/auth.js';
     import {
-      collection,
-      query,
-      where,
-      onSnapshot,
-      addDoc,
-      updateDoc,
-      doc,
-      getDocs,
-      serverTimestamp,
-      increment
+      collection, doc, addDoc, getDoc, getDocs, onSnapshot,
+      query, where, orderBy, limit, serverTimestamp, updateDoc, increment
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    /* ESTADO GLOBAL */
-    let ME = null;
-    let ROOM = null;
-    let REPLY_TO = null;
+    /* ════════════ ESTADO GLOBAL ════════════ */
+    let ME         = null;
+    let ROOM       = null;
+    let UNSUB      = null;
+    let REPLY_TO   = null;
     let ALL_COURSES = [];
-    let UNSUBSCRIBE_MESSAGES = null;
-    let UNSUBSCRIBE_REPLIES = null;
+    let SHARE_MODE = null; // 'rank' | 'cert'
 
-    /* INICIALIZAR */
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.replace('login.html');
-        return;
-      }
+    const RANK_DATA = [
+      { key:'novato',   icon:'🔰', name:'Novato',    color:'#9999aa', desc:'Nivel de entrada a la comunidad' },
+      { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#00c8ff', desc:'Aprendiendo las herramientas' },
+      { key:'hacker',   icon:'💀', name:'Hacker',    color:'#cc2200', desc:'Domina técnicas básicas de pentest' },
+      { key:'elite',    icon:'🏆', name:'Élite',     color:'#d4a017', desc:'Experto en ofensiva avanzada' },
+      { key:'maestro',  icon:'🔮', name:'Maestro',   color:'#a855f7', desc:'Arquitecto de exploits' },
+    ];
 
-      try {
-        const snap = await getDocs(query(collection(db, 'users'), where('uid', '==', user.uid)));
-        if (snap.empty) {
-          alert('Perfil no encontrado');
-          signOut(auth);
-          return;
-        }
-        ME = { uid: user.uid, ...snap.docs[0].data() };
-        console.log('Usuario cargado:', ME);
-      } catch (e) {
-        alert('Error: ' + e.message);
-        signOut(auth);
-      }
+    /* ════════════ INICIO ════════════ */
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+      ME = profile;
+      await loadRooms();
+      setupInput();
+      setupSharePickers();
+      setupRoomSearch();
     });
 
-    /* ════════════════════════════════════════════
-       CARGAR Y RENDERIZAR SALAS
-    ════════════════════════════════════════════ */
+    /* ════════════ SALAS ════════════ */
     async function loadRooms() {
-      if (!ME) return;
+      const listEl = document.getElementById('rooms-list');
 
-      try {
-        const snap = await getDocs(collection(db, 'chat_rooms'));
-        const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const q = query(collection(db, 'chat_rooms'));
+      onSnapshot(q, async (snap) => {
+        const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
 
-        const generalRooms = rooms.filter(r => r.type === 'general');
-        const classRooms = rooms.filter(r => r.type === 'class');
-        const privateRooms = rooms.filter(r => r.type === 'private');
+        const globalExists = rooms.find(r => r.type === 'global');
+        if (!globalExists) {
+          const ref = await addDoc(collection(db, 'chat_rooms'), {
+            type: 'global', name: 'General', icon: '🌐',
+            lastMsg: '', lastAt: serverTimestamp(), msgCount: 0,
+          });
+          rooms.unshift({ id: ref.id, type: 'global', name: 'General', icon: '🌐' });
+        }
 
-        renderRooms('GENERAL', generalRooms);
-        renderRooms('CURSOS', classRooms);
-        renderRooms('PRIVADAS', privateRooms);
-      } catch (e) {
-        console.error('Error al cargar salas:', e);
-      }
-    }
-
-    function renderRooms(section, rooms) {
-      const list = document.querySelector('.chat-rooms__list');
-      const label = Array.from(list.querySelectorAll('.rooms-section-label')).find(el =>
-        el.textContent.includes(section.toUpperCase())
-      );
-
-      if (!label) return;
-
-      let container = label.nextElementSibling;
-      while (container && container.classList.contains('room-item')) {
-        container.remove();
-        container = label.nextElementSibling;
-      }
-
-      rooms.forEach(room => {
-        const el = document.createElement('div');
-        el.className = 'room-item' + (ROOM?.id === room.id ? ' active' : '');
-        el.innerHTML = `
-          <div class="room-item__icon">${room.icon || '💬'}</div>
-          <div class="room-item__info">
-            <div class="room-item__name">${room.name}</div>
-            <div class="room-item__sub">${room.msgCount || 0} mensajes</div>
-          </div>
-          ${room.msgCount > 0 && ROOM?.id !== room.id ? `<div class="room-item__badge">${room.msgCount}</div>` : ''}
-        `;
-        el.addEventListener('click', () => openRoom(room));
-        label.parentElement.insertBefore(el, label.nextElementSibling);
+        renderRoomList(rooms);
       });
     }
 
-    /* ════════════════════════════════════════════
-       ABRIR SALA Y CARGAR MENSAJES
-    ════════════════════════════════════════════ */
+    function renderRoomList(rooms, filter = '') {
+      const listEl = document.getElementById('rooms-list');
+      const fl = filter.trim().toLowerCase();
+      const filtered = fl
+        ? rooms.filter(r => (r.name || '').toLowerCase().includes(fl))
+        : rooms;
+
+      const globals = filtered.filter(r => r.type === 'global');
+      const clases  = filtered.filter(r => r.type === 'class');
+
+      listEl.innerHTML = '';
+
+      const gl = document.createElement('div');
+      gl.innerHTML = `<div class="rooms-section-label">Canales</div>`;
+      if (globals.length === 0) {
+        gl.innerHTML += `<p style="padding:0.6rem 1rem;color:var(--text-muted);font-size:0.75rem">Sin resultados</p>`;
+      }
+      globals.forEach(r => gl.appendChild(buildRoomItem(r)));
+      listEl.appendChild(gl);
+
+      if (clases.length > 0 || fl) {
+        const cl = document.createElement('div');
+        cl.innerHTML = `<div class="rooms-section-label">Hilos de clases</div>`;
+        clases.forEach(r => cl.appendChild(buildRoomItem(r)));
+        listEl.appendChild(cl);
+      }
+
+      if (ROOM) {
+        listEl.querySelectorAll('.room-item').forEach(el => {
+          el.classList.toggle('active', el.dataset.roomId === ROOM.id);
+        });
+      }
+    }
+
+    // Store all rooms globally for search
+    let ALL_ROOMS = [];
+    onSnapshot(query(collection(db, 'chat_rooms')), snap => {
+      ALL_ROOMS = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
+    });
+
+    function setupRoomSearch() {
+      const input = document.getElementById('room-search');
+      if (!input) return;
+      input.addEventListener('input', () => {
+        renderRoomList(ALL_ROOMS, input.value);
+      });
+    }
+
+    function buildRoomItem(room) {
+      const el = document.createElement('div');
+      el.className = 'room-item';
+      el.dataset.roomId = room.id;
+      el.innerHTML = `
+        <div class="room-item__icon">${room.icon || '💬'}</div>
+        <div class="room-item__info">
+          <div class="room-item__name">${escapeHtml(room.name)}</div>
+          <div class="room-item__sub">${room.lastMsg ? escapeHtml(truncate(room.lastMsg, 32)) : 'Sin mensajes aún'}</div>
+        </div>
+        ${room.msgCount > 0 ? '' : ''}
+      `;
+      el.addEventListener('click', () => openRoom(room));
+      return el;
+    }
+
     function openRoom(room) {
       ROOM = room;
       REPLY_TO = null;
 
-      // Actualizar header
-      document.getElementById('room-icon').textContent = room.icon || '💬';
-      document.getElementById('room-name').textContent = room.name;
-      document.getElementById('room-subtitle').textContent =
-        room.type === 'class' ? '📚 Canal de clase' :
-        room.type === 'private' ? '🔒 Privado' : '🌍 Comunidad';
+      document.getElementById('chat-empty').style.display = 'none';
+      document.getElementById('chat-header').style.display = 'flex';
+      document.getElementById('chat-messages').style.display = 'flex';
+      document.getElementById('chat-input-area').style.display = 'block';
+      document.getElementById('typing-indicator').style.display = 'flex';
+      document.getElementById('reply-preview').classList.remove('show');
+      document.getElementById('chat-input').value = '';
+      document.getElementById('btn-send').disabled = true;
+      document.getElementById('char-counter').textContent = '';
 
-      // Mostrar botones según tipo
-      document.getElementById('btn-nuevo-hilo').style.display = room.type === 'class' ? 'block' : 'none';
-      document.getElementById('btn-share-rank').style.display = 'block';
-      document.getElementById('btn-share-cert').style.display = 'block';
+      const iconEl = document.getElementById('header-icon');
+      iconEl.textContent = room.icon || '💬';
+      document.getElementById('header-name').textContent = room.name;
+      document.getElementById('header-sub').innerHTML = `
+        <span class="online-dot"></span>
+        <span>${room.type === 'class' ? `Hilo de clase · ${room.categoria || ''}` : 'Canal de la comunidad'}</span>
+      `;
 
-      // Cargar mensajes
-      loadMessages();
-      loadRooms(); // Actualizar lista
-      closeMobileRooms();
+      document.querySelectorAll('.room-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.roomId === room.id);
+      });
+
+      document.getElementById('chat-rooms-panel').classList.remove('mobile-open');
+
+      if (UNSUB) UNSUB();
+      loadMessages(room.id);
     }
 
-    function loadMessages() {
-      if (!ROOM) return;
-
-      if (UNSUBSCRIBE_MESSAGES) UNSUBSCRIBE_MESSAGES();
-
-      const messagesDiv = document.getElementById('chat-messages');
-      messagesDiv.innerHTML = '';
+    /* ════════════ MENSAJES ════════════ */
+    function loadMessages(roomId) {
+      const el = document.getElementById('chat-messages');
+      el.innerHTML = `<p style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:2rem">
+        <span class="typing-dots"><span></span><span></span><span></span></span>
+      </p>`;
 
       const q = query(
         collection(db, 'chat_messages'),
-        where('roomId', '==', ROOM.id)
+        where('roomId', '==', roomId),
+        limit(200)
       );
 
-      UNSUBSCRIBE_MESSAGES = onSnapshot(q, (snap) => {
-        const messages = snap.docs
-          .map(d => ({ id: d.id, ...d.data() }))
-          .sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0));
-
-        messagesDiv.innerHTML = '';
-
-        messages.forEach((msg, idx) => {
-          // Separador de fecha
-          const msgDate = msg.createdAt?.toDate?.();
-          const prevDate = messages[idx - 1]?.createdAt?.toDate?.();
-          if (!prevDate || msgDate.toDateString() !== prevDate.toDateString()) {
-            const sep = document.createElement('div');
-            sep.className = 'msg-date-separator';
-            sep.innerHTML = `<span>${fmtDate(msgDate)}</span>`;
-            messagesDiv.appendChild(sep);
-          }
-
-          const el = renderMessage(msg);
-          messagesDiv.appendChild(el);
-        });
-
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      UNSUB = onSnapshot(q, (snap) => {
+        const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+        renderMessages(msgs);
+      }, (err) => {
+        el.innerHTML = `<p style="color:#ff6b6b;padding:1.5rem;font-size:0.85rem;text-align:center">
+          Error al cargar mensajes: ${escapeHtml(err.message)}
+        </p>`;
       });
     }
 
-    function renderMessage(msg) {
-      const isOwn = msg.uid === ME.uid;
-      const el = document.createElement('div');
-      el.className = 'msg' + (isOwn ? ' msg--own' : '');
+    let _lastDate = '';
+    function renderMessages(msgs) {
+      const el = document.getElementById('chat-messages');
+      const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
 
-      let replyHtml = '';
-      if (msg.replyTo) {
-        replyHtml = `
-          <div class="msg__reply-quote">
-            <strong>↪️ ${escapeHtml(msg.replyTo.username)}</strong><br>
-            ${escapeHtml(truncate(msg.replyTo.text, 60))}
-          </div>
-        `;
+      _lastDate = '';
+      el.innerHTML = '';
+
+      if (msgs.length === 0) {
+        el.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:0.75rem;padding:3rem;text-align:center">
+            <div style="font-size:2.5rem;opacity:0.25">⌨️</div>
+            <p style="color:var(--text-muted);font-size:0.85rem">Sé el primero en escribir algo.</p>
+          </div>`;
+        return;
       }
 
-      el.innerHTML = `
-        <div class="msg__avatar" title="${msg.username}">
-          ${msg.photoURL ? `<img src="${msg.photoURL}" alt="${msg.username}">` : msg.username.charAt(0).toUpperCase()}
-        </div>
-        <div class="msg__body">
-          <div class="msg__meta">
-            <span class="msg__username">${escapeHtml(msg.username)}</span>
-            ${msg.rango ? `<span class="msg__rango">${msg.rango}</span>` : ''}
-            <span class="msg__time">${fmtTime(msg.createdAt?.toDate?.())}</span>
-          </div>
-          <div class="msg__bubble">
-            ${replyHtml}
-            ${escapeHtml(msg.text)}
-            ${msg.fileUrl ? `<div class="msg__file"><div class="msg__file-icon">📄</div><div class="msg__file-info"><div class="msg__file-name">${escapeHtml(msg.fileName)}</div><div class="msg__file-size">${msg.fileSize}</div></div></div>` : ''}
-          </div>
-          <div class="msg__actions">
-            <button class="msg__action-btn" onclick="replyTo('${msg.id}', '${escapeAttr(msg.username)}', '${escapeAttr(msg.text)}')">↪️ Responder</button>
-            <button class="msg__action-btn" onclick="expandThread('${msg.id}')">🧵 ${msg.threadCount || 0}</button>
-          </div>
-        </div>
-        <div id="thread-${msg.id}" class="thread-replies"></div>
-      `;
-
-      el.addEventListener('mouseenter', () => {
-        el.querySelector('.msg__actions').style.opacity = '1';
-      });
-
-      el.addEventListener('mouseleave', () => {
-        el.querySelector('.msg__actions').style.opacity = '0';
-      });
-
-      return el;
-    }
-
-    /* ════════════════════════════════════════════
-       FUNCIONES DE REPLY Y THREAD
-    ════════════════════════════════════════════ */
-    window.replyTo = function(msgId, username, text) {
-      REPLY_TO = {
-        id: msgId,
-        username: username,
-        text: text
-      };
-      document.getElementById('reply-preview').classList.add('show');
-      document.getElementById('reply-user').textContent = username;
-      document.getElementById('reply-text').textContent = text;
-      document.getElementById('chat-input').focus();
-    };
-
-    window.expandThread = async function(parentId) {
-      const threadDiv = document.getElementById(`thread-${parentId}`);
-      threadDiv.classList.toggle('show');
-
-      if (!threadDiv.classList.contains('show')) return;
-
-      try {
-        const snap = await getDocs(query(
-          collection(db, 'chat_replies'),
-          where('parentId', '==', parentId)
-        ));
-
-        threadDiv.innerHTML = '';
-        snap.docs
-          .map(d => ({ id: d.id, ...d.data() }))
-          .sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0))
-          .forEach(reply => {
-            const replyEl = document.createElement('div');
-            replyEl.style.marginBottom = '0.6rem';
-            replyEl.innerHTML = `
-              <div style="display:flex;gap:0.5rem;align-items:flex-start">
-                <div class="msg__avatar" style="width:28px;height:28px;font-size:0.65rem">${reply.username.charAt(0).toUpperCase()}</div>
-                <div style="flex:1;min-width:0">
-                  <div class="msg__meta" style="margin-bottom:0.1rem">
-                    <span class="msg__username">${escapeHtml(reply.username)}</span>
-                    <span class="msg__time">${fmtTime(reply.createdAt?.toDate?.())}</span>
-                  </div>
-                  <div class="msg__bubble" style="max-width:300px">${escapeHtml(reply.text)}</div>
-                </div>
-              </div>
-            `;
-            threadDiv.appendChild(replyEl);
-          });
-      } catch (e) {
-        console.error('Error al cargar replies:', e);
-      }
-    };
-
-    /* ════════════════════════════════════════════
-       ENVIAR MENSAJE
-    ════════════════════════════════════════════ */
-    document.getElementById('btn-send').addEventListener('click', sendMessage);
-    document.getElementById('chat-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    async function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim();
-      if (!text || !ROOM || !ME) return;
-
-      const btn = document.getElementById('btn-send');
-      btn.disabled = true;
-
-      try {
-        const payload = {
-          roomId: ROOM.id,
-          uid: ME.uid,
-          username: ME.username,
-          photoURL: ME.photoURL || '',
-          text,
-          createdAt: serverTimestamp(),
-          threadCount: 0,
-        };
-
-        if (REPLY_TO) {
-          payload.replyTo = {
-            id: REPLY_TO.id,
-            username: REPLY_TO.username,
-            text: REPLY_TO.text,
-          };
+      let prevUid = null;
+      msgs.forEach((msg, i) => {
+        const dateStr = msg.createdAt?.toDate ? fmtDate(msg.createdAt.toDate()) : '';
+        if (dateStr && dateStr !== _lastDate) {
+          _lastDate = dateStr;
+          const sep = document.createElement('div');
+          sep.className = 'date-sep';
+          sep.textContent = dateStr;
+          el.appendChild(sep);
+          prevUid = null;
         }
 
-        await addDoc(collection(db, 'chat_messages'), payload);
-        await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
-          lastMsg: text,
-          lastAt: serverTimestamp(),
-          msgCount: increment(1),
+        const isGrouped = msg.uid === prevUid && !dateStr;
+        el.appendChild(buildMsg(msg, isGrouped));
+        prevUid = msg.uid;
+      });
+
+      if (wasAtBottom) el.scrollTop = el.scrollHeight;
+    }
+
+    function buildMsg(msg, grouped = false) {
+      const isOwn = msg.uid === ME?.uid;
+      const time = msg.createdAt?.toDate ? fmtTime(msg.createdAt.toDate()) : '';
+      const initials = (msg.username || '?').substring(0, 2).toUpperCase();
+
+      const wrapper = document.createElement('div');
+      wrapper.dataset.msgId = msg.id;
+
+      // Reply quote
+      const replyHTML = msg.replyTo
+        ? `<div class="msg__reply-quote" title="Ir al mensaje original">
+            <strong>@${escapeHtml(msg.replyTo.username)}</strong> · ${escapeHtml(truncate(msg.replyTo.text, 65))}
+           </div>`
+        : '';
+
+      // Rank badge inline
+      const rankHTML = msg.rankShared
+        ? buildRankCard(msg.rankShared)
+        : '';
+
+      // Cert card
+      const certHTML = msg.certShared
+        ? buildCertCard(msg.certShared)
+        : '';
+
+      // Thread button text
+      const threadLabel = msg.threadCount > 0
+        ? `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> ${msg.threadCount} hilo${msg.threadCount !== 1 ? 's' : ''}`
+        : `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> Hilo`;
+
+      wrapper.innerHTML = `
+        <div class="msg${isOwn ? ' msg--own' : ''}${grouped ? ' msg--grouped' : ''}">
+          <div class="msg__avatar">${msg.photoURL
+            ? `<img src="${escapeAttr(msg.photoURL)}" alt="" />`
+            : initials}</div>
+          <div class="msg__body">
+            ${!grouped ? `
+            <div class="msg__meta">
+              <span class="msg__username">@${escapeHtml(msg.username || 'anon')}</span>
+              ${msg.userRank ? buildRankInline(msg.userRank) : ''}
+              <span class="msg__time">${time}</span>
+            </div>` : ''}
+            <div class="msg__bubble">
+              ${replyHTML}
+              ${escapeHtml(msg.text)}
+              ${rankHTML}
+              ${certHTML}
+            </div>
+            <div class="msg__actions">
+              <button class="msg__action-btn" data-action="reply">
+                <svg viewBox="0 0 24 24"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+                Responder
+              </button>
+              <button class="msg__action-btn btn-thread ${msg.threadCount > 0 ? 'has-replies' : ''}" data-action="toggle-thread">
+                ${threadLabel}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="thread-replies" id="thread-${msg.id}" style="display:none"></div>
+      `;
+
+      wrapper.querySelector('[data-action="reply"]').addEventListener('click', () => {
+        REPLY_TO = { id: msg.id, username: msg.username, text: msg.text };
+        document.getElementById('reply-to-name').textContent = msg.username;
+        document.getElementById('reply-to-text').textContent = truncate(msg.text, 55);
+        document.getElementById('reply-preview').classList.add('show');
+        document.getElementById('chat-input').focus();
+      });
+
+      wrapper.querySelector('[data-action="toggle-thread"]').addEventListener('click', () => {
+        toggleThread(msg.id, wrapper);
+      });
+
+      return wrapper;
+    }
+
+    function buildRankInline(rankKey) {
+      const r = RANK_DATA.find(x => x.key === rankKey);
+      if (!r) return '';
+      return `<span class="msg__rank-inline" style="color:${r.color};border-color:${r.color};background:${r.color}18">
+        ${r.icon} ${r.name}
+      </span>`;
+    }
+
+    function buildRankCard(rank) {
+      const r = RANK_DATA.find(x => x.key === rank.key) || { icon: '🔰', name: rank.key, color: '#9999aa' };
+      return `<div class="msg__shared-rank">
+        <div class="msg__shared-rank__icon">${r.icon}</div>
+        <div class="msg__shared-rank__info">
+          <div class="msg__shared-rank__label">Rango actual</div>
+          <div class="msg__shared-rank__name" style="color:${r.color}">${r.name}</div>
+        </div>
+      </div>`;
+    }
+
+    function buildCertCard(cert) {
+      return `<div class="msg__cert-card">
+        <div class="msg__cert-icon">🏅</div>
+        <div class="msg__cert-info">
+          <div class="msg__cert-label">Certificado</div>
+          <div class="msg__cert-title">${escapeHtml(cert.title)}</div>
+          <div class="msg__cert-sub">${escapeHtml(cert.course || '')}</div>
+        </div>
+      </div>`;
+    }
+
+    /* ════════════ HILOS ════════════ */
+    const _openThreads = new Set();
+    const _threadUnsubs = {};
+
+    function toggleThread(msgId, wrapper) {
+      const threadEl = wrapper.querySelector(`#thread-${msgId}`);
+      if (!threadEl) return;
+
+      if (_openThreads.has(msgId)) {
+        _openThreads.delete(msgId);
+        threadEl.style.display = 'none';
+        if (_threadUnsubs[msgId]) { _threadUnsubs[msgId](); delete _threadUnsubs[msgId]; }
+      } else {
+        _openThreads.add(msgId);
+        threadEl.style.display = 'flex';
+        threadEl.style.flexDirection = 'column';
+        loadThread(msgId, threadEl);
+      }
+    }
+
+    function loadThread(parentId, containerEl) {
+      containerEl.innerHTML = `
+        <div class="thread-header">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Hilo de respuestas
+        </div>
+        <p style="color:var(--text-muted);font-size:0.75rem;padding:0.25rem 0">
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+        </p>`;
+
+      const q = query(
+        collection(db, 'chat_replies'),
+        where('parentId', '==', parentId)
+      );
+
+      _threadUnsubs[parentId] = onSnapshot(q, (snap) => {
+        const replies = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+
+        containerEl.innerHTML = `
+          <div class="thread-header">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Hilo · ${replies.length} respuesta${replies.length !== 1 ? 's' : ''}
+          </div>`;
+
+        replies.forEach(r => {
+          const isOwn = r.uid === ME?.uid;
+          const initials = (r.username || '?').substring(0, 2).toUpperCase();
+          const time = r.createdAt?.toDate ? fmtTime(r.createdAt.toDate()) : '';
+
+          const el = document.createElement('div');
+          el.className = `msg${isOwn ? ' msg--own' : ''}`;
+          el.style.cssText = 'gap:0.4rem;padding:0.1rem 0';
+          el.innerHTML = `
+            <div class="msg__avatar" style="width:28px;height:28px;font-size:0.62rem">${
+              r.photoURL ? `<img src="${escapeAttr(r.photoURL)}" alt="" />` : initials
+            }</div>
+            <div class="msg__body" style="max-width:85%">
+              <div class="msg__meta">
+                <span class="msg__username" style="font-size:0.68rem">@${escapeHtml(r.username || 'anon')}</span>
+                <span class="msg__time">${time}</span>
+              </div>
+              <div class="msg__bubble" style="font-size:0.82rem;${isOwn ? 'border-radius:14px 4px 14px 14px' : 'border-radius:4px 14px 14px 14px'}">
+                ${escapeHtml(r.text)}
+              </div>
+            </div>`;
+          containerEl.appendChild(el);
         });
 
-        input.value = '';
-        input.style.height = '';
-        REPLY_TO = null;
-        document.getElementById('reply-preview').classList.remove('show');
+        // Input hilo
+        if (!containerEl.querySelector('.thread-input-row')) {
+          const inputRow = document.createElement('div');
+          inputRow.className = 'thread-input-row';
+          inputRow.innerHTML = `
+            <textarea class="thread-input" placeholder="Responder en el hilo…" maxlength="1000" rows="1"></textarea>
+            <button class="thread-send-btn" aria-label="Enviar respuesta">
+              <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>`;
 
-        setTimeout(() => {
-          document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
-        }, 50);
-      } catch (e) {
-        alert('Error: ' + e.message);
+          const ta  = inputRow.querySelector('textarea');
+          const btn = inputRow.querySelector('button');
+
+          ta.addEventListener('input', () => autoResize(ta));
+          ta.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(parentId, ta, btn, containerEl); }
+          });
+          btn.addEventListener('click', () => sendReply(parentId, ta, btn, containerEl));
+          containerEl.appendChild(inputRow);
+        }
+      });
+    }
+
+    async function sendReply(parentId, ta, btn, containerEl) {
+      const text = ta.value.trim();
+      if (!text || !ME) return;
+      btn.disabled = true;
+      try {
+        await addDoc(collection(db, 'chat_replies'), {
+          parentId, roomId: ROOM.id,
+          uid: ME.uid, username: ME.username, photoURL: ME.photoURL || '',
+          text, createdAt: serverTimestamp(),
+        });
+        await updateDoc(doc(db, 'chat_messages', parentId), { threadCount: increment(1) });
+        ta.value = '';
+        ta.style.height = '';
+        containerEl.scrollTop = containerEl.scrollHeight;
+      } catch(e) {
+        alert('Error al enviar: ' + e.message);
       } finally {
         btn.disabled = false;
       }
     }
 
-    /* ════════════════════════════════════════════
-       COMPARTIR RANGO Y CERTIFICADO
-    ════════════════════════════════════════════ */
-    document.querySelectorAll('.share-modal__tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.share-modal__tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.share-modal__tab-content').forEach(c => c.style.display = 'none');
-        tab.classList.add('active');
-        document.getElementById(`tab-${tab.dataset.tab}`).style.display = 'block';
+    /* ════════════ ENVÍO PRINCIPAL ════════════ */
+    function setupInput() {
+      const input = document.getElementById('chat-input');
+      const btn   = document.getElementById('btn-send');
+      const counter = document.getElementById('char-counter');
+      const MAX = 2000;
+
+      input.addEventListener('input', () => {
+        autoResize(input);
+        const len = input.value.length;
+        btn.disabled = input.value.trim().length === 0;
+        if (len > 1600) {
+          counter.textContent = `${len}/${MAX}`;
+          counter.className = `char-counter ${len > 1900 ? 'limit' : 'warn'}`;
+        } else {
+          counter.textContent = '';
+          counter.className = 'char-counter';
+        }
       });
-    });
 
-    document.getElementById('btn-share-rank').addEventListener('click', () => {
-      document.getElementById('share-modal').classList.add('show');
-    });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+      });
 
-    document.getElementById('btn-share-cert').addEventListener('click', () => {
-      document.getElementById('share-modal').classList.add('show');
-      document.querySelectorAll('.share-modal__tab')[1].click();
-    });
+      btn.addEventListener('click', sendMessage);
 
-    window.shareRank = async function() {
-      const select = document.getElementById('rank-select');
-      const message = document.getElementById('rank-message');
-      const rango = select.value;
-      const texto = message.value.trim() || '¡Acabo de ascender! 🎉';
+      document.getElementById('btn-cancel-reply').addEventListener('click', () => {
+        REPLY_TO = null;
+        document.getElementById('reply-preview').classList.remove('show');
+      });
 
-      if (!ROOM) {
-        alert('Selecciona una sala primero');
-        return;
-      }
+      // Scroll bottom
+      const msgs = document.getElementById('chat-messages');
+      const scrollBtn = document.getElementById('scroll-bottom-btn');
+      msgs.addEventListener('scroll', () => {
+        const dist = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight;
+        scrollBtn.classList.toggle('visible', dist > 150);
+      });
+      scrollBtn.addEventListener('click', () => {
+        msgs.scrollTo({ top: msgs.scrollHeight, behavior: 'smooth' });
+      });
+    }
 
-      try {
-        await addDoc(collection(db, 'chat_messages'), {
-          roomId: ROOM.id,
-          uid: ME.uid,
-          username: ME.username,
-          photoURL: ME.photoURL || '',
-          text: texto,
-          rango: `⭐ ${rango.toUpperCase()}`,
-          createdAt: serverTimestamp(),
-          threadCount: 0,
-        });
+    async function sendMessage(extraPayload = {}) {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text || !ROOM || !ME) return;
 
-        await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
-          lastMsg: texto,
-          lastAt: serverTimestamp(),
-          msgCount: increment(1),
-        });
-
-        document.getElementById('share-modal').classList.remove('show');
-        message.value = '';
-      } catch (e) {
-        alert('Error: ' + e.message);
-      }
-    };
-
-    window.shareCertificate = async function() {
-      const course = document.getElementById('cert-course').value.trim();
-      const message = document.getElementById('cert-message').value.trim() || `¡Completé el curso: ${course}! 🎓`;
-
-      if (!course) {
-        alert('Ingresa el nombre del curso');
-        return;
-      }
-
-      if (!ROOM) {
-        alert('Selecciona una sala primero');
-        return;
-      }
+      const btn = document.getElementById('btn-send');
+      btn.disabled = true;
+      input.value = '';
+      input.style.height = '';
+      document.getElementById('char-counter').textContent = '';
 
       try {
-        await addDoc(collection(db, 'chat_messages'), {
+        const payload = {
           roomId: ROOM.id,
-          uid: ME.uid,
-          username: ME.username,
-          photoURL: ME.photoURL || '',
-          text: `📜 **CERTIFICADO COMPARTIDO**\n${message}\n📚 Curso: ${course}`,
+          uid: ME.uid, username: ME.username, photoURL: ME.photoURL || '',
+          userRank: ME.rango || null,
+          text,
           createdAt: serverTimestamp(),
           threadCount: 0,
-        });
-
+          ...extraPayload,
+        };
+        if (REPLY_TO) {
+          payload.replyTo = { id: REPLY_TO.id, username: REPLY_TO.username, text: REPLY_TO.text };
+        }
+        await addDoc(collection(db, 'chat_messages'), payload);
         await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
-          lastMsg: message,
-          lastAt: serverTimestamp(),
-          msgCount: increment(1),
+          lastMsg: text, lastAt: serverTimestamp(), msgCount: increment(1),
         });
+        REPLY_TO = null;
+        document.getElementById('reply-preview').classList.remove('show');
+        const msgs = document.getElementById('chat-messages');
+        setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 100);
+      } catch(e) {
+        alert('Error al enviar: ' + e.message);
+        btn.disabled = false;
+      }
+    }
 
-        document.getElementById('share-modal').classList.remove('show');
-        document.getElementById('cert-course').value = '';
-        document.getElementById('cert-message').value = '';
-      } catch (e) {
+    /* ════════════ SHARE PICKERS ════════════ */
+    function setupSharePickers() {
+      const overlay = document.getElementById('share-picker-overlay');
+      const body    = document.getElementById('share-picker-body');
+      const title   = document.getElementById('share-picker-title');
+
+      document.getElementById('btn-share-rank').addEventListener('click', () => {
+        SHARE_MODE = 'rank';
+        title.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Compartir tu Rango`;
+        body.innerHTML = '';
+
+        // Mostrar rango actual primero
+        const myRank = ME?.rango || 'novato';
+        const div = document.createElement('div');
+        div.innerHTML = `<div class="share-picker__section-label">Tu rango actual</div>`;
+        const current = RANK_DATA.find(r => r.key === myRank) || RANK_DATA[0];
+        const opt = document.createElement('div');
+        opt.className = 'rank-option';
+        opt.style.borderColor = current.color + '44';
+        opt.innerHTML = `
+          <div class="rank-option__icon">${current.icon}</div>
+          <div class="rank-option__info">
+            <div class="rank-option__name" style="color:${current.color}">${current.name}</div>
+            <div class="rank-option__desc">${current.desc}</div>
+          </div>
+          <span style="font-size:0.68rem;color:var(--text-muted);font-style:italic">· tus puntos</span>`;
+        opt.addEventListener('click', () => {
+          shareRank(current);
+          overlay.classList.remove('show');
+        });
+        div.appendChild(opt);
+        body.appendChild(div);
+
+        overlay.classList.add('show');
+      });
+
+      document.getElementById('btn-share-cert').addEventListener('click', async () => {
+        SHARE_MODE = 'cert';
+        title.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Compartir Certificado`;
+        body.innerHTML = `<p style="color:var(--text-muted);font-size:0.82rem">
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+        </p>`;
+        overlay.classList.add('show');
+
+        try {
+          // Intentar cargar titulos del usuario
+          const snap = await getDocs(query(
+            collection(db, 'user_titles'),
+            where('uid', '==', ME.uid)
+          ));
+          body.innerHTML = '';
+          if (snap.empty) {
+            body.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem">
+              Aún no tenés certificados obtenidos. ¡Completá cursos para obtenerlos!
+            </p>`;
+            return;
+          }
+          snap.docs.forEach(d => {
+            const t = d.data();
+            const opt = document.createElement('div');
+            opt.className = 'cert-option';
+            opt.innerHTML = `
+              <div class="cert-option__icon">🏅</div>
+              <div class="cert-option__info">
+                <div class="cert-option__title">${escapeHtml(t.titulo || t.courseTitle || 'Certificado')}</div>
+                <div class="cert-option__sub">${escapeHtml(t.categoria || t.course || '')}</div>
+              </div>`;
+            opt.addEventListener('click', () => {
+              shareCert({ title: t.titulo || t.courseTitle || 'Certificado', course: t.categoria || t.course || '' });
+              overlay.classList.remove('show');
+            });
+            body.appendChild(opt);
+          });
+        } catch(e) {
+          body.innerHTML = `<p style="color:#ff6b6b;font-size:0.82rem;text-align:center;padding:1rem">
+            Error al cargar certificados.
+          </p>`;
+        }
+      });
+
+      document.getElementById('btn-close-share').addEventListener('click', () => {
+        overlay.classList.remove('show');
+      });
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('show');
+      });
+    }
+
+    async function shareRank(rank) {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim() || `Compartiendo mi rango: ${rank.icon} ${rank.name}`;
+      if (!ROOM || !ME) return;
+      try {
+        const payload = {
+          rankShared: { key: rank.key, name: rank.name, icon: rank.icon, color: rank.color },
+        };
+        await sendMessageWithPayload(text, payload);
+      } catch(e) {
         alert('Error: ' + e.message);
       }
-    };
+    }
 
-    /* ════════════════════════════════════════════
-       CREAR HILO EN CURSO (CLASE)
-    ════════════════════════════════════════════ */
-    document.getElementById('btn-nuevo-hilo').addEventListener('click', async () => {
-      const overlay = document.getElementById('class-picker-overlay');
+    async function shareCert(cert) {
+      const text = `Obtuve el certificado: 🏅 ${cert.title}`;
+      if (!ROOM || !ME) return;
+      try {
+        await sendMessageWithPayload(text, { certShared: cert });
+      } catch(e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    async function sendMessageWithPayload(text, extra = {}) {
+      if (!ROOM || !ME) return;
+      const payload = {
+        roomId: ROOM.id,
+        uid: ME.uid, username: ME.username, photoURL: ME.photoURL || '',
+        userRank: ME.rango || null,
+        text, createdAt: serverTimestamp(), threadCount: 0,
+        ...extra,
+      };
+      await addDoc(collection(db, 'chat_messages'), payload);
+      await updateDoc(doc(db, 'chat_rooms', ROOM.id), {
+        lastMsg: text, lastAt: serverTimestamp(), msgCount: increment(1),
+      });
+      const msgs = document.getElementById('chat-messages');
+      setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 100);
+    }
+
+    /* ════════════ SELECTOR DE CLASE ════════════ */
+    const overlay   = document.getElementById('class-picker-overlay');
+    const pickerList = document.getElementById('picker-list');
+    const pickerSearch = document.getElementById('picker-search');
+
+    document.getElementById('btn-nuevo-hilo').addEventListener('click', openPicker);
+    document.getElementById('btn-close-picker').addEventListener('click', () => overlay.classList.remove('show'));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('show'); });
+
+    async function openPicker() {
       overlay.classList.add('show');
-
       if (ALL_COURSES.length === 0) {
-        const list = document.getElementById('picker-list');
-        list.innerHTML = '<p style="padding:1rem;color:var(--text-muted);">Cargando cursos...</p>';
-
+        pickerList.innerHTML = `<p style="padding:1.5rem;color:var(--text-muted);font-size:0.85rem;text-align:center">
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+        </p>`;
         try {
           const snap = await getDocs(query(collection(db, 'courses'), where('publicado', '==', true)));
           ALL_COURSES = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-            .sort((a, b) => (a.orden || 0) - (b.orden || 0));
-
-          renderPicker('');
-        } catch (e) {
-          list.innerHTML = '<p style="padding:1rem;color:#ff6b6b;">Error al cargar cursos</p>';
+            .sort((a, b) => {
+              const ca = (a.categoria || '').localeCompare(b.categoria || '');
+              return ca !== 0 ? ca : ((a.orden || 0) - (b.orden || 0));
+            });
+        } catch(e) {
+          pickerList.innerHTML = `<p style="padding:1rem;color:#ff6b6b;font-size:0.85rem;text-align:center">Error al cargar clases.</p>`;
+          return;
         }
       }
-    });
+      renderPicker('');
+      pickerSearch.value = '';
+      pickerSearch.focus();
+    }
+
+    pickerSearch.addEventListener('input', () => renderPicker(pickerSearch.value));
 
     function renderPicker(term) {
-      const t = term.toLowerCase();
-      const filtered = t ? ALL_COURSES.filter(c =>
-        (c.titulo || '').toLowerCase().includes(t) ||
-        (c.categoria || '').toLowerCase().includes(t)
-      ) : ALL_COURSES;
+      const t = term.trim().toLowerCase();
+      const filtered = t
+        ? ALL_COURSES.filter(c =>
+            (c.titulo || '').toLowerCase().includes(t) ||
+            (c.categoria || '').toLowerCase().includes(t))
+        : ALL_COURSES;
 
-      const list = document.getElementById('picker-list');
       if (filtered.length === 0) {
-        list.innerHTML = '<p style="padding:1rem;color:var(--text-muted);">No hay resultados</p>';
+        pickerList.innerHTML = `<p style="padding:1rem;color:var(--text-muted);font-size:0.85rem;text-align:center">Sin resultados.</p>`;
         return;
       }
 
-      list.innerHTML = filtered.map(c => `
-        <div class="class-picker__item" data-course-id="${c.id}">
-          <div class="class-picker__item-title">${c.titulo}</div>
-          <div class="class-picker__item-cat">📁 ${c.categoria || 'General'} · ${c.nivel || 'Básico'}</div>
-        </div>
-      `).join('');
-
-      list.querySelectorAll('.class-picker__item').forEach(el => {
-        el.addEventListener('click', async () => {
-          const courseId = el.dataset.courseId;
-          document.getElementById('class-picker-overlay').classList.remove('show');
-
-          try {
-            const snap = await getDocs(query(collection(db, 'chat_rooms'), where('courseId', '==', courseId)));
-            let room;
-
-            if (!snap.empty) {
-              room = { id: snap.docs[0].id, ...snap.docs[0].data() };
-            } else {
-              const course = ALL_COURSES.find(c => c.id === courseId);
-              const ref = await addDoc(collection(db, 'chat_rooms'), {
-                type: 'class',
-                courseId,
-                name: course.titulo,
-                categoria: course.categoria,
-                icon: '📚',
-                lastMsg: '',
-                lastAt: serverTimestamp(),
-                msgCount: 0,
-              });
-              room = { id: ref.id, type: 'class', courseId, name: course.titulo, icon: '📚' };
-            }
-
-            openRoom(room);
-          } catch (e) {
-            alert('Error: ' + e.message);
-          }
-        });
+      pickerList.innerHTML = '';
+      filtered.forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'class-picker__item';
+        el.dataset.courseId = c.id;
+        el.dataset.courseTitle = c.titulo || '';
+        el.dataset.courseCat = c.categoria || '';
+        el.innerHTML = `
+          <div class="class-picker__item-icon">📄</div>
+          <div class="class-picker__item-info">
+            <div class="class-picker__item-title">${escapeHtml(c.titulo)}</div>
+            <div class="class-picker__item-cat">📁 ${escapeHtml(c.categoria || 'General')} · ${escapeHtml(c.nivel || 'Básico')}</div>
+          </div>`;
+        el.addEventListener('click', () => openOrCreateClassRoom(c.id, c.titulo, c.categoria || ''));
+        pickerList.appendChild(el);
       });
     }
 
-    document.getElementById('picker-search').addEventListener('input', (e) => {
-      renderPicker(e.target.value);
-    });
-
-    document.getElementById('btn-close-picker').addEventListener('click', () => {
-      document.getElementById('class-picker-overlay').classList.remove('show');
-    });
-
-    /* ════════════════════════════════════════════
-       MOBILE
-    ════════════════════════════════════════════ */
-    function closeMobileRooms() {
-      document.getElementById('chat-rooms-panel').classList.remove('mobile-open');
+    async function openOrCreateClassRoom(courseId, courseName, coursecat) {
+      overlay.classList.remove('show');
+      try {
+        const q = query(collection(db, 'chat_rooms'), where('courseId', '==', courseId));
+        const snap = await getDocs(q);
+        let room;
+        if (!snap.empty) {
+          room = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        } else {
+          const ref = await addDoc(collection(db, 'chat_rooms'), {
+            type: 'class', courseId, name: courseName, categoria: coursecat,
+            icon: '📚', lastMsg: '', lastAt: serverTimestamp(), msgCount: 0,
+          });
+          room = { id: ref.id, type: 'class', courseId, name: courseName, categoria: coursecat, icon: '📚' };
+        }
+        openRoom(room);
+      } catch(e) {
+        alert('Error: ' + e.message);
+      }
     }
 
-    /* ════════════════════════════════════════════
-       UTILIDADES
-    ════════════════════════════════════════════ */
+    /* ════════════ NAVEGACIÓN MÓVIL ════════════ */
+    document.getElementById('btn-abrir-salas')?.addEventListener('click', () => {
+      document.getElementById('chat-rooms-panel').classList.add('mobile-open');
+    });
+    document.getElementById('btn-back-salas')?.addEventListener('click', () => {
+      document.getElementById('chat-rooms-panel').classList.add('mobile-open');
+    });
+
+    /* ════════════ UTILIDADES ════════════ */
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
     function truncate(str, n) {
       return str && str.length > n ? str.substring(0, n) + '…' : str || '';
     }
-
     function escapeHtml(str) {
       return (str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-
     function escapeAttr(str) {
-      return (str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return (str || '').replace(/"/g, '&quot;');
     }
-
     function fmtTime(date) {
-      return date ? date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '—';
+      return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
     }
-
     function fmtDate(date) {
-      if (!date) return '—';
       const today = new Date();
       const d = new Date(date);
       if (d.toDateString() === today.toDateString()) return 'Hoy';
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
+      const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
       if (d.toDateString() === yesterday.toDateString()) return 'Ayer';
-      return d.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' });
+      return d.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
     }
-
-    // Cargar salas al iniciar
-    setTimeout(() => {
-      loadRooms();
-    }, 1000);
   </script>
 </body>
 </html>
