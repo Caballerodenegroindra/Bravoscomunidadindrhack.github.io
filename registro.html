@@ -149,7 +149,7 @@
         await registerUser({ phone, username, password, email });
         form.reset();
         showMessage('✅ Solicitud enviada. Espera aprobación del administrador.', 'success');
-        alert('✅ Solicitud enviada correctamente. Un administrador revisará tu cuenta pronto.');
+        document.getElementById('wa-modal').style.display = 'flex';
       } catch (error) {
         const msg = error.message || 'No se pudo enviar la solicitud.';
         showMessage('❌ ' + msg, 'error');
@@ -168,5 +168,26 @@
     }
   }
   </script>
+
+  <!-- WhatsApp modal -->
+  <div id="wa-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
+    <div style="background:#0d0d1a;border:1px solid #00ff8844;border-radius:18px;padding:2rem 1.5rem;max-width:360px;width:100%;text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">✅</div>
+      <h2 style="color:#00ff88;margin-bottom:0.5rem;font-size:1.2rem;">¡Solicitud enviada!</h2>
+      <p style="color:#ccc;font-size:0.9rem;margin-bottom:1.5rem;">
+        Un administrador revisará tu cuenta pronto.<br><br>
+        Mientras tanto, <strong style="color:#fff">unite a nuestro grupo de WhatsApp</strong> para estar al tanto de novedades y soporte.
+      </p>
+      <a href="https://chat.whatsapp.com/DNxyv2aLc7cKTSCdWO9E7Q?s=cl&p=a&ilr=1&amv=2" target="_blank"
+         style="display:block;background:#25D366;color:#fff;font-weight:700;font-size:1rem;padding:0.9rem 1rem;border-radius:12px;text-decoration:none;margin-bottom:0.75rem;">
+        💬 Unirme al grupo de WhatsApp
+      </a>
+      <button onclick="document.getElementById('wa-modal').style.display='none'"
+              style="background:none;border:1px solid #444;color:#888;padding:0.6rem 1.5rem;border-radius:10px;cursor:pointer;font-size:0.88rem;">
+        Ahora no
+      </button>
+    </div>
+  </div>
+
 </body>
 </html>
