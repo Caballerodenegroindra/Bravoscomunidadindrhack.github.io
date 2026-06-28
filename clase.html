@@ -314,12 +314,28 @@
       return m ? m[1] : null;
     }
 
+    function extractDriveId(url) {
+      if (!url) return null;
+      const m = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+      return m ? m[1] : null;
+    }
+
+    function getDriveEmbedUrl(id) {
+      return `https://drive.google.com/file/d/${id}/preview`;
+    }
+
+    function getDriveDownloadUrl(id) {
+      return `https://drive.google.com/uc?export=download&id=${id}`;
+    }
+
     function renderClase(curso, userData, uid, submission) {
       loading.style.display = 'none';
       contenidoEl.style.display = 'block';
 
       const puntos = puntosMap[curso.nivel] || 100;
       const ytId = extractYouTubeId(curso.enlace || '');
+      const driveId = !ytId ? extractDriveId(curso.enlace || '') : null;
+      const driveIdDescarga = extractDriveId(curso.descarga || '');
 
       // Actualizar pasos
       if (submission) {
@@ -404,19 +420,33 @@
 
         <!-- VIDEO -->
         ${ytId ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>` : ''}
+        ${driveId ? `
+          <div class="video-wrap">
+            <iframe src="${getDriveEmbedUrl(driveId)}"
+              allow="autoplay"
+              allowfullscreen
+              style="border:0">
+            </iframe>
+          </div>
+        ` : ''}
 
         <!-- DESCRIPCIÓN / CONTENIDO -->
         ${curso.descripcion ? `<div class="content-block">${curso.descripcion}</div>` : ''}
 
         <!-- MATERIAL -->
         ${curso.descarga ? `
-          <a href="${curso.descarga}" target="_blank" download class="material-btn">
+          <a href="${driveIdDescarga ? getDriveDownloadUrl(driveIdDescarga) : curso.descarga}" target="_blank" class="material-btn">
             ⬇ Descargar material de la clase
           </a>
         ` : ''}
-        ${curso.enlace && !ytId ? `
+        ${curso.enlace && !ytId && !driveId ? `
           <a href="${curso.enlace}" target="_blank" class="material-btn">
             🔗 Acceder al recurso externo
+          </a>
+        ` : ''}
+        ${driveId ? `
+          <a href="${getDriveDownloadUrl(driveId)}" target="_blank" class="material-btn" style="background:#1a2a1a;border-color:#00ff8844;color:#00ff88">
+            ⬇ Descargar video de la clase
           </a>
         ` : ''}
 
