@@ -495,8 +495,6 @@
 
       const puntos = puntosMap[curso.nivel] || 100;
       const ytId = extractYouTubeId(curso.enlace || '');
-      const driveId = !ytId ? extractDriveId(curso.enlace || '') : null;
-      const driveIdDescarga = extractDriveId(curso.descarga || '');
 
       // Actualizar pasos
       if (submission) {
@@ -581,62 +579,20 @@
 
         <!-- VIDEO -->
         ${ytId ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>` : ''}
-        ${driveId ? `
-          <div class="vp-wrap" id="vp-wrap">
-            <video id="vp-video" preload="metadata" playsinline>
-              <source src="${getDriveDownloadUrl(driveId)}" type="video/mp4">
-            </video>
-            <div class="vp-brightness" id="vp-brightness"></div>
 
-            <!-- gesture zones -->
-            <div class="vp-overlay">
-              <div class="vp-zone" id="vp-left"></div>
-              <div class="vp-zone-center" id="vp-center">
-                <span class="vp-play-icon" id="vp-play-icon">▶</span>
-              </div>
-              <div class="vp-zone" id="vp-right"></div>
-            </div>
-
-            <!-- feedback bubble -->
-            <div class="vp-feedback" id="vp-feedback"></div>
-
-            <!-- side indicators -->
-            <div class="vp-side-bar"><div class="vp-side-fill" id="vp-vol-fill" style="height:100%"></div></div>
-            <div class="vp-bright-bar"><div class="vp-bright-fill" id="vp-bright-fill" style="height:50%"></div></div>
-
-            <!-- controls -->
-            <div class="vp-controls" id="vp-controls">
-              <div class="vp-progress-wrap" id="vp-progress-wrap">
-                <div class="vp-progress-fill" id="vp-progress-fill"></div>
-                <div class="vp-progress-thumb" id="vp-progress-thumb"></div>
-              </div>
-              <div class="vp-row">
-                <button class="vp-btn" id="vp-playbtn">▶</button>
-                <span class="vp-time" id="vp-time">0:00 / 0:00</span>
-                <button class="vp-btn" id="vp-mutebtn">🔊</button>
-                <button class="vp-btn" id="vp-fullbtn">⛶</button>
-              </div>
-            </div>
-          </div>
-        ` : ''}
 
         <!-- DESCRIPCIÓN / CONTENIDO -->
         ${curso.descripcion ? `<div class="content-block">${curso.descripcion}</div>` : ''}
 
         <!-- MATERIAL -->
         ${curso.descarga ? `
-          <a href="${driveIdDescarga ? getDriveDownloadUrl(driveIdDescarga) : curso.descarga}" target="_blank" class="material-btn">
-            ⬇ Descargar material de la clase
+          <a href="${curso.descarga}" target="_blank" class="material-btn">
+            ⬇ Descargar video de la clase
           </a>
         ` : ''}
-        ${curso.enlace && !ytId && !driveId ? `
+        ${curso.enlace && !ytId ? `
           <a href="${curso.enlace}" target="_blank" class="material-btn">
             🔗 Acceder al recurso externo
-          </a>
-        ` : ''}
-        ${driveId ? `
-          <a href="${getDriveDownloadUrl(driveId)}" target="_blank" class="material-btn" style="background:#1a2a1a;border-color:#00ff8844;color:#00ff88">
-            ⬇ Descargar video de la clase
           </a>
         ` : ''}
 
