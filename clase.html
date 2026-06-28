@@ -55,6 +55,167 @@
       font-size: 0.93rem;
     }
 
+    /* ── CUSTOM VIDEO PLAYER ── */
+    .vp-wrap {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      border: 1px solid #222;
+      user-select: none;
+    }
+    .vp-wrap video {
+      width: 100%;
+      display: block;
+      max-height: 75vw;
+      object-fit: contain;
+    }
+    .vp-brightness {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: #000;
+      opacity: 0;
+      transition: opacity 0.1s;
+      border-radius: 12px;
+    }
+    /* overlay for tap gestures */
+    .vp-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: stretch;
+    }
+    .vp-zone { flex: 1; }
+    /* center tap area */
+    .vp-zone-center {
+      flex: 1.2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* seek/vol feedback bubble */
+    .vp-feedback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .vp-feedback.show { opacity: 1; }
+    /* controls bar */
+    .vp-controls {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 1.5rem 0.75rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: opacity 0.3s;
+    }
+    .vp-controls.hidden { opacity: 0; pointer-events: none; }
+    .vp-progress-wrap {
+      position: relative;
+      height: 4px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .vp-progress-fill {
+      height: 100%;
+      background: #cc2200;
+      border-radius: 4px;
+      width: 0%;
+      pointer-events: none;
+    }
+    .vp-progress-thumb {
+      position: absolute;
+      top: 50%; right: auto;
+      width: 12px; height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      transform: translate(50%, -50%);
+      left: 0%;
+      pointer-events: none;
+    }
+    .vp-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .vp-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.2rem 0.35rem;
+      line-height: 1;
+    }
+    .vp-time {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.8);
+      font-family: monospace;
+      margin-right: auto;
+    }
+    .vp-vol-icon { font-size: 1rem; }
+    /* play/pause big icon */
+    .vp-play-icon {
+      font-size: 2.5rem;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 0 20px rgba(0,0,0,0.8);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .vp-play-icon.show { opacity: 1; }
+    /* volume bar side indicator */
+    .vp-side-bar {
+      position: absolute;
+      right: 0.6rem;
+      bottom: 3.5rem;
+      width: 4px;
+      height: 80px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .vp-side-fill {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: #00ff88;
+      transition: height 0.1s;
+    }
+    .vp-bright-bar {
+      position: absolute;
+      left: 0.6rem;
+      bottom: 3.5rem;
+      width: 4px;
+      height: 80px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .vp-bright-fill {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: #ffcc00;
+      transition: height 0.1s;
+    }
+    /* legacy iframe wrap kept for YT */
     .video-wrap {
       position: relative;
       padding-bottom: 56.25%;
@@ -421,12 +582,41 @@
         <!-- VIDEO -->
         ${ytId ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>` : ''}
         ${driveId ? `
-          <div class="video-wrap">
-            <iframe src="${getDriveEmbedUrl(driveId)}"
-              allow="autoplay"
-              allowfullscreen
-              style="border:0">
-            </iframe>
+          <div class="vp-wrap" id="vp-wrap">
+            <video id="vp-video" preload="metadata" playsinline>
+              <source src="${getDriveDownloadUrl(driveId)}" type="video/mp4">
+            </video>
+            <div class="vp-brightness" id="vp-brightness"></div>
+
+            <!-- gesture zones -->
+            <div class="vp-overlay">
+              <div class="vp-zone" id="vp-left"></div>
+              <div class="vp-zone-center" id="vp-center">
+                <span class="vp-play-icon" id="vp-play-icon">▶</span>
+              </div>
+              <div class="vp-zone" id="vp-right"></div>
+            </div>
+
+            <!-- feedback bubble -->
+            <div class="vp-feedback" id="vp-feedback"></div>
+
+            <!-- side indicators -->
+            <div class="vp-side-bar"><div class="vp-side-fill" id="vp-vol-fill" style="height:100%"></div></div>
+            <div class="vp-bright-bar"><div class="vp-bright-fill" id="vp-bright-fill" style="height:50%"></div></div>
+
+            <!-- controls -->
+            <div class="vp-controls" id="vp-controls">
+              <div class="vp-progress-wrap" id="vp-progress-wrap">
+                <div class="vp-progress-fill" id="vp-progress-fill"></div>
+                <div class="vp-progress-thumb" id="vp-progress-thumb"></div>
+              </div>
+              <div class="vp-row">
+                <button class="vp-btn" id="vp-playbtn">▶</button>
+                <span class="vp-time" id="vp-time">0:00 / 0:00</span>
+                <button class="vp-btn" id="vp-mutebtn">🔊</button>
+                <button class="vp-btn" id="vp-fullbtn">⛶</button>
+              </div>
+            </div>
           </div>
         ` : ''}
 
@@ -494,6 +684,169 @@
         });
       }
     }
+    // ── CUSTOM VIDEO PLAYER LOGIC ──
+    (function() {
+      const video   = document.getElementById('vp-video');
+      if (!video) return;
+
+      const wrap       = document.getElementById('vp-wrap');
+      const brightness = document.getElementById('vp-brightness');
+      const feedback   = document.getElementById('vp-feedback');
+      const controls   = document.getElementById('vp-controls');
+      const playBtn    = document.getElementById('vp-playbtn');
+      const muteBtn    = document.getElementById('vp-mutebtn');
+      const fullBtn    = document.getElementById('vp-fullbtn');
+      const timeEl     = document.getElementById('vp-time');
+      const progWrap   = document.getElementById('vp-progress-wrap');
+      const progFill   = document.getElementById('vp-progress-fill');
+      const progThumb  = document.getElementById('vp-progress-thumb');
+      const playIcon   = document.getElementById('vp-play-icon');
+      const volFill    = document.getElementById('vp-vol-fill');
+      const brightFill = document.getElementById('vp-bright-fill');
+
+      let brightLevel  = 0.5; // 0=dark 1=bright (0=no overlay)
+      let hideTimer    = null;
+      let fbTimer      = null;
+
+      function fmt(s) {
+        s = Math.floor(s);
+        const m = Math.floor(s / 60), ss = s % 60;
+        return m + ':' + String(ss).padStart(2,'0');
+      }
+
+      function showFeedback(txt) {
+        feedback.textContent = txt;
+        feedback.classList.add('show');
+        clearTimeout(fbTimer);
+        fbTimer = setTimeout(() => feedback.classList.remove('show'), 900);
+      }
+
+      function flashIcon(icon) {
+        playIcon.textContent = icon;
+        playIcon.classList.add('show');
+        setTimeout(() => playIcon.classList.remove('show'), 500);
+      }
+
+      function showControls() {
+        controls.classList.remove('hidden');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          if (!video.paused) controls.classList.add('hidden');
+        }, 3000);
+      }
+
+      function togglePlay() {
+        if (video.paused) { video.play(); flashIcon('▶'); }
+        else               { video.pause(); flashIcon('⏸'); }
+        showControls();
+      }
+
+      // play/pause button
+      playBtn.onclick = togglePlay;
+      video.addEventListener('play',  () => { playBtn.textContent = '⏸'; showControls(); });
+      video.addEventListener('pause', () => { playBtn.textContent = '▶'; controls.classList.remove('hidden'); });
+
+      // time update
+      video.addEventListener('timeupdate', () => {
+        if (!video.duration) return;
+        const pct = (video.currentTime / video.duration) * 100;
+        progFill.style.width  = pct + '%';
+        progThumb.style.left  = pct + '%';
+        timeEl.textContent    = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+      });
+
+      // progress bar seek
+      progWrap.addEventListener('click', e => {
+        const r = progWrap.getBoundingClientRect();
+        video.currentTime = ((e.clientX - r.left) / r.width) * video.duration;
+        showControls();
+      });
+
+      // mute
+      muteBtn.onclick = () => {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+        showControls();
+      };
+
+      // fullscreen
+      fullBtn.onclick = () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else wrap.requestFullscreen && wrap.requestFullscreen();
+        showControls();
+      };
+
+      // ── TOUCH GESTURES ──
+      let touchStartX = 0, touchStartY = 0;
+      let touchStartVol = 1, touchStartBright = 0.5;
+      let lastTapTime  = 0, lastTapZone = '';
+      let gestureMode  = null; // 'vol' | 'bright' | null
+
+      wrap.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        touchStartX      = t.clientX;
+        touchStartY      = t.clientY;
+        touchStartVol    = video.volume;
+        touchStartBright = brightLevel;
+        gestureMode      = null;
+        showControls();
+      }, { passive: true });
+
+      wrap.addEventListener('touchmove', e => {
+        const t  = e.touches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        const wRect = wrap.getBoundingClientRect();
+        const isRight = touchStartX > wRect.width / 2;
+
+        if (!gestureMode && Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) {
+          gestureMode = isRight ? 'vol' : 'bright';
+        }
+
+        if (gestureMode === 'vol') {
+          const delta = -(dy / 150);
+          video.volume = Math.max(0, Math.min(1, touchStartVol + delta));
+          volFill.style.height = (video.volume * 100) + '%';
+          showFeedback('🔊 ' + Math.round(video.volume * 100) + '%');
+        } else if (gestureMode === 'bright') {
+          brightLevel = Math.max(0, Math.min(0.85, touchStartBright - dy / 200));
+          brightness.style.opacity = brightLevel;
+          brightFill.style.height  = ((1 - brightLevel) * 100) + '%';
+          showFeedback('☀️ ' + Math.round((1 - brightLevel) * 100) + '%');
+        }
+      }, { passive: true });
+
+      wrap.addEventListener('touchend', e => {
+        if (gestureMode) { gestureMode = null; return; }
+
+        // double-tap detection
+        const t    = e.changedTouches[0];
+        const wRect = wrap.getBoundingClientRect();
+        const zone  = t.clientX < wRect.left + wRect.width * 0.35 ? 'left'
+                    : t.clientX > wRect.left + wRect.width * 0.65 ? 'right'
+                    : 'center';
+        const now   = Date.now();
+        const isDouble = (now - lastTapTime < 280) && (lastTapZone === zone);
+        lastTapTime = now;
+        lastTapZone = zone;
+
+        if (isDouble) {
+          if (zone === 'right') {
+            video.currentTime = Math.min(video.duration, video.currentTime + 5);
+            showFeedback('⏩ +5s');
+          } else if (zone === 'left') {
+            video.currentTime = Math.max(0, video.currentTime - 5);
+            showFeedback('⏪ -5s');
+          }
+        } else if (zone === 'center') {
+          togglePlay();
+        }
+      }, { passive: true });
+
+      // init vol bar
+      volFill.style.height = '100%';
+    })();
+
   </script>
 
   <script type="module">
