@@ -471,7 +471,7 @@
 
     function extractYouTubeId(url) {
       if (!url) return null;
-      const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/);
+      const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
       return m ? m[1] : null;
     }
 
