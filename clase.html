@@ -7,16 +7,28 @@
   <title>Clase — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
+    /* ── HERO ── */
     .clase-hero {
-      background: linear-gradient(135deg, #0a0a0f 0%, #111 100%);
-      border: 1px solid #222;
-      border-radius: 14px;
+      background: linear-gradient(135deg, #0d0d14 0%, #111 100%);
+      border: 1px solid #1e1e2e;
+      border-radius: 16px;
       padding: 1.75rem;
       margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
     }
+    .clase-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #cc2200, transparent);
+    }
+
+    /* ── BADGES ── */
     .nivel-badge {
       display: inline-block;
       padding: 3px 12px;
@@ -25,16 +37,15 @@
       font-weight: 600;
       margin-bottom: 0.75rem;
     }
-    .nivel-basico   { background: #00bfff22; color: #00bfff; border: 1px solid #00bfff; }
-    .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b; }
-    .nivel-avanzado { background: #cc220022; color: #cc2200; border: 1px solid #cc2200; }
-
+    .nivel-basico   { background: #00bfff22; color: #00bfff; border: 1px solid #00bfff44; }
+    .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+    .nivel-avanzado { background: #cc220022; color: #cc2200; border: 1px solid #cc220044; }
     .puntos-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      background: #ffcc0022;
-      border: 1px solid #ffcc00;
+      background: #ffcc0015;
+      border: 1px solid #ffcc0040;
       color: #ffcc00;
       padding: 3px 12px;
       border-radius: 20px;
@@ -43,16 +54,155 @@
       margin-left: 0.5rem;
     }
 
+    /* ── CONTENT BLOCK ── */
     .content-block {
-      background: #0f0f15;
-      border: 1px solid #1a1a2a;
-      border-radius: 12px;
+      background: #0c0c14;
+      border: 1px solid #1a1a2e;
+      border-radius: 14px;
       padding: 1.5rem;
       margin-bottom: 1.25rem;
-      color: #ccc;
-      line-height: 1.8;
+      color: #c8c8d8;
+      line-height: 1.85;
       white-space: pre-wrap;
       font-size: 0.93rem;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .section-header-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .section-header-icon--green { background: #00ff8814; border: 1px solid #00ff8830; }
+    .section-header-icon--red   { background: #cc220014; border: 1px solid #cc220030; }
+    .section-header h3 { margin: 0; font-size: 1rem; color: #f0f0f0; }
+    .section-header p  { margin: 0.15rem 0 0; font-size: 0.78rem; color: #888; }
+
+    /* ── TERMUX COMMANDS SECTION ── */
+    .termux-section {
+      background: #080c10;
+      border: 1px solid #0e2a1a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .termux-section-top {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #0e2a1a;
+    }
+    .termux-logo {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0d2b1a, #1a4a2e);
+      border: 1px solid #1e5535;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .termux-title { margin: 0; font-size: 1rem; color: #00ff88; font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.05em; }
+    .termux-subtitle { margin: 0.15rem 0 0; font-size: 0.78rem; color: #4a8a62; }
+
+    /* Command card */
+    .cmd-card {
+      background: #06100c;
+      border: 1px solid #0d2218;
+      border-radius: 12px;
+      padding: 1rem 1rem 0.75rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .cmd-card:last-child { margin-bottom: 0; }
+    .cmd-card:hover { border-color: #1e5535; }
+
+    .cmd-label {
+      font-size: 0.73rem;
+      color: #4a8a62;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .cmd-description {
+      font-size: 0.85rem;
+      color: #9999aa;
+      line-height: 1.55;
+      margin-bottom: 0.6rem;
+    }
+    .cmd-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #030706;
+      border: 1px solid #0a1e12;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      overflow: hidden;
+    }
+    .cmd-prompt {
+      color: #00ff88;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .cmd-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.83rem;
+      color: #d0f0d8;
+      flex: 1;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0.1rem 0;
+    }
+    .cmd-copy-btn {
+      flex-shrink: 0;
+      background: #0e2a1a;
+      border: 1px solid #1e5535;
+      border-radius: 6px;
+      color: #00ff88;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: var(--font-body);
+    }
+    .cmd-copy-btn:hover { background: #1a4a2e; border-color: #00ff88; }
+    .cmd-copy-btn.copied { background: #00ff8822; border-color: #00ff88; color: #00ff88; }
+    .cmd-copy-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* Tags inline de comando */
+    .cmd-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+    .cmd-tag {
+      font-size: 0.67rem;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: #0a1e12;
+      color: #4a8a62;
+      border: 1px solid #0e2a1a;
+      font-weight: 500;
     }
 
     /* ── CUSTOM VIDEO PLAYER ── */
@@ -60,305 +210,93 @@
       position: relative;
       width: 100%;
       background: #000;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       margin-bottom: 1.25rem;
-      border: 1px solid #222;
+      border: 1px solid #1a1a2e;
       user-select: none;
     }
-    .vp-wrap video {
-      width: 100%;
-      display: block;
-      max-height: 75vw;
-      object-fit: contain;
-    }
-    .vp-brightness {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: #000;
-      opacity: 0;
-      transition: opacity 0.1s;
-      border-radius: 12px;
-    }
-    /* overlay for tap gestures */
-    .vp-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: stretch;
-    }
+    .vp-wrap video { width: 100%; display: block; max-height: 75vw; object-fit: contain; }
+    .vp-brightness { position: absolute; inset: 0; pointer-events: none; background: #000; opacity: 0; transition: opacity 0.1s; border-radius: 14px; }
+    .vp-overlay { position: absolute; inset: 0; display: flex; align-items: stretch; }
     .vp-zone { flex: 1; }
-    /* center tap area */
-    .vp-zone-center {
-      flex: 1.2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* seek/vol feedback bubble */
-    .vp-feedback {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
-      background: rgba(0,0,0,0.72);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 0.45rem 1rem;
-      border-radius: 20px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.25s;
-      white-space: nowrap;
-      z-index: 10;
-    }
+    .vp-zone-center { flex: 1.2; display: flex; align-items: center; justify-content: center; }
+    .vp-feedback { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%); background: rgba(0,0,0,0.75); color: #fff; font-size: 1rem; font-weight: 700; padding: 0.45rem 1rem; border-radius: 20px; pointer-events: none; opacity: 0; transition: opacity 0.25s; white-space: nowrap; z-index: 10; }
     .vp-feedback.show { opacity: 1; }
-    /* controls bar */
-    .vp-controls {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-      padding: 1.5rem 0.75rem 0.65rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      transition: opacity 0.3s;
-    }
+    .vp-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.88)); padding: 1.5rem 0.75rem 0.65rem; display: flex; flex-direction: column; gap: 0.4rem; transition: opacity 0.3s; }
     .vp-controls.hidden { opacity: 0; pointer-events: none; }
-    .vp-progress-wrap {
-      position: relative;
-      height: 4px;
-      background: rgba(255,255,255,0.25);
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .vp-progress-fill {
-      height: 100%;
-      background: #cc2200;
-      border-radius: 4px;
-      width: 0%;
-      pointer-events: none;
-    }
-    .vp-progress-thumb {
-      position: absolute;
-      top: 50%; right: auto;
-      width: 12px; height: 12px;
-      background: #fff;
-      border-radius: 50%;
-      transform: translate(50%, -50%);
-      left: 0%;
-      pointer-events: none;
-    }
-    .vp-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .vp-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0.2rem 0.35rem;
-      line-height: 1;
-    }
-    .vp-time {
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.8);
-      font-family: monospace;
-      margin-right: auto;
-    }
+    .vp-progress-wrap { position: relative; height: 4px; background: rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; }
+    .vp-progress-fill { height: 100%; background: #cc2200; border-radius: 4px; width: 0%; pointer-events: none; }
+    .vp-progress-thumb { position: absolute; top: 50%; right: auto; width: 12px; height: 12px; background: #fff; border-radius: 50%; transform: translate(50%, -50%); left: 0%; pointer-events: none; }
+    .vp-row { display: flex; align-items: center; gap: 0.5rem; }
+    .vp-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0.2rem 0.35rem; line-height: 1; }
+    .vp-time { font-size: 0.72rem; color: rgba(255,255,255,0.8); font-family: monospace; margin-right: auto; }
     .vp-vol-icon { font-size: 1rem; }
-    /* play/pause big icon */
-    .vp-play-icon {
-      font-size: 2.5rem;
-      color: rgba(255,255,255,0.9);
-      text-shadow: 0 0 20px rgba(0,0,0,0.8);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
+    .vp-play-icon { font-size: 2.5rem; color: rgba(255,255,255,0.9); text-shadow: 0 0 20px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
     .vp-play-icon.show { opacity: 1; }
-    /* volume bar side indicator */
-    .vp-side-bar {
-      position: absolute;
-      right: 0.6rem;
-      bottom: 3.5rem;
-      width: 4px;
-      height: 80px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .vp-side-fill {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: #00ff88;
-      transition: height 0.1s;
-    }
-    .vp-bright-bar {
-      position: absolute;
-      left: 0.6rem;
-      bottom: 3.5rem;
-      width: 4px;
-      height: 80px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .vp-bright-fill {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: #ffcc00;
-      transition: height 0.1s;
-    }
-    /* legacy iframe wrap kept for YT */
-    .video-wrap {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 1.25rem;
-      border: 1px solid #222;
-    }
+    .vp-side-bar { position: absolute; right: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+    .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #00ff88; transition: height 0.1s; }
+    .vp-bright-bar { position: absolute; left: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+    .vp-bright-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #ffcc00; transition: height 0.1s; }
+    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #1a1a2e; }
     .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-    /* QUIZ */
+    /* ── QUIZ ── */
     .quiz-section {
       background: #0a0a14;
-      border: 1px solid #cc220044;
-      border-radius: 14px;
+      border: 1px solid #1e1e30;
+      border-radius: 16px;
       padding: 1.75rem;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
-    .quiz-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      color: #cc2200;
-      margin: 0 0 0.35rem;
+    .quiz-section::before {
+      /* accent line top */
     }
-    .quiz-subtitle { color: #888; font-size: 0.85rem; margin: 0 0 1.5rem; }
-
-    .pregunta-card {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-    }
-    .pregunta-card h4 {
-      font-size: 0.92rem;
-      color: #fff;
-      margin: 0 0 0.85rem;
-      line-height: 1.5;
-    }
-    .pregunta-card textarea {
-      width: 100%;
-      min-height: 90px;
-      background: #0a0a0f;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #eee;
-      font-size: 0.88rem;
-      padding: 0.75rem;
-      resize: vertical;
-      font-family: inherit;
-      box-sizing: border-box;
-      transition: border-color 0.2s;
-    }
+    .quiz-title { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; color: #cc2200; margin: 0 0 0.35rem; }
+    .quiz-subtitle { color: #777; font-size: 0.85rem; margin: 0 0 1.5rem; line-height: 1.6; }
+    .pregunta-card { background: #0d0d18; border: 1px solid #1e1e2e; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+    .pregunta-card h4 { font-size: 0.92rem; color: #eee; margin: 0 0 0.85rem; line-height: 1.55; }
+    .pregunta-card textarea { width: 100%; min-height: 90px; background: #080810; border: 1px solid #2a2a3e; border-radius: 8px; color: #ddd; font-size: 0.88rem; padding: 0.75rem; resize: vertical; font-family: inherit; box-sizing: border-box; transition: border-color 0.2s; }
     .pregunta-card textarea:focus { outline: none; border-color: #cc2200; }
-    .pregunta-num {
-      display: inline-block;
-      background: #cc220022;
-      color: #cc2200;
-      border: 1px solid #cc2200;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-right: 0.5rem;
-      flex-shrink: 0;
-    }
+    .pregunta-num { display: inline-block; background: #cc220018; color: #cc2200; border: 1px solid #cc220040; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; flex-shrink: 0; }
+    .quiz-ya-enviado { background: #00bfff0e; border: 1px solid #00bfff30; border-radius: 12px; padding: 1.25rem; color: #00bfff; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.75rem; }
+    .quiz-aprobado { background: #00ff880e; border: 1px solid #00ff8830; border-radius: 12px; padding: 1.25rem; color: #00ff88; }
+    .quiz-rechazado { background: #cc22000e; border: 1px solid #cc220030; border-radius: 12px; padding: 1.25rem; color: #ff6b6b; }
 
-    .quiz-ya-enviado {
-      background: #00bfff11;
-      border: 1px solid #00bfff44;
-      border-radius: 10px;
-      padding: 1.25rem;
-      color: #00bfff;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-    .quiz-aprobado {
-      background: #00ff8811;
-      border: 1px solid #00ff8844;
-      border-radius: 10px;
-      padding: 1.25rem;
-      color: #00ff88;
-    }
-    .quiz-rechazado {
-      background: #cc220011;
-      border: 1px solid #cc220044;
-      border-radius: 10px;
-      padding: 1.25rem;
-      color: #ff6b6b;
-    }
-
+    /* ── MATERIAL BTN ── */
     .material-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 0.65rem 1.1rem;
-      color: #ccc;
+      background: #0d0d18;
+      border: 1px solid #1e1e30;
+      border-radius: 10px;
+      padding: 0.7rem 1.1rem;
+      color: #aaa;
       text-decoration: none;
       font-size: 0.875rem;
-      transition: border-color 0.2s, color 0.2s;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
       margin-bottom: 1rem;
     }
-    .material-btn:hover { border-color: #00bfff; color: #00bfff; }
+    .material-btn:hover { border-color: #00bfff55; color: #00bfff; background: #00bfff08; }
 
-    .progress-steps {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 2rem;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
-    }
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: #555;
-      white-space: nowrap;
-    }
+    /* ── PROGRESS STEPS ── */
+    .progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.25rem; }
+    .step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #444; white-space: nowrap; }
     .step.active { color: #cc2200; }
     .step.done { color: #00ff88; }
-    .step-dot {
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      border: 2px solid #333;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700;
-      flex-shrink: 0;
-    }
+    .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #222; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
     .step.active .step-dot { border-color: #cc2200; color: #cc2200; }
-    .step.done .step-dot { border-color: #00ff88; color: #00ff88; background: #00ff8811; }
-    .step-line { width: 30px; height: 2px; background: #222; flex-shrink: 0; }
-    .step.done + .step .step-line { background: #00ff8844; }
+    .step.done .step-dot { border-color: #00ff88; color: #00ff88; background: #00ff8814; }
+    .step-line { width: 30px; height: 2px; background: #1a1a28; flex-shrink: 0; }
+    .step.done + .step .step-line { background: #00ff8830; }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #1e1e30, transparent);
+      margin: 1.5rem 0;
+    }
   </style>
 </head>
 <body>
@@ -387,7 +325,10 @@
 
   <main>
     <div class="container section">
-      <a href="cursos.html" style="color:#888;font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem">← Volver a Cursos</a>
+      <a href="cursos.html" style="color:#555;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem;transition:color 0.2s" onmouseover="this.style.color='#cc2200'" onmouseout="this.style.color='#555'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver a Cursos
+      </a>
 
       <!-- Pasos -->
       <div class="progress-steps">
@@ -404,7 +345,7 @@
         </div>
       </div>
 
-      <div id="loading" style="color:#888;text-align:center;padding:3rem">Cargando clase…</div>
+      <div id="loading" style="color:#555;text-align:center;padding:3rem;font-size:0.9rem">Cargando clase…</div>
       <div id="clase-contenido" style="display:none"></div>
     </div>
   </main>
@@ -418,13 +359,13 @@
     import { doc, getDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-    const params = new URLSearchParams(location.search);
-    const cursoId = params.get('id');
-    const loading = document.getElementById('loading');
+    const params   = new URLSearchParams(location.search);
+    const cursoId  = params.get('id');
+    const loading  = document.getElementById('loading');
     const contenidoEl = document.getElementById('clase-contenido');
 
     const nivelClass = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
-    const puntosMap = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
+    const puntosMap  = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
 
     if (!cursoId) {
       loading.innerHTML = '<p style="color:#ff6b6b">No se especificó ninguna clase. <a href="cursos.html" style="color:#00bfff">Volver</a></p>';
@@ -435,34 +376,26 @@
         loading.innerHTML = '<div style="text-align:center;padding:2rem"><p style="color:#ff6b6b;margin-bottom:1rem">⚠️ Debes iniciar sesión para ver esta clase.</p><a href="login.html" class="btn btn--primary">Iniciar sesión</a></div>';
         return;
       }
-
       try {
         const userSnap = await getDoc(doc(db, 'users', user.uid));
         const userData = userSnap.data();
-
         if (!userSnap.exists() || userData.estado !== 'aprobado') {
           loading.innerHTML = '<p style="color:#ff6b6b;text-align:center">⚠️ Tu cuenta aún no está aprobada. Contacta al administrador.</p>';
           return;
         }
-
         if (!cursoId) return;
-
         const cursoSnap = await getDoc(doc(db, 'courses', cursoId));
         if (!cursoSnap.exists()) {
           loading.innerHTML = '<p style="color:#ff6b6b">Clase no encontrada.</p>';
           return;
         }
-
         const curso = { id: cursoSnap.id, ...cursoSnap.data() };
-
-        // Verificar si ya envió quiz
         const quizSnap = await getDocs(query(
           collection(db, 'quiz_submissions'),
           where('cursoId', '==', cursoId),
           where('uid', '==', user.uid)
         ));
         const submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
-
         renderClase(curso, userData, user.uid, submission);
       } catch(e) {
         loading.innerHTML = '<p style="color:#ff6b6b">Error al cargar: ' + e.message + '</p>';
@@ -475,36 +408,64 @@
       return m ? m[1] : null;
     }
 
-    function extractDriveId(url) {
-      if (!url) return null;
-      const m = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
-      return m ? m[1] : null;
+    /* ─── RENDER TERMUX COMMANDS ─── */
+    function renderTermuxSection(comandos) {
+      // comandos: array of { etiqueta, descripcion, comando, tags[] }
+      // If none from Firestore, show nothing (admin hasn't added any)
+      if (!comandos || comandos.length === 0) return '';
+
+      const cardsHTML = comandos.map((c, i) => `
+        <div class="cmd-card">
+          ${c.etiqueta ? `<div class="cmd-label">${c.etiqueta}</div>` : ''}
+          ${c.descripcion ? `<div class="cmd-description">${c.descripcion}</div>` : ''}
+          <div class="cmd-row">
+            <span class="cmd-prompt">$</span>
+            <span class="cmd-text" id="cmd-text-${i}">${escapeHtml(c.comando)}</span>
+            <button class="cmd-copy-btn" onclick="copiarComando(this, 'cmd-text-${i}')">
+              <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copiar
+            </button>
+          </div>
+          ${c.tags && c.tags.length ? `<div class="cmd-tags">${c.tags.map(t => `<span class="cmd-tag">${t}</span>`).join('')}</div>` : ''}
+        </div>
+      `).join('');
+
+      return `
+        <div class="termux-section">
+          <div class="termux-section-top">
+            <div class="termux-logo">💻</div>
+            <div>
+              <p class="termux-title">Comandos Termux</p>
+              <p class="termux-subtitle">${comandos.length} comando${comandos.length !== 1 ? 's' : ''} — toca Copiar para usar en Termux</p>
+            </div>
+          </div>
+          ${cardsHTML}
+        </div>
+      `;
     }
 
-    function getDriveEmbedUrl(id) {
-      return `https://drive.google.com/file/d/${id}/preview`;
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    function getDriveDownloadUrl(id) {
-      return `https://drive.google.com/uc?export=download&id=${id}`;
-    }
-
+    /* ─── RENDER CLASE ─── */
     function renderClase(curso, userData, uid, submission) {
       loading.style.display = 'none';
       contenidoEl.style.display = 'block';
 
       const puntos = puntosMap[curso.nivel] || 100;
-      const ytId = extractYouTubeId(curso.enlace || '');
+      const ytId   = extractYouTubeId(curso.enlace || '');
 
       // Actualizar pasos
       if (submission) {
         document.getElementById('step-quiz').classList.add('done');
-        document.getElementById('step-resultado').classList.add(submission.estado === 'aprobado' ? 'done' : submission.estado === 'rechazado' ? 'active' : 'active');
+        document.getElementById('step-resultado').classList.add(
+          submission.estado === 'aprobado' ? 'done' : 'active'
+        );
       } else {
         document.getElementById('step-quiz').classList.add('active');
       }
 
-      // Preguntas del quiz (desde Firestore o defaults)
       const preguntas = curso.quiz_preguntas || [
         '¿Cuál es el concepto principal de esta clase?',
         '¿Qué pasos seguirías para aplicar lo aprendido?',
@@ -513,7 +474,6 @@
       ];
 
       let quizHTML = '';
-
       if (submission) {
         if (submission.estado === 'aprobado') {
           quizHTML = `
@@ -523,8 +483,7 @@
               <p style="margin:0.5rem 0 0;font-size:0.875rem;opacity:0.85">
                 Ganaste <strong>${puntos} puntos</strong> y desbloqueaste tu certificado y badge de esta clase.
               </p>
-            </div>
-          `;
+            </div>`;
         } else if (submission.estado === 'rechazado') {
           quizHTML = `
             <div class="quiz-rechazado">
@@ -534,8 +493,7 @@
                 ${submission.feedback || 'El administrador revisó tus respuestas y no aprobó el quiz. Repasa el contenido e intenta nuevamente.'}
               </p>
               <button class="btn btn--outline btn--small" style="margin-top:1rem" onclick="location.reload()">🔄 Reintentar</button>
-            </div>
-          `;
+            </div>`;
         } else {
           quizHTML = `
             <div class="quiz-ya-enviado">
@@ -546,12 +504,11 @@
                   El administrador revisará tus respuestas y te notificará el resultado. Revisá tu perfil para ver si ya aprobaste.
                 </p>
               </div>
-            </div>
-          `;
+            </div>`;
         }
       } else {
         quizHTML = `
-          <p class="quiz-subtitle">Respondé las 4 preguntas. El admin revisará tus respuestas y, si aprobás, te asignará los puntos automáticamente.</p>
+          <p class="quiz-subtitle">Respondé las ${preguntas.length} preguntas. El admin revisará tus respuestas y, si aprobás, te asignará los puntos automáticamente.</p>
           <form id="quiz-form">
             ${preguntas.map((p, i) => `
               <div class="pregunta-card">
@@ -559,51 +516,61 @@
                 <textarea name="r${i}" placeholder="Tu respuesta…" required></textarea>
               </div>
             `).join('')}
-            <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">
+            <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem;justify-content:center">
               📤 Enviar respuestas
             </button>
-          </form>
-        `;
+          </form>`;
       }
+
+      // Termux commands
+      const termuxHTML = renderTermuxSection(curso.termux_comandos || []);
 
       contenidoEl.innerHTML = `
         <!-- HERO -->
         <div class="clase-hero">
-          <div>
+          <div style="margin-bottom:0.6rem">
             <span class="nivel-badge ${nivelClass[curso.nivel] || 'nivel-basico'}">${curso.nivel || 'Básico'}</span>
             <span class="puntos-badge">⭐ ${puntos} pts</span>
           </div>
-          <h1 style="margin:0.5rem 0 0.75rem;font-size:clamp(1.1rem,4vw,1.6rem)">${curso.titulo}</h1>
-          <p style="color:#aaa;font-size:0.9rem;margin:0;line-height:1.6">${curso.categoria || ''}</p>
+          <h1 style="margin:0 0 0.65rem;font-size:clamp(1.1rem,4vw,1.55rem);line-height:1.3">${curso.titulo}</h1>
+          <p style="color:#666;font-size:0.85rem;margin:0;display:flex;align-items:center;gap:0.4rem">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            ${curso.categoria || 'General'}
+          </p>
         </div>
 
         <!-- VIDEO -->
         ${ytId ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1&fs=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>` : ''}
 
+        <!-- DESCRIPCIÓN -->
+        ${curso.descripcion ? `
+        <div>
+          <div class="section-header" style="margin-bottom:0.75rem">
+            <div class="section-header-icon section-header-icon--red">📋</div>
+            <div>
+              <h3>Contenido de la clase</h3>
+            </div>
+          </div>
+          <div class="content-block">${curso.descripcion}</div>
+        </div>` : ''}
 
-        <!-- DESCRIPCIÓN / CONTENIDO -->
-        ${curso.descripcion ? `<div class="content-block">${curso.descripcion}</div>` : ''}
+        <!-- TERMUX COMMANDS -->
+        ${termuxHTML}
 
         <!-- MATERIAL -->
-        ${curso.descarga ? `
-          <a href="${curso.descarga}" target="_blank" class="material-btn">
-            ⬇ Descargar video de la clase
-          </a>
-        ` : ''}
-        ${curso.enlace && !ytId ? `
-          <a href="${curso.enlace}" target="_blank" class="material-btn">
-            🔗 Acceder al recurso externo
-          </a>
-        ` : ''}
+        ${curso.descarga || (curso.enlace && !ytId) ? `<div class="section-divider"></div>` : ''}
+        ${curso.descarga ? `<a href="${curso.descarga}" target="_blank" class="material-btn">⬇ Descargar video de la clase</a>` : ''}
+        ${curso.enlace && !ytId ? `<a href="${curso.enlace}" target="_blank" class="material-btn">🔗 Acceder al recurso externo</a>` : ''}
 
         <!-- QUIZ -->
+        <div class="section-divider"></div>
         <div class="quiz-section">
           <h2 class="quiz-title">🧠 Quiz de evaluación</h2>
           ${quizHTML}
         </div>
       `;
 
-      // Bind form
+      // Bind quiz form
       const form = document.getElementById('quiz-form');
       if (form) {
         form.addEventListener('submit', async (e) => {
@@ -616,7 +583,6 @@
               pregunta: p,
               respuesta: (form.elements['r' + i]?.value || '').trim()
             }));
-
             await addDoc(collection(db, 'quiz_submissions'), {
               uid,
               username: userData.username || '',
@@ -629,8 +595,6 @@
               estado: 'pendiente',
               fechaEnvio: Timestamp.now(),
             });
-
-            // Recargar para mostrar estado "pendiente"
             location.reload();
           } catch(err) {
             btn.disabled = false;
@@ -640,11 +604,11 @@
         });
       }
     }
+
     // ── CUSTOM VIDEO PLAYER LOGIC ──
     (function() {
-      const video   = document.getElementById('vp-video');
+      const video = document.getElementById('vp-video');
       if (!video) return;
-
       const wrap       = document.getElementById('vp-wrap');
       const brightness = document.getElementById('vp-brightness');
       const feedback   = document.getElementById('vp-feedback');
@@ -659,150 +623,58 @@
       const playIcon   = document.getElementById('vp-play-icon');
       const volFill    = document.getElementById('vp-vol-fill');
       const brightFill = document.getElementById('vp-bright-fill');
-
-      let brightLevel  = 0.5; // 0=dark 1=bright (0=no overlay)
+      let brightLevel  = 0.5;
       let hideTimer    = null;
       let fbTimer      = null;
-
-      function fmt(s) {
-        s = Math.floor(s);
-        const m = Math.floor(s / 60), ss = s % 60;
-        return m + ':' + String(ss).padStart(2,'0');
-      }
-
-      function showFeedback(txt) {
-        feedback.textContent = txt;
-        feedback.classList.add('show');
-        clearTimeout(fbTimer);
-        fbTimer = setTimeout(() => feedback.classList.remove('show'), 900);
-      }
-
-      function flashIcon(icon) {
-        playIcon.textContent = icon;
-        playIcon.classList.add('show');
-        setTimeout(() => playIcon.classList.remove('show'), 500);
-      }
-
-      function showControls() {
-        controls.classList.remove('hidden');
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => {
-          if (!video.paused) controls.classList.add('hidden');
-        }, 3000);
-      }
-
-      function togglePlay() {
-        if (video.paused) { video.play(); flashIcon('▶'); }
-        else               { video.pause(); flashIcon('⏸'); }
-        showControls();
-      }
-
-      // play/pause button
+      function fmt(s) { s = Math.floor(s); const m = Math.floor(s / 60), ss = s % 60; return m + ':' + String(ss).padStart(2,'0'); }
+      function showFeedback(txt) { feedback.textContent = txt; feedback.classList.add('show'); clearTimeout(fbTimer); fbTimer = setTimeout(() => feedback.classList.remove('show'), 900); }
+      function flashIcon(icon) { playIcon.textContent = icon; playIcon.classList.add('show'); setTimeout(() => playIcon.classList.remove('show'), 500); }
+      function showControls() { controls.classList.remove('hidden'); clearTimeout(hideTimer); hideTimer = setTimeout(() => { if (!video.paused) controls.classList.add('hidden'); }, 3000); }
+      function togglePlay() { if (video.paused) { video.play(); flashIcon('▶'); } else { video.pause(); flashIcon('⏸'); } showControls(); }
       playBtn.onclick = togglePlay;
       video.addEventListener('play',  () => { playBtn.textContent = '⏸'; showControls(); });
       video.addEventListener('pause', () => { playBtn.textContent = '▶'; controls.classList.remove('hidden'); });
-
-      // time update
-      video.addEventListener('timeupdate', () => {
-        if (!video.duration) return;
-        const pct = (video.currentTime / video.duration) * 100;
-        progFill.style.width  = pct + '%';
-        progThumb.style.left  = pct + '%';
-        timeEl.textContent    = fmt(video.currentTime) + ' / ' + fmt(video.duration);
-      });
-
-      // progress bar seek
-      progWrap.addEventListener('click', e => {
-        const r = progWrap.getBoundingClientRect();
-        video.currentTime = ((e.clientX - r.left) / r.width) * video.duration;
-        showControls();
-      });
-
-      // mute
-      muteBtn.onclick = () => {
-        video.muted = !video.muted;
-        muteBtn.textContent = video.muted ? '🔇' : '🔊';
-        showControls();
-      };
-
-      // fullscreen
-      fullBtn.onclick = () => {
-        if (document.fullscreenElement) document.exitFullscreen();
-        else wrap.requestFullscreen && wrap.requestFullscreen();
-        showControls();
-      };
-
-      // ── TOUCH GESTURES ──
-      let touchStartX = 0, touchStartY = 0;
-      let touchStartVol = 1, touchStartBright = 0.5;
-      let lastTapTime  = 0, lastTapZone = '';
-      let gestureMode  = null; // 'vol' | 'bright' | null
-
-      wrap.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        touchStartX      = t.clientX;
-        touchStartY      = t.clientY;
-        touchStartVol    = video.volume;
-        touchStartBright = brightLevel;
-        gestureMode      = null;
-        showControls();
-      }, { passive: true });
-
-      wrap.addEventListener('touchmove', e => {
-        const t  = e.touches[0];
-        const dx = t.clientX - touchStartX;
-        const dy = t.clientY - touchStartY;
-        const wRect = wrap.getBoundingClientRect();
-        const isRight = touchStartX > wRect.width / 2;
-
-        if (!gestureMode && Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) {
-          gestureMode = isRight ? 'vol' : 'bright';
-        }
-
-        if (gestureMode === 'vol') {
-          const delta = -(dy / 150);
-          video.volume = Math.max(0, Math.min(1, touchStartVol + delta));
-          volFill.style.height = (video.volume * 100) + '%';
-          showFeedback('🔊 ' + Math.round(video.volume * 100) + '%');
-        } else if (gestureMode === 'bright') {
-          brightLevel = Math.max(0, Math.min(0.85, touchStartBright - dy / 200));
-          brightness.style.opacity = brightLevel;
-          brightFill.style.height  = ((1 - brightLevel) * 100) + '%';
-          showFeedback('☀️ ' + Math.round((1 - brightLevel) * 100) + '%');
-        }
-      }, { passive: true });
-
-      wrap.addEventListener('touchend', e => {
-        if (gestureMode) { gestureMode = null; return; }
-
-        // double-tap detection
-        const t    = e.changedTouches[0];
-        const wRect = wrap.getBoundingClientRect();
-        const zone  = t.clientX < wRect.left + wRect.width * 0.35 ? 'left'
-                    : t.clientX > wRect.left + wRect.width * 0.65 ? 'right'
-                    : 'center';
-        const now   = Date.now();
-        const isDouble = (now - lastTapTime < 280) && (lastTapZone === zone);
-        lastTapTime = now;
-        lastTapZone = zone;
-
-        if (isDouble) {
-          if (zone === 'right') {
-            video.currentTime = Math.min(video.duration, video.currentTime + 5);
-            showFeedback('⏩ +5s');
-          } else if (zone === 'left') {
-            video.currentTime = Math.max(0, video.currentTime - 5);
-            showFeedback('⏪ -5s');
-          }
-        } else if (zone === 'center') {
-          togglePlay();
-        }
-      }, { passive: true });
-
-      // init vol bar
+      video.addEventListener('timeupdate', () => { if (!video.duration) return; const pct = (video.currentTime / video.duration) * 100; progFill.style.width = pct + '%'; progThumb.style.left = pct + '%'; timeEl.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration); });
+      progWrap.addEventListener('click', e => { const r = progWrap.getBoundingClientRect(); video.currentTime = ((e.clientX - r.left) / r.width) * video.duration; showControls(); });
+      muteBtn.onclick = () => { video.muted = !video.muted; muteBtn.textContent = video.muted ? '🔇' : '🔊'; showControls(); };
+      fullBtn.onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else wrap.requestFullscreen && wrap.requestFullscreen(); showControls(); };
+      let touchStartX = 0, touchStartY = 0, touchStartVol = 1, touchStartBright = 0.5, lastTapTime = 0, lastTapZone = '', gestureMode = null;
+      wrap.addEventListener('touchstart', e => { const t = e.touches[0]; touchStartX = t.clientX; touchStartY = t.clientY; touchStartVol = video.volume; touchStartBright = brightLevel; gestureMode = null; showControls(); }, { passive: true });
+      wrap.addEventListener('touchmove', e => { const t = e.touches[0]; const dx = t.clientX - touchStartX; const dy = t.clientY - touchStartY; const wRect = wrap.getBoundingClientRect(); const isRight = touchStartX > wRect.width / 2; if (!gestureMode && Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { gestureMode = isRight ? 'vol' : 'bright'; } if (gestureMode === 'vol') { const delta = -(dy / 150); video.volume = Math.max(0, Math.min(1, touchStartVol + delta)); volFill.style.height = (video.volume * 100) + '%'; showFeedback('🔊 ' + Math.round(video.volume * 100) + '%'); } else if (gestureMode === 'bright') { brightLevel = Math.max(0, Math.min(0.85, touchStartBright - dy / 200)); brightness.style.opacity = brightLevel; brightFill.style.height = ((1 - brightLevel) * 100) + '%'; showFeedback('☀️ ' + Math.round((1 - brightLevel) * 100) + '%'); } }, { passive: true });
+      wrap.addEventListener('touchend', e => { if (gestureMode) { gestureMode = null; return; } const t = e.changedTouches[0]; const wRect = wrap.getBoundingClientRect(); const zone = t.clientX < wRect.left + wRect.width * 0.35 ? 'left' : t.clientX > wRect.left + wRect.width * 0.65 ? 'right' : 'center'; const now = Date.now(); const isDouble = (now - lastTapTime < 280) && (lastTapZone === zone); lastTapTime = now; lastTapZone = zone; if (isDouble) { if (zone === 'right') { video.currentTime = Math.min(video.duration, video.currentTime + 5); showFeedback('⏩ +5s'); } else if (zone === 'left') { video.currentTime = Math.max(0, video.currentTime - 5); showFeedback('⏪ -5s'); } } else if (zone === 'center') { togglePlay(); } }, { passive: true });
       volFill.style.height = '100%';
     })();
+  </script>
 
+  <script>
+    // ── COPY COMMAND (global, outside module) ──
+    function copiarComando(btn, textId) {
+      const el  = document.getElementById(textId);
+      const txt = el ? el.textContent : '';
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar`;
+        }, 2000);
+      }).catch(() => {
+        // Fallback para navegadores sin clipboard API
+        const range = document.createRange();
+        range.selectNode(el);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar`;
+        }, 2000);
+      });
+    }
   </script>
 
   <script type="module">

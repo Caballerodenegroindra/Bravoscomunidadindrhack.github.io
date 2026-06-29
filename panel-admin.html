@@ -6,7 +6,7 @@
   <title>Panel administrador — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -437,6 +437,17 @@
           <div class="field"><label>Pregunta 3</label><input type="text" name="quiz_p3" placeholder="¿Qué riesgos o precauciones debes tener en cuenta?" /></div>
           <div class="field"><label>Pregunta 4</label><input type="text" name="quiz_p4" placeholder="¿Cómo explicarías este tema a alguien que no lo conoce?" /></div>
         </div>
+
+        <!-- COMANDOS TERMUX -->
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #0e2a1a">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+            <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:#00ff88;margin:0">💻 COMANDOS TERMUX</p>
+            <button type="button" id="btn-add-cmd" style="background:#0e2a1a;border:1px solid #1e5535;border-radius:6px;color:#00ff88;font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
+          </div>
+          <p style="font-size:0.77rem;color:#4a8a62;margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic. Cada bloque tiene: etiqueta, descripción del comando y el comando en sí.</p>
+          <div id="termux-cmds-container"></div>
+        </div>
+
         <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
           <input type="checkbox" name="publicado" id="publicado" checked />
           <label for="publicado">Publicar inmediatamente</label>
@@ -708,6 +719,7 @@
       editingCourseId = null;
       modalTitle.textContent = 'Crear curso';
       modalForm.reset();
+      loadTermuxCmds([]);
       modal.style.display = 'flex';
     });
 
@@ -733,6 +745,7 @@
           modalForm.quiz_p3?.value?.trim() || '¿Qué riesgos o precauciones debes tener en cuenta?',
           modalForm.quiz_p4?.value?.trim() || '¿Cómo explicarías este tema a alguien que no lo conoce?',
         ],
+        termux_comandos: getTermuxCmds(),
       };
 
       try {
@@ -749,6 +762,47 @@
         alert('❌ Error: ' + err.message);
       }
     });
+
+    // ── TERMUX COMMANDS MANAGER ──
+    const termuxContainer = document.getElementById('termux-cmds-container');
+    const addCmdBtn       = document.getElementById('btn-add-cmd');
+
+    function addCmdBlock(data) {
+      const idx  = termuxContainer.children.length;
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'background:#060d09;border:1px solid #0e2a1a;border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
+      wrap.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:#555;cursor:pointer;font-size:1rem">✕</button>
+        <div class="field" style="margin-bottom:0.5rem">
+          <label style="font-size:0.75rem;color:#4a8a62">Etiqueta (título corto)</label>
+          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
+        </div>
+        <div class="field" style="margin-bottom:0.5rem">
+          <label style="font-size:0.75rem;color:#4a8a62">Descripción / para qué sirve</label>
+          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label style="font-size:0.75rem;color:#00ff88">Comando <span style="color:#555">(lo que se copia)</span></label>
+          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:#030706;border:1px solid #1e5535;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#d0f0d8" />
+        </div>
+      `;
+      termuxContainer.appendChild(wrap);
+    }
+
+    function loadTermuxCmds(cmds) {
+      termuxContainer.innerHTML = '';
+      (cmds || []).forEach(c => addCmdBlock(c));
+    }
+
+    function getTermuxCmds() {
+      return Array.from(termuxContainer.children).map(wrap => ({
+        etiqueta:    wrap.querySelector('.cmd-etiqueta')?.value?.trim() || '',
+        descripcion: wrap.querySelector('.cmd-desc')?.value?.trim()     || '',
+        comando:     wrap.querySelector('.cmd-comando')?.value?.trim()  || '',
+      })).filter(c => c.comando);
+    }
+
+    if (addCmdBtn) addCmdBtn.addEventListener('click', () => addCmdBlock(null));
 
     function renderCourses(courses, searchTerm) {
       const grid = document.querySelector('[data-courses-grid]');
@@ -833,6 +887,8 @@
             if (modalForm.quiz_p2) modalForm.quiz_p2.value = qs[1] || '';
             if (modalForm.quiz_p3) modalForm.quiz_p3.value = qs[2] || '';
             if (modalForm.quiz_p4) modalForm.quiz_p4.value = qs[3] || '';
+            // Cargar comandos termux
+            loadTermuxCmds(course.termux_comandos || []);
             modal.style.display = 'flex';
           }
 
