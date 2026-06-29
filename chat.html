@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="theme-color" content="#0d1117" />
   <title>Chat — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ── VARIABLES EXTRA ── */
@@ -44,7 +44,7 @@
     }
 
     .chat-rooms__title {
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       font-size: 0.68rem;
       letter-spacing: 0.14em;
       color: var(--text-muted);
@@ -72,7 +72,7 @@
       padding: 0.25rem 0.6rem;
       font-size: 0.72rem;
       font-weight: 700;
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       letter-spacing: 0.05em;
       transition: background 0.15s, box-shadow 0.15s;
       white-space: nowrap;
@@ -260,7 +260,7 @@
     .chat-header__info { flex: 1; min-width: 0; }
 
     .chat-header__name {
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.07em;
@@ -373,7 +373,7 @@
       font-size: 0.72rem;
       font-weight: 800;
       color: var(--primary);
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       letter-spacing: 0.05em;
     }
     .msg__avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -394,8 +394,8 @@
     .msg__username {
       font-size: 0.75rem;
       font-weight: 700;
-      color: var(--cyan);
-      font-family: var(--font-brand);
+      color: var(--color-accent-fg);
+      font-family: var(--font-body);
       letter-spacing: 0.04em;
     }
     .msg--own .msg__username { color: var(--primary); }
@@ -445,7 +445,7 @@
     /* Reply quote */
     .msg__reply-quote {
       background: rgba(255,255,255,0.04);
-      border-left: 3px solid var(--cyan);
+      border-left: 3px solid var(--color-accent-fg);
       border-radius: 4px;
       padding: 0.3rem 0.6rem;
       margin-bottom: 0.5rem;
@@ -455,7 +455,7 @@
       transition: background 0.1s;
     }
     .msg__reply-quote:hover { background: rgba(0,200,255,0.06); }
-    .msg__reply-quote strong { color: var(--cyan); font-family: var(--font-brand); font-size: 0.68rem; letter-spacing: 0.04em; }
+    .msg__reply-quote strong { color: var(--color-accent-fg); font-family: var(--font-body); font-size: 0.68rem; letter-spacing: 0.04em; }
     .msg--own .msg__reply-quote { border-left-color: var(--primary); }
     .msg--own .msg__reply-quote strong { color: var(--primary); }
 
@@ -474,7 +474,7 @@
     .msg__shared-rank__icon { font-size: 1.5rem; }
     .msg__shared-rank__info { flex: 1; }
     .msg__shared-rank__label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
-    .msg__shared-rank__name { font-family: var(--font-brand); font-size: 0.82rem; font-weight: 700; }
+    .msg__shared-rank__name { font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; }
 
     /* Mensaje especial: certificado */
     .msg__cert-card {
@@ -520,11 +520,11 @@
       transition: border-color 0.12s, color 0.12s, background 0.12s;
       font-family: var(--font-body);
     }
-    .msg__action-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,200,255,0.06); }
+    .msg__action-btn:hover { border-color: var(--color-accent-fg); color: var(--color-accent-fg); background: rgba(0,200,255,0.06); }
     .msg__action-btn svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .btn-thread { font-size: 0.67rem; }
-    .btn-thread.has-replies { color: var(--cyan); border-color: rgba(0,200,255,0.25); }
+    .btn-thread.has-replies { color: var(--color-accent-fg); border-color: rgba(0,200,255,0.25); }
 
     /* ── HILOS ── */
     .thread-replies {
@@ -539,7 +539,7 @@
 
     .thread-header {
       font-size: 0.67rem;
-      color: var(--cyan);
+      color: var(--color-accent-fg);
       font-weight: 700;
       letter-spacing: 0.05em;
       padding-bottom: 0.35rem;
@@ -656,7 +656,7 @@
       margin-bottom: -4px;
     }
     .chat-reply-preview.show { display: flex; }
-    .chat-reply-preview strong { color: var(--cyan); font-family: var(--font-brand); font-size: 0.68rem; }
+    .chat-reply-preview strong { color: var(--color-accent-fg); font-family: var(--font-body); font-size: 0.68rem; }
     .chat-reply-preview__cancel {
       margin-left: auto;
       background: none;
@@ -669,7 +669,7 @@
       transition: color 0.1s;
     }
     .chat-reply-preview__cancel:hover { color: var(--text); }
-    .chat-reply-preview svg { width: 11px; height: 11px; stroke: var(--cyan); fill: none; stroke-width: 2; flex-shrink: 0; }
+    .chat-reply-preview svg { width: 11px; height: 11px; stroke: var(--color-accent-fg); fill: none; stroke-width: 2; flex-shrink: 0; }
 
     /* Attach bar */
     .chat-attach-bar {
@@ -789,7 +789,7 @@
     .chat-empty__glyph svg { width: 34px; height: 34px; stroke: var(--primary); fill: none; stroke-width: 1.5; opacity: 0.7; }
 
     .chat-empty__title {
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text);
@@ -866,7 +866,7 @@
       justify-content: space-between;
     }
     .class-picker__title {
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -980,7 +980,7 @@
       justify-content: space-between;
     }
     .share-picker__title {
-      font-family: var(--font-brand);
+      font-family: var(--font-body);
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -1032,7 +1032,7 @@
     .rank-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); }
     .rank-option__icon { font-size: 1.4rem; }
     .rank-option__info { flex: 1; }
-    .rank-option__name { font-family: var(--font-brand); font-size: 0.82rem; font-weight: 700; }
+    .rank-option__name { font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; }
     .rank-option__desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
 
     .cert-option {
@@ -1265,7 +1265,7 @@
 
     const RANK_DATA = [
       { key:'novato',   icon:'🔰', name:'Novato',    color:'#9999aa', desc:'Nivel de entrada a la comunidad' },
-      { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#00c8ff', desc:'Aprendiendo las herramientas' },
+      { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#58a6ff', desc:'Aprendiendo las herramientas' },
       { key:'hacker',   icon:'💀', name:'Hacker',    color:'#cc2200', desc:'Domina técnicas básicas de pentest' },
       { key:'elite',    icon:'🏆', name:'Élite',     color:'#d4a017', desc:'Experto en ofensiva avanzada' },
       { key:'maestro',  icon:'🔮', name:'Maestro',   color:'#a855f7', desc:'Arquitecto de exploits' },

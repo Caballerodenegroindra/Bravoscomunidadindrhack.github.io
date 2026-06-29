@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Mi Ficha — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=Share+Tech+Mono&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=family=Inter:wght@400;500;600&family=Share+Tech+Mono&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ---- Card para descargar ---- */
@@ -42,12 +42,12 @@
       position: absolute;
       top: -30px; right: -30px;
       width: 120px; height: 120px;
-      background: radial-gradient(circle, #cc220022, transparent 70%);
+      background: radial-gradient(circle, var(--color-accent-fg)22, transparent 70%);
       border-radius: 50%;
     }
 
     .ficha-logo {
-      font-family: 'Orbitron', sans-serif;
+      font-family: var(--font-body);
       font-size: 0.7rem;
       color: #00bfff;
       letter-spacing: 4px;
@@ -56,14 +56,14 @@
     }
 
     .ficha-academy {
-      font-family: 'Orbitron', sans-serif;
+      font-family: var(--font-body);
       font-size: 1.3rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: 2px;
     }
 
-    .ficha-academy span { color: #cc2200; }
+    .ficha-academy span { color: var(--color-accent-fg); }
 
     .ficha-badge-rango {
       display: inline-block;
@@ -100,7 +100,7 @@
     }
 
     .ficha-name {
-      font-family: 'Orbitron', sans-serif;
+      font-family: var(--font-body);
       font-size: 1.1rem;
       font-weight: 700;
       color: #fff;
@@ -148,7 +148,7 @@
 
     .ficha-curso-item::before {
       content: '▸';
-      color: #cc2200;
+      color: var(--color-accent-fg);
     }
 
     .ficha-footer {
@@ -167,7 +167,7 @@
     }
 
     .ficha-watermark {
-      font-family: 'Orbitron', sans-serif;
+      font-family: var(--font-body);
       font-size: 0.6rem;
       color: #b8860b44;
       letter-spacing: 3px;
@@ -364,7 +364,7 @@
 
       try {
         const canvas = await html2canvas(fichaCard, {
-          backgroundColor: '#0a0a0f',
+          backgroundColor: '#0d1117',
           scale: 2,
           useCORS: true,
           logging: false,

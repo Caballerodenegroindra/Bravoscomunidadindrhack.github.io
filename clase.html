@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="theme-color" content="#0d1117" />
   <title>Clase — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ── HERO ── */
@@ -25,7 +25,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, #cc2200, transparent);
+      background: linear-gradient(90deg, transparent, var(--color-accent-emphasis), transparent);
     }
 
     /* ── BADGES ── */
@@ -39,7 +39,7 @@
     }
     .nivel-basico   { background: #00bfff22; color: #00bfff; border: 1px solid #00bfff44; }
     .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
-    .nivel-avanzado { background: #cc220022; color: #cc2200; border: 1px solid #cc220044; }
+    .nivel-avanzado { background: var(--color-accent-emphasis)22; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis)44; }
     .puntos-badge {
       display: inline-flex;
       align-items: center;
@@ -81,8 +81,8 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
-    .section-header-icon--green { background: #00ff8814; border: 1px solid #00ff8830; }
-    .section-header-icon--red   { background: #cc220014; border: 1px solid #cc220030; }
+    .section-header-icon--green { background: #3fb95014; border: 1px solid #3fb95030; }
+    .section-header-icon--red   { background: var(--color-accent-emphasis)14; border: 1px solid var(--color-accent-emphasis)30; }
     .section-header h3 { margin: 0; font-size: 1rem; color: #f0f0f0; }
     .section-header p  { margin: 0.15rem 0 0; font-size: 0.78rem; color: #888; }
 
@@ -111,7 +111,7 @@
       font-size: 1.2rem;
       flex-shrink: 0;
     }
-    .termux-title { margin: 0; font-size: 1rem; color: #00ff88; font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.05em; }
+    .termux-title { margin: 0; font-size: 1rem; color: #3fb950; font-family: var(--font-body); font-weight: 700; letter-spacing: 0.05em; }
     .termux-subtitle { margin: 0.15rem 0 0; font-size: 0.78rem; color: #4a8a62; }
 
     /* Command card */
@@ -151,7 +151,7 @@
       overflow: hidden;
     }
     .cmd-prompt {
-      color: #00ff88;
+      color: #3fb950;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem;
       font-weight: 700;
@@ -172,7 +172,7 @@
       background: #0e2a1a;
       border: 1px solid #1e5535;
       border-radius: 6px;
-      color: #00ff88;
+      color: #3fb950;
       font-size: 0.72rem;
       font-weight: 600;
       padding: 0.3rem 0.65rem;
@@ -184,8 +184,8 @@
       gap: 0.3rem;
       font-family: var(--font-body);
     }
-    .cmd-copy-btn:hover { background: #1a4a2e; border-color: #00ff88; }
-    .cmd-copy-btn.copied { background: #00ff8822; border-color: #00ff88; color: #00ff88; }
+    .cmd-copy-btn:hover { background: #1a4a2e; border-color: #3fb950; }
+    .cmd-copy-btn.copied { background: #3fb95022; border-color: #3fb950; color: #3fb950; }
     .cmd-copy-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 
     /* Tags inline de comando */
@@ -226,7 +226,7 @@
     .vp-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.88)); padding: 1.5rem 0.75rem 0.65rem; display: flex; flex-direction: column; gap: 0.4rem; transition: opacity 0.3s; }
     .vp-controls.hidden { opacity: 0; pointer-events: none; }
     .vp-progress-wrap { position: relative; height: 4px; background: rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; }
-    .vp-progress-fill { height: 100%; background: #cc2200; border-radius: 4px; width: 0%; pointer-events: none; }
+    .vp-progress-fill { height: 100%; background: var(--color-accent-emphasis); border-radius: 4px; width: 0%; pointer-events: none; }
     .vp-progress-thumb { position: absolute; top: 50%; right: auto; width: 12px; height: 12px; background: #fff; border-radius: 50%; transform: translate(50%, -50%); left: 0%; pointer-events: none; }
     .vp-row { display: flex; align-items: center; gap: 0.5rem; }
     .vp-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0.2rem 0.35rem; line-height: 1; }
@@ -235,7 +235,7 @@
     .vp-play-icon { font-size: 2.5rem; color: rgba(255,255,255,0.9); text-shadow: 0 0 20px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
     .vp-play-icon.show { opacity: 1; }
     .vp-side-bar { position: absolute; right: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
-    .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #00ff88; transition: height 0.1s; }
+    .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #3fb950; transition: height 0.1s; }
     .vp-bright-bar { position: absolute; left: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
     .vp-bright-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #ffcc00; transition: height 0.1s; }
     .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #1a1a2e; }
@@ -252,16 +252,16 @@
     .quiz-section::before {
       /* accent line top */
     }
-    .quiz-title { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; color: #cc2200; margin: 0 0 0.35rem; }
+    .quiz-title { font-family: var(--font-body); font-size: 1.05rem; color: var(--color-accent-emphasis); margin: 0 0 0.35rem; }
     .quiz-subtitle { color: #777; font-size: 0.85rem; margin: 0 0 1.5rem; line-height: 1.6; }
     .pregunta-card { background: #0d0d18; border: 1px solid #1e1e2e; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
     .pregunta-card h4 { font-size: 0.92rem; color: #eee; margin: 0 0 0.85rem; line-height: 1.55; }
     .pregunta-card textarea { width: 100%; min-height: 90px; background: #080810; border: 1px solid #2a2a3e; border-radius: 8px; color: #ddd; font-size: 0.88rem; padding: 0.75rem; resize: vertical; font-family: inherit; box-sizing: border-box; transition: border-color 0.2s; }
-    .pregunta-card textarea:focus { outline: none; border-color: #cc2200; }
-    .pregunta-num { display: inline-block; background: #cc220018; color: #cc2200; border: 1px solid #cc220040; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; flex-shrink: 0; }
+    .pregunta-card textarea:focus { outline: none; border-color: var(--color-accent-emphasis); }
+    .pregunta-num { display: inline-block; background: var(--color-accent-emphasis)18; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis)40; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; flex-shrink: 0; }
     .quiz-ya-enviado { background: #00bfff0e; border: 1px solid #00bfff30; border-radius: 12px; padding: 1.25rem; color: #00bfff; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.75rem; }
-    .quiz-aprobado { background: #00ff880e; border: 1px solid #00ff8830; border-radius: 12px; padding: 1.25rem; color: #00ff88; }
-    .quiz-rechazado { background: #cc22000e; border: 1px solid #cc220030; border-radius: 12px; padding: 1.25rem; color: #ff6b6b; }
+    .quiz-aprobado { background: #3fb9500e; border: 1px solid #3fb95030; border-radius: 12px; padding: 1.25rem; color: #3fb950; }
+    .quiz-rechazado { background: var(--color-accent-emphasis)0e; border: 1px solid var(--color-accent-emphasis)30; border-radius: 12px; padding: 1.25rem; color: var(--color-danger-fg); }
 
     /* ── MATERIAL BTN ── */
     .material-btn {
@@ -283,13 +283,13 @@
     /* ── PROGRESS STEPS ── */
     .progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.25rem; }
     .step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #444; white-space: nowrap; }
-    .step.active { color: #cc2200; }
-    .step.done { color: #00ff88; }
+    .step.active { color: var(--color-accent-emphasis); }
+    .step.done { color: #3fb950; }
     .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #222; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
-    .step.active .step-dot { border-color: #cc2200; color: #cc2200; }
-    .step.done .step-dot { border-color: #00ff88; color: #00ff88; background: #00ff8814; }
+    .step.active .step-dot { border-color: var(--color-accent-emphasis); color: var(--color-accent-emphasis); }
+    .step.done .step-dot { border-color: #3fb950; color: #3fb950; background: #3fb95014; }
     .step-line { width: 30px; height: 2px; background: #1a1a28; flex-shrink: 0; }
-    .step.done + .step .step-line { background: #00ff8830; }
+    .step.done + .step .step-line { background: #3fb95030; }
 
     /* ── DIVIDER ── */
     .section-divider {
@@ -325,7 +325,7 @@
 
   <main>
     <div class="container section">
-      <a href="cursos.html" style="color:#555;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem;transition:color 0.2s" onmouseover="this.style.color='#cc2200'" onmouseout="this.style.color='#555'">
+      <a href="cursos.html" style="color:#555;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem;transition:color 0.2s" onmouseover="this.style.color='var(--color-accent-emphasis)'" onmouseout="this.style.color='#555'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
         Volver a Cursos
       </a>
@@ -368,25 +368,25 @@
     const puntosMap  = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
 
     if (!cursoId) {
-      loading.innerHTML = '<p style="color:#ff6b6b">No se especificó ninguna clase. <a href="cursos.html" style="color:#00bfff">Volver</a></p>';
+      loading.innerHTML = '<p style="color:var(--color-danger-fg)">No se especificó ninguna clase. <a href="cursos.html" style="color:#00bfff">Volver</a></p>';
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        loading.innerHTML = '<div style="text-align:center;padding:2rem"><p style="color:#ff6b6b;margin-bottom:1rem">⚠️ Debes iniciar sesión para ver esta clase.</p><a href="login.html" class="btn btn--primary">Iniciar sesión</a></div>';
+        loading.innerHTML = '<div style="text-align:center;padding:2rem"><p style="color:var(--color-danger-fg);margin-bottom:1rem">⚠️ Debes iniciar sesión para ver esta clase.</p><a href="login.html" class="btn btn--primary">Iniciar sesión</a></div>';
         return;
       }
       try {
         const userSnap = await getDoc(doc(db, 'users', user.uid));
         const userData = userSnap.data();
         if (!userSnap.exists() || userData.estado !== 'aprobado') {
-          loading.innerHTML = '<p style="color:#ff6b6b;text-align:center">⚠️ Tu cuenta aún no está aprobada. Contacta al administrador.</p>';
+          loading.innerHTML = '<p style="color:var(--color-danger-fg);text-align:center">⚠️ Tu cuenta aún no está aprobada. Contacta al administrador.</p>';
           return;
         }
         if (!cursoId) return;
         const cursoSnap = await getDoc(doc(db, 'courses', cursoId));
         if (!cursoSnap.exists()) {
-          loading.innerHTML = '<p style="color:#ff6b6b">Clase no encontrada.</p>';
+          loading.innerHTML = '<p style="color:var(--color-danger-fg)">Clase no encontrada.</p>';
           return;
         }
         const curso = { id: cursoSnap.id, ...cursoSnap.data() };
@@ -398,7 +398,7 @@
         const submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
         renderClase(curso, userData, user.uid, submission);
       } catch(e) {
-        loading.innerHTML = '<p style="color:#ff6b6b">Error al cargar: ' + e.message + '</p>';
+        loading.innerHTML = '<p style="color:var(--color-danger-fg)">Error al cargar: ' + e.message + '</p>';
       }
     });
 
