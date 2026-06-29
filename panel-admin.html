@@ -8,6 +8,74 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── PRESENCIA ── */
+    .presence-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #0e0e18;
+      transition: background 0.15s;
+    }
+    .presence-row:last-child { border-bottom: none; }
+    .presence-row:hover { background: #0d0d18; }
+
+    .presence-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .presence-dot--online  { background: #00ff88; box-shadow: 0 0 6px #00ff8866; }
+    .presence-dot--recent  { background: #f59e0b; box-shadow: 0 0 6px #f59e0b55; }
+    .presence-dot--offline { background: #333; }
+
+    .presence-username {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #f0f0f0;
+      min-width: 120px;
+    }
+    .presence-status-text {
+      font-size: 0.8rem;
+      color: #666;
+      flex: 1;
+    }
+    .presence-status-text.online  { color: #00ff88; }
+    .presence-status-text.recent  { color: #f59e0b; }
+
+    .presence-lastseen {
+      font-size: 0.75rem;
+      color: #444;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .presence-rank {
+      font-size: 0.7rem;
+      color: #555;
+      min-width: 70px;
+    }
+
+    .presence-table {
+      background: #0a0a14;
+      border: 1px solid #1a1a2a;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .presence-table-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: #080810;
+      border-bottom: 1px solid #1a1a2a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -31,6 +99,7 @@
       <a href="#resumen" class="tabbar__item active" data-tab="resumen"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>Resumen</a>
       <a href="#solicitudes" class="tabbar__item" data-tab="solicitudes"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></span>Solicitudes</a>
       <a href="#miembros" class="tabbar__item" data-tab="miembros"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Miembros</a>
+      <a href="#presencia" class="tabbar__item" data-tab="presencia"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Presencia</a>
       <a href="#cursos" class="tabbar__item" data-tab="cursos"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Cursos</a>
       <button class="tabbar__item" id="admin-more-btn"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span>Más</button>
     </div>
@@ -52,6 +121,7 @@
         <a href="#resumen" class="active" data-tab="resumen">📊 Resumen</a>
         <a href="#solicitudes" data-tab="solicitudes">📥 Solicitudes</a>
         <a href="#miembros" data-tab="miembros">👥 Miembros</a>
+        <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
         <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
@@ -159,6 +229,34 @@
         </div>
         <div data-members-body style="margin-top:1rem">
           <p class="section-subtitle">Cargando miembros…</p>
+        </div>
+      </div>
+
+      <!-- PRESENCIA -->
+      <div class="tab-section hidden" id="presencia">
+        <div class="panel-header">
+          <div>
+            <h1 class="section-title">Presencia <span class="accent">Online</span></h1>
+            <p class="section-subtitle">Estado de conexión de todos los miembros en tiempo real.</p>
+          </div>
+          <button class="btn btn--small btn--outline" id="presencia-refresh-btn">↻ Actualizar</button>
+        </div>
+
+        <!-- Filtros presencia -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center">
+          <button class="btn btn--small btn--primary" data-pf="todos">👥 Todos <span id="pf-count-todos"></span></button>
+          <button class="btn btn--small btn--outline" data-pf="online" style="border-color:#00ff88;color:#00ff88">🟢 En línea <span id="pf-count-online"></span></button>
+          <button class="btn btn--small btn--outline" data-pf="reciente" style="border-color:#f59e0b;color:#f59e0b">🕐 Reciente <span id="pf-count-reciente"></span></button>
+          <button class="btn btn--small btn--outline" data-pf="offline" style="border-color:#555;color:#888">⚫ Sin actividad <span id="pf-count-offline"></span></button>
+          <input type="search" id="presencia-search" placeholder="Buscar usuario…" style="flex:1;min-width:160px;background:#111;border:1px solid #222;border-radius:8px;padding:0.45rem 0.75rem;color:#f0f0f0;font-size:0.85rem;font-family:inherit" />
+        </div>
+
+        <!-- Última actualización -->
+        <p id="presencia-updated" style="font-size:0.75rem;color:#444;margin-bottom:0.75rem"></p>
+
+        <!-- Lista -->
+        <div id="presencia-body">
+          <p class="section-subtitle">Cargando presencia…</p>
         </div>
       </div>
 
@@ -471,7 +569,7 @@
       formatFecha,
     } from './js/admin.js';
     import { db } from './js/firebase-config.js';
-    import { doc, updateDoc, addDoc, deleteDoc, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { doc, updateDoc, addDoc, deleteDoc, collection, getDocs, onSnapshot, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     /* --- Navegación entre pestañas --- */
     const tabs = document.querySelectorAll('[data-tab]');
@@ -509,6 +607,9 @@
       buscarClaseBox.addEventListener('input', () => {
         renderCourses(courses, buscarClaseBox.value);
       });
+
+      // Init presencia (carga en tiempo real cuando se activa la pestaña)
+      initPresenciaTab();
     });
 
     function badge(estado) {
@@ -519,6 +620,158 @@
         [ESTADOS.RECHAZADO]: 'Rechazado',
       };
       return `<span class="badge badge--${estado}">${labels[estado] || estado}</span>`;
+    }
+
+    /* ══════════════════════════════════════════════════
+       PRESENCIA — Lista de miembros con estado online
+       ══════════════════════════════════════════════════ */
+    function initPresenciaTab() {
+      const body       = document.getElementById('presencia-body');
+      const updatedEl  = document.getElementById('presencia-updated');
+      const searchEl   = document.getElementById('presencia-search');
+      const refreshBtn = document.getElementById('presencia-refresh-btn');
+
+      let _allUsers    = [];
+      let _pfFilter    = 'todos';
+      let _unsubscribe = null;
+      let _loaded      = false;
+
+      // Cuándo se activa la pestaña por primera vez → suscribirse
+      const presenciaTab = document.querySelector('[data-tab="presencia"]');
+      if (presenciaTab) {
+        presenciaTab.addEventListener('click', () => {
+          if (!_loaded) startListener();
+        });
+      }
+
+      // Botón actualizar
+      if (refreshBtn) refreshBtn.addEventListener('click', () => {
+        body.innerHTML = '<p class="section-subtitle">Actualizando…</p>';
+        if (_unsubscribe) _unsubscribe();
+        _loaded = false;
+        startListener();
+      });
+
+      function startListener() {
+        _loaded = true;
+        const q = query(collection(db, 'users'));
+        _unsubscribe = onSnapshot(q, (snap) => {
+          _allUsers = snap.docs
+            .map(d => ({ uid: d.id, ...d.data() }))
+            .filter(u => u.estado === 'aprobado');
+          updatedEl.textContent = 'Actualizado: ' + new Date().toLocaleTimeString('es');
+          updateCounts();
+          paintPresencia();
+        }, (err) => {
+          body.innerHTML = '<p style="color:#ff6b6b">Error al cargar: ' + err.message + '</p>';
+        });
+      }
+
+      // Filtros
+      document.querySelectorAll('[data-pf]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          _pfFilter = btn.dataset.pf;
+          document.querySelectorAll('[data-pf]').forEach(b => {
+            b.classList.remove('btn--primary');
+            b.classList.add('btn--outline');
+          });
+          btn.classList.add('btn--primary');
+          btn.classList.remove('btn--outline');
+          paintPresencia();
+        });
+      });
+
+      if (searchEl) searchEl.addEventListener('input', paintPresencia);
+
+      function getPresenceLevel(u) {
+        if (u.isOnline === true) return 'online';
+        if (!u.lastSeen) return 'offline';
+        const secs = u.lastSeen.seconds || 0;
+        const diffMin = (Date.now() / 1000 - secs) / 60;
+        if (diffMin <= 15) return 'recent';
+        return 'offline';
+      }
+
+      function fmtLastSeen(u) {
+        if (u.isOnline) return 'Ahora mismo';
+        if (!u.lastSeen) return 'Nunca';
+        const date = new Date(u.lastSeen.seconds * 1000);
+        const now  = new Date();
+        const diffMs = now - date;
+        const diffMin = Math.floor(diffMs / 60000);
+        const diffH   = Math.floor(diffMin / 60);
+        const diffD   = Math.floor(diffH / 24);
+        if (diffMin < 1)  return 'Hace unos segundos';
+        if (diffMin < 60) return `Hace ${diffMin} min`;
+        if (diffH   < 24) return `Hace ${diffH}h`;
+        if (diffD   < 7)  return `Hace ${diffD} día${diffD !== 1 ? 's' : ''}`;
+        return date.toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' });
+      }
+
+      function updateCounts() {
+        const online  = _allUsers.filter(u => getPresenceLevel(u) === 'online');
+        const recent  = _allUsers.filter(u => getPresenceLevel(u) === 'recent');
+        const offline = _allUsers.filter(u => getPresenceLevel(u) === 'offline');
+        const el = id => document.getElementById(id);
+        if (el('pf-count-todos'))    el('pf-count-todos').textContent    = '(' + _allUsers.length + ')';
+        if (el('pf-count-online'))   el('pf-count-online').textContent   = '(' + online.length + ')';
+        if (el('pf-count-reciente')) el('pf-count-reciente').textContent = '(' + recent.length + ')';
+        if (el('pf-count-offline'))  el('pf-count-offline').textContent  = '(' + offline.length + ')';
+      }
+
+      function paintPresencia() {
+        const term = (searchEl?.value || '').trim().toLowerCase();
+
+        let list = _allUsers;
+        if (_pfFilter === 'online')   list = list.filter(u => getPresenceLevel(u) === 'online');
+        if (_pfFilter === 'reciente') list = list.filter(u => getPresenceLevel(u) === 'recent');
+        if (_pfFilter === 'offline')  list = list.filter(u => getPresenceLevel(u) === 'offline');
+        if (term) list = list.filter(u =>
+          (u.username||'').toLowerCase().includes(term) ||
+          (u.displayName||'').toLowerCase().includes(term) ||
+          (u.rango||'').toLowerCase().includes(term)
+        );
+
+        // Sort: online first, then recent, then offline; within each group sort by lastSeen desc
+        list = [...list].sort((a, b) => {
+          const order = { online: 0, recent: 1, offline: 2 };
+          const la = order[getPresenceLevel(a)], lb = order[getPresenceLevel(b)];
+          if (la !== lb) return la - lb;
+          return (b.lastSeen?.seconds || 0) - (a.lastSeen?.seconds || 0);
+        });
+
+        if (list.length === 0) {
+          body.innerHTML = '<p class="section-subtitle" style="padding:1rem">Sin resultados.</p>';
+          return;
+        }
+
+        const dotClass = { online: 'presence-dot--online', recent: 'presence-dot--recent', offline: 'presence-dot--offline' };
+        const statusLabel = { online: 'En línea', recent: 'Reciente', offline: 'Sin actividad' };
+        const statusClass = { online: 'online', recent: 'recent', offline: '' };
+
+        body.innerHTML = `
+          <div class="presence-table">
+            <div class="presence-table-header">
+              <span style="width:10px;flex-shrink:0"></span>
+              <span style="min-width:120px">Usuario</span>
+              <span style="min-width:70px">Rango</span>
+              <span style="flex:1">Estado</span>
+              <span style="min-width:140px;text-align:right">Última conexión</span>
+            </div>
+            ${list.map(u => {
+              const level = getPresenceLevel(u);
+              return `
+                <div class="presence-row">
+                  <span class="presence-dot ${dotClass[level]}"></span>
+                  <span class="presence-username">${u.username || u.displayName || u.uid}</span>
+                  <span class="presence-rank">${u.rango || 'Recluta'}</span>
+                  <span class="presence-status-text ${statusClass[level]}">${statusLabel[level]}</span>
+                  <span class="presence-lastseen">${fmtLastSeen(u)}</span>
+                </div>`;
+            }).join('')}
+          </div>
+        `;
+      }
     }
 
     function renderStats(users, courses) {
