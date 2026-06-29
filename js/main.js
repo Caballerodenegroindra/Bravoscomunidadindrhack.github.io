@@ -1,34 +1,77 @@
 /* ============================================================
    ACADEMIA INDRHACK — Script compartido de navegación
-   Controla el menú móvil y muestra el estado de sesión
-   (entrar / mi panel / cerrar sesión) en la barra superior.
+   Controla el menú móvil, muestra estado de sesión,
+   y registra presencia (online / lastSeen) en Firestore.
    ============================================================ */
 
 import { onSessionChange, logoutUser, ROLES } from './auth.js';
+import { db } from './firebase-config.js';
+import {
+  doc, updateDoc, serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+/* ── PRESENCIA ──────────────────────────────────────────────
+   Cuando el usuario está autenticado:
+   - Marca isOnline: true + lastSeen: now al entrar
+   - Marca isOnline: false + lastSeen: now al cerrar/salir
+   ──────────────────────────────────────────────────────────*/
+let _presenceUid = null;
+
+async function setPresence(uid, online) {
+  if (!uid) return;
+  try {
+    await updateDoc(doc(db, 'users', uid), {
+      isOnline: online,
+      lastSeen: serverTimestamp(),
+    });
+  } catch (_) { /* silencioso — no bloquear la página */ }
+}
+
+function initPresence(uid) {
+  if (_presenceUid === uid) return; // ya inicializado para este uid
+  _presenceUid = uid;
+
+  setPresence(uid, true);
+
+  // Antes de cerrar la pestaña / navegar fuera
+  window.addEventListener('beforeunload', () => setPresence(uid, false));
+
+  // Visibilidad de la pestaña (minimizar, cambiar de app)
+  document.addEventListener('visibilitychange', () => {
+    setPresence(uid, document.visibilityState === 'visible');
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Menú móvil
+  // ── Menú móvil ──
   const toggle = document.querySelector('.navbar__toggle');
-  const links = document.querySelector('.navbar__links');
-
+  const links  = document.querySelector('.navbar__links');
   if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      links.classList.toggle('open');
-    });
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
   }
 
-  // Estado de sesión en la barra superior
+  // ── Estado de sesión en barra superior ──
   const sessionSlot = document.querySelector('[data-session-slot]');
-  if (!sessionSlot) return;
 
   onSessionChange((profile) => {
     if (!profile) {
-      sessionSlot.innerHTML = `
-        <a href="login.html" class="btn btn--ghost">Iniciar sesión</a>
-        <a href="registro.html" class="btn btn--small btn--outline">Registrarte</a>
-      `;
+      if (_presenceUid) {
+        setPresence(_presenceUid, false);
+        _presenceUid = null;
+      }
+      if (sessionSlot) {
+        sessionSlot.innerHTML = `
+          <a href="login.html" class="btn btn--ghost">Iniciar sesión</a>
+          <a href="registro.html" class="btn btn--small btn--outline">Registrarte</a>
+        `;
+      }
       return;
     }
+
+    // Registrar presencia
+    initPresence(profile.uid);
+
+    if (!sessionSlot) return;
 
     const panelUrl = profile.rol === ROLES.ADMINISTRADOR ? 'panel-admin.html' : 'panel-usuario.html';
 
@@ -40,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const logoutBtn = sessionSlot.querySelector('[data-logout]');
     logoutBtn.addEventListener('click', async () => {
+      await setPresence(profile.uid, false);
       await logoutUser();
       window.location.href = 'index.html';
     });
