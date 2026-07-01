@@ -10,11 +10,18 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ── PRESENCIA ── */
+    /* Mobile-first: tarjeta de 2 líneas (evita que "Última conexión"
+       se corte fuera de la pantalla). En pantallas anchas pasa a fila. */
     .presence-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: 12px 1fr auto;
+      grid-template-areas:
+        "dot user   status"
+        "dot rank   lastseen";
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
+      column-gap: 0.6rem;
+      row-gap: 0.2rem;
+      padding: 0.65rem 0.9rem;
       border-bottom: 1px solid #0e0e18;
       transition: background 0.15s;
     }
@@ -22,38 +29,54 @@
     .presence-row:hover { background: #0d0d18; }
 
     .presence-dot {
+      grid-area: dot;
       width: 10px; height: 10px;
       border-radius: 50%;
       flex-shrink: 0;
+      align-self: center;
     }
     .presence-dot--online  { background: #00ff88; box-shadow: 0 0 6px #00ff8866; }
     .presence-dot--recent  { background: #f59e0b; box-shadow: 0 0 6px #f59e0b55; }
     .presence-dot--offline { background: #333; }
 
     .presence-username {
+      grid-area: user;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: #f0f0f0;
-      min-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
     }
     .presence-status-text {
-      font-size: 0.8rem;
+      grid-area: status;
+      font-size: 0.76rem;
       color: #666;
-      flex: 1;
+      text-align: right;
+      white-space: nowrap;
     }
     .presence-status-text.online  { color: #00ff88; }
     .presence-status-text.recent  { color: #f59e0b; }
 
     .presence-lastseen {
-      font-size: 0.75rem;
-      color: #444;
+      grid-area: lastseen;
+      font-size: 0.7rem;
+      color: #555;
       text-align: right;
       white-space: nowrap;
     }
+    .presence-lastseen::before {
+      content: "Últ. vez: ";
+      color: #3a3a3a;
+    }
     .presence-rank {
+      grid-area: rank;
       font-size: 0.7rem;
       color: #555;
-      min-width: 70px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .presence-table {
@@ -62,18 +85,34 @@
       border-radius: 14px;
       overflow: hidden;
     }
-    .presence-table-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 1rem;
-      background: #080810;
-      border-bottom: 1px solid #1a1a2a;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #444;
+    .presence-table-header { display: none; }
+
+    /* Desktop / tablet: vuelve a fila horizontal de una sola línea */
+    @media (min-width: 720px) {
+      .presence-table-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        background: #080810;
+        border-bottom: 1px solid #1a1a2a;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #444;
+      }
+      .presence-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+      }
+      .presence-username { min-width: 120px; flex: none; }
+      .presence-rank { min-width: 70px; }
+      .presence-status-text { flex: 1; text-align: left; }
+      .presence-lastseen { min-width: 140px; }
+      .presence-lastseen::before { content: none; }
     }
   </style>
 </head>
