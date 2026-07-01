@@ -91,6 +91,9 @@
         <a href="perfil.html">👤 Perfil</a>
         <a href="configuracion.html">⚙️ Configuración</a>
       </nav>
+      <div id="admin-back-link" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+        <a href="panel-admin.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center">🛠️ Panel Admin</a>
+      </div>
     </aside>
 
     <section class="panel-content">
@@ -246,6 +249,10 @@
       document.querySelector('[data-user-username]').textContent = '@' + profile.username;
       document.querySelector('[data-user-rango]').textContent = profile.rango || 'Iniciado';
       const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
+      if (profile.rol === 'administrador') {
+        const backLink = document.getElementById('admin-back-link');
+        if (backLink) backLink.style.display = 'block';
+      }
     });
   </script>
 

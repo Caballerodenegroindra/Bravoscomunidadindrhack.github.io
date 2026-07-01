@@ -85,8 +85,11 @@
     <nav class="navbar__links">
       <a href="index.html">Inicio</a>
       <a href="cursos.html">Cursos</a>
+      <a href="chat.html">Chat</a>
+      <a href="ia-asistente.html">IA</a>
       <a href="redes.html">Redes</a>
       <a href="configuracion.html">Configuración</a>
+      <a href="panel-usuario.html">Vista Usuario</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
     <button class="navbar__toggle" aria-label="Abrir menú">
@@ -107,6 +110,9 @@
 
   <!-- Admin "Más" mini-menu -->
   <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 8px);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:200px;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
+    <a href="chat.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">💬 Chat</a>
+    <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
+    <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">📰 Noticias</a>
     <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
@@ -129,7 +135,10 @@
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
-        <a href="ficha.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center">🪪 Mi Ficha</a>
+        <a href="chat.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center">💬 Chat</a>
+        <a href="ia-asistente.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center;margin-top:0.5rem">🤖 Asistente IA</a>
+        <a href="panel-usuario.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center;margin-top:0.5rem">🔁 Vista Usuario</a>
+        <a href="ficha.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center;margin-top:0.5rem">🪪 Mi Ficha</a>
         <a href="titulos.html" class="btn btn--outline btn--small" style="width:100%;justify-content:center;margin-top:0.5rem">🎓 Mis Títulos</a>
       </div>
     </aside>
