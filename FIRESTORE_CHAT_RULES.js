@@ -80,6 +80,24 @@ match /live_progress/{progressId} {
 }
 
 // ═══════════════════════════════════════════════════════════
+// PRESENCIA POR SALA (quién está conectado ahora mismo)
+// ═══════════════════════════════════════════════════════════
+
+// El id del documento es "{roomId}_{uid}". Cada usuario solo puede
+// crear/actualizar/borrar SU PROPIO documento de presencia. El admin
+// puede leer la lista completa para ver quién está conectado en cada
+// sala o clase en vivo desde chat.html.
+match /room_presence/{presenceId} {
+  allow read: if request.auth != null;
+  allow create, update: if request.auth != null
+    && request.resource.data.uid == request.auth.uid
+    && presenceId == request.resource.data.roomId + '_' + request.auth.uid;
+  allow delete: if request.auth != null &&
+    (presenceId == resource.data.roomId + '_' + request.auth.uid ||
+     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == 'administrador');
+}
+
+// ═══════════════════════════════════════════════════════════
 // ÍNDICES requeridos en Firestore (Firebase Console →
 // Firestore → Índices → Índices compuestos):
 //

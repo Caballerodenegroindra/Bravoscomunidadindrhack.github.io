@@ -207,6 +207,25 @@ service cloud.firestore {
 
       allow delete: if isAdmin();
     }
+
+    // ───────────────────────────────────────────────────────
+    // PRESENCIA POR SALA (quién está conectado ahora mismo)
+    // ───────────────────────────────────────────────────────
+    // El id del documento es "{roomId}_{uid}". Cada usuario solo puede
+    // crear/actualizar/borrar SU PROPIO documento de presencia (heartbeat
+    // mientras tiene la sala/clase en vivo abierta). Solo el admin puede
+    // leer la lista completa desde chat.html para ver "quién está
+    // conectado"; cualquier usuario aprobado puede leer (necesario para
+    // que el propio cliente pueda hacer merge de su doc), pero la UI de
+    // la lista de conectados solo se muestra a administradores.
+    match /room_presence/{presenceId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && presenceId == request.resource.data.roomId + '_' + request.auth.uid;
+      allow delete: if isSignedIn() &&
+        (presenceId == resource.data.roomId + '_' + request.auth.uid || isAdmin());
+    }
   }
 }
 

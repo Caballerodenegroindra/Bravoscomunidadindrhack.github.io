@@ -1053,6 +1053,116 @@
     .cert-option__sub { font-size: 0.68rem; color: var(--text-muted); }
 
     /* ══════════════════════════════════════════
+       CONECTADOS EN LA SALA (solo admin)
+       ══════════════════════════════════════════ */
+    .chat-header__members.clickable {
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chat-header__members.clickable:hover {
+      background: rgba(204,34,0,0.1);
+      border-color: rgba(204,34,0,0.3);
+    }
+
+    .connected-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 450;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .connected-overlay.show { display: flex; }
+
+    .connected-panel {
+      background: var(--bg-card);
+      border: 1px solid rgba(204,34,0,0.2);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 560px;
+      max-height: 70dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.22s ease;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+    }
+
+    .connected-panel__header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .connected-panel__title {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .connected-panel__close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: color 0.1s;
+    }
+    .connected-panel__close:hover { color: var(--text); }
+
+    .connected-panel__list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+
+    .connected-item {
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .connected-item__avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(204,34,0,0.1);
+      border: 1px solid rgba(204,34,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .connected-item__avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .connected-item__info { flex: 1; min-width: 0; }
+    .connected-item__name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .connected-item__sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 1px; }
+    .connected-panel__empty {
+      padding: 2rem 1.25rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ══════════════════════════════════════════
        CLASES EN VIVO
        ══════════════════════════════════════════ */
 
@@ -1536,8 +1646,8 @@
             <span>En línea</span>
           </div>
         </div>
-        <div class="chat-header__members" id="header-members" style="display:none">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <div class="chat-header__members" id="header-members" style="display:none" title="Ver quién está conectado">
+          <span class="online-dot" style="box-shadow:none"></span>
           <span id="members-count">—</span>
         </div>
       </div>
@@ -1626,6 +1736,22 @@
     </div>
   </div>
 
+  <!-- MODAL: Usuarios conectados en la sala (solo admin) -->
+  <div class="connected-overlay" id="connected-overlay">
+    <div class="connected-panel">
+      <div class="connected-panel__header">
+        <span class="connected-panel__title">
+          <span class="online-dot"></span>
+          Conectados ahora
+        </span>
+        <button class="connected-panel__close" id="btn-close-connected">✕</button>
+      </div>
+      <div class="connected-panel__list" id="connected-list">
+        <p class="connected-panel__empty">Nadie conectado en esta sala por ahora.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Selector de clase -->
   <div class="class-picker-overlay" id="class-picker-overlay">
     <div class="class-picker">
@@ -1668,7 +1794,7 @@
     import { db, auth } from './js/firebase-config.js';
     import { requireApprovedUser } from './js/auth.js';
     import {
-      collection, doc, addDoc, setDoc, getDoc, getDocs, onSnapshot,
+      collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot,
       query, where, orderBy, limit, serverTimestamp, updateDoc, increment
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
@@ -1692,6 +1818,12 @@
     let LIVE_STEPS_UNSUB   = null;
     let LIVE_PROGRESS_UNSUB = null;
 
+    /* ── Estado: Conectados en la sala (presencia) ── */
+    let PRESENCE_ROOM_ID   = null; // roomId de la sala/sesión activa
+    let PRESENCE_INTERVAL  = null; // setInterval del heartbeat propio
+    let PRESENCE_LIST_UNSUB = null; // listener de la lista (solo admin)
+    let CONNECTED_USERS    = [];   // usuarios conectados en la sala activa
+
     const RANK_DATA = [
       { key:'novato',   icon:'🔰', name:'Novato',    color:'#9999aa', desc:'Nivel de entrada a la comunidad' },
       { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#58a6ff', desc:'Aprendiendo las herramientas' },
@@ -1714,6 +1846,107 @@
       setupSharePickers();
       setupRoomSearch();
       setupLiveCreateModal();
+      setupConnectedPanel();
+    });
+
+    /* ════════════ CONECTADOS EN LA SALA (presencia) ════════════
+       Cada usuario que tiene abierta una sala/clase en vivo "late"
+       (refresca) su documento de presencia cada 20s. El admin escucha
+       esa colección en tiempo real y ve quién sigue activo (últimos ~45s).
+       ════════════════════════════════════════════════════════════ */
+    const PRESENCE_HEARTBEAT_MS = 20000;
+    const PRESENCE_STALE_MS     = 45000;
+
+    async function touchPresence(roomId) {
+      if (!ME || !roomId) return;
+      try {
+        await setDoc(doc(db, 'room_presence', `${roomId}_${ME.uid}`), {
+          roomId,
+          uid: ME.uid,
+          username: ME.username || '',
+          displayName: ME.displayName || ME.username || 'Usuario',
+          photoURL: ME.photoURL || '',
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      } catch (_) { /* silencioso — no bloquear el chat */ }
+    }
+
+    function stopRoomPresence() {
+      if (PRESENCE_INTERVAL) { clearInterval(PRESENCE_INTERVAL); PRESENCE_INTERVAL = null; }
+      if (PRESENCE_LIST_UNSUB) { PRESENCE_LIST_UNSUB(); PRESENCE_LIST_UNSUB = null; }
+      const oldRoomId = PRESENCE_ROOM_ID;
+      PRESENCE_ROOM_ID = null;
+      CONNECTED_USERS = [];
+      document.getElementById('header-members').style.display = 'none';
+      if (oldRoomId && ME) {
+        deleteDoc(doc(db, 'room_presence', `${oldRoomId}_${ME.uid}`)).catch(() => {});
+      }
+    }
+
+    function startRoomPresence(roomId) {
+      stopRoomPresence();
+      PRESENCE_ROOM_ID = roomId;
+      touchPresence(roomId);
+      PRESENCE_INTERVAL = setInterval(() => touchPresence(roomId), PRESENCE_HEARTBEAT_MS);
+
+      if (!IS_ADMIN) return; // solo el admin ve quién está conectado
+
+      const membersBtn = document.getElementById('header-members');
+      membersBtn.classList.add('clickable');
+      membersBtn.style.display = 'flex';
+
+      PRESENCE_LIST_UNSUB = onSnapshot(
+        query(collection(db, 'room_presence'), where('roomId', '==', roomId)),
+        (snap) => {
+          const now = Date.now();
+          CONNECTED_USERS = snap.docs
+            .map(d => d.data())
+            .filter(u => {
+              const t = u.updatedAt?.toMillis ? u.updatedAt.toMillis() : now;
+              return (now - t) < PRESENCE_STALE_MS;
+            })
+            .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
+
+          document.getElementById('members-count').textContent = CONNECTED_USERS.length;
+          renderConnectedList();
+        }
+      );
+    }
+
+    function renderConnectedList() {
+      const list = document.getElementById('connected-list');
+      if (CONNECTED_USERS.length === 0) {
+        list.innerHTML = '<p class="connected-panel__empty">Nadie conectado en esta sala por ahora.</p>';
+        return;
+      }
+      list.innerHTML = CONNECTED_USERS.map(u => `
+        <div class="connected-item">
+          <div class="connected-item__avatar">
+            ${u.photoURL ? `<img src="${escapeHtml(u.photoURL)}" alt="" />` : (u.displayName || '?').trim().charAt(0).toUpperCase()}
+          </div>
+          <div class="connected-item__info">
+            <div class="connected-item__name">${escapeHtml(u.displayName || u.username || 'Usuario')}</div>
+            <div class="connected-item__sub">@${escapeHtml(u.username || '—')}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setupConnectedPanel() {
+      const overlay = document.getElementById('connected-overlay');
+      document.getElementById('header-members').addEventListener('click', () => {
+        if (!IS_ADMIN) return;
+        renderConnectedList();
+        overlay.classList.add('show');
+      });
+      document.getElementById('btn-close-connected').addEventListener('click', () => overlay.classList.remove('show'));
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('show'); });
+    }
+
+    window.addEventListener('beforeunload', () => {
+      if (PRESENCE_ROOM_ID && ME) {
+        deleteDoc(doc(db, 'room_presence', `${PRESENCE_ROOM_ID}_${ME.uid}`)).catch(() => {});
+      }
     });
 
     /* ════════════ SALAS ════════════ */
@@ -1896,6 +2129,7 @@
 
       if (UNSUB) UNSUB();
       loadMessages(room.id);
+      startRoomPresence(room.id);
     }
 
     /* ════════════ MENSAJES ════════════ */
@@ -2118,6 +2352,7 @@
         el.classList.toggle('active', el.dataset.roomId === session.id);
       });
       document.getElementById('chat-rooms-panel').classList.remove('mobile-open');
+      startRoomPresence(session.id);
 
       // Escuchar cambios de la sesión (currentStep, status) en tiempo real
       LIVE_SESSION_UNSUB = onSnapshot(doc(db, 'live_classes', session.id), (snap) => {
