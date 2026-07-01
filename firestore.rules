@@ -38,6 +38,17 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // Devuelve true si la sala NO existe (mensajes de clases en vivo u otros
+    // casos donde no hay doc en chat_rooms) o si no es de tipo "dm" (canales
+    // y hilos de clase son visibles para cualquier usuario logueado), o si
+    // siendo "dm" el usuario actual es uno de los participantes.
+    function canAccessRoom(roomId) {
+      let roomPath = /databases/$(database)/documents/chat_rooms/$(roomId);
+      return !exists(roomPath) ||
+        get(roomPath).data.type != 'dm' ||
+        request.auth.uid in get(roomPath).data.participants;
+    }
+
     // ───────────────────────────────────────────────────────
     // USUARIOS
     // ───────────────────────────────────────────────────────
@@ -139,30 +150,46 @@ service cloud.firestore {
     // ───────────────────────────────────────────────────────
     // CHAT
     // ───────────────────────────────────────────────────────
+    // chat_rooms también incluye salas de tipo "dm" (mensaje directo entre
+    // dos usuarios), identificadas por type == 'dm' y un campo
+    // participants == [uidA, uidB]. Esas solo pueden leerse/editarse por
+    // sus dos participantes; los canales y hilos de clase (type != 'dm')
+    // siguen siendo visibles para cualquier usuario logueado.
     match /chat_rooms/{roomId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
+      allow read: if isSignedIn() &&
+        (resource.data.type != 'dm' || request.auth.uid in resource.data.participants);
+
+      allow create: if isSignedIn() && (
+        request.resource.data.type != 'dm' ||
+        (request.auth.uid in request.resource.data.participants &&
+         request.resource.data.participants.size() == 2)
+      );
+
+      allow update: if isSignedIn() &&
+        (resource.data.type != 'dm' || request.auth.uid in resource.data.participants);
+
       allow delete: if isAdmin();
     }
 
     match /chat_messages/{msgId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && canAccessRoom(resource.data.roomId);
       allow create: if isSignedIn()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text.size() > 0
-        && request.resource.data.text.size() <= 2000;
+        && request.resource.data.text.size() <= 2000
+        && canAccessRoom(request.resource.data.roomId);
       // Se permite update para incrementar threadCount (respuestas en hilo)
-      allow update: if isSignedIn();
+      allow update: if isSignedIn() && canAccessRoom(resource.data.roomId);
       allow delete: if isOwner(resource.data.uid) || isAdmin();
     }
 
     match /chat_replies/{replyId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && canAccessRoom(resource.data.roomId);
       allow create: if isSignedIn()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text.size() > 0
-        && request.resource.data.text.size() <= 1000;
+        && request.resource.data.text.size() <= 1000
+        && canAccessRoom(request.resource.data.roomId);
       allow update: if false;
       allow delete: if isOwner(resource.data.uid) || isAdmin();
     }
@@ -241,6 +268,9 @@ service cloud.firestore {
 //
 // Colección: chat_rooms
 //   lastAt (Descendente)    ← índice de colección única
+//
+// Colección: chat_rooms (mensajes directos)
+//   participants (Arrays) + type (Ascendente)
 //
 // Colección: live_classes/{sessionId}/steps
 //   order (Ascendente)      ← índice de colección única

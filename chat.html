@@ -34,13 +34,18 @@
     }
 
     .chat-rooms__header {
-      padding: 0.9rem 1rem;
+      padding: 0.9rem 1rem 0.6rem;
       border-bottom: 1px solid rgba(255,255,255,0.06);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 0.55rem;
       flex-shrink: 0;
+    }
+
+    .chat-rooms__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
     }
 
     .chat-rooms__title {
@@ -82,6 +87,15 @@
       box-shadow: 0 0 10px rgba(204,34,0,0.2);
     }
     .btn-nuevo-hilo svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+    .btn-nuevo-dm {
+      border-color: rgba(0,200,255,0.35);
+      color: var(--color-accent-fg);
+    }
+    .btn-nuevo-dm:hover {
+      background: rgba(0,200,255,0.08);
+      box-shadow: 0 0 10px rgba(0,200,255,0.15);
+    }
 
     /* Search bar */
     .chat-rooms__search {
@@ -166,6 +180,17 @@
       border-color: rgba(204,34,0,0.35);
       background: rgba(204,34,0,0.08);
     }
+
+    .room-item__icon--avatar {
+      border-radius: 50%;
+      overflow: hidden;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--color-accent-fg);
+      background: rgba(0,200,255,0.06);
+      border-color: rgba(0,200,255,0.18);
+    }
+    .room-item__icon--avatar img { width: 100%; height: 100%; object-fit: cover; }
 
     .room-item__info { flex: 1; min-width: 0; }
     .room-item__name {
@@ -379,7 +404,7 @@
     .msg__avatar img { width: 100%; height: 100%; object-fit: cover; }
     .msg--own .msg__avatar { border-color: rgba(204,34,0,0.3); }
 
-    .msg__body { max-width: min(78%, 520px); }
+    .msg__body { max-width: min(80%, 620px); }
     .msg--own .msg__body { align-items: flex-end; display: flex; flex-direction: column; }
 
     .msg__meta {
@@ -423,24 +448,55 @@
 
     /* Burbuja */
     .msg__bubble {
+      display: inline-block;
+      width: fit-content;
+      max-width: 100%;
       background: rgba(22,22,31,0.9);
       border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 4px 14px 14px 14px;
-      padding: 0.6rem 0.85rem;
-      font-size: 0.88rem;
-      line-height: 1.55;
+      border-radius: 4px 12px 12px 12px;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.83rem;
+      line-height: 1.5;
       color: var(--text);
       word-break: break-word;
       white-space: pre-wrap;
       position: relative;
       backdrop-filter: blur(4px);
+      vertical-align: top;
     }
     .msg--own .msg__bubble {
       background: linear-gradient(135deg, rgba(30,8,0,0.95) 0%, rgba(28,10,4,0.9) 100%);
       border-color: rgba(204,34,0,0.25);
-      border-radius: 14px 4px 14px 14px;
+      border-radius: 12px 4px 12px 12px;
       box-shadow: 0 0 18px rgba(204,34,0,0.06);
     }
+
+    /* Formato de texto dentro del mensaje (para compartir apuntes de clase) */
+    .msg__bubble strong { color: #fff; font-weight: 700; }
+    .msg--own .msg__bubble strong { color: #fff; }
+    .msg__bubble em { font-style: italic; color: var(--text); opacity: 0.92; }
+    .msg__bubble .msg__code {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.05rem 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8em;
+      color: #ffb199;
+    }
+    .msg__bubble .msg__link { color: var(--color-accent-fg); text-decoration: underline; text-underline-offset: 2px; }
+    .msg__bubble .msg__h1,
+    .msg__bubble .msg__h2 {
+      display: inline-block;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: var(--font-body);
+      letter-spacing: 0.02em;
+    }
+    .msg__bubble .msg__h1 { font-size: 1.02em; }
+    .msg__bubble .msg__h2 { font-size: 0.96em; }
+    .msg__bubble .msg__h3 { font-weight: 700; color: var(--color-accent-fg); }
+    .msg__bubble .msg__bullet { color: var(--text); }
 
     /* Reply quote */
     .msg__reply-quote {
@@ -1594,14 +1650,20 @@
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           Canales
         </span>
-        <button class="btn-nuevo-hilo" id="btn-nuevo-hilo">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Clase
-        </button>
-        <button class="btn-nueva-clase-viva" id="btn-nueva-clase-viva">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-          En vivo
-        </button>
+        <div class="chat-rooms__actions">
+          <button class="btn-nuevo-hilo btn-nuevo-dm" id="btn-nuevo-dm">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Mensaje
+          </button>
+          <button class="btn-nuevo-hilo" id="btn-nuevo-hilo">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Clase
+          </button>
+          <button class="btn-nueva-clase-viva" id="btn-nueva-clase-viva">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+            En vivo
+          </button>
+        </div>
       </div>
       <div class="chat-rooms__search">
         <input type="text" id="room-search" placeholder="Buscar canal…" autocomplete="off" />
@@ -1736,6 +1798,25 @@
     </div>
   </div>
 
+  <!-- MODAL: Nuevo mensaje directo -->
+  <div class="class-picker-overlay" id="dm-picker-overlay">
+    <div class="class-picker">
+      <div class="class-picker__header">
+        <span class="class-picker__title">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Nuevo mensaje directo
+        </span>
+        <button class="class-picker__close" id="btn-close-dm-picker">✕</button>
+      </div>
+      <div class="class-picker__search">
+        <input type="text" id="dm-picker-search" placeholder="Buscar usuario…" autocomplete="off" />
+      </div>
+      <div class="class-picker__list" id="dm-picker-list">
+        <p style="padding:1rem;color:var(--text-muted);font-size:0.85rem;text-align:center">Cargando usuarios…</p>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Usuarios conectados en la sala (solo admin) -->
   <div class="connected-overlay" id="connected-overlay">
     <div class="connected-panel">
@@ -1792,7 +1873,7 @@
 
   <script type="module">
     import { db, auth } from './js/firebase-config.js';
-    import { requireApprovedUser } from './js/auth.js';
+    import { requireApprovedUser, ESTADOS } from './js/auth.js';
     import {
       collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot,
       query, where, orderBy, limit, serverTimestamp, updateDoc, increment
@@ -1824,6 +1905,10 @@
     let PRESENCE_LIST_UNSUB = null; // listener de la lista (solo admin)
     let CONNECTED_USERS    = [];   // usuarios conectados en la sala activa
 
+    /* ── Estado: Mensajes directos ── */
+    let DM_ROOMS       = [];   // salas de tipo 'dm' donde participo
+    let DM_USERS_CACHE = null; // lista de usuarios aprobados para el picker
+
     const RANK_DATA = [
       { key:'novato',   icon:'🔰', name:'Novato',    color:'#9999aa', desc:'Nivel de entrada a la comunidad' },
       { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#58a6ff', desc:'Aprendiendo las herramientas' },
@@ -1842,11 +1927,13 @@
       }
       await loadRooms();
       loadLiveSessions();
+      loadDmRooms();
       setupInput();
       setupSharePickers();
       setupRoomSearch();
       setupLiveCreateModal();
       setupConnectedPanel();
+      setupDmPicker();
     });
 
     /* ════════════ CONECTADOS EN LA SALA (presencia) ════════════
@@ -1980,6 +2067,13 @@
 
       const globals = filtered.filter(r => r.type === 'global');
       const clases  = filtered.filter(r => r.type === 'class');
+      const dms = fl
+        ? DM_ROOMS.filter(r => {
+            const other = otherParticipant(r);
+            return (other.displayName || '').toLowerCase().includes(fl) ||
+                   (other.username || '').toLowerCase().includes(fl);
+          })
+        : DM_ROOMS;
 
       listEl.innerHTML = '';
 
@@ -1990,6 +2084,16 @@
       }
       globals.forEach(r => gl.appendChild(buildRoomItem(r)));
       listEl.appendChild(gl);
+
+      if (dms.length > 0 || fl) {
+        const dl = document.createElement('div');
+        dl.innerHTML = `<div class="rooms-section-label">💬 Mensajes directos</div>`;
+        if (dms.length === 0) {
+          dl.innerHTML += `<p style="padding:0.6rem 1rem;color:var(--text-muted);font-size:0.75rem">Sin resultados</p>`;
+        }
+        dms.forEach(r => dl.appendChild(buildDmRoomItem(r)));
+        listEl.appendChild(dl);
+      }
 
       renderLiveSection(listEl, fl);
 
@@ -2074,6 +2178,144 @@
         .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
     });
 
+    /* ════════════ MENSAJES DIRECTOS ════════════ */
+    function dmRoomId(uidA, uidB) {
+      return 'dm_' + [uidA, uidB].sort().join('_');
+    }
+
+    function otherParticipant(room) {
+      const otherUid = (room.participants || []).find(u => u !== ME.uid);
+      return (room.participantInfo && room.participantInfo[otherUid]) || { displayName: 'Usuario', username: '', photoURL: '' };
+    }
+
+    function loadDmRooms() {
+      if (!ME) return;
+      const q = query(
+        collection(db, 'chat_rooms'),
+        where('type', '==', 'dm'),
+        where('participants', 'array-contains', ME.uid)
+      );
+      onSnapshot(q, (snap) => {
+        DM_ROOMS = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
+        renderRoomList(ALL_ROOMS, document.getElementById('room-search')?.value || '');
+      });
+    }
+
+    function buildDmRoomItem(room) {
+      const other = otherParticipant(room);
+      const el = document.createElement('div');
+      el.className = 'room-item';
+      el.dataset.roomId = room.id;
+      const initials = (other.displayName || other.username || '?').substring(0, 2).toUpperCase();
+      el.innerHTML = `
+        <div class="room-item__icon room-item__icon--avatar">${other.photoURL
+          ? `<img src="${escapeAttr(other.photoURL)}" alt="" />`
+          : initials}</div>
+        <div class="room-item__info">
+          <div class="room-item__name">${escapeHtml(other.displayName || other.username || 'Usuario')}</div>
+          <div class="room-item__sub">${room.lastMsg ? escapeHtml(truncate(room.lastMsg, 32)) : 'Sin mensajes aún'}</div>
+        </div>
+      `;
+      el.addEventListener('click', () => openRoom({ id: room.id, type: 'dm', participants: room.participants, participantInfo: room.participantInfo }));
+      return el;
+    }
+
+    async function setupDmPicker() {
+      const overlay  = document.getElementById('dm-picker-overlay');
+      const listEl   = document.getElementById('dm-picker-list');
+      const searchEl = document.getElementById('dm-picker-search');
+
+      async function openPicker() {
+        overlay.classList.add('show');
+        if (!DM_USERS_CACHE) {
+          listEl.innerHTML = '<p style="padding:1rem;color:var(--text-muted);font-size:0.85rem;text-align:center">Cargando usuarios…</p>';
+          try {
+            const q = query(collection(db, 'users'), where('estado', '==', ESTADOS.APROBADO));
+            const snap = await getDocs(q);
+            DM_USERS_CACHE = snap.docs
+              .map(d => ({ uid: d.id, ...d.data() }))
+              .filter(u => u.uid !== ME.uid)
+              .sort((a, b) => (a.displayName || a.username || '').localeCompare(b.displayName || b.username || ''));
+          } catch (e) {
+            listEl.innerHTML = `<p style="padding:1rem;color:#ff6b6b;font-size:0.85rem;text-align:center">Error: ${escapeHtml(e.message)}</p>`;
+            return;
+          }
+        }
+        paintDmList();
+      }
+
+      function paintDmList() {
+        const term = (searchEl.value || '').trim().toLowerCase();
+        const list = term
+          ? DM_USERS_CACHE.filter(u =>
+              (u.username || '').toLowerCase().includes(term) ||
+              (u.displayName || '').toLowerCase().includes(term))
+          : DM_USERS_CACHE;
+
+        if (list.length === 0) {
+          listEl.innerHTML = '<p style="padding:1rem;color:var(--text-muted);font-size:0.85rem;text-align:center">Sin resultados.</p>';
+          return;
+        }
+
+        listEl.innerHTML = list.map(u => `
+          <div class="class-picker__item" data-uid="${u.uid}">
+            <div class="class-picker__item-icon" style="border-radius:50%;overflow:hidden;padding:0">${
+              u.photoURL ? `<img src="${escapeAttr(u.photoURL)}" alt="" style="width:100%;height:100%;object-fit:cover" />`
+                         : (u.displayName || u.username || '?').substring(0,2).toUpperCase()
+            }</div>
+            <div class="class-picker__item-info">
+              <div class="class-picker__item-title">${escapeHtml(u.displayName || u.username || 'Usuario')}</div>
+              <div class="class-picker__item-cat">${u.rango || 'Recluta'} · @${escapeHtml(u.username || '')}</div>
+            </div>
+          </div>
+        `).join('');
+
+        listEl.querySelectorAll('[data-uid]').forEach(item => {
+          item.addEventListener('click', () => {
+            const uid = item.dataset.uid;
+            const user = DM_USERS_CACHE.find(u => u.uid === uid);
+            if (user) startDmWith(user);
+          });
+        });
+      }
+
+      document.getElementById('btn-nuevo-dm').addEventListener('click', openPicker);
+      document.getElementById('btn-close-dm-picker').addEventListener('click', () => overlay.classList.remove('show'));
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('show'); });
+      searchEl.addEventListener('input', paintDmList);
+    }
+
+    async function startDmWith(user) {
+      const overlay = document.getElementById('dm-picker-overlay');
+      const roomId = dmRoomId(ME.uid, user.uid);
+      const dmRef = doc(db, 'chat_rooms', roomId);
+      let participantInfo;
+      try {
+        const snap = await getDoc(dmRef);
+        if (!snap.exists()) {
+          participantInfo = {
+            [ME.uid]:   { username: ME.username,   displayName: ME.displayName   || ME.username,   photoURL: ME.photoURL   || '' },
+            [user.uid]: { username: user.username, displayName: user.displayName || user.username, photoURL: user.photoURL || '' },
+          };
+          await setDoc(dmRef, {
+            type: 'dm',
+            participants: [ME.uid, user.uid],
+            participantInfo,
+            lastMsg: '', lastAt: serverTimestamp(), msgCount: 0, createdAt: serverTimestamp(),
+          });
+        } else {
+          participantInfo = snap.data().participantInfo || {};
+        }
+      } catch (e) {
+        alert('No se pudo abrir el mensaje directo: ' + e.message);
+        return;
+      }
+      overlay.classList.remove('show');
+      openRoom({ id: roomId, type: 'dm', participants: [ME.uid, user.uid], participantInfo });
+    }
+
+
     function setupRoomSearch() {
       const input = document.getElementById('room-search');
       if (!input) return;
@@ -2114,12 +2356,29 @@
       document.getElementById('char-counter').textContent = '';
 
       const iconEl = document.getElementById('header-icon');
-      iconEl.textContent = room.icon || '💬';
-      document.getElementById('header-name').textContent = room.name;
-      document.getElementById('header-sub').innerHTML = `
-        <span class="online-dot"></span>
-        <span>${room.type === 'class' ? `Hilo de clase · ${room.categoria || ''}` : 'Canal de la comunidad'}</span>
-      `;
+      if (room.type === 'dm') {
+        const other = otherParticipant(room);
+        iconEl.style.borderRadius = '50%';
+        iconEl.style.overflow = 'hidden';
+        iconEl.innerHTML = other.photoURL
+          ? `<img src="${escapeAttr(other.photoURL)}" alt="" style="width:100%;height:100%;object-fit:cover" />`
+          : '';
+        if (!other.photoURL) iconEl.textContent = (other.displayName || other.username || '?').substring(0, 2).toUpperCase();
+        document.getElementById('header-name').textContent = other.displayName || other.username || 'Usuario';
+        document.getElementById('header-sub').innerHTML = `
+          <span class="online-dot"></span>
+          <span>Mensaje directo${other.username ? ' · @' + escapeHtml(other.username) : ''}</span>
+        `;
+      } else {
+        iconEl.style.borderRadius = '';
+        iconEl.style.overflow = '';
+        iconEl.textContent = room.icon || '💬';
+        document.getElementById('header-name').textContent = room.name;
+        document.getElementById('header-sub').innerHTML = `
+          <span class="online-dot"></span>
+          <span>${room.type === 'class' ? `Hilo de clase · ${room.categoria || ''}` : 'Canal de la comunidad'}</span>
+        `;
+      }
 
       document.querySelectorAll('.room-item').forEach(el => {
         el.classList.toggle('active', el.dataset.roomId === room.id);
@@ -2245,7 +2504,7 @@
             <div class="msg__bubble">
               ${stepLabelHTML}
               ${replyHTML}
-              ${escapeHtml(msg.text)}
+              ${formatMessageText(msg.text)}
               ${rankHTML}
               ${certHTML}
             </div>
@@ -2700,8 +2959,8 @@
                 <span class="msg__username" style="font-size:0.68rem">@${escapeHtml(r.username || 'anon')}</span>
                 <span class="msg__time">${time}</span>
               </div>
-              <div class="msg__bubble" style="font-size:0.82rem;${isOwn ? 'border-radius:14px 4px 14px 14px' : 'border-radius:4px 14px 14px 14px'}">
-                ${escapeHtml(r.text)}
+              <div class="msg__bubble" style="font-size:0.8rem;${isOwn ? 'border-radius:12px 4px 12px 12px' : 'border-radius:4px 12px 12px 12px'}">
+                ${formatMessageText(r.text)}
               </div>
             </div>`;
           containerEl.appendChild(el);
@@ -2731,7 +2990,7 @@
     }
 
     async function sendReply(parentId, ta, btn, containerEl) {
-      const text = ta.value.trim();
+      const text = normalizeMsgText(ta.value);
       if (!text || !ME) return;
       btn.disabled = true;
       try {
@@ -2796,7 +3055,7 @@
 
     async function sendMessage(extraPayload = {}) {
       const input = document.getElementById('chat-input');
-      const text  = input.value.trim();
+      const text  = normalizeMsgText(input.value);
       if (!text || !ME) return;
       if (!ROOM && !LIVE_SESSION) return;
 
@@ -3113,6 +3372,27 @@
     }
     function escapeAttr(str) {
       return (str || '').replace(/"/g, '&quot;');
+    }
+    // Evita que varios "Enter" seguidos (típico en teclados móviles al no
+    // disparar el envío) infle el mensaje con muchas líneas en blanco.
+    function normalizeMsgText(str) {
+      return (str || '').replace(/\n{3,}/g, '\n\n').trim();
+    }
+    function formatMessageText(raw) {
+      let text = escapeHtml((raw || '').replace(/\n{3,}/g, '\n\n'));
+      // Encabezados de línea (útil para pegar apuntes de clase con secciones)
+      text = text.replace(/^### (.+)$/gm, '<span class="msg__h3">$1</span>');
+      text = text.replace(/^## (.+)$/gm, '<span class="msg__h2">$1</span>');
+      text = text.replace(/^# (.+)$/gm, '<span class="msg__h1">$1</span>');
+      // Viñetas
+      text = text.replace(/^[-•]\s+(.+)$/gm, '<span class="msg__bullet">• $1</span>');
+      // Negrita / cursiva / código inline
+      text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
+      text = text.replace(/`([^`\n]+)`/g, '<span class="msg__code">$1</span>');
+      // Enlaces
+      text = text.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="msg__link">$1</a>');
+      return text;
     }
     function fmtTime(date) {
       return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
