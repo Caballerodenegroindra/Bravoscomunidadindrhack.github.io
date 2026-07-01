@@ -1,0 +1,228 @@
+// ═══════════════════════════════════════════════════════════
+// REGLAS COMPLETAS DE FIRESTORE — Academia Indrhack
+//
+// Reemplazá TODO el contenido de tus reglas actuales en:
+// Firebase Console → Firestore Database → Reglas
+// por el contenido completo de este archivo (de punta a punta,
+// incluyendo la primera línea "rules_version = '2';").
+//
+// Cubre TODAS las colecciones que usa la página:
+//   users, courses, cursos_aprobados, proyectos, proyectos_base,
+//   quiz_submissions, quiz_logros, user_titles, noticias, config,
+//   chat_rooms, chat_messages, chat_replies,
+//   live_classes (+ subcolección steps), live_progress
+// ═══════════════════════════════════════════════════════════
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ───────────────────────────────────────────────────────
+    // FUNCIONES AUXILIARES
+    // ───────────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        myProfile().rol == 'administrador';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ───────────────────────────────────────────────────────
+    // USUARIOS
+    // ───────────────────────────────────────────────────────
+    // - Lectura: cualquier usuario logueado (se necesita para mostrar
+    //   nombres/rangos en el chat, el panel de admin, perfiles, etc.)
+    // - Alta: solo el propio usuario, y siempre arranca como "usuario"
+    //   con estado "pendiente" (nadie puede autoaprobarse ni auto-
+    //   asignarse el rol de administrador desde el registro).
+    // - Edición:
+    //     · El admin puede editar cualquier cosa (aprobar, suspender,
+    //       asignar rol/rango, sumar puntos, etc.)
+    //     · El propio usuario puede editar SOLO los campos de su
+    //       perfil (nombre, bio, intereses, etc.), nunca su rol,
+    //       estado, rango ni puntos.
+    // - Borrado: solo el admin.
+    match /users/{userId} {
+      allow read: if isSignedIn();
+
+      allow create: if isOwner(userId)
+        && request.resource.data.rol == 'usuario'
+        && request.resource.data.estado == 'pendiente';
+
+      allow update: if isAdmin() || (
+        isOwner(userId) &&
+        request.resource.data.rol    == resource.data.rol &&
+        request.resource.data.estado == resource.data.estado &&
+        request.resource.data.rango  == resource.data.rango &&
+        request.resource.data.get('puntos', 0)      == resource.data.get('puntos', 0) &&
+        request.resource.data.get('puntosTotal', 0) == resource.data.get('puntosTotal', 0)
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CURSOS (catálogo público)
+    // ───────────────────────────────────────────────────────
+    // Se muestran incluso sin haber iniciado sesión (página "cursos.html"),
+    // por eso la lectura es pública. Solo el admin los crea/edita/borra.
+    match /courses/{courseId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Cursos que cada usuario ya tiene aprobados (lo gestiona el admin)
+    match /cursos_aprobados/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Proyectos base (catálogo) y proyectos aprobados por usuario
+    match /proyectos_base/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+    match /proyectos/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // QUIZZES
+    // ───────────────────────────────────────────────────────
+    // El usuario solo puede crear SU PROPIA entrega, y siempre en
+    // estado "pendiente" (no puede autoaprobarse el quiz).
+    // Aprobar/rechazar y sumar puntos es una acción exclusiva del admin.
+    match /quiz_submissions/{subId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.estado == 'pendiente';
+      allow update, delete: if isAdmin();
+    }
+
+    // Logros/certificados otorgados al aprobar un quiz (solo admin los crea)
+    match /quiz_logros/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Títulos/certificados de usuario (mostrados en el chat al compartir)
+    match /user_titles/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // NOTICIAS Y CONFIGURACIÓN DEL SITIO (público)
+    // ───────────────────────────────────────────────────────
+    match /noticias/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /config/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CHAT
+    // ───────────────────────────────────────────────────────
+    match /chat_rooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /chat_messages/{msgId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000;
+      // Se permite update para incrementar threadCount (respuestas en hilo)
+      allow update: if isSignedIn();
+      allow delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    match /chat_replies/{replyId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 1000;
+      allow update: if false;
+      allow delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CLASES EN VIVO
+    // ───────────────────────────────────────────────────────
+    // Solo el admin crea la clase, agrega los pasos y avanza/finaliza
+    // la sesión. Cualquier usuario logueado puede leerla y unirse.
+    match /live_classes/{sessionId} {
+      allow read: if isSignedIn();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+
+      match /steps/{stepId} {
+        allow read: if isSignedIn();
+        allow create, update, delete: if isAdmin();
+      }
+    }
+
+    // Progreso individual de cada alumno dentro de una clase en vivo.
+    // El id del documento es "{sessionId}_{uid}".
+    // - Cada usuario solo puede crear/editar SU PROPIO progreso.
+    // - Solo puede avanzar de paso (unlockedStep), no retroceder ni
+    //   tocar otros campos del documento salvo el "joinedAt"/"username"
+    //   inicial de creación.
+    // - El admin puede leer/editar cualquier progreso (soporte/moderación).
+    match /live_progress/{progressId} {
+      allow read: if isSignedIn();
+
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && progressId == request.resource.data.sessionId + '_' + request.auth.uid;
+
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.uid == request.auth.uid &&
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.sessionId == resource.data.sessionId &&
+        request.resource.data.unlockedStep >= resource.data.unlockedStep
+      );
+
+      allow delete: if isAdmin();
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ÍNDICES requeridos en Firestore (Firebase Console →
+// Firestore → Índices → Índices compuestos):
+//
+// Colección: chat_messages
+//   roomId (Ascendente) + createdAt (Ascendente)
+//
+// Colección: chat_replies
+//   parentId (Ascendente) + createdAt (Ascendente)
+//
+// Colección: chat_rooms
+//   lastAt (Descendente)    ← índice de colección única
+//
+// Colección: live_classes/{sessionId}/steps
+//   order (Ascendente)      ← índice de colección única
+// ═══════════════════════════════════════════════════════════

@@ -43,6 +43,43 @@ match /chat_replies/{replyId} {
 }
 
 // ═══════════════════════════════════════════════════════════
+// CLASES EN VIVO
+// ═══════════════════════════════════════════════════════════
+
+// Sesiones de clase en vivo (live_classes)
+// - Cualquier usuario aprobado puede leer
+// - Solo un administrador puede crear/editar (crear la clase, avanzar
+//   de paso, finalizarla). El campo "rol" vive en /users/{uid}.
+match /live_classes/{sessionId} {
+  allow read: if request.auth != null;
+  allow create: if request.auth != null
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == 'administrador';
+  allow update: if request.auth != null
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == 'administrador';
+  allow delete: if false; // solo desde admin SDK
+
+  // Pasos precargados de la clase (solo el admin los crea/edita)
+  match /steps/{stepId} {
+    allow read: if request.auth != null;
+    allow create, update: if request.auth != null
+      && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == 'administrador';
+    allow delete: if false;
+  }
+}
+
+// Progreso de cada usuario dentro de una clase en vivo (live_progress)
+// - El id del documento es "{sessionId}_{uid}"
+// - Cada usuario solo puede leer/escribir su propio progreso
+match /live_progress/{progressId} {
+  allow read: if request.auth != null;
+  allow create: if request.auth != null
+    && request.resource.data.uid == request.auth.uid;
+  allow update: if request.auth != null
+    && resource.data.uid == request.auth.uid;
+  allow delete: if false;
+}
+
+// ═══════════════════════════════════════════════════════════
 // ÍNDICES requeridos en Firestore (Firebase Console →
 // Firestore → Índices → Índices compuestos):
 //
@@ -54,4 +91,7 @@ match /chat_replies/{replyId} {
 //
 // Colección: chat_rooms
 //   lastAt (Descendente)    ← índice de colección única
+//
+// Colección: live_classes/{sessionId}/steps
+//   order (Ascendente)      ← índice de colección única
 // ═══════════════════════════════════════════════════════════
