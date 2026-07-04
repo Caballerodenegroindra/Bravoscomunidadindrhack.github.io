@@ -82,6 +82,52 @@
   --shadow-lg:  0 8px 24px rgba(140,149,159,0.2);
 }
 
+/* ============================================================
+   TEMA CLARO — se activa con <html data-theme="light">
+   Misma estructura de variables que el tema oscuro (GitHub Light)
+   ============================================================ */
+:root[data-theme="light"] {
+  --color-canvas-default:      #ffffff;
+  --color-canvas-subtle:       #f6f8fa;
+  --color-canvas-inset:        #eef1f4;
+  --color-border-default:      #d0d7de;
+  --color-border-muted:        #d8dee4;
+  --color-border-subtle:       rgba(31,35,40,0.12);
+
+  --color-fg-default:          #1f2328;
+  --color-fg-muted:            #59636e;
+  --color-fg-subtle:           #6e7781;
+  --color-fg-on-emphasis:      #ffffff;
+
+  --color-accent-fg:           #0969da;
+  --color-accent-emphasis:     #0969da;
+  --color-accent-subtle:       rgba(9,105,218,0.1);
+
+  --color-success-fg:          #1a7f37;
+  --color-success-emphasis:    #1f883d;
+  --color-success-subtle:      rgba(31,136,61,0.15);
+
+  --color-attention-fg:        #9a6700;
+  --color-attention-emphasis:  #9a6700;
+  --color-attention-subtle:    rgba(154,103,0,0.15);
+
+  --color-danger-fg:           #cf222e;
+  --color-danger-emphasis:     #cf222e;
+  --color-danger-subtle:       rgba(207,34,46,0.1);
+
+  --color-done-fg:             #8250df;
+  --color-done-subtle:         rgba(130,80,223,0.15);
+
+  --color-neutral-emphasis:    #6e7781;
+
+  --bg-elevated:   #eef1f4;
+  --gold:          #9a6700;
+
+  --shadow-sm:  0 1px 0 rgba(31,35,40,0.04);
+  --shadow:     0 1px 3px rgba(31,35,40,0.10), 0 8px 24px rgba(66,74,83,0.08);
+  --shadow-lg:  0 8px 24px rgba(140,149,159,0.25);
+}
+
 /* ── RESET ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -90,11 +136,12 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.65;
   min-height: 100dvh;
   overflow-x: hidden;
   padding-bottom: var(--tabbar-h);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 img { max-width: 100%; display: block; }
@@ -166,6 +213,54 @@ code { font-family: var(--font-mono); }
 .navbar__links a.active { color: var(--text); font-weight: 600; }
 
 .navbar__session { font-size: 0.875rem; }
+
+/* ── BOTÓN DE TEMA (claro/oscuro) ── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.theme-toggle:hover { background: var(--bg-elevated); border-color: var(--color-fg-muted); }
+.theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .icon-sun { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+/* ── BOTÓN DE AYUDA (flotante, siempre visible) ── */
+.help-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(var(--tabbar-h) + 1rem);
+  z-index: 250;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-accent-emphasis);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  text-decoration: none;
+}
+.help-fab:hover { text-decoration: none; filter: brightness(1.1); }
+@media (min-width: 641px) {
+  .help-fab { bottom: 1.25rem; }
+}
 
 .navbar__toggle {
   display: none;
@@ -1208,6 +1303,60 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .dropdown__item:hover { background: var(--bg-elevated); color: var(--text); }
 .dropdown__divider { height: 1px; background: var(--border-muted); margin: 0.25rem 0; }
+
+/* ── GUÍA DE AYUDA ── */
+.guide-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+.guide-step__number {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-accent-emphasis);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.guide-step__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: var(--text);
+}
+.guide-step__desc {
+  font-size: 1rem;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+.guide-menu-card {
+  display: flex;
+  gap: 0.875rem;
+  align-items: center;
+  padding: 1.1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.guide-menu-card__icon { font-size: 1.8rem; flex-shrink: 0; }
+.guide-menu-card__title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+.guide-menu-card__desc { font-size: 0.95rem; color: var(--text-soft); }
+.guide-hero {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+.guide-hero__title { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+.guide-hero__desc { font-size: 1.1rem; color: var(--text-soft); max-width: 600px; margin: 0 auto; line-height: 1.7; }
 
 /* ── MODAL OVERLAY ── */
 .modal-overlay {
