@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Clases de Termux — Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="panel-usuario.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="panel-usuario.html" title="Ir a tu panel">Mi Panel</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="chat.html" title="Chatear con la comunidad">Chat</a>
+      <a href="clases-termux.html" title="Comandos de Termux" style="color:var(--primary)">Termux</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="panel-usuario.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span><span class="tabbar__label">Mi Panel</span></a>
+      <a href="cursos.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="tabbar__label">Cursos</span></a>
+      <a href="chat.html" class="tabbar__item"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><span class="tabbar__label">Chat</span></a>
+      <a href="notificaciones.html" class="tabbar__item" style="position:relative">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+        <span class="tabbar__label">Avisos</span>
+        <span class="notif-dot" data-notif-dot style="display:none"></span>
+      </a>
+      <a href="clases-termux.html" class="tabbar__item active"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span><span class="tabbar__label">Termux</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container section">
+      <h1 class="section-title">Clases de <span class="accent">Termux</span></h1>
+      <p class="section-subtitle">Comandos listos para copiar y pegar en Termux. Tocá "Copiar" en un solo comando, o "Copiar todo" para llevarte el bloque completo de la clase.</p>
+
+      <div id="termux-clases" style="margin-top:2rem">
+        <p class="section-subtitle">Cargando clases…</p>
+      </div>
+
+      <div id="admin-add-box" style="display:none;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border-muted)">
+        <h2 class="section-title" style="font-size:1.1rem">➕ Agregar clase de Termux (admin)</h2>
+        <form id="form-nueva-clase" class="card" style="display:flex;flex-direction:column;gap:0.75rem;margin-top:1rem">
+          <div class="field"><label>Título de la clase</label><input type="text" name="titulo" required placeholder="Ej: Instalar Python en Termux" /></div>
+          <div class="field"><label>Descripción breve (opcional)</label><input type="text" name="descripcion" placeholder="Ej: Preparar el entorno antes de programar" /></div>
+          <div class="field">
+            <label>Comandos (uno por línea)</label>
+            <textarea name="comandos" rows="6" required placeholder="pkg update -y&#10;pkg install python -y&#10;python --version" style="font-family:var(--font-mono);white-space:pre"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary">Guardar clase</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { requireApprovedUser } from './js/auth.js';
+    import {
+      collection, getDocs, addDoc, query, orderBy, Timestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const cont = document.getElementById('termux-clases');
+    const adminBox = document.getElementById('admin-add-box');
+    const form = document.getElementById('form-nueva-clase');
+
+    const profile = await requireApprovedUser();
+    if (profile && profile.rol === 'administrador') {
+      adminBox.style.display = 'block';
+    }
+
+    async function copiarTexto(texto, btn) {
+      try {
+        await navigator.clipboard.writeText(texto);
+      } catch (e) {
+        // Respaldo para navegadores/WebViews viejos sin Clipboard API
+        const ta = document.createElement('textarea');
+        ta.value = texto;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const original = btn.textContent;
+      btn.textContent = '✔ Copiado';
+      btn.classList.add('copiado');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copiado');
+      }, 1500);
+    }
+
+    function renderClase(clase) {
+      const comandos = clase.comandos || [];
+      const bloqueCompleto = comandos.join('\n');
+      return `
+        <div class="termux-block">
+          <div class="termux-block__header">
+            <div>
+              <h3 class="termux-block__title">${clase.titulo}</h3>
+              ${clase.descripcion ? `<p class="termux-block__desc">${clase.descripcion}</p>` : ''}
+            </div>
+            <button class="termux-copy-all-btn" data-copy-all>📋 Copiar todo</button>
+          </div>
+          <div class="termux-block__body">
+            ${comandos.map((c) => `
+              <div class="termux-cmd">
+                <code>${escapeHtml(c)}</code>
+                <button class="termux-copy-btn" data-copy-one>Copiar</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    async function cargarClases() {
+      try {
+        const snap = await getDocs(query(collection(db, 'clases_termux'), orderBy('orden', 'asc')));
+        if (snap.empty) {
+          cont.innerHTML = '<p class="section-subtitle">Todavía no hay clases de Termux cargadas.</p>';
+          return;
+        }
+        const clases = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        cont.innerHTML = clases.map(renderClase).join('');
+
+        // Delegación de eventos para los botones de copiar (se generan dinámicamente)
+        cont.querySelectorAll('.termux-block').forEach((block, i) => {
+          const clase = clases[i];
+          const comandos = clase.comandos || [];
+          block.querySelectorAll('[data-copy-one]').forEach((btn, idx) => {
+            btn.addEventListener('click', () => copiarTexto(comandos[idx], btn));
+          });
+          block.querySelector('[data-copy-all]').addEventListener('click', (e) => {
+            copiarTexto(comandos.join('\n'), e.currentTarget);
+          });
+        });
+      } catch (e) {
+        cont.innerHTML = `<p style="color:var(--color-danger-fg)">Error al cargar las clases: ${e.message}</p>`;
+      }
+    }
+
+    cargarClases();
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const comandos = fd.get('comandos').split('\n').map((l) => l.trim()).filter(Boolean);
+      const snap = await getDocs(collection(db, 'clases_termux'));
+      try {
+        await addDoc(collection(db, 'clases_termux'), {
+          titulo: fd.get('titulo').trim(),
+          descripcion: (fd.get('descripcion') || '').trim(),
+          comandos,
+          orden: snap.size,
+          fecha: Timestamp.now(),
+        });
+        form.reset();
+        cargarClases();
+      } catch (err) {
+        alert('Error al guardar: ' + err.message);
+      }
+    });
+  </script>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+  <script src="js/theme.js"></script>
+</body>
+</html>

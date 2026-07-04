@@ -93,6 +93,28 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // ───────────────────────────────────────────────────────
+    // NOTIFICACIONES
+    // ───────────────────────────────────────────────────────
+    // Cada usuario solo puede leer/marcar como leídas SUS PROPIAS
+    // notificaciones. Crearlas (aprobar quiz, cuenta, proyecto, etc.)
+    // es una acción exclusiva del admin (o del propio backend/app).
+    match /notificaciones/{docId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if isAdmin();
+      allow update: if isSignedIn() && resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['leida']);
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CLASES DE TERMUX
+    // ───────────────────────────────────────────────────────
+    match /clases_termux/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
     // Cursos que cada usuario ya tiene aprobados (lo gestiona el admin)
     match /cursos_aprobados/{docId} {
       allow read: if isSignedIn();

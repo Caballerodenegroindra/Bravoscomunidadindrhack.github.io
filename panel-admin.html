@@ -131,6 +131,8 @@
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
       <a href="panel-usuario.html">Vista Usuario</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
     <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
@@ -612,6 +614,8 @@
 
   <script src="js/particles.js"></script>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
     import {
@@ -1704,6 +1708,7 @@
       collection, getDocs, doc, getDoc, updateDoc, addDoc,
       query, where, orderBy, Timestamp, increment
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { crearNotificacion, TIPOS_NOTIF } from './js/notificaciones.js';
 
     const modal = document.getElementById('quiz-review-modal');
     const modalContent = document.getElementById('quiz-modal-content');
@@ -1881,6 +1886,15 @@
           fecha: Timestamp.now(),
         });
 
+        // 4. Notificar al usuario (dentro de la app + aviso del navegador/celular)
+        await crearNotificacion({
+          uid,
+          tipo: TIPOS_NOTIF.QUIZ_APROBADO,
+          titulo: '¡Quiz aprobado! ✅',
+          mensaje: `Aprobaste el quiz de "${cursoTitulo}" y ganaste ${puntos} puntos.`,
+          link: 'ficha.html',
+        });
+
         alert(`✅ Quiz aprobado. Se asignaron ${puntos} puntos a @${uid.substring(0,8)}.`);
         modal.style.display = 'none';
 
@@ -1903,6 +1917,15 @@
           feedback,
           fechaRevision: Timestamp.now(),
         });
+
+        await crearNotificacion({
+          uid,
+          tipo: TIPOS_NOTIF.QUIZ_RECHAZADO,
+          titulo: 'Quiz no aprobado',
+          mensaje: feedback,
+          link: 'ficha.html',
+        });
+
         alert('❌ Quiz rechazado. El usuario puede volver a intentarlo.');
         modal.style.display = 'none';
         const activeFilter = document.querySelector('[data-qfilter].btn--primary')?.dataset?.qfilter || 'pendiente';

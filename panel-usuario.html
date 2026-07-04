@@ -26,6 +26,8 @@
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
     <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
@@ -65,6 +67,11 @@
       <a href="#ranking" class="tabbar__item" id="tab-ranking-btn">
         <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
         Ranking
+      </a>
+      <a href="notificaciones.html" class="tabbar__item" style="position:relative">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+        <span class="tabbar__label">Avisos</span>
+        <span class="notif-dot" data-notif-dot style="display:none"></span>
       </a>
     </div>
   </nav>
@@ -247,6 +254,8 @@
 
   <script src="js/particles.js"></script>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireApprovedUser } from './js/auth.js';
 
