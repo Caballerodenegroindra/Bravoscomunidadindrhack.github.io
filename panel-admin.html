@@ -23,11 +23,11 @@
       column-gap: 0.6rem;
       row-gap: 0.2rem;
       padding: 0.65rem 0.9rem;
-      border-bottom: 1px solid #0e0e18;
+      border-bottom: 1px solid var(--border-muted);
       transition: background 0.15s;
     }
     .presence-row:last-child { border-bottom: none; }
-    .presence-row:hover { background: #0d0d18; }
+    .presence-row:hover { background: var(--bg-elevated); }
 
     .presence-dot {
       grid-area: dot;
@@ -44,7 +44,7 @@
       grid-area: user;
       font-weight: 600;
       font-size: 0.88rem;
-      color: #f0f0f0;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -53,36 +53,36 @@
     .presence-status-text {
       grid-area: status;
       font-size: 0.76rem;
-      color: #666;
+      color: var(--text-muted);
       text-align: right;
       white-space: nowrap;
     }
-    .presence-status-text.online  { color: #00ff88; }
+    .presence-status-text.online  { color: #00c26e; }
     .presence-status-text.recent  { color: #f59e0b; }
 
     .presence-lastseen {
       grid-area: lastseen;
       font-size: 0.7rem;
-      color: #555;
+      color: var(--text-muted);
       text-align: right;
       white-space: nowrap;
     }
     .presence-lastseen::before {
       content: "Últ. vez: ";
-      color: #3a3a3a;
+      color: var(--text-muted);
     }
     .presence-rank {
       grid-area: rank;
       font-size: 0.7rem;
-      color: #555;
+      color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .presence-table {
-      background: #0a0a14;
-      border: 1px solid #1a1a2a;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
     }
@@ -95,13 +95,13 @@
         align-items: center;
         gap: 0.75rem;
         padding: 0.6rem 1rem;
-        background: #080810;
-        border-bottom: 1px solid #1a1a2a;
+        background: var(--bg-elevated);
+        border-bottom: 1px solid var(--border);
         font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: #444;
+        color: var(--text-muted);
       }
       .presence-row {
         display: flex;
@@ -156,13 +156,13 @@
 
   <!-- Admin "Más" mini-menu -->
   <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 8px);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:200px;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
-    <a href="chat.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">💬 Chat</a>
-    <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
-    <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
-    <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">📰 Noticias</a>
-    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
-    <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
-    <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:#f0f0f0;font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
+    <a href="chat.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">💬 Chat</a>
+    <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
+    <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
+    <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📰 Noticias</a>
+    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
+    <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
+    <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
 
   <main class="dashboard">
@@ -278,7 +278,7 @@
           </select>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
-          <button class="btn btn--small btn--outline" data-wa-filter="todos" style="border-color:#aaa;color:#aaa">👥 Todos <span data-wa-count="todos"></span></button>
+          <button class="btn btn--small btn--outline" data-wa-filter="todos" style="border-color:var(--border);color:var(--text-muted)">👥 Todos <span data-wa-count="todos"></span></button>
           <button class="btn btn--small btn--outline" data-wa-filter="en" style="border-color:#25d366;color:#25d366">✅ En WhatsApp <span data-wa-count="en"></span></button>
           <button class="btn btn--small btn--outline" data-wa-filter="fuera" style="border-color:#ff3b3b;color:#ff3b3b">❌ Fuera <span data-wa-count="fuera"></span></button>
         </div>
@@ -302,12 +302,12 @@
           <button class="btn btn--small btn--primary" data-pf="todos">👥 Todos <span id="pf-count-todos"></span></button>
           <button class="btn btn--small btn--outline" data-pf="online" style="border-color:#00ff88;color:#00ff88">🟢 En línea <span id="pf-count-online"></span></button>
           <button class="btn btn--small btn--outline" data-pf="reciente" style="border-color:#f59e0b;color:#f59e0b">🕐 Reciente <span id="pf-count-reciente"></span></button>
-          <button class="btn btn--small btn--outline" data-pf="offline" style="border-color:#555;color:#888">⚫ Sin actividad <span id="pf-count-offline"></span></button>
-          <input type="search" id="presencia-search" placeholder="Buscar usuario…" style="flex:1;min-width:160px;background:#111;border:1px solid #222;border-radius:8px;padding:0.45rem 0.75rem;color:#f0f0f0;font-size:0.85rem;font-family:inherit" />
+          <button class="btn btn--small btn--outline" data-pf="offline" style="border-color:var(--border);color:var(--text-muted)">⚫ Sin actividad <span id="pf-count-offline"></span></button>
+          <input type="search" id="presencia-search" placeholder="Buscar usuario…" style="flex:1;min-width:160px;background:var(--color-canvas-inset);border:1px solid var(--border);border-radius:8px;padding:0.45rem 0.75rem;color:var(--text);font-size:0.85rem;font-family:inherit" />
         </div>
 
         <!-- Última actualización -->
-        <p id="presencia-updated" style="font-size:0.75rem;color:#444;margin-bottom:0.75rem"></p>
+        <p id="presencia-updated" style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.75rem"></p>
 
         <!-- Lista -->
         <div id="presencia-body">
@@ -390,7 +390,7 @@
 
       <div id="quiz-review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem">
         <div class="card" style="width:100%;max-width:650px;margin:auto;position:relative">
-          <button id="quiz-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#aaa;cursor:pointer;font-size:1.5rem">✕</button>
+          <button id="quiz-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.5rem">✕</button>
           <div id="quiz-modal-content"></div>
         </div>
       </div>
@@ -893,18 +893,18 @@
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
               <div>
                 <strong>${u.username}</strong>
-                <small style="color:#888;display:block">${u.rol}</small>
+                <small style="color:var(--text-muted);display:block">${u.rol}</small>
               </div>
               ${badge(u.estado)}
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
-              <label style="color:#aaa;font-size:0.8rem">Rango:</label>
-              <select class="rango-select" data-uid="${u.uid}" style="background:#111;color:#fff;border:1px solid #444;border-radius:6px;padding:5px 10px;font-size:0.82rem;flex:1;min-width:130px">
+              <label style="color:var(--text-muted);font-size:0.8rem">Rango:</label>
+              <select class="rango-select" data-uid="${u.uid}" style="background:var(--color-canvas-inset);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:0.82rem;flex:1;min-width:130px">
                 ${RANGOS.map(r => '<option value="' + r + '" ' + (u.rango === r ? 'selected' : '') + '>' + r + '</option>').join('')}
               </select>
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
-              <label style="color:#aaa;font-size:0.8rem">WhatsApp:</label>
+              <label style="color:var(--text-muted);font-size:0.8rem">WhatsApp:</label>
               <button class="whatsapp-toggle" data-uid="${u.uid}" data-en-grupo="${u.enGrupo ? 'true' : 'false'}"
                 style="background:${u.enGrupo ? '#25d36622' : '#ff3b3b22'};color:${u.enGrupo ? '#25d366' : '#ff3b3b'};border:1px solid ${u.enGrupo ? '#25d366' : '#ff3b3b'};border-radius:20px;padding:4px 12px;font-size:0.78rem;cursor:pointer">
                 ${u.enGrupo ? '✅ En el grupo' : '❌ Fuera del grupo'}
@@ -1080,7 +1080,7 @@
       const wrap = document.createElement('div');
       wrap.style.cssText = 'background:#060d09;border:1px solid #0e2a1a;border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
       wrap.innerHTML = `
-        <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:#555;cursor:pointer;font-size:1rem">✕</button>
+        <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
         <div class="field" style="margin-bottom:0.5rem">
           <label style="font-size:0.75rem;color:#4a8a62">Etiqueta (título corto)</label>
           <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
@@ -1090,7 +1090,7 @@
           <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
         </div>
         <div class="field" style="margin-bottom:0">
-          <label style="font-size:0.75rem;color:#00ff88">Comando <span style="color:#555">(lo que se copia)</span></label>
+          <label style="font-size:0.75rem;color:#00ff88">Comando <span style="color:var(--text-muted)">(lo que se copia)</span></label>
           <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:#030706;border:1px solid #1e5535;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#d0f0d8" />
         </div>
       `;
@@ -1147,16 +1147,16 @@
         <div style="margin-bottom:1.5rem">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--color-border-muted)">
             <span>📁</span>
-            <strong style="color:#fff">${cat}</strong>
-            <span style="color:#888;font-size:0.8rem">${clases.length} clase${clases.length !== 1 ? 's' : ''}</span>
+            <strong style="color:var(--text)">${cat}</strong>
+            <span style="color:var(--text-muted);font-size:0.8rem">${clases.length} clase${clases.length !== 1 ? 's' : ''}</span>
           </div>
           ${clases.sort((a,b) => (a.orden||1)-(b.orden||1)).map(c => `
             <div class="card" data-course-id="${c.id}" style="margin-bottom:0.75rem;padding:0.75rem">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
                 <div>
-                  <span style="color:#888;font-size:0.75rem">Clase ${c.orden || 1} · ${c.nivel || 'Básico'}</span>
+                  <span style="color:var(--text-muted);font-size:0.75rem">Clase ${c.orden || 1} · ${c.nivel || 'Básico'}</span>
                   <h3 style="margin:0.25rem 0;font-size:0.95rem">${c.titulo || 'Sin título'}</h3>
-                  <p style="color:#666;font-size:0.82rem;margin:0">${(c.descripcion || '').substring(0,80)}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
+                  <p style="color:var(--text-muted);font-size:0.82rem;margin:0">${(c.descripcion || '').substring(0,80)}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
                 </div>
                 <span style="color:${c.publicado ? '#25d366' : '#888'};font-size:0.78rem">${c.publicado ? '✅' : '⛔'}</span>
               </div>
@@ -1762,10 +1762,10 @@
                   const color = estadoColor[s.estado] || '#888';
                   const icon = estadoIcon[s.estado] || '?';
                   return `<tr>
-                    <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:#888;font-size:0.75rem">${s.displayName || ''}</span></td>
+                    <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:var(--text-muted);font-size:0.75rem">${s.displayName || ''}</span></td>
                     <td style="font-size:0.85rem;max-width:200px">${s.cursoTitulo || s.cursoId}</td>
                     <td><span style="color:${color};font-size:0.8rem">${s.nivel || '—'}</span><br><span style="color:#ffcc00;font-size:0.75rem">⭐ ${s.puntos || 0} pts</span></td>
-                    <td style="font-size:0.78rem;color:#888">${fecha}</td>
+                    <td style="font-size:0.78rem;color:var(--text-muted)">${fecha}</td>
                     <td><span style="color:${color};font-weight:700">${icon} ${s.estado}</span></td>
                     <td>
                       <button class="btn btn--small btn--outline" onclick="window.verQuizSubmission('${s.id}')">
@@ -1812,7 +1812,7 @@
 
       modalContent.innerHTML = `
         <h2 style="margin:0 0 0.25rem;padding-right:2rem;font-size:1.1rem">Respuestas del Quiz</h2>
-        <p style="color:#888;font-size:0.82rem;margin:0 0 1.25rem">@${sub.username} · ${sub.cursoTitulo} · ${fecha}</p>
+        <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 1.25rem">@${sub.username} · ${sub.cursoTitulo} · ${fecha}</p>
 
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
           <span style="background:#ffcc0022;border:1px solid #ffcc00;color:#ffcc00;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700">⭐ ${sub.puntos} puntos en juego</span>
@@ -1820,17 +1820,17 @@
         </div>
 
         ${(sub.respuestas || []).map((r, i) => `
-          <div style="background:#0f0f15;border:1px solid #222;border-radius:10px;padding:1rem;margin-bottom:0.75rem">
+          <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
             <p style="color:var(--color-accent-fg);font-size:0.78rem;font-weight:700;margin:0 0 0.4rem">PREGUNTA ${i + 1}</p>
-            <p style="color:#ccc;font-size:0.875rem;margin:0 0 0.65rem;line-height:1.5">${r.pregunta}</p>
-            <p style="color:#fff;font-size:0.9rem;line-height:1.6;background:#1a1a2a;border-radius:6px;padding:0.65rem;margin:0;white-space:pre-wrap">${r.respuesta || '<em style="color:#555">Sin respuesta</em>'}</p>
+            <p style="color:var(--text-soft);font-size:0.875rem;margin:0 0 0.65rem;line-height:1.5">${r.pregunta}</p>
+            <p style="color:var(--text);font-size:0.9rem;line-height:1.6;background:var(--color-canvas-inset);border-radius:6px;padding:0.65rem;margin:0;white-space:pre-wrap">${r.respuesta || '<em style="color:var(--text-muted)">Sin respuesta</em>'}</p>
           </div>
         `).join('')}
 
         ${sub.estado === 'pendiente' ? `
-          <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #222">
-            <p style="color:#888;font-size:0.82rem;margin:0 0 0.5rem">Feedback para el usuario (opcional):</p>
-            <textarea id="quiz-feedback" placeholder="Ej: Excelente respuesta. / Repasá el punto 3 de la clase." style="width:100%;min-height:80px;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:#eee;font-size:0.85rem;padding:0.65rem;resize:vertical;box-sizing:border-box;font-family:inherit"></textarea>
+          <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+            <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 0.5rem">Feedback para el usuario (opcional):</p>
+            <textarea id="quiz-feedback" placeholder="Ej: Excelente respuesta. / Repasá el punto 3 de la clase." style="width:100%;min-height:80px;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.65rem;resize:vertical;box-sizing:border-box;font-family:inherit"></textarea>
             <div style="display:flex;gap:0.75rem;margin-top:1rem">
               <button class="btn btn--primary" style="flex:1" onclick="window.aprobarQuiz('${sub.id}', '${sub.uid}', ${sub.puntos}, '${sub.cursoId}', '${sub.cursoTitulo?.replace(/'/g,"\\'")}', '${sub.nivel}')">
                 ✅ APROBAR — Asignar ${sub.puntos} puntos
@@ -1958,18 +1958,18 @@
 
         const medalias = ['🥇', '🥈', '🥉'];
         el.innerHTML = `
-          <div style="background:#0f0f15;border:1px solid #1a1a2a;border-radius:12px;overflow:hidden">
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
             ${users.map((u, i) => {
               const pts = u.puntos || 0;
               const medalla = medalias[i] || `#${i + 1}`;
               const isTop = i < 3;
-              return `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;border-bottom:1px solid #1a1a2a;${isTop ? 'background:#ffffff04' : ''}">
-                <span style="font-size:${isTop ? '1.2rem' : '0.85rem'};width:32px;text-align:center;font-weight:700;color:${isTop ? '#fff' : '#555'}">${medalla}</span>
+              return `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;border-bottom:1px solid var(--border-muted);${isTop ? 'background:var(--bg-elevated)' : ''}">
+                <span style="font-size:${isTop ? '1.2rem' : '0.85rem'};width:32px;text-align:center;font-weight:700;color:${isTop ? 'var(--text)' : 'var(--text-muted)'}">${medalla}</span>
                 <div style="flex:1">
-                  <p style="margin:0;font-size:0.9rem;font-weight:600;color:#fff">@${u.username || u.uid?.substring(0,8)}</p>
-                  <p style="margin:0.1rem 0 0;color:#888;font-size:0.75rem">${u.displayName || ''} ${u.rango ? '· ' + u.rango : ''}</p>
+                  <p style="margin:0;font-size:0.9rem;font-weight:600;color:var(--text)">@${u.username || u.uid?.substring(0,8)}</p>
+                  <p style="margin:0.1rem 0 0;color:var(--text-muted);font-size:0.75rem">${u.displayName || ''} ${u.rango ? '· ' + u.rango : ''}</p>
                 </div>
-                <span style="font-size:0.95rem;font-weight:700;color:#ffcc00">⭐ ${pts}</span>
+                <span style="font-size:0.95rem;font-weight:700;color:#e3b341">⭐ ${pts}</span>
               </div>`;
             }).join('')}
           </div>
