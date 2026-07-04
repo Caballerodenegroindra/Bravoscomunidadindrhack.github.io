@@ -23,6 +23,7 @@ import {
   orderBy,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { ESTADOS } from './auth.js';
+import { crearNotificacion, TIPOS_NOTIF } from './notificaciones.js';
 
 /**
  * Obtiene todos los usuarios ordenados por fecha de ingreso.
@@ -42,12 +43,25 @@ export function setUserState(uid, estado) {
   return updateDoc(doc(db, 'users', uid), { estado });
 }
 
-export function approveUser(uid) {
-  return setUserState(uid, ESTADOS.APROBADO);
+export async function approveUser(uid) {
+  await setUserState(uid, ESTADOS.APROBADO);
+  await crearNotificacion({
+    uid,
+    tipo: TIPOS_NOTIF.CUENTA_APROBADA,
+    titulo: '¡Tu cuenta fue aprobada! 🎉',
+    mensaje: 'Ya podés entrar a la Academia y empezar con los cursos.',
+    link: 'panel-usuario.html',
+  });
 }
 
-export function rejectUser(uid) {
-  return setUserState(uid, ESTADOS.RECHAZADO);
+export async function rejectUser(uid) {
+  await setUserState(uid, ESTADOS.RECHAZADO);
+  await crearNotificacion({
+    uid,
+    tipo: TIPOS_NOTIF.CUENTA_RECHAZADA,
+    titulo: 'Tu solicitud de cuenta fue rechazada',
+    mensaje: 'Contactá a un administrador si creés que es un error.',
+  });
 }
 
 export function suspendUser(uid) {
