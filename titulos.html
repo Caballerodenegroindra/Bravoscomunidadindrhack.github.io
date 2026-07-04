@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Mis Títulos — Academia Indrhack</title>
@@ -231,12 +232,18 @@
   <header class="navbar">
     <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
-      <a href="index.html">Inicio</a>
-      <a href="cursos.html">Cursos</a>
-      <a href="noticias.html">Noticias</a>
-      <a href="redes.html">Redes</a>
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+            <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
     <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </header>
 
@@ -536,5 +543,7 @@
       }
     });
   </script>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+  <script src="js/theme.js"></script>
 </body>
 </html>

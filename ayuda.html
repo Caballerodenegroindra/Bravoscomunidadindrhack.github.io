@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Ayuda — Cómo usar Academia Indrhack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK
+    </a>
+    <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="ayuda.html" class="active" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- TABBAR (móvil) -->
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="cursos.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+        Cursos
+      </a>
+      <a href="login.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span>
+        Ingresar
+      </a>
+      <a href="index.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span>
+        Inicio
+      </a>
+      <a href="ayuda.html" class="tabbar__item active">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 2-3 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        Ayuda
+      </a>
+      <a href="registro.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
+        Registro
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="guide-hero">
+      <div style="font-size:3rem;margin-bottom:0.5rem">👋</div>
+      <h1 class="guide-hero__title">Bienvenido a la guía de ayuda</h1>
+      <p class="guide-hero__desc">
+        Acá te explicamos, paso a paso y con palabras simples, cómo usar la Academia Indrhack.
+        Si tenés dudas, leé esta página con calma. No hace falta apurarse.
+      </p>
+    </section>
+
+    <section class="container section" style="padding-top:0">
+      <h2 class="section-title">Primeros pasos</h2>
+      <p class="section-subtitle">Seguí estos pasos en orden la primera vez que entrás a la página.</p>
+
+      <div class="guide-step">
+        <div class="guide-step__number">1</div>
+        <div>
+          <div class="guide-step__title">Creá tu cuenta</div>
+          <div class="guide-step__desc">
+            Tocá el botón <strong>"Registrarse"</strong> en la página de Inicio. Vas a completar tu nombre,
+            un correo electrónico y una contraseña. Con eso ya tenés tu cuenta creada.
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step__number">2</div>
+        <div>
+          <div class="guide-step__title">Iniciá sesión</div>
+          <div class="guide-step__desc">
+            Una vez que ya tenés cuenta, tocá <strong>"Iniciar sesión"</strong>, escribí tu correo y tu
+            contraseña, y vas a entrar a tu panel personal.
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step__number">3</div>
+        <div>
+          <div class="guide-step__title">Esperá la aprobación</div>
+          <div class="guide-step__desc">
+            Por seguridad, un administrador revisa las cuentas nuevas antes de habilitarlas del todo.
+            Es normal que tengas que esperar un poco la primera vez.
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step__number">4</div>
+        <div>
+          <div class="guide-step__title">Explorá los cursos</div>
+          <div class="guide-step__desc">
+            Tocá <strong>"Cursos"</strong> en el menú de arriba para ver todo lo que podés aprender.
+            Elegí uno y entrá para ver las clases.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" style="padding-top:0">
+      <h2 class="section-title">¿Qué significa cada botón del menú?</h2>
+      <p class="section-subtitle">Estos son los botones que vas a ver siempre arriba de la página (o abajo, si usás el celular).</p>
+
+      <div class="card-grid">
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">🏠</div>
+          <div>
+            <div class="guide-menu-card__title">Inicio</div>
+            <div class="guide-menu-card__desc">Te lleva a la página principal de la Academia.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">📚</div>
+          <div>
+            <div class="guide-menu-card__title">Cursos</div>
+            <div class="guide-menu-card__desc">Acá están todas las clases disponibles para aprender.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">📰</div>
+          <div>
+            <div class="guide-menu-card__title">Noticias</div>
+            <div class="guide-menu-card__desc">Novedades y avisos importantes de la Academia.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">🌐</div>
+          <div>
+            <div class="guide-menu-card__title">Redes</div>
+            <div class="guide-menu-card__desc">Nuestras redes sociales, por si querés seguirnos ahí también.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">💬</div>
+          <div>
+            <div class="guide-menu-card__title">Chat</div>
+            <div class="guide-menu-card__desc">Para hablar con otros compañeros y compañeras de la comunidad.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">🤖</div>
+          <div>
+            <div class="guide-menu-card__title">IA (Asistente)</div>
+            <div class="guide-menu-card__desc">Un asistente que responde tus preguntas sobre los cursos.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">⚙️</div>
+          <div>
+            <div class="guide-menu-card__title">Configuración</div>
+            <div class="guide-menu-card__desc">Para cambiar tus datos personales o tu contraseña.</div>
+          </div>
+        </div>
+        <div class="guide-menu-card">
+          <div class="guide-menu-card__icon">❓</div>
+          <div>
+            <div class="guide-menu-card__title">Ayuda</div>
+            <div class="guide-menu-card__desc">Esta misma página, siempre disponible con el botón "?".</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" style="padding-top:0">
+      <h2 class="section-title">Cambiar el tema claro u oscuro</h2>
+      <p class="section-subtitle" style="margin-bottom:1rem">
+        Si te cuesta ver la letra en fondo oscuro, podés cambiarlo por un fondo blanco.
+        Tocá el botón redondo con el sol o la luna, que está arriba a la derecha, al lado del menú.
+      </p>
+    </section>
+
+    <section class="container section" style="padding-top:0">
+      <h2 class="section-title">¿Algo no funciona o no entendés algo?</h2>
+      <p class="section-subtitle">
+        No te preocupes, le puede pasar a cualquiera. Podés volver a esta página de Ayuda tocando el botón
+        <strong>"?"</strong> que siempre está flotando abajo a la derecha de la pantalla, en cualquier parte de la web.
+      </p>
+      <div style="text-align:center;margin-top:1.5rem">
+        <a href="index.html" class="btn btn--primary">Volver al Inicio</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="Ya estás en la página de ayuda" style="opacity:0.5;pointer-events:none;">?</a>
+  <script src="js/theme.js"></script>
+</body>
+</html>
