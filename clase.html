@@ -9,8 +9,40 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
   <style>
+    /* ── BOTÓN FLOTANTE: preguntar en el chat del curso ── */
+    .clase-chat-fab {
+      position: fixed;
+      left: 1rem;
+      bottom: calc(var(--tabbar-h) + 1rem);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-accent-emphasis);
+      color: #fff;
+      border: 2px solid var(--gold);
+      border-radius: 999px;
+      padding: 0.65rem 1.1rem 0.65rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: var(--shadow-lg);
+      white-space: nowrap;
+    }
+    .clase-chat-fab.show { display: inline-flex; }
+    .clase-chat-fab:hover { text-decoration: none; filter: brightness(1.12); }
+    .clase-chat-fab svg { width: 18px; height: 18px; flex-shrink: 0; }
+    @media (min-width: 641px) {
+      .clase-chat-fab { bottom: 1.25rem; }
+    }
+    /* Deja lugar para no tapar el botón de ayuda en pantallas muy angostas */
+    @media (max-width: 380px) {
+      .clase-chat-fab span.fab-label { display: none; }
+      .clase-chat-fab { padding: 0.65rem; }
+    }
+
     /* ── HERO ── */
     .clase-hero {
       background: linear-gradient(135deg, #0d0d14 0%, #111 100%);
@@ -361,6 +393,10 @@
 
       <div id="loading" style="color:#555;text-align:center;padding:3rem;font-size:0.9rem">Cargando clase…</div>
       <div id="clase-contenido" style="display:none"></div>
+      <a href="#" id="clase-chat-fab" class="clase-chat-fab" aria-label="Preguntar sobre esta clase en el chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span class="fab-label">Preguntar sobre esta clase</span>
+      </a>
     </div>
   </main>
 
@@ -372,7 +408,7 @@
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { db, auth } from './js/firebase-config.js';
-    import { doc, getDoc, collection, query, where, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { doc, getDoc, setDoc, collection, query, where, getDocs, addDoc, Timestamp, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
     const params   = new URLSearchParams(location.search);
@@ -413,6 +449,18 @@
         ));
         const submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
         renderClase(curso, userData, user.uid, submission);
+
+        // Guardamos qué clase vio por última vez para que "Mi panel"
+        // pueda ofrecerle "Continuar donde te quedaste" directo a esta clase.
+        setDoc(doc(db, 'users', user.uid), {
+          ultimaClase: {
+            id: curso.id,
+            titulo: curso.titulo || 'Clase',
+            categoria: curso.categoria || '',
+            completada: !!(submission && submission.estado === 'aprobado'),
+            fecha: serverTimestamp(),
+          },
+        }, { merge: true }).catch(() => { /* no bloqueamos la vista de la clase si esto falla */ });
       } catch(e) {
         loading.innerHTML = '<p style="color:var(--color-danger-fg)">Error al cargar: ' + e.message + '</p>';
       }
@@ -468,6 +516,18 @@
     function renderClase(curso, userData, uid, submission) {
       loading.style.display = 'none';
       contenidoEl.style.display = 'block';
+
+      // Botón flotante: abre (o crea) la sala de chat de este curso específico
+      const chatFab = document.getElementById('clase-chat-fab');
+      if (chatFab) {
+        const params = new URLSearchParams({
+          curso: curso.id,
+          titulo: curso.titulo || 'Clase',
+          cat: curso.categoria || ''
+        });
+        chatFab.href = `chat.html?${params.toString()}`;
+        chatFab.classList.add('show');
+      }
 
       const puntos = puntosMap[curso.nivel] || 100;
       const ytId   = extractYouTubeId(curso.enlace || '');

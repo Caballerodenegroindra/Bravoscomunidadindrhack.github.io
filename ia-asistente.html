@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
   <style>
     /* ── LAYOUT PRINCIPAL ── */
     .ia-page {
@@ -159,6 +159,21 @@
     .nb-b { background:#c6a96522; color:#1c3f73; border:1px solid #1c3f73; }
     .nb-i { background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b; }
     .nb-a { background:#cc220022; color:#cc2200; border:1px solid #cc2200; }
+
+    /* Botón "Preguntale a la comunidad" */
+    .ask-community-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 0.6rem; padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(0,200,255,0.08);
+      border: 1px solid rgba(0,200,255,0.35);
+      color: var(--color-accent-fg);
+      font-size: 0.7rem; font-weight: 600;
+      text-decoration: none; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ask-community-btn:hover { background: rgba(0,200,255,0.16); transform: translateY(-1px); }
+    .ask-community-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
 
     /* Typing dots */
     .typing-dots { display:inline-flex; gap:4px; align-items:center; padding:2px 0; }
@@ -426,6 +441,46 @@
         .replace(/\n/g, '<br>');
     }
 
+    // ── Detecta si la IA no pudo resolver la consulta ──
+    const UNCERTAIN_PATTERNS = [
+      /no teng[oa]\s+(esa\s+)?información/i,
+      /no cuento con (esa\s+)?información/i,
+      /no dispongo de/i,
+      /no est[áa]\s+disponible esa información/i,
+      /no lo sé/i,
+      /no sabría decirte/i,
+      /no puedo (ayudarte|responder|resolver) (con )?eso/i,
+      /te recomiendo (consultar|preguntar)/i,
+      /no tengo esa (dato|precisión)/i,
+      /no fue posible encontrar/i,
+      /consultá con un administrador/i,
+    ];
+    function pareceNoResuelto(texto) {
+      return UNCERTAIN_PATTERNS.some((rx) => rx.test(texto));
+    }
+
+    // ── Construye el botón "Preguntale a la comunidad" ──
+    function buildCommunityBtn(userQuestion, cursoMencionado) {
+      const params = new URLSearchParams();
+      if (cursoMencionado) {
+        params.set('curso', cursoMencionado.id);
+        params.set('titulo', cursoMencionado.titulo || 'Clase');
+        params.set('cat', cursoMencionado.categoria || '');
+      }
+      if (userQuestion) params.set('pregunta', userQuestion);
+      const href = `chat.html${params.toString() ? '?' + params.toString() : ''}`;
+
+      const a = document.createElement('a');
+      a.className = 'ask-community-btn';
+      a.href = href;
+      a.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Preguntale a la comunidad`;
+      return a;
+    }
+
     function appendMsg(role, html, raw) {
       if (welcomeEl) welcomeEl.style.display = 'none';
       const isUser = role === 'user';
@@ -515,7 +570,8 @@ ESTILO:
 - Sé directo, amigable y técnico cuando sea necesario.
 - Usa **negrita** para resaltar nombres de clases, páginas y términos clave.
 - Si recomiendas clases, listarlas con nombre, nivel y por qué son útiles.
-- Máximo 350 palabras por respuesta salvo que el usuario pida más detalle.`;
+- Máximo 350 palabras por respuesta salvo que el usuario pida más detalle.
+- Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
 
       try {
         const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -556,9 +612,15 @@ ESTILO:
           bubble.appendChild(cardsWrap);
         }
 
+        // Si la IA no pudo resolverlo, ofrecemos ir a preguntarle a la comunidad
+        if (pareceNoResuelto(reply)) {
+          bubble.appendChild(buildCommunityBtn(text, mentioned[0] || null));
+        }
+
       } catch(e) {
         rmTyping();
-        appendMsg('assistant', '<strong style="color:#b3382c">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo.');
+        const errDiv = appendMsg('assistant', '<strong style="color:#b3382c">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo, o preguntale directamente a la comunidad.');
+        errDiv.querySelector('.msg-bubble--ia').appendChild(buildCommunityBtn(text, null));
       }
 
       busy = false;

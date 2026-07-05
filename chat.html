@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
   <style>
     /* ── VARIABLES EXTRA ── */
     :root {
@@ -1890,6 +1890,7 @@
   <script type="module">
     import { db, auth } from './js/firebase-config.js';
     import { requireApprovedUser, ESTADOS } from './js/auth.js';
+    import { crearNotificacion, crearNotificacionMasiva, TIPOS_NOTIF } from './js/notificaciones.js';
     import {
       collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot,
       query, where, orderBy, limit, serverTimestamp, updateDoc, increment
@@ -1950,6 +1951,46 @@
       setupLiveCreateModal();
       setupConnectedPanel();
       setupDmPicker();
+
+      // Si venimos desde "Preguntar sobre esta clase" en clase.html,
+      // desde una notificación, o desde el asistente de IA cuando no
+      // pudo resolver algo, abrimos la sala correspondiente y, si viene
+      // una pregunta pre-cargada, la dejamos lista en el campo de texto.
+      const urlParams = new URLSearchParams(location.search);
+      const cursoParam = urlParams.get('curso');
+      const salaParam  = urlParams.get('sala');
+      const vivaParam  = urlParams.get('viva');
+      const preguntaParam = urlParams.get('pregunta');
+
+      if (cursoParam) {
+        const titulo = urlParams.get('titulo') || 'Clase';
+        const cat = urlParams.get('cat') || '';
+        await openOrCreateClassRoom(cursoParam, titulo, cat);
+      } else if (salaParam) {
+        try {
+          const salaSnap = await getDoc(doc(db, 'chat_rooms', salaParam));
+          if (salaSnap.exists()) openRoom({ id: salaSnap.id, ...salaSnap.data() });
+        } catch (_) { /* si falla, el usuario elige la sala manualmente */ }
+      } else if (vivaParam) {
+        try {
+          const vivaSnap = await getDoc(doc(db, 'live_classes', vivaParam));
+          if (vivaSnap.exists()) openLiveRoom({ id: vivaSnap.id, ...vivaSnap.data() });
+        } catch (_) { /* si falla, el usuario elige la sala manualmente */ }
+      }
+
+      if (preguntaParam) {
+        const input = document.getElementById('chat-input');
+        if (input) {
+          input.value = preguntaParam;
+          autoResize(input);
+          document.getElementById('btn-send').disabled = false;
+          input.focus();
+        }
+      }
+
+      if (cursoParam || salaParam || vivaParam || preguntaParam) {
+        history.replaceState(null, '', 'chat.html');
+      }
     });
 
     /* ════════════ CONECTADOS EN LA SALA (presencia) ════════════
@@ -2547,7 +2588,7 @@
       });
 
       wrapper.querySelector('[data-action="toggle-thread"]').addEventListener('click', () => {
-        toggleThread(msg.id, wrapper);
+        toggleThread(msg.id, wrapper, msg.uid, msg.username);
       });
 
       return wrapper;
@@ -2780,6 +2821,7 @@
 
     async function sendStepToChat(step) {
       if (!IS_ADMIN || !LIVE_SESSION) return;
+      const yaEstabaEnVivo = LIVE_SESSION.status === 'en-vivo';
       try {
         await addDoc(collection(db, 'chat_messages'), {
           roomId: LIVE_SESSION.id,
@@ -2798,9 +2840,26 @@
           lastMsg: step.titulo || step.contenido || '',
           lastAt: serverTimestamp(),
         });
+        // La clase recién está empezando ahora: avisamos a toda la comunidad.
+        if (!yaEstabaEnVivo) notificarClaseEnVivo(LIVE_SESSION.id, LIVE_SESSION.title);
       } catch(e) {
         alert('Error al enviar el paso: ' + e.message);
       }
+    }
+
+    /* Notifica a todos los usuarios aprobados que una clase en vivo acaba
+       de empezar, con un link directo para unirse desde notificaciones.html. */
+    async function notificarClaseEnVivo(sessionId, title) {
+      try {
+        const snap = await getDocs(query(collection(db, 'users'), where('estado', '==', ESTADOS.APROBADO)));
+        const uids = snap.docs.map(d => d.id).filter((uid) => uid !== ME?.uid);
+        await crearNotificacionMasiva(uids, {
+          tipo: TIPOS_NOTIF.CLASE_EN_VIVO,
+          titulo: '🔴 ¡Clase en vivo empezando!',
+          mensaje: `"${title || 'Una clase'}" acaba de empezar. Sumate ahora en el chat.`,
+          link: `chat.html?viva=${sessionId}`,
+        });
+      } catch (_) { /* si falla, no bloqueamos el flujo de la clase en vivo */ }
     }
 
     async function markStepCompleted() {
@@ -2917,7 +2976,7 @@
     const _openThreads = new Set();
     const _threadUnsubs = {};
 
-    function toggleThread(msgId, wrapper) {
+    function toggleThread(msgId, wrapper, parentUid, parentUsername) {
       const threadEl = wrapper.querySelector(`#thread-${msgId}`);
       if (!threadEl) return;
 
@@ -2929,11 +2988,11 @@
         _openThreads.add(msgId);
         threadEl.style.display = 'flex';
         threadEl.style.flexDirection = 'column';
-        loadThread(msgId, threadEl);
+        loadThread(msgId, threadEl, parentUid, parentUsername);
       }
     }
 
-    function loadThread(parentId, containerEl) {
+    function loadThread(parentId, containerEl, parentUid, parentUsername) {
       containerEl.innerHTML = `
         <div class="thread-header">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -2997,15 +3056,15 @@
 
           ta.addEventListener('input', () => autoResize(ta));
           ta.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(parentId, ta, btn, containerEl); }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(parentId, ta, btn, containerEl, parentUid, parentUsername); }
           });
-          btn.addEventListener('click', () => sendReply(parentId, ta, btn, containerEl));
+          btn.addEventListener('click', () => sendReply(parentId, ta, btn, containerEl, parentUid, parentUsername));
           containerEl.appendChild(inputRow);
         }
       });
     }
 
-    async function sendReply(parentId, ta, btn, containerEl) {
+    async function sendReply(parentId, ta, btn, containerEl, parentUid, parentUsername) {
       const text = normalizeMsgText(ta.value);
       if (!text || !ME) return;
       btn.disabled = true;
@@ -3019,6 +3078,17 @@
         ta.value = '';
         ta.style.height = '';
         containerEl.scrollTop = containerEl.scrollHeight;
+
+        // Avisamos al autor del mensaje original (si no se está respondiendo a sí mismo)
+        if (parentUid && parentUid !== ME.uid) {
+          crearNotificacion({
+            uid: parentUid,
+            tipo: TIPOS_NOTIF.RESPUESTA_HILO,
+            titulo: `💬 ${ME.username} respondió tu mensaje`,
+            mensaje: truncate(text, 90),
+            link: `chat.html?sala=${ROOM.id}`,
+          }).catch(() => {});
+        }
       } catch(e) {
         alert('Error al enviar: ' + e.message);
       } finally {
