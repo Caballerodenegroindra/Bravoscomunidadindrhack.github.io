@@ -1750,6 +1750,11 @@
       <!-- Input -->
       <div class="chat-input-area" id="chat-input-area" style="display:none">
         <div class="chat-attach-bar" id="attach-bar">
+          <button class="attach-btn" id="btn-attach-file">
+            <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            Imagen / Archivo
+          </button>
+          <input type="file" id="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.zip" style="display:none" />
           <button class="attach-btn" id="btn-share-rank">
             <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Compartir Rango
@@ -1759,6 +1764,7 @@
             Certificado
           </button>
         </div>
+        <div class="attach-upload-status" id="attach-upload-status" style="display:none"></div>
         <div class="chat-input-row">
           <textarea
             class="chat-input"
@@ -1897,6 +1903,21 @@
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     /* ════════════ ESTADO GLOBAL ════════════ */
+    /* ════════════ SUBIDA DE IMÁGENES / ARCHIVOS (gratis, sin Firebase Storage) ════════════
+       Firebase Storage ahora exige el plan de pago Blaze incluso para uso gratuito,
+       así que usamos Cloudinary (plan gratuito, no pide tarjeta): 25 créditos/mes,
+       equivalentes a ~25 GB entre almacenamiento y transferencia.
+       Pasos para activarlo (una sola vez):
+       1) Crear cuenta gratis en https://cloudinary.com (con Google/GitHub o email, sin tarjeta).
+       2) En el Dashboard, copiar el "Cloud name" y pegarlo abajo en CLOUDINARY_CLOUD_NAME.
+       3) Ir a Settings → Upload → "Upload presets" → Add upload preset →
+          Signing Mode: "Unsigned" → Save. Copiar el nombre del preset y pegarlo en
+          CLOUDINARY_UPLOAD_PRESET.
+       Mientras estos dos valores queden vacíos, el botón de adjuntar avisa que falta configurar. */
+    const CLOUDINARY_CLOUD_NAME    = '';  // ej: 'dxabc1234'
+    const CLOUDINARY_UPLOAD_PRESET = '';  // ej: 'indrhack_chat_unsigned'
+    const MAX_UPLOAD_MB = 10; // límite del plan gratuito de Cloudinary para imágenes
+
     let ME         = null;
     let ROOM       = null;
     let UNSUB      = null;
@@ -2535,6 +2556,11 @@
         ? buildCertCard(msg.certShared)
         : '';
 
+      // Imagen o archivo adjunto
+      const fileHTML = msg.fileAttachment
+        ? buildFileAttachment(msg.fileAttachment)
+        : '';
+
       // Thread button text
       const threadLabel = msg.threadCount > 0
         ? `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> ${msg.threadCount} hilo${msg.threadCount !== 1 ? 's' : ''}`
@@ -2565,6 +2591,7 @@
               ${formatMessageText(msg.text)}
               ${rankHTML}
               ${certHTML}
+              ${fileHTML}
             </div>
             <div class="msg__actions">
               <button class="msg__action-btn" data-action="reply">
@@ -2623,6 +2650,20 @@
           <div class="msg__cert-sub">${escapeHtml(cert.course || '')}</div>
         </div>
       </div>`;
+    }
+
+    function buildFileAttachment(file) {
+      if (file.isImage) {
+        return `<img class="msg__image-attachment" src="${escapeAttr(file.url)}" alt="${escapeAttr(file.name || 'Imagen')}" loading="lazy" onclick="window.open('${escapeAttr(file.url)}', '_blank')" />`;
+      }
+      const ext = (file.name || '').split('.').pop()?.toUpperCase() || 'ARCHIVO';
+      return `<a class="msg__file-card" href="${escapeAttr(file.url)}" target="_blank" rel="noopener">
+        <div class="msg__file-icon">📄</div>
+        <div class="msg__file-info">
+          <div class="msg__file-name">${escapeHtml(file.name || 'Archivo')}</div>
+          <div class="msg__file-sub">${escapeHtml(ext)} · Toca para abrir/descargar</div>
+        </div>
+      </a>`;
     }
 
     /* ════════════════════════════════════════════════════════
@@ -3129,6 +3170,23 @@
         document.getElementById('reply-preview').classList.remove('show');
       });
 
+      // Adjuntar imagen / archivo
+      const attachBtn  = document.getElementById('btn-attach-file');
+      const fileInput  = document.getElementById('file-input');
+      attachBtn.addEventListener('click', () => {
+        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+          alert('Falta configurar Cloudinary (almacenamiento gratuito de imágenes). Pedile al administrador que complete CLOUDINARY_CLOUD_NAME y CLOUDINARY_UPLOAD_PRESET en chat.html.');
+          return;
+        }
+        fileInput.click();
+      });
+      fileInput.addEventListener('change', async () => {
+        const file = fileInput.files[0];
+        fileInput.value = '';
+        if (!file) return;
+        await uploadAndSendFile(file);
+      });
+
       // Scroll bottom
       const msgs = document.getElementById('chat-messages');
       const scrollBtn = document.getElementById('scroll-bottom-btn');
@@ -3349,6 +3407,56 @@
       }
       const msgs = document.getElementById('chat-messages');
       setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 100);
+    }
+
+    async function uploadAndSendFile(file) {
+      if ((!ROOM && !LIVE_SESSION) || !ME) return;
+
+      const maxBytes = MAX_UPLOAD_MB * 1024 * 1024;
+      if (file.size > maxBytes) {
+        alert(`El archivo pesa demasiado (máx. ${MAX_UPLOAD_MB} MB en el plan gratuito).`);
+        return;
+      }
+
+      const statusEl = document.getElementById('attach-upload-status');
+      const attachBtn = document.getElementById('btn-attach-file');
+      statusEl.style.display = 'block';
+      statusEl.textContent = `Subiendo "${file.name}"…`;
+      attachBtn.disabled = true;
+
+      const isImage = file.type.startsWith('image/');
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        const resourceType = isImage ? 'image' : 'raw';
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+          { method: 'POST', body: formData }
+        );
+        const data = await res.json();
+        if (!res.ok || !data.secure_url) {
+          throw new Error(data.error?.message || 'No se pudo subir el archivo.');
+        }
+
+        const text = isImage ? '📷 Imagen' : `📎 ${file.name}`;
+        await sendMessageWithPayload(text, {
+          fileAttachment: {
+            url: data.secure_url,
+            name: file.name,
+            type: file.type || '',
+            isImage,
+          },
+        });
+      } catch (e) {
+        alert('Error al subir el archivo: ' + e.message);
+      } finally {
+        statusEl.style.display = 'none';
+        statusEl.textContent = '';
+        attachBtn.disabled = false;
+      }
     }
 
     /* ════════════ SELECTOR DE CLASE ════════════ */
