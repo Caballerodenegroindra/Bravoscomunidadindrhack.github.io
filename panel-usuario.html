@@ -123,7 +123,7 @@
 
       <!-- ① STATS: lo primero que quiere saber un estudiante -->
       <div class="stat-grid" style="margin-bottom:1.5rem">
-        <div class="stat-card" style="border-color:rgba(56,139,253,0.3)">
+        <div class="stat-card" style="border-color:rgba(198,169,101,0.3)">
           <div class="stat-card__value" data-user-rango style="color:var(--color-accent-fg);font-size:1.1rem">—</div>
           <div class="stat-card__label">🎖️ Rango actual</div>
         </div>
@@ -131,7 +131,7 @@
           <div class="stat-card__value" data-user-puntos style="color:var(--gold)">—</div>
           <div class="stat-card__label">⭐ Puntos totales</div>
         </div>
-        <div class="stat-card" style="border-color:rgba(63,185,80,0.3)">
+        <div class="stat-card" style="border-color:rgba(63,143,95,0.3)">
           <div class="stat-card__value" data-user-ranking style="color:var(--color-success-fg)">—</div>
           <div class="stat-card__label">🏅 Ranking global</div>
         </div>
@@ -142,7 +142,7 @@
       </div>
 
       <!-- ② ACCIÓN PRINCIPAL: ir a estudiar (CTA más importante) -->
-      <div class="card" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-color:rgba(56,139,253,0.25);background:rgba(56,139,253,0.04)">
+      <div class="card" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-color:rgba(198,169,101,0.25);background:rgba(198,169,101,0.04)">
         <div>
           <h2 style="font-size:1rem;font-weight:600;margin-bottom:0.2rem">¿Listo para seguir aprendiendo?</h2>
           <p style="margin:0;font-size:0.875rem;color:var(--text-soft)">Retoma donde lo dejaste o explora nuevos cursos.</p>
@@ -502,7 +502,7 @@
           { min: 0,    label: 'Bronce',   color: '#cd7f32' },
           { min: 100,  label: 'Plata',    color: '#c0c0c0' },
           { min: 250,  label: 'Oro',      color: '#e3b341' },
-          { min: 500,  label: 'Platino',  color: '#58a6ff' },
+          { min: 500,  label: 'Platino',  color: '#1c3f73' },
           { min: 1000, label: 'Diamante', color: '#a371f7' },
         ];
         function getTope(pts) {
@@ -522,7 +522,7 @@
             ? medalIcons[pos - 1]
             : `<span style="font-size:0.85rem;font-weight:600;color:var(--text-muted)">#${pos}</span>`;
 
-          return `<div class="card" style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;${esYo ? 'border-color:rgba(56,139,253,0.4);background:rgba(56,139,253,0.05)' : ''}">
+          return `<div class="card" style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;${esYo ? 'border-color:rgba(198,169,101,0.4);background:rgba(198,169,101,0.05)' : ''}">
             <div style="width:32px;text-align:center;flex-shrink:0;font-size:1.1rem">${medal}</div>
             <div style="flex:1;min-width:0">
               <p style="margin:0;font-weight:600;font-size:0.9rem;color:${esYo ? 'var(--color-accent-fg)' : 'var(--text)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">

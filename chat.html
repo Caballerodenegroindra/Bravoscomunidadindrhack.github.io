@@ -1229,7 +1229,7 @@
       align-items: center;
       gap: 4px;
       background: none;
-      border: 1px solid rgba(248,81,73,0.45);
+      border: 1px solid rgba(179,56,44,0.45);
       border-radius: 6px;
       color: #b3382c;
       cursor: pointer;
@@ -1242,13 +1242,13 @@
       white-space: nowrap;
     }
     .btn-nueva-clase-viva.show { display: inline-flex; }
-    .btn-nueva-clase-viva:hover { background: rgba(248,81,73,0.1); box-shadow: 0 0 10px rgba(248,81,73,0.2); }
+    .btn-nueva-clase-viva:hover { background: rgba(179,56,44,0.1); box-shadow: 0 0 10px rgba(179,56,44,0.2); }
     .btn-nueva-clase-viva svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
     /* Item de sala "clase en vivo" en el sidebar */
     .room-item--live .room-item__icon {
-      border-color: rgba(248,81,73,0.35);
-      background: rgba(248,81,73,0.08);
+      border-color: rgba(179,56,44,0.35);
+      background: rgba(179,56,44,0.08);
     }
     .live-pulse-dot {
       width: 7px; height: 7px;
@@ -1282,8 +1282,8 @@
       flex-direction: column;
       gap: 0.55rem;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid rgba(248,81,73,0.18);
-      background: linear-gradient(180deg, rgba(248,81,73,0.06) 0%, rgba(9,9,14,0.4) 100%);
+      border-bottom: 1px solid rgba(179,56,44,0.18);
+      background: linear-gradient(180deg, rgba(179,56,44,0.06) 0%, rgba(9,9,14,0.4) 100%);
       position: relative;
       z-index: 2;
       flex-shrink: 0;
@@ -1346,16 +1346,16 @@
     }
     .step-chip__label { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase; }
     .step-chip__title { font-size: 0.72rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-    .step-chip--sent { border-color: rgba(63,185,80,0.35); background: rgba(63,185,80,0.06); }
+    .step-chip--sent { border-color: rgba(63,143,95,0.35); background: rgba(63,143,95,0.06); }
     .step-chip--sent .step-chip__label { color: var(--success); }
     .step-chip--next {
-      border-color: rgba(248,81,73,0.5);
-      background: rgba(248,81,73,0.08);
+      border-color: rgba(179,56,44,0.5);
+      background: rgba(179,56,44,0.08);
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(248,81,73,0.12);
+      box-shadow: 0 0 12px rgba(179,56,44,0.12);
       transition: background 0.12s, box-shadow 0.12s;
     }
-    .step-chip--next:hover { background: rgba(248,81,73,0.16); box-shadow: 0 0 16px rgba(248,81,73,0.25); }
+    .step-chip--next:hover { background: rgba(179,56,44,0.16); box-shadow: 0 0 16px rgba(179,56,44,0.25); }
     .step-chip--next .step-chip__label { color: #b3382c; }
     .step-chip--locked { opacity: 0.4; }
 
@@ -1376,8 +1376,8 @@
       border: 1px solid rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
-    .live-progress__dot--done { background: var(--success); border-color: var(--success); box-shadow: 0 0 6px rgba(63,185,80,0.5); }
-    .live-progress__dot--current { background: #b3382c; border-color: #b3382c; box-shadow: 0 0 6px rgba(248,81,73,0.6); animation: livePulse 1.4s infinite; }
+    .live-progress__dot--done { background: var(--success); border-color: var(--success); box-shadow: 0 0 6px rgba(63,143,95,0.5); }
+    .live-progress__dot--current { background: #b3382c; border-color: #b3382c; box-shadow: 0 0 6px rgba(179,56,44,0.6); animation: livePulse 1.4s infinite; }
 
     .live-complete-btn {
       align-self: flex-start;
@@ -1416,8 +1416,8 @@
 
     /* Mensaje de "contenido de paso" (distinto de chat normal) */
     .msg--step .msg__bubble {
-      background: linear-gradient(135deg, rgba(248,81,73,0.1) 0%, rgba(30,8,4,0.9) 100%);
-      border-color: rgba(248,81,73,0.3);
+      background: linear-gradient(135deg, rgba(179,56,44,0.1) 0%, rgba(30,8,4,0.9) 100%);
+      border-color: rgba(179,56,44,0.3);
       border-radius: 10px;
     }
     .msg__step-label {
@@ -1446,7 +1446,7 @@
     .live-create-overlay.show { display: flex; }
     .live-create {
       background: var(--bg-card);
-      border: 1px solid rgba(248,81,73,0.25);
+      border: 1px solid rgba(179,56,44,0.25);
       border-radius: 20px 20px 0 0;
       width: 100%;
       max-width: 560px;
@@ -1507,7 +1507,7 @@
       outline: none;
       transition: border-color 0.15s;
     }
-    .live-create__field input:focus, .live-create__field textarea:focus { border-color: rgba(248,81,73,0.45); }
+    .live-create__field input:focus, .live-create__field textarea:focus { border-color: rgba(179,56,44,0.45); }
     .live-create__field textarea { resize: vertical; min-height: 54px; }
 
     .live-create__steps-label {
@@ -1555,7 +1555,7 @@
       align-items: center;
       gap: 5px;
       background: none;
-      border: 1px dashed rgba(248,81,73,0.4);
+      border: 1px dashed rgba(179,56,44,0.4);
       border-radius: 20px;
       color: #b3382c;
       font-size: 0.72rem;
@@ -1564,7 +1564,7 @@
       cursor: pointer;
       font-family: var(--font-body);
     }
-    .btn-add-step:hover { background: rgba(248,81,73,0.08); }
+    .btn-add-step:hover { background: rgba(179,56,44,0.08); }
     .btn-add-step svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
     .live-create__footer {
