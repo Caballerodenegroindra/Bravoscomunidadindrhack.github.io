@@ -2588,7 +2588,7 @@
       });
 
       wrapper.querySelector('[data-action="toggle-thread"]').addEventListener('click', () => {
-        toggleThread(msg.id, wrapper, msg.uid, msg.username);
+        toggleThread(msg.id, wrapper, msg.uid, msg.username, msg.roomId);
       });
 
       return wrapper;
@@ -2976,7 +2976,7 @@
     const _openThreads = new Set();
     const _threadUnsubs = {};
 
-    function toggleThread(msgId, wrapper, parentUid, parentUsername) {
+    function toggleThread(msgId, wrapper, parentUid, parentUsername, roomId) {
       const threadEl = wrapper.querySelector(`#thread-${msgId}`);
       if (!threadEl) return;
 
@@ -2988,11 +2988,11 @@
         _openThreads.add(msgId);
         threadEl.style.display = 'flex';
         threadEl.style.flexDirection = 'column';
-        loadThread(msgId, threadEl, parentUid, parentUsername);
+        loadThread(msgId, threadEl, parentUid, parentUsername, roomId);
       }
     }
 
-    function loadThread(parentId, containerEl, parentUid, parentUsername) {
+    function loadThread(parentId, containerEl, parentUid, parentUsername, roomId) {
       containerEl.innerHTML = `
         <div class="thread-header">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -3004,6 +3004,7 @@
 
       const q = query(
         collection(db, 'chat_replies'),
+        where('roomId', '==', roomId),
         where('parentId', '==', parentId)
       );
 
@@ -3417,7 +3418,7 @@
     async function openOrCreateClassRoom(courseId, courseName, coursecat) {
       overlay.classList.remove('show');
       try {
-        const q = query(collection(db, 'chat_rooms'), where('courseId', '==', courseId));
+        const q = query(collection(db, 'chat_rooms'), where('type', '==', 'class'), where('courseId', '==', courseId));
         const snap = await getDocs(q);
         let room;
         if (!snap.empty) {
