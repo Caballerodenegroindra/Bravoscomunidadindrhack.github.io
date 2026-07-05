@@ -40,6 +40,18 @@ function initPresence(uid) {
   document.addEventListener('visibilitychange', () => {
     setPresence(uid, document.visibilityState === 'visible');
   });
+
+  // "Latido": en móviles, cerrar la app o que el sistema la mate en
+  // segundo plano no siempre dispara beforeunload/visibilitychange,
+  // así que el flag isOnline puede quedar "pegado" en true para siempre.
+  // Este intervalo refresca lastSeen cada 60s SOLO si la app sigue
+  // realmente visible, para que el panel de admin pueda detectar
+  // cuándo un isOnline:true está desactualizado y ya no es real.
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && _presenceUid === uid) {
+      setPresence(uid, true);
+    }
+  }, 60000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
