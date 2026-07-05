@@ -7,7 +7,7 @@
   <title>Panel administrador — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ── PRESENCIA ── */
@@ -36,8 +36,8 @@
       flex-shrink: 0;
       align-self: center;
     }
-    .presence-dot--online  { background: #00ff88; box-shadow: 0 0 6px #00ff8866; }
-    .presence-dot--recent  { background: #f59e0b; box-shadow: 0 0 6px #f59e0b55; }
+    .presence-dot--online  { background: #3f8f5f; box-shadow: 0 0 6px #3f8f5f66; }
+    .presence-dot--recent  { background: #c6a965; box-shadow: 0 0 6px #c6a96555; }
     .presence-dot--offline { background: #333; }
 
     .presence-username {
@@ -57,8 +57,8 @@
       text-align: right;
       white-space: nowrap;
     }
-    .presence-status-text.online  { color: #00c26e; }
-    .presence-status-text.recent  { color: #f59e0b; }
+    .presence-status-text.online  { color: #3f8f5f; }
+    .presence-status-text.recent  { color: #c6a965; }
 
     .presence-lastseen {
       grid-area: lastseen;
@@ -162,7 +162,7 @@
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
     <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📰 Noticias</a>
-    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
+    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:#c6a965;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
@@ -178,7 +178,7 @@
         <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
-        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:#f59e0b;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
+        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:#c6a965;color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
@@ -219,16 +219,16 @@
             <div class="stat-card__value" data-stat="cursos">—</div>
             <div class="stat-card__label">Cursos publicados</div>
           </div>
-          <div class="stat-card" style="border-color:#25d36644">
-            <div class="stat-card__value" data-stat="en-grupo" style="color:#25d366">—</div>
+          <div class="stat-card" style="border-color:#3f8f5f44">
+            <div class="stat-card__value" data-stat="en-grupo" style="color:#3f8f5f">—</div>
             <div class="stat-card__label">✅ En WhatsApp</div>
           </div>
-          <div class="stat-card" style="border-color:#ff3b3b44">
-            <div class="stat-card__value" data-stat="fuera-grupo" style="color:#ff3b3b">—</div>
+          <div class="stat-card" style="border-color:#b3382c44">
+            <div class="stat-card__value" data-stat="fuera-grupo" style="color:#b3382c">—</div>
             <div class="stat-card__label">❌ Fuera de WhatsApp</div>
           </div>
-          <div class="stat-card" style="border-color:#f59e0b44;cursor:pointer" onclick="document.querySelector('[data-tab=\'quizzes\']').click()">
-            <div class="stat-card__value" data-stat="quizzes-pendientes" style="color:#f59e0b">—</div>
+          <div class="stat-card" style="border-color:#c6a96544;cursor:pointer" onclick="document.querySelector('[data-tab=\'quizzes\']').click()">
+            <div class="stat-card__value" data-stat="quizzes-pendientes" style="color:#c6a965">—</div>
             <div class="stat-card__label">⏳ Quizzes pendientes</div>
           </div>
         </div>
@@ -281,8 +281,8 @@
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
           <button class="btn btn--small btn--outline" data-wa-filter="todos" style="border-color:var(--border);color:var(--text-muted)">👥 Todos <span data-wa-count="todos"></span></button>
-          <button class="btn btn--small btn--outline" data-wa-filter="en" style="border-color:#25d366;color:#25d366">✅ En WhatsApp <span data-wa-count="en"></span></button>
-          <button class="btn btn--small btn--outline" data-wa-filter="fuera" style="border-color:#ff3b3b;color:#ff3b3b">❌ Fuera <span data-wa-count="fuera"></span></button>
+          <button class="btn btn--small btn--outline" data-wa-filter="en" style="border-color:#3f8f5f;color:#3f8f5f">✅ En WhatsApp <span data-wa-count="en"></span></button>
+          <button class="btn btn--small btn--outline" data-wa-filter="fuera" style="border-color:#b3382c;color:#b3382c">❌ Fuera <span data-wa-count="fuera"></span></button>
         </div>
         <div data-members-body style="margin-top:1rem">
           <p class="section-subtitle">Cargando miembros…</p>
@@ -302,8 +302,8 @@
         <!-- Filtros presencia -->
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center">
           <button class="btn btn--small btn--primary" data-pf="todos">👥 Todos <span id="pf-count-todos"></span></button>
-          <button class="btn btn--small btn--outline" data-pf="online" style="border-color:#00ff88;color:#00ff88">🟢 En línea <span id="pf-count-online"></span></button>
-          <button class="btn btn--small btn--outline" data-pf="reciente" style="border-color:#f59e0b;color:#f59e0b">🕐 Reciente <span id="pf-count-reciente"></span></button>
+          <button class="btn btn--small btn--outline" data-pf="online" style="border-color:#3f8f5f;color:#3f8f5f">🟢 En línea <span id="pf-count-online"></span></button>
+          <button class="btn btn--small btn--outline" data-pf="reciente" style="border-color:#c6a965;color:#c6a965">🕐 Reciente <span id="pf-count-reciente"></span></button>
           <button class="btn btn--small btn--outline" data-pf="offline" style="border-color:var(--border);color:var(--text-muted)">⚫ Sin actividad <span id="pf-count-offline"></span></button>
           <input type="search" id="presencia-search" placeholder="Buscar usuario…" style="flex:1;min-width:160px;background:var(--color-canvas-inset);border:1px solid var(--border);border-radius:8px;padding:0.45rem 0.75rem;color:var(--text);font-size:0.85rem;font-family:inherit" />
         </div>
@@ -594,12 +594,12 @@
         </div>
 
         <!-- COMANDOS TERMUX -->
-        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #0e2a1a">
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #0f1d38">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
-            <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:#00ff88;margin:0">💻 COMANDOS TERMUX</p>
-            <button type="button" id="btn-add-cmd" style="background:#0e2a1a;border:1px solid #1e5535;border-radius:6px;color:#00ff88;font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
+            <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:#3f8f5f;margin:0">💻 COMANDOS TERMUX</p>
+            <button type="button" id="btn-add-cmd" style="background:#0f1d38;border:1px solid #24365c;border-radius:6px;color:#3f8f5f;font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
           </div>
-          <p style="font-size:0.77rem;color:#4a8a62;margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic. Cada bloque tiene: etiqueta, descripción del comando y el comando en sí.</p>
+          <p style="font-size:0.77rem;color:#5c6c8c;margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic. Cada bloque tiene: etiqueta, descripción del comando y el comando en sí.</p>
           <div id="termux-cmds-container"></div>
         </div>
 
@@ -722,7 +722,7 @@
           updateCounts();
           paintPresencia();
         }, (err) => {
-          body.innerHTML = '<p style="color:#ff6b6b">Error al cargar: ' + err.message + '</p>';
+          body.innerHTML = '<p style="color:#c9776d">Error al cargar: ' + err.message + '</p>';
         });
       }
 
@@ -910,7 +910,7 @@
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
               <label style="color:var(--text-muted);font-size:0.8rem">WhatsApp:</label>
               <button class="whatsapp-toggle" data-uid="${u.uid}" data-en-grupo="${u.enGrupo ? 'true' : 'false'}"
-                style="background:${u.enGrupo ? '#25d36622' : '#ff3b3b22'};color:${u.enGrupo ? '#25d366' : '#ff3b3b'};border:1px solid ${u.enGrupo ? '#25d366' : '#ff3b3b'};border-radius:20px;padding:4px 12px;font-size:0.78rem;cursor:pointer">
+                style="background:${u.enGrupo ? '#3f8f5f22' : '#b3382c22'};color:${u.enGrupo ? '#3f8f5f' : '#b3382c'};border:1px solid ${u.enGrupo ? '#3f8f5f' : '#b3382c'};border-radius:20px;padding:4px 12px;font-size:0.78rem;cursor:pointer">
                 ${u.enGrupo ? '✅ En el grupo' : '❌ Fuera del grupo'}
               </button>
             </div>
@@ -965,9 +965,9 @@
             await updateDoc(doc(db, 'users', btn.dataset.uid), { enGrupo: nuevoEstado });
             btn.dataset.enGrupo = nuevoEstado ? 'true' : 'false';
             btn.textContent = nuevoEstado ? '✅ En el grupo' : '❌ Fuera del grupo';
-            btn.style.background = nuevoEstado ? '#25d36622' : '#ff3b3b22';
-            btn.style.color = nuevoEstado ? '#25d366' : '#ff3b3b';
-            btn.style.borderColor = nuevoEstado ? '#25d366' : '#ff3b3b';
+            btn.style.background = nuevoEstado ? '#3f8f5f22' : '#b3382c22';
+            btn.style.color = nuevoEstado ? '#3f8f5f' : '#b3382c';
+            btn.style.borderColor = nuevoEstado ? '#3f8f5f' : '#b3382c';
           });
         });
       }
@@ -1082,20 +1082,20 @@
     function addCmdBlock(data) {
       const idx  = termuxContainer.children.length;
       const wrap = document.createElement('div');
-      wrap.style.cssText = 'background:#060d09;border:1px solid #0e2a1a;border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
+      wrap.style.cssText = 'background:#0a1428;border:1px solid #0f1d38;border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
       wrap.innerHTML = `
         <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
         <div class="field" style="margin-bottom:0.5rem">
-          <label style="font-size:0.75rem;color:#4a8a62">Etiqueta (título corto)</label>
-          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
+          <label style="font-size:0.75rem;color:#5c6c8c">Etiqueta (título corto)</label>
+          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border-color:#0f1d38;font-size:0.85rem" />
         </div>
         <div class="field" style="margin-bottom:0.5rem">
-          <label style="font-size:0.75rem;color:#4a8a62">Descripción / para qué sirve</label>
-          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:#030706;border-color:#0e2a1a;font-size:0.85rem" />
+          <label style="font-size:0.75rem;color:#5c6c8c">Descripción / para qué sirve</label>
+          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border-color:#0f1d38;font-size:0.85rem" />
         </div>
         <div class="field" style="margin-bottom:0">
-          <label style="font-size:0.75rem;color:#00ff88">Comando <span style="color:var(--text-muted)">(lo que se copia)</span></label>
-          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:#030706;border:1px solid #1e5535;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#d0f0d8" />
+          <label style="font-size:0.75rem;color:#3f8f5f">Comando <span style="color:var(--text-muted)">(lo que se copia)</span></label>
+          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border:1px solid #24365c;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#e8ecf3" />
         </div>
       `;
       termuxContainer.appendChild(wrap);
@@ -1162,7 +1162,7 @@
                   <h3 style="margin:0.25rem 0;font-size:0.95rem">${c.titulo || 'Sin título'}</h3>
                   <p style="color:var(--text-muted);font-size:0.82rem;margin:0">${(c.descripcion || '').substring(0,80)}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
                 </div>
-                <span style="color:${c.publicado ? '#25d366' : '#888'};font-size:0.78rem">${c.publicado ? '✅' : '⛔'}</span>
+                <span style="color:${c.publicado ? '#3f8f5f' : '#888'};font-size:0.78rem">${c.publicado ? '✅' : '⛔'}</span>
               </div>
               <div class="table-actions" style="margin-top:0.5rem">
                 <button class="btn btn--small btn--outline" data-action="editar">Editar</button>
@@ -1745,7 +1745,7 @@
           if (badge) badge.textContent = _quizCache.length;
         }
 
-        const estadoColor = { pendiente: '#f59e0b', aprobado: '#00ff88', rechazado: '#ff6b6b' };
+        const estadoColor = { pendiente: '#c6a965', aprobado: '#3f8f5f', rechazado: '#c9776d' };
         const estadoIcon = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
 
         listEl.innerHTML = `
@@ -1769,7 +1769,7 @@
                   return `<tr>
                     <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:var(--text-muted);font-size:0.75rem">${s.displayName || ''}</span></td>
                     <td style="font-size:0.85rem;max-width:200px">${s.cursoTitulo || s.cursoId}</td>
-                    <td><span style="color:${color};font-size:0.8rem">${s.nivel || '—'}</span><br><span style="color:#ffcc00;font-size:0.75rem">⭐ ${s.puntos || 0} pts</span></td>
+                    <td><span style="color:${color};font-size:0.8rem">${s.nivel || '—'}</span><br><span style="color:#c6a965;font-size:0.75rem">⭐ ${s.puntos || 0} pts</span></td>
                     <td style="font-size:0.78rem;color:var(--text-muted)">${fecha}</td>
                     <td><span style="color:${color};font-weight:700">${icon} ${s.estado}</span></td>
                     <td>
@@ -1784,7 +1784,7 @@
           </div>
         `;
       } catch(e) {
-        listEl.innerHTML = `<p style="color:#ff6b6b">Error: ${e.message}</p>`;
+        listEl.innerHTML = `<p style="color:#c9776d">Error: ${e.message}</p>`;
       }
     }
 
@@ -1812,7 +1812,7 @@
       const sub = _quizCache?.find(s => s.id === subId);
       if (!sub) return;
 
-      const estadoColor = { pendiente: '#f59e0b', aprobado: '#00ff88', rechazado: '#ff6b6b' };
+      const estadoColor = { pendiente: '#c6a965', aprobado: '#3f8f5f', rechazado: '#c9776d' };
       const fecha = sub.fechaEnvio?.toDate ? sub.fechaEnvio.toDate().toLocaleString('es-MX') : '—';
 
       modalContent.innerHTML = `
@@ -1820,7 +1820,7 @@
         <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 1.25rem">@${sub.username} · ${sub.cursoTitulo} · ${fecha}</p>
 
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
-          <span style="background:#ffcc0022;border:1px solid #ffcc00;color:#ffcc00;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700">⭐ ${sub.puntos} puntos en juego</span>
+          <span style="background:#c6a96522;border:1px solid #c6a965;color:#c6a965;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700">⭐ ${sub.puntos} puntos en juego</span>
           <span style="color:${estadoColor[sub.estado]};font-weight:700;font-size:0.85rem">${sub.estado.toUpperCase()}</span>
         </div>
 
@@ -1992,13 +1992,13 @@
                   <p style="margin:0;font-size:0.9rem;font-weight:600;color:var(--text)">@${u.username || u.uid?.substring(0,8)}</p>
                   <p style="margin:0.1rem 0 0;color:var(--text-muted);font-size:0.75rem">${u.displayName || ''} ${u.rango ? '· ' + u.rango : ''}</p>
                 </div>
-                <span style="font-size:0.95rem;font-weight:700;color:#e3b341">⭐ ${pts}</span>
+                <span style="font-size:0.95rem;font-weight:700;color:#c6a965">⭐ ${pts}</span>
               </div>`;
             }).join('')}
           </div>
         `;
       } catch(e) {
-        el.innerHTML = '<p class="section-subtitle" style="color:#ff6b6b">Error al cargar ranking.</p>';
+        el.innerHTML = '<p class="section-subtitle" style="color:#c9776d">Error al cargar ranking.</p>';
       }
     }
 

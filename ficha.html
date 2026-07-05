@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Mi Ficha — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=family=Inter:wght@400;500;600&family=Share+Tech+Mono&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ---- Card para descargar ---- */
@@ -21,19 +21,19 @@
     #ficha-card {
       width: 100%;
       max-width: 480px;
-      background: #0d1117;
-      border: 2px solid #b8860b;
+      background: #0a1428;
+      border: 2px solid #c6a965;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       font-family: 'Share Tech Mono', monospace;
-      box-shadow: 0 0 40px #b8860b33, 0 0 80px #ffffff08;
+      box-shadow: 0 0 40px #c6a96533, 0 0 80px #ffffff08;
     }
 
     .ficha-header {
-      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+      background: linear-gradient(135deg, #0a1428 0%, #0f1d38 100%);
       padding: 1.5rem 1.5rem 1rem;
-      border-bottom: 1px solid #b8860b66;
+      border-bottom: 1px solid #c6a96566;
       position: relative;
       overflow: hidden;
     }
@@ -50,7 +50,7 @@
     .ficha-logo {
       font-family: var(--font-body);
       font-size: 0.7rem;
-      color: #00bfff;
+      color: #1c3f73;
       letter-spacing: 4px;
       opacity: 0.8;
       margin-bottom: 0.25rem;
@@ -69,12 +69,12 @@
     .ficha-badge-rango {
       display: inline-block;
       margin-top: 0.75rem;
-      background: #b8860b22;
-      border: 1px solid #b8860b;
+      background: #c6a96522;
+      border: 1px solid #c6a965;
       border-radius: 20px;
       padding: 3px 14px;
       font-size: 0.75rem;
-      color: #ffd700;
+      color: #c6a965;
       letter-spacing: 2px;
     }
 
@@ -89,9 +89,9 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      border: 2px solid #00bfff;
+      border: 2px solid #1c3f73;
       object-fit: cover;
-      box-shadow: 0 0 12px #00bfff44;
+      box-shadow: 0 0 12px #1c3f7344;
     }
 
     .ficha-info-row {
@@ -118,12 +118,12 @@
 
     .ficha-value {
       font-size: 0.85rem;
-      color: #00bfff;
+      color: #1c3f73;
     }
 
     .ficha-divider {
       border: none;
-      border-top: 1px solid #b8860b33;
+      border-top: 1px solid #c6a96533;
       margin: 0;
     }
 
@@ -153,8 +153,8 @@
     }
 
     .ficha-footer {
-      background: #050508;
-      border-top: 1px solid #b8860b33;
+      background: #0a1428;
+      border-top: 1px solid #c6a96533;
       padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
@@ -170,14 +170,14 @@
     .ficha-watermark {
       font-family: var(--font-body);
       font-size: 0.6rem;
-      color: #b8860b44;
+      color: #c6a96544;
       letter-spacing: 3px;
     }
 
     /* Circuit decoration lines */
     .circuit-line {
       position: absolute;
-      background: #00bfff;
+      background: #1c3f73;
       opacity: 0.15;
     }
 
@@ -254,7 +254,7 @@
               </div>
               <div class="ficha-field">
                 <div class="ficha-label">Estado</div>
-                <div class="ficha-value" style="color:#25d366" id="ficha-estado">—</div>
+                <div class="ficha-value" style="color:#3f8f5f" id="ficha-estado">—</div>
               </div>
             </div>
 
@@ -341,7 +341,7 @@
             cursosEl.innerHTML = cursosData.map(c =>
               '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
               '<span>' + (c.categoria || '') + ' — ' + c.titulo + '</span>' +
-              '<span style="color:#b8860b;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + c.puntuacion + '/10</span>' +
+              '<span style="color:#c6a965;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + c.puntuacion + '/10</span>' +
               '</div>'
             ).join('');
           }
@@ -357,7 +357,7 @@
             const p = d.data();
             return '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
               '<span>' + (p.nombre || '—') + '</span>' +
-              '<span style="color:#b8860b;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + (p.puntuacion || '—') + '/10</span>' +
+              '<span style="color:#c6a965;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + (p.puntuacion || '—') + '/10</span>' +
               '</div>';
           }).join('');
         }
@@ -375,7 +375,7 @@
 
       try {
         const canvas = await html2canvas(fichaCard, {
-          backgroundColor: '#0d1117',
+          backgroundColor: '#0a1428',
           scale: 2,
           useCORS: true,
           logging: false,

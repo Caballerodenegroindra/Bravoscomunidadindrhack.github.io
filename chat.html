@@ -4,11 +4,11 @@
   <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0d1117" />
+  <meta name="theme-color" content="#0a1428" />
   <title>Chat — Academia Indrhack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* ── VARIABLES EXTRA ── */
@@ -27,7 +27,7 @@
     .chat-rooms {
       width: var(--chat-sidebar-w);
       flex-shrink: 0;
-      background: #09090e;
+      background: #0a1428;
       border-right: 1px solid rgba(204,34,0,0.15);
       display: flex;
       flex-direction: column;
@@ -307,8 +307,8 @@
     .online-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 6px #22c55e;
+      background: #3f8f5f;
+      box-shadow: 0 0 6px #3f8f5f;
       display: inline-block;
     }
 
@@ -644,7 +644,7 @@
       justify-content: center;
       transition: background 0.15s, box-shadow 0.15s;
     }
-    .thread-send-btn:hover { background: #e02800; box-shadow: 0 0 12px rgba(204,34,0,0.4); }
+    .thread-send-btn:hover { background: #8c2a20; box-shadow: 0 0 12px rgba(204,34,0,0.4); }
     .thread-send-btn:disabled { background: #2a2a2a; color: #555; cursor: default; }
     .thread-send-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -803,7 +803,7 @@
       box-shadow: 0 2px 12px rgba(204,34,0,0.3);
     }
     .chat-send-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .chat-send-btn:hover:not(:disabled) { background: #e02800; box-shadow: 0 0 24px rgba(204,34,0,0.5); }
+    .chat-send-btn:hover:not(:disabled) { background: #8c2a20; box-shadow: 0 0 24px rgba(204,34,0,0.5); }
     .chat-send-btn:active:not(:disabled) { transform: scale(0.92); }
     .chat-send-btn:disabled { background: #222230; color: #444; cursor: default; box-shadow: none; }
 
@@ -1231,7 +1231,7 @@
       background: none;
       border: 1px solid rgba(248,81,73,0.45);
       border-radius: 6px;
-      color: #f85149;
+      color: #b3382c;
       cursor: pointer;
       padding: 0.25rem 0.6rem;
       font-size: 0.72rem;
@@ -1253,8 +1253,8 @@
     .live-pulse-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: #f85149;
-      box-shadow: 0 0 6px #f85149;
+      background: #b3382c;
+      box-shadow: 0 0 6px #b3382c;
       display: inline-block;
       animation: livePulse 1.4s infinite;
       flex-shrink: 0;
@@ -1270,7 +1270,7 @@
       font-size: 0.6rem;
       font-weight: 800;
       letter-spacing: 0.06em;
-      color: #f85149;
+      color: #b3382c;
       text-transform: uppercase;
     }
     .room-item__live-badge.scheduled { color: var(--text-muted); }
@@ -1319,7 +1319,7 @@
       font-family: var(--font-body);
       transition: border-color 0.12s, color 0.12s;
     }
-    .live-controls__finish-btn:hover { border-color: #f85149; color: #f85149; }
+    .live-controls__finish-btn:hover { border-color: #b3382c; color: #b3382c; }
 
     /* Chips de pasos (vista admin) */
     .step-chips {
@@ -1356,7 +1356,7 @@
       transition: background 0.12s, box-shadow 0.12s;
     }
     .step-chip--next:hover { background: rgba(248,81,73,0.16); box-shadow: 0 0 16px rgba(248,81,73,0.25); }
-    .step-chip--next .step-chip__label { color: #f85149; }
+    .step-chip--next .step-chip__label { color: #b3382c; }
     .step-chip--locked { opacity: 0.4; }
 
     /* Barra de progreso (vista usuario) */
@@ -1377,7 +1377,7 @@
       flex-shrink: 0;
     }
     .live-progress__dot--done { background: var(--success); border-color: var(--success); box-shadow: 0 0 6px rgba(63,185,80,0.5); }
-    .live-progress__dot--current { background: #f85149; border-color: #f85149; box-shadow: 0 0 6px rgba(248,81,73,0.6); animation: livePulse 1.4s infinite; }
+    .live-progress__dot--current { background: #b3382c; border-color: #b3382c; box-shadow: 0 0 6px rgba(248,81,73,0.6); animation: livePulse 1.4s infinite; }
 
     .live-complete-btn {
       align-self: flex-start;
@@ -1387,7 +1387,7 @@
       background: var(--success);
       border: none;
       border-radius: 20px;
-      color: #04140a;
+      color: #0a1428;
       font-weight: 800;
       font-size: 0.75rem;
       padding: 0.45rem 0.95rem;
@@ -1428,7 +1428,7 @@
       font-weight: 800;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: #f85149;
+      color: #b3382c;
       margin-bottom: 0.4rem;
     }
     .msg__step-label svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
@@ -1475,7 +1475,7 @@
       align-items: center;
       gap: 6px;
     }
-    .live-create__title svg { width: 14px; height: 14px; stroke: #f85149; fill: none; stroke-width: 2; }
+    .live-create__title svg { width: 14px; height: 14px; stroke: #b3382c; fill: none; stroke-width: 2; }
     .live-create__close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; line-height: 1; }
     .live-create__close:hover { color: var(--text); }
     .live-create__body {
@@ -1536,7 +1536,7 @@
       justify-content: space-between;
       font-size: 0.68rem;
       font-weight: 800;
-      color: #f85149;
+      color: #b3382c;
       letter-spacing: 0.05em;
     }
     .live-step-row__remove {
@@ -1547,7 +1547,7 @@
       font-size: 0.9rem;
       line-height: 1;
     }
-    .live-step-row__remove:hover { color: #f85149; }
+    .live-step-row__remove:hover { color: #b3382c; }
 
     .btn-add-step {
       align-self: flex-start;
@@ -1557,7 +1557,7 @@
       background: none;
       border: 1px dashed rgba(248,81,73,0.4);
       border-radius: 20px;
-      color: #f85149;
+      color: #b3382c;
       font-size: 0.72rem;
       font-weight: 700;
       padding: 0.35rem 0.85rem;
@@ -1574,7 +1574,7 @@
     }
     .btn-crear-clase-viva {
       width: 100%;
-      background: #f85149;
+      background: #b3382c;
       border: none;
       border-radius: 24px;
       color: #fff;
@@ -1927,10 +1927,10 @@
 
     const RANK_DATA = [
       { key:'novato',   icon:'🔰', name:'Novato',    color:'#9999aa', desc:'Nivel de entrada a la comunidad' },
-      { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#58a6ff', desc:'Aprendiendo las herramientas' },
-      { key:'hacker',   icon:'💀', name:'Hacker',    color:'#cc2200', desc:'Domina técnicas básicas de pentest' },
-      { key:'elite',    icon:'🏆', name:'Élite',     color:'#d4a017', desc:'Experto en ofensiva avanzada' },
-      { key:'maestro',  icon:'🔮', name:'Maestro',   color:'#a855f7', desc:'Arquitecto de exploits' },
+      { key:'aprendiz', icon:'⚡', name:'Aprendiz',  color:'#c6a965', desc:'Aprendiendo las herramientas' },
+      { key:'hacker',   icon:'💀', name:'Hacker',    color:'#8c2a20', desc:'Domina técnicas básicas de pentest' },
+      { key:'elite',    icon:'🏆', name:'Élite',     color:'#c6a965', desc:'Experto en ofensiva avanzada' },
+      { key:'maestro',  icon:'🔮', name:'Maestro',   color:'#5b6f9e', desc:'Arquitecto de exploits' },
     ];
 
     /* ════════════ INICIO ════════════ */
@@ -2254,7 +2254,7 @@
               .filter(u => u.uid !== ME.uid)
               .sort((a, b) => (a.displayName || a.username || '').localeCompare(b.displayName || b.username || ''));
           } catch (e) {
-            listEl.innerHTML = `<p style="padding:1rem;color:#ff6b6b;font-size:0.85rem;text-align:center">Error: ${escapeHtml(e.message)}</p>`;
+            listEl.innerHTML = `<p style="padding:1rem;color:#c9776d;font-size:0.85rem;text-align:center">Error: ${escapeHtml(e.message)}</p>`;
             return;
           }
         }
@@ -2425,7 +2425,7 @@
           .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
         renderMessages(msgs);
       }, (err) => {
-        el.innerHTML = `<p style="color:#ff6b6b;padding:1.5rem;font-size:0.85rem;text-align:center">
+        el.innerHTML = `<p style="color:#c9776d;padding:1.5rem;font-size:0.85rem;text-align:center">
           Error al cargar mensajes: ${escapeHtml(err.message)}
         </p>`;
       });
@@ -2688,7 +2688,7 @@
           .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
         renderLiveMessages();
       }, (err) => {
-        el.innerHTML = `<p style="color:#ff6b6b;padding:1.5rem;font-size:0.85rem;text-align:center">
+        el.innerHTML = `<p style="color:#c9776d;padding:1.5rem;font-size:0.85rem;text-align:center">
           Error al cargar mensajes: ${escapeHtml(err.message)}
         </p>`;
       });
@@ -3207,7 +3207,7 @@
             body.appendChild(opt);
           });
         } catch(e) {
-          body.innerHTML = `<p style="color:#ff6b6b;font-size:0.82rem;text-align:center;padding:1rem">
+          body.innerHTML = `<p style="color:#c9776d;font-size:0.82rem;text-align:center;padding:1rem">
             Error al cargar certificados.
           </p>`;
         }
@@ -3302,7 +3302,7 @@
               return ca !== 0 ? ca : ((a.orden || 0) - (b.orden || 0));
             });
         } catch(e) {
-          pickerList.innerHTML = `<p style="padding:1rem;color:#ff6b6b;font-size:0.85rem;text-align:center">Error al cargar clases.</p>`;
+          pickerList.innerHTML = `<p style="padding:1rem;color:#c9776d;font-size:0.85rem;text-align:center">Error al cargar clases.</p>`;
           return;
         }
       }
