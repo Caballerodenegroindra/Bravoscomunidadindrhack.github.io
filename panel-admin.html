@@ -771,21 +771,24 @@
       if (searchEl) searchEl.addEventListener('input', paintPresencia);
 
       function getPresenceLevel(u) {
-        if (u.isOnline === true) return 'online';
-        if (!u.lastSeen) return 'offline';
+        if (!u.lastSeen) return u.isOnline === true ? 'online' : 'offline';
         const secs = u.lastSeen.seconds || 0;
         const diffMin = (Date.now() / 1000 - secs) / 60;
+        // Si isOnline quedó "pegado" en true (la app se cerró sin avisar,
+        // común en móviles) pero ya pasaron varios minutos sin señal de
+        // vida (lastSeen viejo), no lo mostramos como en línea.
+        if (u.isOnline === true && diffMin <= 3) return 'online';
         if (diffMin <= 15) return 'recent';
         return 'offline';
       }
 
       function fmtLastSeen(u) {
-        if (u.isOnline) return 'Ahora mismo';
-        if (!u.lastSeen) return 'Nunca';
+        if (!u.lastSeen) return u.isOnline ? 'Ahora mismo' : 'Nunca';
         const date = new Date(u.lastSeen.seconds * 1000);
         const now  = new Date();
         const diffMs = now - date;
         const diffMin = Math.floor(diffMs / 60000);
+        if (u.isOnline && diffMin <= 3) return 'Ahora mismo';
         const diffH   = Math.floor(diffMin / 60);
         const diffD   = Math.floor(diffH / 24);
         if (diffMin < 1)  return 'Hace unos segundos';
