@@ -48,6 +48,9 @@ export const TIPOS_NOTIF = {
   CURSO_APROBADO: 'curso_aprobado',
   RANGO: 'rango',
   SISTEMA: 'sistema',
+  CLASE_EN_VIVO: 'clase_en_vivo',
+  RESPUESTA_HILO: 'respuesta_hilo',
+  CURSO_NUEVO: 'curso_nuevo',
 };
 
 const ICONOS = {
@@ -59,7 +62,28 @@ const ICONOS = {
   curso_aprobado: '📘',
   rango: '⭐',
   sistema: '🔔',
+  clase_en_vivo: '🔴',
+  respuesta_hilo: '💬',
+  curso_nuevo: '📚',
 };
+
+/**
+ * Crea la misma notificación para una lista de UIDs (por ejemplo, todos
+ * los usuarios aprobados). Usa un batch para no disparar cientos de
+ * escrituras individuales cuando la lista es grande.
+ */
+export async function crearNotificacionMasiva(uids, { tipo = TIPOS_NOTIF.SISTEMA, titulo, mensaje, link = '' }) {
+  if (!uids || uids.length === 0 || !titulo) return;
+  const batch = writeBatch(db);
+  uids.forEach((uid) => {
+    const ref = doc(collection(db, 'notificaciones'));
+    batch.set(ref, {
+      uid, tipo, titulo, mensaje: mensaje || '', link,
+      leida: false, fecha: Timestamp.now(),
+    });
+  });
+  await batch.commit();
+}
 
 export function iconoNotificacion(tipo) {
   return ICONOS[tipo] || '🔔';
