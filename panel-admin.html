@@ -18,7 +18,8 @@
       grid-template-columns: 12px 1fr auto;
       grid-template-areas:
         "dot user   status"
-        "dot rank   lastseen";
+        "dot phone  lastseen"
+        "dot rank   rank";
       align-items: center;
       column-gap: 0.6rem;
       row-gap: 0.2rem;
@@ -45,6 +46,15 @@
       font-weight: 600;
       font-size: 0.88rem;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .presence-phone {
+      grid-area: phone;
+      font-size: 0.76rem;
+      color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -110,6 +120,7 @@
         padding: 0.75rem 1rem;
       }
       .presence-username { min-width: 120px; flex: none; }
+      .presence-phone { min-width: 110px; flex: none; }
       .presence-rank { min-width: 70px; }
       .presence-status-text { flex: 1; text-align: left; }
       .presence-lastseen { min-width: 140px; }
@@ -805,7 +816,8 @@
         if (term) list = list.filter(u =>
           (u.username||'').toLowerCase().includes(term) ||
           (u.displayName||'').toLowerCase().includes(term) ||
-          (u.rango||'').toLowerCase().includes(term)
+          (u.rango||'').toLowerCase().includes(term) ||
+          (u.phone||'').toLowerCase().includes(term)
         );
 
         // Sort: online first, then recent, then offline; within each group sort by lastSeen desc
@@ -830,6 +842,7 @@
             <div class="presence-table-header">
               <span style="width:10px;flex-shrink:0"></span>
               <span style="min-width:120px">Usuario</span>
+              <span style="min-width:110px">Teléfono</span>
               <span style="min-width:70px">Rango</span>
               <span style="flex:1">Estado</span>
               <span style="min-width:140px;text-align:right">Última conexión</span>
@@ -840,6 +853,7 @@
                 <div class="presence-row">
                   <span class="presence-dot ${dotClass[level]}"></span>
                   <span class="presence-username">${u.username || u.displayName || u.uid}</span>
+                  <span class="presence-phone">${u.phone || '—'}</span>
                   <span class="presence-rank">${u.rango || 'Recluta'}</span>
                   <span class="presence-status-text ${statusClass[level]}">${statusLabel[level]}</span>
                   <span class="presence-lastseen">${fmtLastSeen(u)}</span>
@@ -914,7 +928,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
               <div>
                 <strong>${u.username}</strong>
-                <small style="color:var(--text-muted);display:block">${u.rol}</small>
+                <small style="color:var(--text-muted);display:block">${u.rol}${u.phone ? ' · 📱 ' + u.phone : ''}</small>
               </div>
               ${badge(u.estado)}
             </div>

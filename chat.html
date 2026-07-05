@@ -2010,6 +2010,7 @@
           username: ME.username || '',
           displayName: ME.displayName || ME.username || 'Usuario',
           photoURL: ME.photoURL || '',
+          phone: ME.phone || '',
           updatedAt: serverTimestamp(),
         }, { merge: true });
       } catch (_) { /* silencioso — no bloquear el chat */ }
@@ -2070,7 +2071,7 @@
           </div>
           <div class="connected-item__info">
             <div class="connected-item__name">${escapeHtml(u.displayName || u.username || 'Usuario')}</div>
-            <div class="connected-item__sub">@${escapeHtml(u.username || '—')}</div>
+            <div class="connected-item__sub">@${escapeHtml(u.username || '—')}${u.phone ? ` · 📱 ${escapeHtml(u.phone)}` : ''}</div>
           </div>
         </div>
       `).join('');
