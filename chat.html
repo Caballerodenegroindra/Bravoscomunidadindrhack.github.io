@@ -2097,7 +2097,7 @@
     async function loadRooms() {
       const listEl = document.getElementById('rooms-list');
 
-      const q = query(collection(db, 'chat_rooms'));
+      const q = query(collection(db, 'chat_rooms'), where('type', 'in', ['global', 'class']));
       onSnapshot(q, async (snap) => {
         const rooms = snap.docs.map(d => ({ id: d.id, ...d.data() }))
           .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
@@ -2230,7 +2230,7 @@
 
     // Store all rooms globally for search
     let ALL_ROOMS = [];
-    onSnapshot(query(collection(db, 'chat_rooms')), snap => {
+    onSnapshot(query(collection(db, 'chat_rooms'), where('type', 'in', ['global', 'class'])), snap => {
       ALL_ROOMS = snap.docs.map(d => ({ id: d.id, ...d.data() }))
         .sort((a, b) => (b.lastAt?.seconds || 0) - (a.lastAt?.seconds || 0));
     });
