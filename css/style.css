@@ -1100,6 +1100,40 @@ tbody tr:last-child td { border-bottom: none; }
 .msg__cert-title { font-size: 0.8125rem; font-weight: 700; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .msg__cert-sub { font-size: 0.6875rem; color: var(--text-muted); margin-top: 1px; }
 
+.msg__image-attachment {
+  display: block;
+  max-width: 260px;
+  max-height: 320px;
+  border-radius: var(--radius);
+  margin-top: 0.35rem;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  object-fit: cover;
+}
+.msg__file-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.75rem;
+  margin-top: 0.35rem;
+  max-width: 280px;
+  text-decoration: none;
+  transition: border-color 0.12s;
+}
+.msg__file-card:hover { border-color: var(--gold); }
+.msg__file-icon { font-size: 1.4rem; flex-shrink: 0; }
+.msg__file-info { flex: 1; min-width: 0; }
+.msg__file-name { font-size: 0.8rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg__file-sub { font-size: 0.68rem; color: var(--text-muted); }
+.attach-upload-status {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding: 0.2rem 0.75rem 0;
+}
+
 .chat-attach-bar {
   display: flex;
   gap: 0.35rem;
@@ -1127,6 +1161,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .attach-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--color-accent-subtle); }
 .attach-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.attach-btn:disabled { opacity: 0.5; cursor: default; }
 
 .share-picker-overlay {
   display: none;
