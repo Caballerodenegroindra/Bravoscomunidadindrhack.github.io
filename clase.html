@@ -466,6 +466,16 @@
       }
     });
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function extractYouTubeId(url) {
       if (!url) return null;
       const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
@@ -627,7 +637,7 @@
               <h3>Contenido de la clase</h3>
             </div>
           </div>
-          <div class="content-block">${curso.descripcion}</div>
+          <div class="content-block">${escapeHtml(curso.descripcion)}</div>
         </div>` : ''}
 
         <!-- TERMUX COMMANDS -->

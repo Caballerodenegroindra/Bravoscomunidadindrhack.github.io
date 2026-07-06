@@ -1206,7 +1206,7 @@
                 <div>
                   <span style="color:var(--text-muted);font-size:0.75rem">Clase ${c.orden || 1} · ${c.nivel || 'Básico'}</span>
                   <h3 style="margin:0.25rem 0;font-size:0.95rem">${c.titulo || 'Sin título'}</h3>
-                  <p style="color:var(--text-muted);font-size:0.82rem;margin:0">${(c.descripcion || '').substring(0,80)}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
+                  <p style="color:var(--text-muted);font-size:0.82rem;margin:0">${escapeHtml((c.descripcion || '').substring(0,80))}${(c.descripcion||'').length > 80 ? '...' : ''}</p>
                 </div>
                 <span style="color:${c.publicado ? '#3f8f5f' : '#888'};font-size:0.78rem">${c.publicado ? '✅' : '⛔'}</span>
               </div>
