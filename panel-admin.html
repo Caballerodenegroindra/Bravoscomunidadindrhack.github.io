@@ -678,25 +678,50 @@
     const initial = window.location.hash.replace('#', '') || 'resumen';
     activateTab(initial);
 
-    /* --- Carga de datos protegida por rol administrador --- */
+    /* --- Carga de datos protegida por rol administrador ---
+       Nota: cada bloque va en su propio try/catch para que un
+       error en una sección (por ej. cursos) NO impida que las
+       demás (presencia, miembros, etc.) se carguen igual. --- */
     requireAdmin('index.html').then(async (admin) => {
       if (!admin) return;
 
-      const users = await fetchAllUsers();
-      renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
-      renderMembers(users);
+      let users = [];
+      try {
+        users = await fetchAllUsers();
+        renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
+        renderMembers(users);
+      } catch (err) {
+        console.error('Error cargando usuarios:', err);
+      }
 
-      const courses = await fetchAllCourses();
-      renderStats(users, courses);
-      renderCourses(courses);
+      try {
+        const courses = await fetchAllCourses();
+        renderStats(users, courses);
+        renderCourses(courses);
 
-      const buscarClaseBox = document.getElementById('curso-buscar-clase');
-      buscarClaseBox.addEventListener('input', () => {
-        renderCourses(courses, buscarClaseBox.value);
-      });
+        const buscarClaseBox = document.getElementById('curso-buscar-clase');
+        buscarClaseBox.addEventListener('input', () => {
+          renderCourses(courses, buscarClaseBox.value);
+        });
+      } catch (err) {
+        console.error('Error cargando cursos:', err);
+        const grid = document.querySelector('[data-courses-grid]');
+        if (grid) {
+          grid.innerHTML = `<p class="section-subtitle" style="color:#c9776d">
+            ❌ Error al cargar los cursos: ${err.message}<br>
+            <span style="font-size:0.75rem">Revisá las reglas de Firestore para la colección "courses" y la consola del navegador (F12) para más detalles.</span>
+          </p>`;
+        }
+      }
 
-      // Init presencia (carga en tiempo real cuando se activa la pestaña)
-      initPresenciaTab();
+      // Init presencia (carga en tiempo real cuando se activa la pestaña).
+      // Va fuera del try/catch de cursos para que SIEMPRE se active,
+      // incluso si la carga de cursos falló arriba.
+      try {
+        initPresenciaTab();
+      } catch (err) {
+        console.error('Error iniciando presencia:', err);
+      }
     });
 
     function badge(estado) {
