@@ -96,8 +96,51 @@
       margin-bottom: 1.25rem;
       color: #c8c8d8;
       line-height: 1.85;
-      white-space: pre-wrap;
       font-size: 0.93rem;
+    }
+    .content-block .desc-titulo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #fff;
+      font-size: 1.02rem;
+      margin: 1.1rem 0 0.5rem;
+    }
+    .content-block .desc-titulo:first-child { margin-top: 0; }
+    .content-block .desc-num {
+      background: var(--color-accent, #e0245e);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .content-block .desc-lista {
+      margin: 0.4rem 0 0.9rem 1.2rem;
+      padding: 0;
+    }
+    .content-block .desc-lista li { margin-bottom: 0.35rem; }
+    .content-block .desc-parrafo { margin: 0 0 0.6rem; }
+    .content-block strong { color: #fff; }
+    .content-block pre {
+      background: #05050a;
+      border: 1px solid #1a1a2e;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      overflow-x: auto;
+      margin: 0.6rem 0 0.9rem;
+    }
+    .content-block pre code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.82rem;
+      color: #8ee08e;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     /* ── SECTION HEADER ── */
@@ -518,8 +561,54 @@
       `;
     }
 
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    /* ─── MINI-MARKDOWN SEGURO ───
+       Escapa TODO el HTML primero (así no se puede inyectar <script>),
+       y recién después interpreta un formato simple tipo Markdown. */
+    function renderDescripcion(str) {
+      if (!str) return '';
+      const safe = escapeHtml(str);
+      const lineas = safe.split('\n');
+      let html = '';
+      let enLista = false;
+      let enCodigo = false;
+
+      const cerrarLista = () => { if (enLista) { html += '</ul>'; enLista = false; } };
+
+      for (let linea of lineas) {
+        // Bloques de código ```
+        if (/^```/.test(linea.trim())) {
+          cerrarLista();
+          if (!enCodigo) { html += '<pre><code>'; enCodigo = true; }
+          else { html += '</code></pre>'; enCodigo = false; }
+          continue;
+        }
+        if (enCodigo) { html += linea + '\n'; continue; }
+
+        // Negrita inline **texto**
+        const conNegrita = linea.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+        // Títulos numerados: "1. Algo" o "1) Algo"
+        const matchTitulo = conNegrita.match(/^\s*(\d+)[\.\)]\s+(.*)$/);
+        // Listas con guion o asterisco: "- item" o "* item"
+        const matchItem = conNegrita.match(/^\s*[-*]\s+(.*)$/);
+
+        if (matchTitulo) {
+          cerrarLista();
+          html += `<h4 class="desc-titulo"><span class="desc-num">${matchTitulo[1]}</span>${matchTitulo[2]}</h4>`;
+        } else if (matchItem) {
+          if (!enLista) { html += '<ul class="desc-lista">'; enLista = true; }
+          html += `<li>${matchItem[1]}</li>`;
+        } else if (linea.trim() === '') {
+          cerrarLista();
+          html += '<br>';
+        } else {
+          cerrarLista();
+          html += `<p class="desc-parrafo">${conNegrita}</p>`;
+        }
+      }
+      cerrarLista();
+      if (enCodigo) html += '</code></pre>';
+      return html;
     }
 
     /* ─── RENDER CLASE ─── */
@@ -637,7 +726,7 @@
               <h3>Contenido de la clase</h3>
             </div>
           </div>
-          <div class="content-block">${escapeHtml(curso.descripcion)}</div>
+          <div class="content-block">${renderDescripcion(curso.descripcion)}</div>
         </div>` : ''}
 
         <!-- TERMUX COMMANDS -->
