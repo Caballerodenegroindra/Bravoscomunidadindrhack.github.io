@@ -695,7 +695,15 @@
       }
 
       try {
-        const courses = await fetchAllCourses();
+        const grid = document.querySelector('[data-courses-grid]');
+        if (grid) grid.innerHTML = '<p class="section-subtitle">Consultando Firestore (colección "courses")…</p>';
+
+        const snap = await getDocs(collection(db, 'courses'));
+        console.log('[DEBUG cursos] documentos crudos recibidos de Firestore:', snap.size);
+
+        const courses = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        console.log('[DEBUG cursos] courses mapeados:', courses);
+
         renderStats(users, courses);
         renderCourses(courses);
 
@@ -708,8 +716,10 @@
         const grid = document.querySelector('[data-courses-grid]');
         if (grid) {
           grid.innerHTML = `<p class="section-subtitle" style="color:#c9776d">
-            ❌ Error al cargar los cursos: ${err.message}<br>
-            <span style="font-size:0.75rem">Revisá las reglas de Firestore para la colección "courses" y la consola del navegador (F12) para más detalles.</span>
+            ❌ Error al cargar los cursos<br>
+            <b>Código:</b> ${err.code || '(sin código)'}<br>
+            <b>Mensaje:</b> ${err.message}<br>
+            <span style="font-size:0.75rem">Mandá esta info completa para poder ayudarte mejor.</span>
           </p>`;
         }
       }
