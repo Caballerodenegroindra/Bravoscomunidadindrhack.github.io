@@ -596,8 +596,8 @@
         <button id="modal-close" class="btn btn--small btn--danger">&#10005;</button>
       </div>
       <form id="course-form">
-        <div class="field"><label>Título</label><input type="text" name="titulo" required placeholder="Ej: Clase 1 - Introducción a Linux" /></div>
-        <div class="field"><label>Carpeta / Categoría</label><input type="text" name="categoria" placeholder="Ej: Hacking Ético, Linux, WhatsApp..." required /></div>
+        <div class="field"><label>Título</label><input type="text" name="titulo" placeholder="Ej: Clase 1 - Introducción a Linux" /></div>
+        <div class="field"><label>Carpeta / Categoría</label><input type="text" name="categoria" placeholder="Ej: Hacking Ético, Linux, WhatsApp..." /></div>
         <div class="field"><label>Orden dentro de la carpeta</label><input type="number" name="orden" placeholder="1, 2, 3..." min="1" value="1" /></div>
         <div class="field"><label>Nivel</label>
           <select name="nivel">
@@ -608,8 +608,8 @@
         </div>
         <div class="field"><label>Descripción / Contenido de la clase</label><textarea name="descripcion" rows="5" placeholder="Escribe el contenido completo de la clase aquí..."></textarea></div>
         <div class="field"><label>Material (texto o URL)</label><input type="text" name="material" placeholder="Ej: PDF adjunto, link de drive..." /></div>
-        <div class="field"><label>Enlace de la clase (YouTube, Drive, etc.)</label><input type="url" name="enlace" placeholder="https://..." /></div>
-        <div class="field"><label>Enlace de descarga</label><input type="url" name="descarga" placeholder="https://..." /></div>
+        <div class="field"><label>Enlace de la clase (YouTube, Drive, etc.)</label><input type="text" name="enlace" placeholder="https://..." /></div>
+        <div class="field"><label>Enlace de descarga</label><input type="text" name="descarga" placeholder="https://..." /></div>
 
         <!-- PREGUNTAS DEL QUIZ -->
         <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #222">
@@ -1075,15 +1075,24 @@
 
     modalForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      const normalizarLink = (v) => {
+        v = v.trim();
+        if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+        return v;
+      };
+      const enlaceVal   = normalizarLink(modalForm.enlace.value);
+      const descargaVal = normalizarLink(modalForm.descarga.value);
+
       const data = {
-        titulo: modalForm.titulo.value.trim(),
+        titulo: modalForm.titulo.value.trim() || 'Clase sin título',
         categoria: modalForm.categoria.value.trim() || 'General',
         orden: parseInt(modalForm.orden.value) || 1,
         nivel: modalForm.nivel.value.trim(),
         descripcion: modalForm.descripcion.value.trim(),
         material: modalForm.material.value.trim(),
-        enlace: modalForm.enlace.value.trim(),
-        descarga: modalForm.descarga.value.trim(),
+        enlace: enlaceVal,
+        descarga: descargaVal,
         publicado: modalForm.publicado.checked,
         quiz_preguntas: [
           modalForm.quiz_p1?.value?.trim() || '¿Cuál es el concepto principal de esta clase?',
