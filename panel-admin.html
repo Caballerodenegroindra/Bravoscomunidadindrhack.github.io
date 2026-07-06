@@ -1196,6 +1196,10 @@
 
     if (addCmdBtn) addCmdBtn.addEventListener('click', () => addCmdBlock(null));
 
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
     function renderCourses(courses, searchTerm) {
       const grid = document.querySelector('[data-courses-grid]');
       const term = (searchTerm || '').trim().toLowerCase();
