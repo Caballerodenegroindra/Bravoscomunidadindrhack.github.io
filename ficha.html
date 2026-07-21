@@ -196,6 +196,9 @@
   <canvas id="particle-canvas"></canvas>
 
   <header class="navbar">
+    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
     <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
@@ -214,6 +217,36 @@
 
     <button class="navbar__toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </header>
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="cursos.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+        Cursos
+      </a>
+      <a href="chat.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+        Chat
+      </a>
+      <a href="panel-usuario.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span>
+        Mi Panel
+      </a>
+      <a href="ia-asistente.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></span>
+        IA
+      </a>
+      <a href="panel-usuario.html#ranking" class="tabbar__item" id="tab-ranking-btn">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        Ranking
+      </a>
+      <a href="notificaciones.html" class="tabbar__item" style="position:relative">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+        <span class="tabbar__label">Avisos</span>
+        <span class="notif-dot" data-notif-dot style="display:none"></span>
+      </a>
+    </div>
+  </nav>
+
 
   <main>
     <div class="container section">
