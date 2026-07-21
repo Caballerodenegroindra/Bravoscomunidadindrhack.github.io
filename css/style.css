@@ -206,6 +206,25 @@ code { font-family: var(--font-mono); }
 }
 .navbar__brand:hover { text-decoration: none; color: var(--text); }
 
+/* ── BOTÓN "VOLVER" (flecha atrás en pantallas internas) ── */
+.navbar__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.navbar__back:hover { background: var(--bg-elevated); border-color: var(--gold); }
+.navbar__back svg { width: 18px; height: 18px; }
+
 .navbar__octocat {
   width: 32px; height: 32px;
   fill: var(--color-fg-default);
