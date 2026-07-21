@@ -22,11 +22,14 @@
    ============================================================ */
 
 (function () {
-  // No mostrar esto en páginas de login/registro: ahí "atrás" debe
-  // funcionar normal (por ejemplo, para volver del registro al login).
-  const paginasExcluidas = ['login.html', 'registro.html', 'index.html'];
+  // Solo mostramos el cartel de "¿Querés salir?" en las pantallas
+  // "principales" (portada pública y panel del usuario ya logueado).
+  // En el resto de las secciones internas, "atrás" debe funcionar de
+  // forma normal y llevar a la pantalla anterior, sin preguntar nada
+  // y sin ensuciar el historial del navegador con estados extra.
+  const paginasPrincipales = ['index.html', 'panel-usuario.html', ''];
   const pagina = window.location.pathname.split('/').pop() || 'index.html';
-  if (paginasExcluidas.includes(pagina)) return;
+  if (!paginasPrincipales.includes(pagina)) return;
 
   let mostrandoCartel = false;
   let confirmadoParaSalir = false;
