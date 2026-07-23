@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /panel-usuario.html
+Disallow: /panel-admin.html
+Disallow: /chat.html
+Disallow: /perfil.html
+Disallow: /configuracion.html
+Disallow: /notificaciones.html
+Disallow: /ficha.html
+Disallow: /clase.html
+Disallow: /titulos.html
+Disallow: /clases-termux.html
+Disallow: /ia-asistente.html
+
+Sitemap: https://bravoscomunidadindrhack.github.io/sitemap.xml

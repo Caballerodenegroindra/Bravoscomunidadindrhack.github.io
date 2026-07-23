@@ -6,58 +6,362 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0a1428" />
   <title>Cursos — Academia Indrhack</title>
+  <meta name="description" content="Explorá el catálogo completo de cursos de Academia Indrhack: ciberseguridad, hacking ético, Termux y más." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <link rel="canonical" href="https://bravoscomunidadindrhack.github.io/cursos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Cursos — Academia Indrhack" />
+  <meta property="og:description" content="Explorá el catálogo completo de cursos de Academia Indrhack: ciberseguridad, hacking ético, Termux y más." />
+  <meta property="og:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
+  <meta property="og:url" content="https://bravoscomunidadindrhack.github.io/cursos.html" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cursos — Academia Indrhack" />
+  <meta name="twitter:description" content="Explorá el catálogo completo de cursos de Academia Indrhack: ciberseguridad, hacking ético, Termux y más." />
+  <meta name="twitter:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=2" />
   <style>
-    .curso-card {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .curso-card:hover { border-color: var(--color-accent-emphasis); box-shadow: 0 0 12px var(--color-accent-emphasis)33; }
-    .curso-card.expanded { border-color: var(--color-accent-fg); }
-    .curso-descripcion {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      color: #aaa;
-      font-size: 0.9rem;
-      margin: 0.5rem 0;
-      white-space: pre-wrap;
-    }
-    .curso-descripcion.full {
-      display: block;
-      -webkit-line-clamp: unset;
-    }
-    .categoria-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin: 2rem 0 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--color-accent-emphasis)44;
-    }
-    .categoria-icon { font-size: 1.4rem; }
+    /* ====================== NIVELES (paleta semántica) ====================== */
     .nivel-badge {
       display: inline-block;
       padding: 2px 10px;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 600;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
       margin-bottom: 0.5rem;
     }
-    .nivel-basico { background: var(--color-accent-fg)22; color: var(--color-accent-fg); border: 1px solid var(--color-accent-fg); }
-    .nivel-intermedio { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b; }
-    .nivel-avanzado { background: var(--color-accent-emphasis)22; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis); }
-    .expand-hint { color: #555; font-size: 0.75rem; margin-top: 0.25rem; }
+    .nivel-basico     { background: var(--color-success-subtle);   color: var(--color-success-fg);   border: 1px solid rgba(63,143,95,0.4); }
+    .nivel-intermedio { background: var(--color-attention-subtle); color: var(--color-attention-fg); border: 1px solid rgba(201,154,46,0.4); }
+    .nivel-avanzado   { background: var(--color-danger-subtle);    color: var(--color-danger-fg);    border: 1px solid rgba(179,56,44,0.4); }
+
+    /* ====================== STATS BAR ====================== */
+    .cursos-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .cursos-stats__item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+    .cursos-stats__item b { font-family: var(--font-heading); font-size: 1.05rem; color: var(--gold); }
+
+    /* ====================== TOOLBAR: buscador + toggle vista ====================== */
+    .cursos-toolbar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: stretch;
+      margin-bottom: 1rem;
+    }
+    .cursos-search {
+      position: relative;
+      flex: 1 1 280px;
+      min-width: 220px;
+    }
+    .cursos-search svg {
+      position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+      width: 17px; height: 17px; stroke: var(--text-muted); pointer-events: none;
+    }
+    .cursos-search input {
+      width: 100%;
+      background: var(--color-canvas-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.65rem 2.4rem 0.65rem 2.6rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      min-height: 44px;
+    }
+    .cursos-search input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(198,169,101,0.2); }
+    .cursos-search input::placeholder { color: var(--text-muted); }
+    .cursos-search__clear {
+      position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      font-size: 1rem; padding: 0.4rem 0.6rem; line-height: 1;
+    }
+    .cursos-search__clear:hover { color: var(--gold); }
+
+    .cursos-vista-toggle {
+      display: flex;
+      background: var(--color-canvas-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .vista-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0.65rem 1.1rem;
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+      color: var(--text-soft);
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      min-height: 44px;
+    }
+    .vista-btn:hover { color: var(--text); background: var(--bg-elevated); }
+    .vista-btn.active { background: var(--color-accent-emphasis); color: #fff; }
+
+    /* ====================== CHIPS (categoría / nivel) ====================== */
+    .cursos-chips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.6rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .cursos-chips::-webkit-scrollbar { height: 4px; }
+    .cursos-chips::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .chip {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--gold); color: var(--gold); }
+    .chip.active { background: var(--color-accent-emphasis); border-color: var(--color-accent-emphasis); color: #fff; }
+    .chip .chip-count { opacity: 0.7; font-weight: 400; }
+
+    /* ====================== VISTA LISTA: grid de tarjetas ====================== */
+    .cursos-vista { display: none; }
+    .cursos-vista.active { display: block; }
+
+    .categoria-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-muted);
+      cursor: default;
+    }
+    .categoria-icon {
+      font-size: 1.2rem;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+    }
+    .categoria-header h2 { font-size: 1.05rem; margin: 0; }
+    .categoria-count {
+      color: var(--text-muted); font-size: 0.78rem;
+      margin-left: auto;
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 0.15rem 0.6rem; border-radius: var(--radius-pill);
+    }
+
+    .cursos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 0.9rem;
+    }
+    .curso-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--color-accent-emphasis);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.2rem;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .curso-card.nivel-l-basico     { border-left-color: var(--color-success-fg); }
+    .curso-card.nivel-l-intermedio { border-left-color: var(--color-attention-fg); }
+    .curso-card.nivel-l-avanzado   { border-left-color: var(--color-danger-fg); }
+    .curso-card:hover { border-color: var(--gold); box-shadow: var(--shadow); transform: translateY(-1px); }
+    .curso-card { position: relative; }
+    .curso-card__top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding-right: 1.9rem; }
+    .curso-card__orden { color: var(--text-muted); font-size: 0.72rem; font-weight: 700; }
+    .curso-card h3 { margin: 0.2rem 0 0.35rem; font-size: 0.98rem; line-height: 1.35; padding-right: 1.4rem; }
+    .curso-card__share {
+      position: absolute; top: 0.9rem; right: 0.9rem;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text-soft);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .curso-card__share:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.08); }
+    .curso-card__share.copiado { border-color: var(--color-success-fg); color: var(--color-success-fg); }
+
+    /* Toast de "enlace copiado" */
+    .toast-copiado {
+      position: fixed; left: 50%; bottom: calc(var(--tabbar-h, 60px) + 1rem);
+      transform: translate(-50%, 12px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--color-success-fg);
+      color: var(--color-success-fg);
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem; font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .toast-copiado.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .modal-share-row { display: flex; gap: 0.5rem; align-items: stretch; margin-top: 0.5rem; }
+    .modal-share-row input {
+      flex: 1; min-width: 0;
+      background: var(--color-canvas-inset); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text-soft); font-size: 0.78rem; padding: 0 0.7rem;
+    }
+    .curso-descripcion {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 0.35rem 0;
+      white-space: pre-wrap;
+    }
+    .expand-hint { color: var(--text-muted); font-size: 0.72rem; margin-top: 0.4rem; }
     .curso-actions { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .cursos-empty {
+      text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);
+      border: 1px dashed var(--border); border-radius: var(--radius-md);
+    }
+    mark.hl { background: rgba(198,169,101,0.35); color: var(--gold); border-radius: 2px; padding: 0 1px; }
+
+    /* ====================== VISTA MAPA CONCEPTUAL ====================== */
+    .mapa-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--color-canvas-inset);
+      overflow: hidden;
+    }
+    .mapa-toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+    .mapa-leyenda { display: flex; gap: 0.9rem; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-soft); }
+    .mapa-leyenda span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .mapa-leyenda i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .mapa-zoom { display: flex; align-items: center; gap: 0.35rem; }
+    .mapa-zoom button {
+      background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text);
+      width: 30px; height: 30px; border-radius: var(--radius); cursor: pointer; font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mapa-zoom button:hover { border-color: var(--gold); color: var(--gold); }
+    .mapa-zoom__label { font-size: 0.75rem; color: var(--text-muted); min-width: 38px; text-align: center; }
+
+    .mapa-canvas-wrap {
+      overflow: auto;
+      height: 62vh;
+      min-height: 420px;
+      background:
+        linear-gradient(var(--color-border-muted) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-border-muted) 1px, transparent 1px);
+      background-size: 26px 26px;
+      background-color: var(--color-canvas-inset);
+      cursor: grab;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mapa-canvas-wrap.dragging { cursor: grabbing; }
+    #mapa-canvas {
+      position: relative;
+      transform-origin: 0 0;
+      transition: transform 0.15s ease-out;
+    }
+    #mapa-lines { position: absolute; top: 0; left: 0; pointer-events: none; }
+
+    .map-node {
+      position: absolute;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      user-select: none;
+      transition: box-shadow 0.15s, opacity 0.15s, border-color 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .map-node.dim { opacity: 0.25; pointer-events: none; }
+
+    .map-node--root {
+      background: var(--color-accent-emphasis);
+      border: 1.5px solid var(--gold);
+      color: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .map-node--root .map-node__title { font-family: var(--font-heading); font-weight: 700; font-size: 0.92rem; }
+    .map-node--root .map-node__sub { font-size: 0.65rem; opacity: 0.8; margin-top: 2px; }
+
+    .map-node--categoria {
+      background: var(--bg-card);
+      border: 1.5px solid var(--gold);
+      padding: 0.55rem 0.7rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .map-node--categoria:hover { box-shadow: 0 0 0 3px rgba(198,169,101,0.18); }
+    .map-node--categoria .map-node__icon { font-size: 1rem; }
+    .map-node--categoria .map-node__title { font-size: 0.82rem; font-weight: 700; color: var(--text); line-height: 1.25; }
+    .map-node--categoria .map-node__sub { font-size: 0.65rem; color: var(--text-muted); }
+
+    .map-node--curso {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-left: 3px solid var(--color-accent-fg);
+      padding: 0.5rem 0.65rem;
+    }
+    .map-node--curso:hover { border-color: var(--gold); }
+    .map-node--curso.nivel-l-basico     { border-left-color: var(--color-success-fg); }
+    .map-node--curso.nivel-l-intermedio { border-left-color: var(--color-attention-fg); }
+    .map-node--curso.nivel-l-avanzado   { border-left-color: var(--color-danger-fg); }
+    .map-node--curso .map-node__title {
+      font-size: 0.76rem; font-weight: 600; color: var(--text); line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .map-node--curso .map-node__sub { font-size: 0.62rem; color: var(--text-muted); margin-top: 3px; }
+
+    .mapa-hint { font-size: 0.75rem; color: var(--text-muted); padding: 0.6rem 0.9rem 0; margin: 0; }
+
+    @media (max-width: 640px) {
+      .cursos-toolbar { flex-direction: column; }
+      .cursos-vista-toggle { width: 100%; }
+      .vista-btn { flex: 1; }
+      .cursos-grid { grid-template-columns: 1fr; }
+      .mapa-canvas-wrap { height: 52vh; }
+      .mapa-leyenda { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -120,11 +424,56 @@
       <h1 class="section-title">Nuestros <span class="accent">Cursos</span></h1>
       <p class="section-subtitle">Rutas de aprendizaje en informática, ciberseguridad, hacking ético y privacidad digital.</p>
 
-      <!-- Filtro por categoría -->
-      <div id="filtros" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin:1.5rem 0"></div>
+      <div id="cursos-stats" class="cursos-stats"></div>
 
-      <div id="cursos-container">
-        <p class="section-subtitle">Cargando cursos...</p>
+      <!-- Buscador + selector de vista -->
+      <div class="cursos-toolbar">
+        <div class="cursos-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="buscar-curso" placeholder="Buscar por nombre, tema o categoría..." autocomplete="off" />
+          <button type="button" id="buscar-curso-clear" class="cursos-search__clear" style="display:none" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="cursos-vista-toggle" role="tablist" aria-label="Cambiar vista">
+          <button type="button" class="vista-btn active" data-vista="lista" role="tab" aria-selected="true">📋 Lista</button>
+          <button type="button" class="vista-btn" data-vista="mapa" role="tab" aria-selected="false">🗺️ Mapa conceptual</button>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div id="filtros-categoria" class="cursos-chips"></div>
+      <div id="filtros-nivel" class="cursos-chips"></div>
+
+      <!-- Vista: lista -->
+      <div id="vista-lista" class="cursos-vista active">
+        <div id="cursos-container">
+          <p class="section-subtitle">Cargando cursos...</p>
+        </div>
+      </div>
+
+      <!-- Vista: mapa conceptual -->
+      <div id="vista-mapa" class="cursos-vista">
+        <div class="mapa-panel">
+          <div class="mapa-toolbar">
+            <div class="mapa-leyenda">
+              <span><i style="background:var(--gold)"></i> Rama / categoría</span>
+              <span><i style="background:var(--color-success-fg)"></i> Básico</span>
+              <span><i style="background:var(--color-attention-fg)"></i> Intermedio</span>
+              <span><i style="background:var(--color-danger-fg)"></i> Avanzado</span>
+            </div>
+            <div class="mapa-zoom">
+              <button type="button" id="mapZoomOut" aria-label="Alejar">−</button>
+              <span class="mapa-zoom__label" id="mapZoomLabel">100%</span>
+              <button type="button" id="mapZoomIn" aria-label="Acercar">+</button>
+              <button type="button" id="mapZoomFit" aria-label="Ajustar a la pantalla">⤢</button>
+            </div>
+          </div>
+          <div class="mapa-canvas-wrap" id="mapa-canvas-wrap">
+            <div id="mapa-canvas">
+              <svg id="mapa-lines"></svg>
+            </div>
+          </div>
+          <p class="mapa-hint">💡 Arrastrá el fondo para moverte por el mapa · Tocá una clase para ver su detalle · Tocá una rama para filtrarla en la lista</p>
+        </div>
       </div>
     </div>
   </main>
@@ -137,6 +486,8 @@
     </div>
   </div>
 
+  <div id="toast-copiado" class="toast-copiado">🔗 Enlace copiado al portapapeles</div>
+
   <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético</footer>
 
   <script src="js/particles.js"></script>
@@ -146,24 +497,45 @@
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    const container = document.getElementById('cursos-container');
-    const filtrosEl = document.getElementById('filtros');
-    const modal = document.getElementById('curso-modal');
-    const modalContent = document.getElementById('curso-modal-content');
-    document.getElementById('curso-modal-close').onclick = () => modal.style.display = 'none';
-
-    const nivelClass = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
-
-    let allCursos = [];
-    let categorias = [];
-    let filtroActivo = 'todos';
-
-    // Verificar sesión del usuario
     import { auth } from './js/firebase-config.js';
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+    /* ===== Referencias DOM ===== */
+    const container      = document.getElementById('cursos-container');
+    const statsEl         = document.getElementById('cursos-stats');
+    const chipsCatEl      = document.getElementById('filtros-categoria');
+    const chipsNivelEl    = document.getElementById('filtros-nivel');
+    const searchInput     = document.getElementById('buscar-curso');
+    const searchClearBtn  = document.getElementById('buscar-curso-clear');
+    const vistaBtns       = document.querySelectorAll('.vista-btn');
+    const vistaLista      = document.getElementById('vista-lista');
+    const vistaMapa       = document.getElementById('vista-mapa');
+    const mapWrap         = document.getElementById('mapa-canvas-wrap');
+    const mapCanvas       = document.getElementById('mapa-canvas');
+    const mapSvg          = document.getElementById('mapa-lines');
+    const modal           = document.getElementById('curso-modal');
+    const modalContent    = document.getElementById('curso-modal-content');
+    const toastEl         = document.getElementById('toast-copiado');
+    document.getElementById('curso-modal-close').onclick = () => {
+      modal.style.display = 'none';
+      try { history.replaceState(null, '', location.pathname); } catch(e) {}
+    };
+
+    const nivelClass  = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
+    const nivelSlug   = { 'Básico': 'basico', 'Intermedio': 'intermedio', 'Avanzado': 'avanzado' };
+    const puntosMap   = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
+
+    /* ===== Estado ===== */
+    let allCursos       = [];
+    let categorias      = [];
+    let filtroCategoria = 'todos';
+    let filtroNivel     = 'todos';
+    let searchTerm      = '';
+    let vistaActual     = 'lista';
+    let mapaRenderizado = false;
+
+    /* ===== Sesión ===== */
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const snap = await getDoc(doc(db, 'users', user.uid));
@@ -171,76 +543,219 @@
       }
     });
 
+    /* ===== Carga de cursos ===== */
     async function cargarCursos() {
       try {
         const snap = await getDocs(collection(db, 'courses'));
 
         if (snap.empty) {
-          container.innerHTML = '<p class="section-subtitle">No hay cursos publicados aún.</p>';
+          container.innerHTML = '<div class="cursos-empty">Aún no hay cursos publicados.</div>';
           return;
         }
 
         allCursos = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.publicado !== false);
 
         if (allCursos.length === 0) {
-          container.innerHTML = '<p class="section-subtitle">No hay cursos publicados aún.</p>';
+          container.innerHTML = '<div class="cursos-empty">Aún no hay cursos publicados.</div>';
           return;
         }
 
         categorias = [...new Set(allCursos.map(c => c.categoria || 'General'))];
 
-        filtrosEl.innerHTML = '<button class="btn btn--small btn--primary" data-filtro="todos">Todos</button>' +
-          categorias.map(cat => '<button class="btn btn--small btn--outline" data-filtro="' + cat + '">' + cat + '</button>').join('');
-
-        filtrosEl.querySelectorAll('[data-filtro]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            filtroActivo = btn.dataset.filtro;
-            filtrosEl.querySelectorAll('[data-filtro]').forEach(b => b.className = 'btn btn--small btn--outline');
-            btn.className = 'btn btn--small btn--primary';
-            renderCursos();
-          });
-        });
-
+        renderStats();
+        renderChipsCategoria();
+        renderChipsNivel();
         renderCursos();
+        abrirDesdeEnlace();
       } catch(e) {
-        container.innerHTML = '<p class="section-subtitle">❌ Error: ' + e.message + '</p>';
+        container.innerHTML = '<div class="cursos-empty">❌ Error al cargar los cursos: ' + e.message + '</div>';
       }
     }
 
     cargarCursos();
 
-    function renderCursos() {
-      const lista = filtroActivo === 'todos'
-        ? allCursos
-        : allCursos.filter(c => (c.categoria || 'General') === filtroActivo);
+    /* ===== Abrir automáticamente un curso si llega por enlace compartido ===== */
+    function abrirDesdeEnlace() {
+      const params = new URLSearchParams(location.search);
+      const idCompartido = params.get('curso') || params.get('id');
+      if (!idCompartido) return;
+      const curso = allCursos.find(c => c.id === idCompartido);
+      if (curso) abrirModal(curso);
+    }
 
-      if (lista.length === 0) {
-        container.innerHTML = '<p class="section-subtitle">No hay cursos en esta categoría.</p>';
-        return;
+    /* ===== Utilidades ===== */
+    function norm(str) {
+      return (str || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function escapeHtml(str) {
+      return (str || '').toString()
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function resaltar(texto) {
+      const safe = escapeHtml(texto);
+      if (!searchTerm) return safe;
+      try {
+        const re = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+        return safe.replace(re, '<mark class="hl">$1</mark>');
+      } catch(e) { return safe; }
+    }
+
+    const ICONOS_CATEGORIA = [
+      { match: /hack|pentest|explot/i, icon: '🛡️' },
+      { match: /linux|termux/i, icon: '🐧' },
+      { match: /whatsapp/i, icon: '💬' },
+      { match: /red(es)?|wifi|network/i, icon: '🌐' },
+      { match: /privacidad|osint|anonim/i, icon: '🕵️' },
+      { match: /forense/i, icon: '🔍' },
+      { match: /malware|virus/i, icon: '🦠' },
+      { match: /python|script|programa/i, icon: '🐍' },
+      { match: /web|servidor/i, icon: '💻' },
+      { match: /movil|android|celular/i, icon: '📱' },
+    ];
+    function iconoCategoria(cat) {
+      const found = ICONOS_CATEGORIA.find(x => x.match.test(cat));
+      return found ? found.icon : '📁';
+    }
+
+    function cursoCoincide(c) {
+      if (filtroCategoria !== 'todos' && (c.categoria || 'General') !== filtroCategoria) return false;
+      if (filtroNivel !== 'todos' && (c.nivel || 'Básico') !== filtroNivel) return false;
+      if (searchTerm) {
+        const t = norm(searchTerm);
+        const campo = norm(c.titulo) + ' ' + norm(c.descripcion) + ' ' + norm(c.categoria);
+        if (!campo.includes(t)) return false;
       }
+      return true;
+    }
 
-      // Agrupar por categoría
+    function agruparPorCategoria(lista) {
       const grupos = {};
       lista.forEach(c => {
         const cat = c.categoria || 'General';
         if (!grupos[cat]) grupos[cat] = [];
         grupos[cat].push(c);
       });
+      Object.values(grupos).forEach(arr => arr.sort((a, b) => (a.orden || 1) - (b.orden || 1)));
+      return grupos;
+    }
+
+    /* ===== Stats ===== */
+    function renderStats() {
+      const total = allCursos.length;
+      const nCat  = categorias.length;
+      const conteoNivel = { 'Básico': 0, 'Intermedio': 0, 'Avanzado': 0 };
+      allCursos.forEach(c => { conteoNivel[c.nivel || 'Básico'] = (conteoNivel[c.nivel || 'Básico'] || 0) + 1; });
+
+      statsEl.innerHTML = `
+        <div class="cursos-stats__item">📚 <b>${total}</b> clase${total !== 1 ? 's' : ''}</div>
+        <div class="cursos-stats__item">🗂️ <b>${nCat}</b> categoría${nCat !== 1 ? 's' : ''}</div>
+        <div class="cursos-stats__item">🟢 <b>${conteoNivel['Básico']}</b> básico</div>
+        <div class="cursos-stats__item">🟡 <b>${conteoNivel['Intermedio']}</b> intermedio</div>
+        <div class="cursos-stats__item">🔴 <b>${conteoNivel['Avanzado']}</b> avanzado</div>
+      `;
+    }
+
+    /* ===== Chips ===== */
+    function renderChipsCategoria() {
+      const conteo = {};
+      allCursos.forEach(c => { const cat = c.categoria || 'General'; conteo[cat] = (conteo[cat] || 0) + 1; });
+
+      chipsCatEl.innerHTML =
+        `<button type="button" class="chip ${filtroCategoria === 'todos' ? 'active' : ''}" data-filtro-cat="todos">Todas las ramas <span class="chip-count">${allCursos.length}</span></button>` +
+        categorias.map(cat => `<button type="button" class="chip ${filtroCategoria === cat ? 'active' : ''}" data-filtro-cat="${escapeHtml(cat)}">${iconoCategoria(cat)} ${escapeHtml(cat)} <span class="chip-count">${conteo[cat]}</span></button>`).join('');
+
+      chipsCatEl.querySelectorAll('[data-filtro-cat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filtroCategoria = btn.dataset.filtroCat;
+          renderChipsCategoria();
+          renderTodo();
+        });
+      });
+    }
+
+    function renderChipsNivel() {
+      const niveles = ['Básico', 'Intermedio', 'Avanzado'];
+      const conteo = {};
+      allCursos.forEach(c => { const n = c.nivel || 'Básico'; conteo[n] = (conteo[n] || 0) + 1; });
+
+      chipsNivelEl.innerHTML =
+        `<button type="button" class="chip ${filtroNivel === 'todos' ? 'active' : ''}" data-filtro-nivel="todos">Todos los niveles</button>` +
+        niveles.filter(n => conteo[n]).map(n => `<button type="button" class="chip ${filtroNivel === n ? 'active' : ''}" data-filtro-nivel="${n}">${n} <span class="chip-count">${conteo[n]}</span></button>`).join('');
+
+      chipsNivelEl.querySelectorAll('[data-filtro-nivel]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filtroNivel = btn.dataset.filtroNivel;
+          renderChipsNivel();
+          renderTodo();
+        });
+      });
+    }
+
+    /* ===== Buscador ===== */
+    searchInput.addEventListener('input', () => {
+      searchTerm = searchInput.value.trim();
+      searchClearBtn.style.display = searchTerm ? 'block' : 'none';
+      renderTodo();
+    });
+    searchClearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchTerm = '';
+      searchClearBtn.style.display = 'none';
+      searchInput.focus();
+      renderTodo();
+    });
+
+    /* ===== Toggle de vista ===== */
+    vistaBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        vistaActual = btn.dataset.vista;
+        vistaBtns.forEach(b => { b.classList.toggle('active', b === btn); b.setAttribute('aria-selected', b === btn); });
+        vistaLista.classList.toggle('active', vistaActual === 'lista');
+        vistaMapa.classList.toggle('active', vistaActual === 'mapa');
+        if (vistaActual === 'mapa') renderMapa();
+      });
+    });
+
+    function renderTodo() {
+      renderCursos();
+      if (vistaActual === 'mapa') renderMapa();
+    }
+
+    /* ===== Vista: lista ===== */
+    function renderCursos() {
+      const lista = allCursos.filter(cursoCoincide);
+
+      if (allCursos.length === 0) return;
+
+      if (lista.length === 0) {
+        container.innerHTML = `<div class="cursos-empty">😕 No encontramos cursos con esos filtros.<br><span style="font-size:0.8rem">Probá ajustar la búsqueda o elegí "Todas las ramas".</span></div>`;
+        return;
+      }
+
+      const grupos = agruparPorCategoria(lista);
 
       container.innerHTML = Object.entries(grupos).map(([cat, cursos]) => `
         <div class="categoria-header">
-          <span class="categoria-icon">📁</span>
-          <h2 style="margin:0;font-size:1.1rem;color:#fff">${cat}</h2>
-          <span style="color:#888;font-size:0.82rem">${cursos.length} clase${cursos.length !== 1 ? 's' : ''}</span>
+          <span class="categoria-icon">${iconoCategoria(cat)}</span>
+          <h2>${escapeHtml(cat)}</h2>
+          <span class="categoria-count">${cursos.length} clase${cursos.length !== 1 ? 's' : ''}</span>
         </div>
-        ${cursos.map(c => `
-          <div class="curso-card" data-id="${c.id}">
-            <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}">${c.nivel || 'Básico'}</span>
-            <h3 style="margin:0.25rem 0;font-size:1rem">${c.titulo}</h3>
-            <p class="curso-descripcion">${c.descripcion || ''}</p>
-            <p class="expand-hint">Toca para ver más →</p>
-          </div>
-        `).join('')}
+        <div class="cursos-grid">
+          ${cursos.map(c => `
+            <div class="curso-card nivel-l-${nivelSlug[c.nivel] || 'basico'}" data-id="${c.id}">
+              <button type="button" class="curso-card__share" data-share-id="${c.id}" title="Copiar enlace de esta clase" aria-label="Compartir esta clase">🔗</button>
+              <div class="curso-card__top">
+                <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}">${c.nivel || 'Básico'}</span>
+                <span class="curso-card__orden">Clase ${c.orden || 1}</span>
+              </div>
+              <h3>${resaltar(c.titulo)}</h3>
+              <p class="curso-descripcion">${resaltar(c.descripcion || '')}</p>
+              <p class="expand-hint">Toca para ver más →</p>
+            </div>
+          `).join('')}
+        </div>
       `).join('');
 
       container.querySelectorAll('.curso-card').forEach(card => {
@@ -249,14 +764,196 @@
           abrirModal(curso);
         });
       });
+
+      container.querySelectorAll('[data-share-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const curso = allCursos.find(c => c.id === btn.dataset.shareId);
+          if (curso) compartirCurso(curso, btn);
+        });
+      });
     }
 
+    /* ===== Vista: mapa conceptual ===== */
+    function renderMapa() {
+      if (allCursos.length === 0) return;
+
+      const lista = allCursos.filter(cursoCoincide);
+      const grupos = agruparPorCategoria(lista.length ? lista : allCursos);
+      const catKeys = Object.keys(grupos);
+      const hayFiltroActivo = filtroCategoria !== 'todos' || filtroNivel !== 'todos' || !!searchTerm;
+
+      // ---- Layout ----
+      const colWidth   = 232;
+      const nodeW      = 190;
+      const rootW      = 220, rootH = 66;
+      const catH       = 56;
+      const rootY      = 36;
+      const catY       = rootY + rootH + 90;
+      const courseGapTop = 100;
+      const courseStep   = 96;
+      const courseH      = 78;
+
+      const n = Math.max(catKeys.length, 1);
+      const canvasWidth = Math.max(n * colWidth + 60, mapWrap.clientWidth || 900);
+      let maxCourses = 1;
+      catKeys.forEach(cat => { maxCourses = Math.max(maxCourses, grupos[cat].length); });
+      const canvasHeight = catY + courseGapTop + maxCourses * courseStep + 80;
+
+      mapCanvas.style.width = canvasWidth + 'px';
+      mapCanvas.style.height = canvasHeight + 'px';
+      mapSvg.setAttribute('width', canvasWidth);
+      mapSvg.setAttribute('height', canvasHeight);
+      mapSvg.setAttribute('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
+
+      const rootX = canvasWidth / 2;
+
+      // ---- Limpiar nodos previos (dejar el svg) ----
+      mapCanvas.querySelectorAll('.map-node').forEach(el => el.remove());
+
+      const linesHtml = [];
+
+      // Nodo raíz
+      addNode({
+        cls: 'map-node--root',
+        x: rootX - rootW / 2, y: rootY, w: rootW, h: rootH,
+        html: `<div class="map-node__title">${escapeHtml(document.title.split('—')[1] ? document.title.split('—')[1].trim() : 'Academia Indrhack')}</div><div class="map-node__sub">${allCursos.length} clases · ${catKeys.length} ramas</div>`,
+        onClick: () => {
+          filtroCategoria = 'todos'; filtroNivel = 'todos'; searchTerm = ''; searchInput.value = '';
+          searchClearBtn.style.display = 'none';
+          renderChipsCategoria(); renderChipsNivel(); renderTodo();
+        }
+      });
+
+      catKeys.forEach((cat, i) => {
+        const catCenterX = 30 + i * colWidth + colWidth / 2;
+        const activo = !hayFiltroActivo || filtroCategoria === 'todos' || filtroCategoria === cat;
+
+        linesHtml.push(lineaCurva(rootX, rootY + rootH, catCenterX, catY, activo));
+
+        addNode({
+          cls: 'map-node--categoria' + (activo ? '' : ' dim'),
+          x: catCenterX - nodeW / 2, y: catY, w: nodeW, h: catH,
+          html: `<span class="map-node__icon">${iconoCategoria(cat)}</span><div><div class="map-node__title">${escapeHtml(cat)}</div><div class="map-node__sub">${grupos[cat].length} clase${grupos[cat].length !== 1 ? 's' : ''}</div></div>`,
+          onClick: () => {
+            filtroCategoria = cat;
+            renderChipsCategoria();
+            vistaBtns.forEach(b => { const isLista = b.dataset.vista === 'lista'; b.classList.toggle('active', isLista); b.setAttribute('aria-selected', isLista); });
+            vistaLista.classList.add('active'); vistaMapa.classList.remove('active'); vistaActual = 'lista';
+            renderCursos();
+          }
+        });
+
+        let prevX = catCenterX, prevY = catY + catH;
+        grupos[cat].forEach((curso, j) => {
+          const cy = catY + courseGapTop + j * courseStep;
+          const cActivo = activo && cursoCoincide(curso);
+          linesHtml.push(lineaCurva(prevX, prevY, catCenterX, cy, cActivo));
+
+          addNode({
+            cls: 'map-node--curso nivel-l-' + (nivelSlug[curso.nivel] || 'basico') + (cActivo ? '' : ' dim'),
+            x: catCenterX - nodeW / 2, y: cy, w: nodeW, h: courseH,
+            html: `<div class="map-node__title">${escapeHtml(curso.titulo)}</div><div class="map-node__sub">Clase ${curso.orden || 1} · ${curso.nivel || 'Básico'}</div>`,
+            onClick: () => abrirModal(curso)
+          });
+
+          prevX = catCenterX; prevY = cy + courseH;
+        });
+      });
+
+      mapSvg.innerHTML = linesHtml.join('');
+
+      function lineaCurva(x1, y1, x2, y2, activo) {
+        const midY = y1 + (y2 - y1) / 2;
+        const color = activo ? 'var(--gold)' : 'var(--border)';
+        const opacity = activo ? 0.9 : 0.35;
+        return `<path d="M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}" fill="none" stroke="${color === 'var(--gold)' ? '#c6a965' : '#3a4a70'}" stroke-width="1.5" opacity="${opacity}"></path>`;
+      }
+
+      function addNode({ cls, x, y, w, h, html, onClick }) {
+        const el = document.createElement('div');
+        el.className = 'map-node ' + cls;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.width = w + 'px';
+        el.style.minHeight = h + 'px';
+        el.innerHTML = html;
+        if (onClick) el.addEventListener('click', (e) => { if (!mapaArrastrando) onClick(e); });
+        mapCanvas.appendChild(el);
+      }
+
+      if (!mapaRenderizado) {
+        mapaRenderizado = true;
+        requestAnimationFrame(ajustarMapa);
+      }
+    }
+
+    /* ===== Zoom y pan del mapa ===== */
+    let zoomMapa = 1;
+    const ZOOM_MIN = 0.4, ZOOM_MAX = 1.5;
+
+    function aplicarZoomMapa(nivel) {
+      zoomMapa = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, nivel));
+      mapCanvas.style.transform = `scale(${zoomMapa})`;
+      document.getElementById('mapZoomLabel').textContent = Math.round(zoomMapa * 100) + '%';
+    }
+
+    function ajustarMapa() {
+      const wrapW = mapWrap.clientWidth;
+      const canvasW = mapCanvas.offsetWidth || 1;
+      const factor = Math.min(1, wrapW / canvasW);
+      aplicarZoomMapa(factor > 0 ? factor : 1);
+      mapWrap.scrollLeft = 0;
+      mapWrap.scrollTop = 0;
+    }
+
+    document.getElementById('mapZoomIn').addEventListener('click', () => aplicarZoomMapa(zoomMapa + 0.1));
+    document.getElementById('mapZoomOut').addEventListener('click', () => aplicarZoomMapa(zoomMapa - 0.1));
+    document.getElementById('mapZoomFit').addEventListener('click', ajustarMapa);
+
+    let mapaArrastrando = false;
+    (function initPan() {
+      let dragging = false, startX = 0, startY = 0, scrollL = 0, scrollT = 0, moved = false;
+
+      function down(e) {
+        if (e.target.closest('.map-node')) return;
+        dragging = true; moved = false;
+        const p = e.touches ? e.touches[0] : e;
+        startX = p.clientX; startY = p.clientY;
+        scrollL = mapWrap.scrollLeft; scrollT = mapWrap.scrollTop;
+        mapWrap.classList.add('dragging');
+      }
+      function move(e) {
+        if (!dragging) return;
+        const p = e.touches ? e.touches[0] : e;
+        const dx = p.clientX - startX, dy = p.clientY - startY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+        mapWrap.scrollLeft = scrollL - dx;
+        mapWrap.scrollTop = scrollT - dy;
+      }
+      function up() {
+        dragging = false;
+        mapaArrastrando = moved;
+        mapWrap.classList.remove('dragging');
+        setTimeout(() => { mapaArrastrando = false; }, 50);
+      }
+
+      mapWrap.addEventListener('mousedown', down);
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', up);
+      mapWrap.addEventListener('touchstart', down, { passive: true });
+      mapWrap.addEventListener('touchmove', move, { passive: true });
+      mapWrap.addEventListener('touchend', up);
+    })();
+
+    window.addEventListener('resize', () => { if (vistaActual === 'mapa') mapaRenderizado = false; });
+
+    /* ===== Modal detalle de curso ===== */
     function abrirModal(c) {
       const user = window._currentUser || null;
       const logueado = user && user.estado === 'aprobado';
-
-      const puntosMap = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
       const puntos = puntosMap[c.nivel] || 100;
+      const enlaceCompartir = enlaceCurso(c);
 
       const descargaBtn = c.descarga && logueado
         ? `<a href="${c.descarga}" target="_blank" download class="btn btn--primary">⬇ Descargar material</a>`
@@ -276,20 +973,100 @@
         <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
           <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}">${c.nivel || 'Básico'}</span>
           <span style="background:#ffcc0022;border:1px solid #ffcc00;color:#ffcc00;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700">⭐ ${puntos} puntos</span>
+          <span style="color:var(--text-muted);font-size:0.78rem">${iconoCategoria(c.categoria || 'General')} ${escapeHtml(c.categoria || 'General')}</span>
         </div>
-        <h2 style="margin:0 0 0.75rem;padding-right:2rem">${c.titulo}</h2>
-        <p style="color:#aaa;white-space:pre-wrap;line-height:1.7;margin-bottom:1.25rem">${c.descripcion || ''}</p>
-        ${c.material && logueado ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">📄 <strong style="color:#fff">Material:</strong> ${c.material}</p>` : ''}
+        <h2 style="margin:0 0 0.75rem;padding-right:2rem">${escapeHtml(c.titulo)}</h2>
+        <p style="color:#aaa;white-space:pre-wrap;line-height:1.7;margin-bottom:1.25rem">${escapeHtml(c.descripcion || '')}</p>
+        ${c.material && logueado ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">📄 <strong style="color:#fff">Material:</strong> ${escapeHtml(c.material)}</p>` : ''}
         <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1.25rem">
           ${verClaseBtn}
           ${descargaBtn}
           ${enlaceBtn}
         </div>
+        <div style="margin-top:1.1rem;padding-top:0.9rem;border-top:1px solid var(--border-muted)">
+          <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 0.5rem">🔗 Compartir esta clase</p>
+          <div class="modal-share-row">
+            <input type="text" id="modal-share-input" readonly value="${escapeHtml(enlaceCompartir)}" aria-label="Enlace para compartir esta clase" />
+            <button type="button" class="btn btn--outline btn--small" id="modal-share-btn">Copiar enlace</button>
+          </div>
+        </div>
       `;
       modal.style.display = 'flex';
       modal.scrollTop = 0;
+
+      const shareInput = document.getElementById('modal-share-input');
+      shareInput.addEventListener('focus', () => shareInput.select());
+      shareInput.addEventListener('click', () => shareInput.select());
+      document.getElementById('modal-share-btn').addEventListener('click', (e) => compartirCurso(c, e.currentTarget));
+
+      // Refleja el curso abierto en la URL para que se pueda compartir tal cual está en la barra
+      try { history.replaceState(null, '', location.pathname + '?curso=' + encodeURIComponent(c.id)); } catch(e) {}
+    }
+
+    /* ===== Compartir enlace de una clase ===== */
+    function enlaceCurso(c) {
+      return location.origin + location.pathname + '?curso=' + encodeURIComponent(c.id);
+    }
+
+    async function compartirCurso(curso, btnEl) {
+      const url = enlaceCurso(curso);
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: curso.titulo, text: 'Mirá esta clase en Academia Indrhack: ' + curso.titulo, url });
+          return;
+        } catch(e) {
+          if (e && e.name === 'AbortError') return; // el usuario canceló el share nativo
+          // si falla el share nativo, seguimos con copiar al portapapeles
+        }
+      }
+
+      const copiado = await copiarAlPortapapeles(url);
+      if (copiado) {
+        mostrarToast('🔗 Enlace copiado al portapapeles');
+        if (btnEl) {
+          btnEl.classList.add('copiado');
+          const original = btnEl.textContent;
+          btnEl.textContent = btnEl.classList.contains('curso-card__share') ? '✅' : '✅ Copiado';
+          setTimeout(() => { btnEl.classList.remove('copiado'); btnEl.textContent = original; }, 1800);
+        }
+      } else {
+        mostrarToast('No se pudo copiar. Mantené presionado el enlace para copiarlo.');
+      }
+    }
+
+    async function copiarAlPortapapeles(texto) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(texto);
+          return true;
+        }
+      } catch(e) {}
+      try {
+        const temp = document.createElement('textarea');
+        temp.value = texto;
+        temp.style.position = 'fixed';
+        temp.style.opacity = '0';
+        document.body.appendChild(temp);
+        temp.focus();
+        temp.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(temp);
+        return ok;
+      } catch(e) {
+        return false;
+      }
+    }
+
+    let toastTimer = null;
+    function mostrarToast(mensaje) {
+      toastEl.textContent = mensaje;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
     }
   </script>
+
 
   <script type="module">
     import { auth } from './js/firebase-config.js';
