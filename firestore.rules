@@ -35,10 +35,30 @@ service cloud.firestore {
     }
 
     // ───────────────────────────────────────────────────────
+    // NOMBRES DE USUARIO (para validar unicidad sin exponer
+    // perfiles completos con email/teléfono)
+    // ───────────────────────────────────────────────────────
+    match /usernames/{username} {
+      allow read: if true;
+      // "create" solo dispara si el documento (username) no existe
+      // todavía, así Firestore ya impide duplicados de forma nativa.
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
     // USUARIOS
     // ───────────────────────────────────────────────────────
     match /users/{userId} {
-      allow read: if true;
+      // Antes: "allow read: if true" exponía email y teléfono de TODOS
+      // los usuarios a cualquiera en internet, sin necesidad de sesión.
+      // Como el registro está abierto, "isSignedIn()" solo no basta:
+      // cualquiera podría crear una cuenta y leer igual todo antes de
+      // ser aprobado. Por eso se exige además estado == 'aprobado',
+      // salvo para leer el propio perfil (necesario para ver tu estado
+      // "pendiente" tras registrarte) o para el admin.
+      allow read: if isOwner(userId) || isAdmin() ||
+        (isSignedIn() && myProfile().estado == 'aprobado');
 
       allow create: if isOwner(userId)
         && request.resource.data.rol == 'usuario'

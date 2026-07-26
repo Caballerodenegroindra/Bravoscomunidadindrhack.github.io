@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1428" />
+  <title>Privacidad y datos — Academia Indrhack</title>
+  <meta name="description" content="Cómo protegemos tus datos en Academia Indrhack: qué pedimos, para qué, y quién puede verlos." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <link rel="canonical" href="https://bravoscomunidadindrhack.github.io/privacidad.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="index.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span>
+        Inicio
+      </a>
+      <a href="cursos.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+        Cursos
+      </a>
+      <a href="noticias.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+        Noticias
+      </a>
+      <a href="login.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        Ingresar
+      </a>
+      <a href="registro.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
+        Registro
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container section" style="max-width:720px;margin:0 auto;">
+      <h1 class="section-title" style="text-align:center;margin-bottom:0.4rem">
+        🔒 Privacidad y <span class="accent">datos</span>
+      </h1>
+      <p class="section-subtitle" style="text-align:center;margin:0 auto 2rem;max-width:560px">
+        Sabemos que da desconfianza dejar tu número y correo en cualquier lado. Acá te explicamos exactamente qué hacemos con tus datos.
+      </p>
+
+      <div class="card" style="margin-bottom:1.2rem;">
+        <h3 style="margin-bottom:0.5rem">📦 ¿Dónde se guardan?</h3>
+        <p class="section-subtitle" style="margin:0">
+          Tus datos se almacenan en <strong>Firebase</strong>, infraestructura de Google Cloud usada por miles de aplicaciones profesionales. La conexión entre tu dispositivo y el servidor va cifrada (HTTPS).
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:1.2rem;">
+        <h3 style="margin-bottom:0.5rem">🔑 ¿Quién puede verlos?</h3>
+        <ul class="section-subtitle" style="margin:0;padding-left:1.1rem;line-height:1.7">
+          <li><strong>Tu contraseña:</strong> nunca la vemos. Está cifrada por Firebase — ni el administrador ni el creador de la página tienen acceso a ella.</li>
+          <li><strong>Tu email y teléfono:</strong> visibles para los administradores (para gestionar tu cuenta) y, una vez tu cuenta es aprobada, para otros miembros dentro del panel — igual que compartís tu contacto en cualquier comunidad.</li>
+          <li><strong>Fuera de la comunidad:</strong> nadie puede verlos. No son públicos en internet, no se venden ni se comparten con terceros.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-bottom:1.2rem;">
+        <h3 style="margin-bottom:0.5rem">🛡️ ¿Por qué pedimos tu número y correo?</h3>
+        <p class="section-subtitle" style="margin:0">
+          El número nos ayuda a verificar que sos una persona real (no un bot) y a contactarte si hay algún problema con tu cuenta. El correo se usa únicamente para que puedas recuperar tu contraseña si la olvidás.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:1.2rem;">
+        <h3 style="margin-bottom:0.5rem">✅ ¿Es segura la página?</h3>
+        <p class="section-subtitle" style="margin:0">
+          Sí. Está construida sobre infraestructura de Google (Firebase) y GitHub Pages, las mismas que usan empresas grandes. No descargás nada al entrar: todo funciona desde el navegador.
+        </p>
+      </div>
+
+      <p class="section-subtitle" style="text-align:center;margin-top:2rem">
+        ¿Dudas sobre tus datos? Escribinos en el grupo de soporte o por el chat de la comunidad.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+    <br />
+    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+  <script src="js/theme.js"></script>
+</body>
+</html>
