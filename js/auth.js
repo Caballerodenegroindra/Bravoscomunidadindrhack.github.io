@@ -92,9 +92,11 @@ export async function registerUser({ phone, username, password, email }) {
       extra: '',
     });
     // Reserva el nombre de usuario en la colección pública (sin datos
-    // personales) para poder validar unicidad sin exponer perfiles.
+    // personales sensibles como teléfono) para poder validar unicidad
+    // y resolver el login sin exponer perfiles completos.
     await setDoc(doc(db, 'usernames', normalizedUsername), {
       uid: credential.user.uid,
+      email: normalizedEmail,
     });
   } catch (firestoreError) {
     await credential.user.delete();
@@ -106,18 +108,15 @@ export async function registerUser({ phone, username, password, email }) {
 }
 
 /**
- * Busca el email real de Authentication a partir del username.
- * Si el perfil es antiguo y no tiene email guardado, usa el
- * esquema anterior (usuario@indrhack.local) como respaldo.
+ * Busca el email real de Authentication a partir del username,
+ * usando la colección pública "usernames" (no requiere estar
+ * autenticado, a diferencia de consultar "users" directamente).
  */
 async function getEmailByUsername(username) {
-  const q = query(
-    collection(db, 'users'),
-    where('username', '==', username.trim().toLowerCase())
-  );
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const data = snap.docs[0].data();
+  const normalizedUsername = username.trim().toLowerCase();
+  const snap = await getDoc(doc(db, 'usernames', normalizedUsername));
+  if (!snap.exists()) return null;
+  const data = snap.data();
   return data.email || usernameToEmail(username);
 }
 
