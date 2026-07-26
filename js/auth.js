@@ -42,15 +42,15 @@ export const ROLES = {
 };
 
 /**
- * Verifica si un nombre de usuario ya existe en la colección "users".
+ * Verifica si un nombre de usuario ya existe, consultando la colección
+ * pública "usernames" (solo contiene el nombre reservado, sin datos
+ * personales) en vez de la colección "users" (que sí tiene email/teléfono
+ * y ahora requiere estar aprobado para leerse).
  */
 export async function isUsernameTaken(username) {
-  const q = query(
-    collection(db, 'users'),
-    where('username', '==', username.trim().toLowerCase())
-  );
-  const snap = await getDocs(q);
-  return !snap.empty;
+  const normalizedUsername = username.trim().toLowerCase();
+  const snap = await getDoc(doc(db, 'usernames', normalizedUsername));
+  return snap.exists();
 }
 
 /**
@@ -90,6 +90,11 @@ export async function registerUser({ phone, username, password, email }) {
       compartir: '',
       estilo: '',
       extra: '',
+    });
+    // Reserva el nombre de usuario en la colección pública (sin datos
+    // personales) para poder validar unicidad sin exponer perfiles.
+    await setDoc(doc(db, 'usernames', normalizedUsername), {
+      uid: credential.user.uid,
     });
   } catch (firestoreError) {
     await credential.user.delete();
