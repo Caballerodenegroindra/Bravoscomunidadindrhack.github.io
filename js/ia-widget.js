@@ -157,7 +157,8 @@ function initWidget() {
       appendMsg('assistant', fmt(reply));
     } catch (e) {
       rmTyping();
-      appendMsg('assistant', '<strong style="color:#b3382c">⚠ Error de conexión.</strong> Probá de nuevo en un momento.');
+      console.error('Error del asistente IA:', e);
+      appendMsg('assistant', `<strong style="color:#b3382c">⚠ Error de conexión.</strong><br><span style="font-size:0.75rem;opacity:0.75">${esc(e.message || String(e))}</span>`);
     } finally {
       busy = false;
       sendBtn.disabled = !inpEl.value.trim();

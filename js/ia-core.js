@@ -159,20 +159,38 @@ export async function askGemini(systemPrompt, history) {
     parts: [{ text: m.content }],
   }));
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': GEMINI_API_KEY,
-    },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: systemPrompt }] },
-      contents,
-      generationConfig: { maxOutputTokens: 1000 },
-    }),
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message || 'Error de la API de Gemini');
+  let res;
+  try {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': GEMINI_API_KEY,
+      },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents,
+        generationConfig: { maxOutputTokens: 1000 },
+      }),
+    });
+  } catch (netErr) {
+    // No llegó a golpear la API (sin internet, DNS, bloqueo de un adblock/VPN, CORS, etc.)
+    throw new Error(`RED: ${netErr.message}`);
+  }
+
+  let data;
+  try {
+    data = await res.json();
+  } catch (parseErr) {
+    throw new Error(`HTTP ${res.status}: respuesta no es JSON válido`);
+  }
+
+  if (!res.ok || data.error) {
+    const motivo = data.error?.message || `HTTP ${res.status}`;
+    const codigo = data.error?.code || res.status;
+    throw new Error(`API ${codigo}: ${motivo}`);
+  }
+
   return data.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('') || 'Sin respuesta.';
 }
 
