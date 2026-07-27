@@ -76,8 +76,12 @@ function initWidget() {
           Asistente Indrhack
         </span>
         <div id="ia-widget-header-actions">
-          <a href="ia-asistente.html" id="ia-widget-expand" title="Abrir chat completo">⤢</a>
-          <button type="button" id="ia-widget-minimize" aria-label="Minimizar">⌄</button>
+          <a href="ia-asistente.html" id="ia-widget-expand" title="Abrir chat completo" aria-label="Abrir chat completo">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H4v5"/><path d="M4 3l6 6"/><path d="M15 21h5v-5"/><path d="M20 21l-6-6"/></svg>
+          </a>
+          <button type="button" id="ia-widget-minimize" aria-label="Cerrar">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l14 14"/><path d="M19 5L5 19"/></svg>
+          </button>
         </div>
       </div>
       <div id="ia-widget-msgs"></div>
@@ -224,10 +228,27 @@ function initWidget() {
 
   function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function fmt(text) {
-    return esc(text)
+    const escaped = esc(text)
       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-      .replace(/\n/g, '<br>');
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+    // En vez de unir todo con <br> (queda como un bloque compacto y
+    // denso), armamos párrafos reales y convertimos las líneas "- algo"
+    // en una lista con su propio espaciado, para que se lea más suelto.
+    let html = '';
+    let listaAbierta = false;
+    escaped.split('\n').forEach((linea) => {
+      const t = linea.trim();
+      if (/^-\s+/.test(t)) {
+        if (!listaAbierta) { html += '<ul class="ia-w-list">'; listaAbierta = true; }
+        html += `<li>${t.replace(/^-\s+/, '')}</li>`;
+        return;
+      }
+      if (listaAbierta) { html += '</ul>'; listaAbierta = false; }
+      if (t !== '') html += `<p>${t}</p>`;
+    });
+    if (listaAbierta) html += '</ul>';
+    return html || `<p>${escaped}</p>`;
   }
 
   function appendMsg(role, html) {
