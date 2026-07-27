@@ -365,12 +365,17 @@
   <!-- LÓGICA PRINCIPAL -->
   <script type="module">
     import { db, auth } from './js/firebase-config.js';
-    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import {
+      cargarCursos, buildCursosContext,
+      cargarProgresoUsuario, buildProgresoContext,
+      buildSystemPrompt, askGemini, nombrePagina,
+    } from './js/ia-core.js';
 
     // ── Estado global ──
     let CURSOS    = [];   // [{id, titulo, descripcion, categoria, nivel, publicado}]
     let USER_INFO = null; // info del usuario logueado
+    let PROGRESO  = [];   // clases ya aprobadas por el usuario
     let history   = [];   // historial del chat
     let busy      = false;
 
@@ -383,14 +388,10 @@
     const cursosBadge= document.getElementById('cursos-badge');
     const loadStrip  = document.getElementById('loading-strip');
 
-    // ── Cargar cursos desde Firestore ──
+    // ── Cargar cursos desde Firestore (vía core compartido) ──
     async function loadCursos() {
       try {
-        const snap = await getDocs(collection(db, 'courses'));
-        CURSOS = snap.docs
-          .map(d => ({ id: d.id, ...d.data() }))
-          .filter(c => c.publicado !== false);
-
+        CURSOS = await cargarCursos();
         cursosBadge.textContent = `📚 ${CURSOS.length} clases`;
         statusTxt.textContent   = `${CURSOS.length} clases cargadas · Listo`;
         loadStrip.style.display = 'none';
@@ -401,13 +402,14 @@
       }
     }
 
-    // ── Detectar usuario logueado ──
+    // ── Detectar usuario logueado + su progreso real ──
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
           const snap = await getDoc(doc(db, 'users', user.uid));
           if (snap.exists()) USER_INFO = { uid: user.uid, ...snap.data() };
+          PROGRESO = await cargarProgresoUsuario(user.uid);
         } catch(e) {}
       }
     });
@@ -511,23 +513,6 @@
     }
     function rmTyping() { document.getElementById('typing')?.remove(); }
 
-    // ── Construir contexto de cursos para el prompt ──
-    function buildCursosContext() {
-      if (!CURSOS.length) return 'No hay clases cargadas aún.';
-      const cats = {};
-      CURSOS.forEach(c => {
-        const cat = c.categoria || 'General';
-        if (!cats[cat]) cats[cat] = [];
-        cats[cat].push(c);
-      });
-      return Object.entries(cats).map(([cat, arr]) =>
-        `### Categoría: ${cat}\n` +
-        arr.map(c =>
-          `- ID: ${c.id} | Título: "${c.titulo}" | Nivel: ${c.nivel || 'Básico'} | Descripción: ${(c.descripcion || '').slice(0, 220)}`
-        ).join('\n')
-      ).join('\n\n');
-    }
-
     // ── Enviar mensaje ──
     window.send = async function() {
       const text = inpEl.value.trim();
@@ -540,58 +525,15 @@
 
       showTyping();
 
-      const cursosCtx = buildCursosContext();
-      const userCtx = USER_INFO
-        ? `El usuario está logueado: ${USER_INFO.displayName || USER_INFO.username || 'usuario'}, rango: ${USER_INFO.rango || '—'}, puntos: ${USER_INFO.puntos || 0}.`
-        : 'El usuario no ha iniciado sesión.';
-
-      const systemPrompt = `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática.
-
-CONTEXTO DEL USUARIO:
-${userCtx}
-
-CLASES DISPONIBLES EN LA ACADEMIA (datos reales de Firestore):
-${cursosCtx}
-
-CÓMO FUNCIONA LA ACADEMIA:
-- Registro: el usuario se registra en registro.html con username y contraseña. Su cuenta queda pendiente hasta que un administrador la aprueba.
-- Login: en login.html usando username. Tras aprobación, accede al panel-usuario.html.
-- Cursos y clases: visibles en cursos.html. Cada clase tiene nivel (Básico/Intermedio/Avanzado), descripción, y un quiz de evaluación.
-- Quiz: al ver una clase en clase.html, el usuario responde 4 preguntas. El admin las revisa y aprueba/rechaza. Si aprueba, gana puntos: Básico=100pts, Intermedio=200pts, Avanzado=400pts.
-- Puntos y ranking: los puntos acumulados definen el rango del usuario y su posición en el ranking visible en panel-usuario.html.
-- Perfil: en perfil.html el usuario puede cambiar nombre visible, bio y foto.
-- Mi ficha: en ficha.html se ven los datos del usuario.
-- Títulos: en titulos.html aparecen los certificados y badges obtenidos.
-- Chat: en chat.html hay un chat comunitario entre miembros.
-- Noticias: en noticias.html se publican anuncios y novedades.
-- Redes: en redes.html están los links a las redes sociales de la academia.
-- Configuración: en configuracion.html el usuario puede cambiar contraseña y ajustes.
-- Panel admin: solo accesible para administradores, en panel-admin.html gestionan usuarios, clases, quiz y noticias.
-
-CÓMO RECOMENDAR CLASES:
-Cuando el usuario pregunte qué clases le sirven para algo, analiza el título y descripción de cada clase disponible y recomienda las más relevantes por nombre y nivel. NO inventes clases que no estén en la lista. Si no hay clases cargadas aún, díselo.
-
-ESTILO:
-- Responde siempre en español.
-- Sé directo, amigable y técnico cuando sea necesario.
-- Usa **negrita** para resaltar nombres de clases, páginas y términos clave.
-- Si recomiendas clases, listarlas con nombre, nivel y por qué son útiles.
-- Máximo 350 palabras por respuesta salvo que el usuario pida más detalle.
-- Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
+      const systemPrompt = buildSystemPrompt({
+        userInfo: USER_INFO,
+        cursosCtx: buildCursosContext(CURSOS),
+        progresoCtx: buildProgresoContext(PROGRESO),
+        paginaCtx: nombrePagina(location.pathname),
+      });
 
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 1000,
-            system: systemPrompt,
-            messages: history.slice(-14)
-          })
-        });
-        const data = await res.json();
-        const reply = data.content?.map(b => b.text || '').join('') || 'Sin respuesta.';
+        const reply = await askGemini(systemPrompt, history);
         history.push({ role: 'assistant', content: reply });
         rmTyping();
 

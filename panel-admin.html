@@ -664,6 +664,7 @@
   <script src="js/particles.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
@@ -2064,6 +2065,7 @@
       query, where, orderBy, Timestamp, increment
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { crearNotificacion, TIPOS_NOTIF } from './js/notificaciones.js';
+    import { recomendarSiguienteCurso } from './js/ia-core.js';
 
     const modal = document.getElementById('quiz-review-modal');
     const modalContent = document.getElementById('quiz-modal-content');
@@ -2259,6 +2261,21 @@
 
         // Actualizar badge de pendientes
         updatePendienteCount();
+
+        // 5. La IA analiza el progreso del usuario y sugiere la siguiente
+        //    clase como notificación aparte. No bloquea el flujo si falla.
+        recomendarSiguienteCurso({ uid, cursoAprobadoTitulo: cursoTitulo })
+          .then((rec) => {
+            if (!rec) return;
+            return crearNotificacion({
+              uid,
+              tipo: TIPOS_NOTIF.CURSO_APROBADO,
+              titulo: '🤖 Tu asistente IA te recomienda...',
+              mensaje: rec.texto,
+              link: rec.cursoId ? `clase.html?id=${rec.cursoId}` : 'cursos.html',
+            });
+          })
+          .catch((e) => console.error('No se pudo generar recomendación IA:', e));
       } catch(e) {
         alert('Error: ' + e.message);
       }
