@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Núcleo del asistente de IA (Grok, vía OpenRouter)
+   ACADEMIA INDRHACK — Núcleo del asistente de IA (vía OpenRouter)
    ============================================================
    Módulo compartido usado por:
    - ia-asistente.html   (chat de página completa)
@@ -19,9 +19,14 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 // Clave gratuita de OpenRouter: https://openrouter.ai/keys (no pide tarjeta)
-// El modelo "x-ai/grok-4-fast:free" es Grok de xAI, gratis (con límite de uso).
+// Usamos "openrouter/free": el auto-router propio de OpenRouter, que elige
+// automáticamente entre los modelos gratis disponibles en cada momento
+// (Llama, Qwen, GPT-OSS, etc). Esto evita que el asistente se rompa cuando
+// un modelo puntual (como pasó con Grok 4 Fast) se da de baja o deja de
+// ser gratis: el auto-router salta a otro modelo gratis sin tocar código.
 export const OPENROUTER_API_KEY = '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';
-export const GROK_MODEL         = 'x-ai/grok-4-fast:free';
+export const IA_MODEL           = 'openrouter/free';
+
 
 /* ── Mapa estático del sitio: qué hay y dónde ─────────────── */
 export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html con username y contraseña. Su cuenta queda pendiente hasta que un administrador la aprueba.
@@ -152,9 +157,9 @@ ESTILO:
 - Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
 }
 
-/* ── Llamada a la API de Grok (vía OpenRouter, formato OpenAI) ──
+/* ── Llamada a la API de IA (vía OpenRouter, formato OpenAI) ──
    history: [{role:'user'|'assistant', content:string}, ...]   */
-export async function askGrok(systemPrompt, history) {
+export async function askIA(systemPrompt, history) {
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history.slice(-14).map((m) => ({
@@ -175,7 +180,7 @@ export async function askGrok(systemPrompt, history) {
         'X-Title': 'Academia Indrhack',
       },
       body: JSON.stringify({
-        model: GROK_MODEL,
+        model: IA_MODEL,
         messages,
         max_tokens: 1000,
       }),
@@ -225,7 +230,7 @@ ${pendientes.map((c) => `- ID:${c.id} | "${c.titulo}" | Nivel: ${c.nivel || 'Bá
 
 Recomendá UNA sola clase como siguiente paso lógico, priorizando progresión de nivel (Básico → Intermedio → Avanzado) y temática relacionada con "${cursoAprobadoTitulo}". Respondé en español, en un máximo de 2 frases cortas y amigables, mencionando el título exacto de la clase recomendada entre comillas. No uses markdown ni listas.`;
 
-    const reply = await askGrok(prompt, [{ role: 'user', content: 'Recomendame la siguiente clase.' }]);
+    const reply = await askIA(prompt, [{ role: 'user', content: 'Recomendame la siguiente clase.' }]);
     const mencionado = pendientes.find((c) => reply.includes(c.titulo));
     return { texto: reply.trim(), cursoId: mencionado?.id || null };
   } catch (e) {
