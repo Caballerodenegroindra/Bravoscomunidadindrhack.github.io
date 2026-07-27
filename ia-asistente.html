@@ -369,7 +369,7 @@
     import {
       cargarCursos, buildCursosContext,
       cargarProgresoUsuario, buildProgresoContext,
-      buildSystemPrompt, askGemini, nombrePagina,
+      buildSystemPrompt, askGrok, nombrePagina,
     } from './js/ia-core.js';
 
     // ── Estado global ──
@@ -533,7 +533,7 @@
       });
 
       try {
-        const reply = await askGemini(systemPrompt, history);
+        const reply = await askGrok(systemPrompt, history);
         history.push({ role: 'assistant', content: reply });
         rmTyping();
 
