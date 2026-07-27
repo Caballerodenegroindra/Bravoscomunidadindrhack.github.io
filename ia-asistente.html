@@ -369,13 +369,18 @@
     import {
       cargarCursos, buildCursosContext,
       cargarProgresoUsuario, buildProgresoContext,
+      cargarConfigSitio, buildConfigContext,
       buildSystemPrompt, askIA, nombrePagina,
     } from './js/ia-core.js';
+
+    // URL base del sitio para armar enlaces compartibles absolutos
+    const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
 
     // ── Estado global ──
     let CURSOS    = [];   // [{id, titulo, descripcion, categoria, nivel, publicado}]
     let USER_INFO = null; // info del usuario logueado
     let PROGRESO  = [];   // clases ya aprobadas por el usuario
+    let CONFIG    = {};   // enlaces oficiales (config/site)
     let history   = [];   // historial del chat
     let busy      = false;
 
@@ -415,6 +420,7 @@
     });
 
     loadCursos();
+    cargarConfigSitio().then((c) => { CONFIG = c; });
 
     // ── Helpers DOM ──
     window.resize = function(el) {
@@ -527,9 +533,10 @@
 
       const systemPrompt = buildSystemPrompt({
         userInfo: USER_INFO,
-        cursosCtx: buildCursosContext(CURSOS),
+        cursosCtx: buildCursosContext(CURSOS, BASE_URL),
         progresoCtx: buildProgresoContext(PROGRESO),
         paginaCtx: nombrePagina(location.pathname),
+        configCtx: buildConfigContext(CONFIG),
       });
 
       try {
