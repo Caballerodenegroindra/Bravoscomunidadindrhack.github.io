@@ -91,7 +91,8 @@
 
           <div class="field">
             <label for="username">Nombre de usuario</label>
-            <input type="text" id="username" name="username" required minlength="3" placeholder="usuario_indrhack" />
+            <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-bottom:0.35rem">Solo letras y números, sin espacios ni símbolos.</small>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9]+" inputmode="text" autocomplete="off" placeholder="usuarioindrhack" />
           </div>
 
           <div class="field">
@@ -153,6 +154,21 @@
 
     const form = document.getElementById('register-form');
     const message = document.getElementById('form-message');
+    const usernameInput = document.getElementById('username');
+
+    // Bloquea pegar texto en el campo de usuario.
+    usernameInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+    });
+
+    // Elimina en tiempo real cualquier carácter que no sea letra o número
+    // (sin acentos, sin espacios, sin emojis, sin símbolos).
+    usernameInput.addEventListener('input', () => {
+      const cleaned = usernameInput.value.replace(/[^A-Za-z0-9]/g, '');
+      if (cleaned !== usernameInput.value) {
+        usernameInput.value = cleaned;
+      }
+    });
 
     function showMessage(text, type) {
       message.textContent = text;
@@ -176,6 +192,11 @@
 
       if (username.length < 3) {
         showMessage('El nombre de usuario debe tener al menos 3 caracteres.', 'error');
+        return;
+      }
+
+      if (!/^[A-Za-z0-9]+$/.test(username)) {
+        showMessage('El nombre de usuario solo puede tener letras y números, sin espacios ni símbolos.', 'error');
         return;
       }
 
