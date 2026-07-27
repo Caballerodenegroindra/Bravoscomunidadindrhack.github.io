@@ -15,8 +15,13 @@ import { onSessionChange } from './auth.js';
 import {
   cargarCursos, buildCursosContext,
   cargarProgresoUsuario, buildProgresoContext,
+  cargarConfigSitio, buildConfigContext,
   buildSystemPrompt, askIA, nombrePagina,
 } from './ia-core.js';
+
+// URL base del sitio (sirve para armar enlaces compartibles absolutos,
+// funciona tanto si está en la raíz como en una subcarpeta).
+const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
 
 // En el chat de página completa ya está la IA a pantalla completa,
 // así que ahí no mostramos la burbuja para no duplicar.
@@ -31,6 +36,7 @@ function initWidget() {
   let userInfo  = null;
   let cursos    = [];
   let progreso  = [];
+  let config    = {};
   let history   = safeLoadHistory();
   let busy      = false;
 
@@ -39,6 +45,7 @@ function initWidget() {
     if (profile) cargarProgresoUsuario(profile.uid).then((p) => { progreso = p; });
   });
   cargarCursos().then((c) => { cursos = c; });
+  cargarConfigSitio().then((c) => { config = c; });
 
   /* ── DOM ── */
   const wrap = document.createElement('div');
@@ -144,9 +151,10 @@ function initWidget() {
 
     const systemPrompt = buildSystemPrompt({
       userInfo,
-      cursosCtx: buildCursosContext(cursos),
+      cursosCtx: buildCursosContext(cursos, BASE_URL),
       progresoCtx: buildProgresoContext(progreso),
       paginaCtx: nombrePagina(location.pathname),
+      configCtx: buildConfigContext(config),
     });
 
     try {

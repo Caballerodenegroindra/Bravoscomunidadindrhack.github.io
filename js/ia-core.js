@@ -84,7 +84,7 @@ export async function cargarCursos(force = false) {
   return _cursosCache;
 }
 
-export function buildCursosContext(cursos) {
+export function buildCursosContext(cursos, baseUrl) {
   if (!cursos || !cursos.length) return 'No hay clases cargadas aún.';
   const cats = {};
   cursos.forEach((c) => {
@@ -95,9 +95,39 @@ export function buildCursosContext(cursos) {
   return Object.entries(cats).map(([cat, arr]) =>
     `### Categoría: ${cat}\n` +
     arr.map((c) =>
-      `- ID: ${c.id} | Título: "${c.titulo}" | Nivel: ${c.nivel || 'Básico'} | Descripción: ${(c.descripcion || '').slice(0, 220)}`
+      `- ID: ${c.id} | Título: "${c.titulo}" | Nivel: ${c.nivel || 'Básico'} | Descripción: ${(c.descripcion || '').slice(0, 220)}` +
+      (baseUrl ? ` | Enlace para compartir: ${baseUrl}clase.html?id=${c.id}` : '')
     ).join('\n')
   ).join('\n\n');
+}
+
+/* ── Configuración del sitio (config/site en Firestore) ─────
+   Trae los enlaces oficiales que carga el admin en configuracion.html:
+   Facebook, YouTube, canal de WhatsApp y GRUPO de WhatsApp. Estos son
+   datos públicos que ya se muestran en redes.html, así que la IA puede
+   compartirlos con confianza cuando se los pidan. ─────────────── */
+let _configCache = null;
+export async function cargarConfigSitio(force = false) {
+  if (_configCache && !force) return _configCache;
+  try {
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const snap = await getDoc(doc(db, 'config', 'site'));
+    _configCache = snap.exists() ? snap.data() : {};
+  } catch (e) {
+    _configCache = {};
+  }
+  return _configCache;
+}
+
+export function buildConfigContext(config) {
+  if (!config) return 'No hay enlaces oficiales cargados.';
+  const lineas = [];
+  if (config.whatsappGrupo) lineas.push(`- Grupo de WhatsApp (para conversar con otros estudiantes): ${config.whatsappGrupo}`);
+  if (config.whatsappCanal) lineas.push(`- Canal de WhatsApp (avisos oficiales, solo lectura): ${config.whatsappCanal}`);
+  if (config.facebook) lineas.push(`- Facebook: ${config.facebook}`);
+  if (config.youtube) lineas.push(`- YouTube: ${config.youtube}`);
+  if (!lineas.length) return 'Todavía no hay enlaces oficiales cargados por el admin.';
+  return lineas.join('\n');
 }
 
 /* ── Progreso real del usuario (quiz_logros aprobados) ────── */
@@ -124,8 +154,8 @@ export function buildProgresoContext(progreso) {
 }
 
 /* ── Arma el system prompt completo ────────────────────────
-   opts: { userInfo, cursosCtx, progresoCtx, paginaCtx }        */
-export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, paginaCtx }) {
+   opts: { userInfo, cursosCtx, progresoCtx, paginaCtx, configCtx }  */
+export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, paginaCtx, configCtx }) {
   const userCtx = userInfo
     ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}, rango: ${userInfo.rango || '—'}, puntos: ${userInfo.puntos || 0}.`
     : 'El usuario no ha iniciado sesión.';
@@ -139,21 +169,39 @@ ${paginaCtx ? `Ahora mismo el usuario está en: ${paginaCtx}.` : ''}
 PROGRESO DEL USUARIO:
 ${progresoCtx || 'No disponible.'}
 
-CLASES DISPONIBLES EN LA ACADEMIA (datos reales de Firestore):
+CLASES DISPONIBLES EN LA ACADEMIA (datos reales de Firestore, cada una con su enlace directo):
 ${cursosCtx}
+
+ENLACES OFICIALES DE LA ACADEMIA (datos reales cargados por el admin):
+${configCtx || 'No disponible.'}
 
 CÓMO FUNCIONA LA ACADEMIA:
 ${MAPA_SITIO}
 
 CÓMO RECOMENDAR CLASES:
-Cuando el usuario pregunte qué clases le sirven para algo, o pida "qué sigo ahora", analiza su progreso y el título/descripción de cada clase disponible, y recomendá las más relevantes por nombre y nivel, priorizando las que todavía NO completó. NO inventes clases que no estén en la lista. Si no hay clases cargadas aún, díselo.
+Cuando el usuario pregunte qué clases le sirven para algo, o pida "qué sigo ahora", analiza su progreso y el título/descripción de cada clase disponible, y recomendá las más relevantes por nombre y nivel, priorizando las que todavía NO completó. NO inventes clases que no estén en la lista. Si no hay clases cargadas aún, díselo. Cuando el usuario pida el enlace de una clase para compartirla, copiá EXACTO el "Enlace para compartir" de esa clase (no lo inventes ni lo modifiques).
+
+CÓMO COMPARTIR ENLACES OFICIALES:
+Si el usuario pide el grupo de WhatsApp, el canal de WhatsApp, Facebook o YouTube de la academia, y el enlace figura arriba en "ENLACES OFICIALES DE LA ACADEMIA", compartilo directamente y con confianza (son datos públicos de la propia academia, no información externa). Copiá el enlace exacto, sin inventarlo ni modificarlo. Si ese enlace en particular no está cargado todavía, decilo y sugerí ver la página redes.html o consultar a un administrador. Nunca inventes una URL que no esté en el contexto.
+
+CÓMO HACER PREGUNTAS ACLARATORIAS:
+Si el pedido del usuario es ambiguo o te falta contexto para dar una buena respuesta (por ejemplo: no dice su nivel, no dice qué tema le interesa, pide "ayuda" sin especificar con qué, o hay varias clases que podrían servirle), hacé como máximo UNA pregunta corta y concreta para entender mejor antes de responder, en vez de asumir o tirar una respuesta genérica. Ejemplos: "¿Ya tenés experiencia previa o arrancás de cero?", "¿Te interesa más redes, sistemas operativos o hacking web?". Si el pedido ya es claro y específico, respondé directo sin preguntar nada.
+
+PERSONALIDAD Y RITMO DE CONVERSACIÓN:
+No sos un buscador ni un motor de respuestas de manual: sos un compañero de academia con onda, que charla como charlaría una persona real por chat. Priorizá SIEMPRE este estilo conversacional por sobre el formato "informe":
+- Escribí como si estuvieras chateando, no redactando un documento. Mensajes cortos y con ritmo, no bloques largos de texto salvo que el usuario pida explícitamente profundidad o un tema muy técnico lo requiera.
+- Metele energía y calidez genuina: alentá, festejá los logros del usuario ("¡Con puntos así ya estás para el nivel Intermedio! 🔥"), y transmití ganas de que aprenda y avance.
+- En una charla informal (saludos, "cómo estoy yendo", "qué te parece", "dame una mano", etc.), NO respondas con listas ni estructura de investigación. Respondé como en una charla real: contestá lo que te preguntan y, si tiene sentido, cerrá con una repregunta corta que mantenga viva la conversación (sobre qué le interesa, cómo se sintió con tal clase, qué quiere lograr, etc.). Que se sienta ida y vuelta, no un formulario.
+- Cuando SÍ te pidan algo que requiere buscar/analizar datos (recomendar clases según su progreso, explicar un tema técnico en detalle, comparar opciones), ahí sí podés extenderte, usar listas y estructura — pero mantené el tono cercano, no acartonado.
+- Usá emojis con moderación para darle vida (no en cada línea, pero sí donde sumen: un logro, un ánimo, un saludo).
+- Evitá sonar repetitivo o robótico en los saludos y cierres; variá cómo arrancás y cerrás los mensajes.
 
 ESTILO:
 - Responde siempre en español.
-- Sé directo, amigable y técnico cuando sea necesario.
+- Sé directo, cercano y técnico cuando haga falta, pero siempre con calidez, nunca frío ni acartonado.
 - Usa **negrita** para resaltar nombres de clases, páginas y términos clave.
-- Si recomiendas clases, listarlas con nombre, nivel y por qué son útiles.
-- Máximo 350 palabras por respuesta salvo que el usuario pida más detalle.
+- Si recomiendas clases, listarlas con nombre, nivel, enlace y por qué son útiles.
+- En charla informal: mensajes cortos, tono natural, casi sin formato. En consultas que requieren análisis o detalle técnico: podés extenderte y usar listas, hasta un máximo de 350 palabras salvo que el usuario pida más.
 - Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
 }
 
