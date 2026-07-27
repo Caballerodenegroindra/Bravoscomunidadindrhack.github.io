@@ -15,7 +15,7 @@ import { onSessionChange } from './auth.js';
 import {
   cargarCursos, buildCursosContext,
   cargarProgresoUsuario, buildProgresoContext,
-  buildSystemPrompt, askGemini, nombrePagina,
+  buildSystemPrompt, askGrok, nombrePagina,
 } from './ia-core.js';
 
 // En el chat de página completa ya está la IA a pantalla completa,
@@ -150,7 +150,7 @@ function initWidget() {
     });
 
     try {
-      const reply = await askGemini(systemPrompt, history);
+      const reply = await askGrok(systemPrompt, history);
       history.push({ role: 'assistant', content: reply });
       saveHistory();
       rmTyping();

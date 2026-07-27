@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Núcleo del asistente de IA (Gemini)
+   ACADEMIA INDRHACK — Núcleo del asistente de IA (Grok, vía OpenRouter)
    ============================================================
    Módulo compartido usado por:
    - ia-asistente.html   (chat de página completa)
@@ -18,9 +18,10 @@ import {
   collection, getDocs, query, where,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// Clave gratuita de Google AI Studio: https://aistudio.google.com/apikey
-export const GEMINI_API_KEY = 'AQ.Ab8RN6JkQouwMECSs0Rh_9CA55xv8Lyg89kISivqO5vHaPZhwQ';
-export const GEMINI_MODEL   = 'gemini-2.5-flash';
+// Clave gratuita de OpenRouter: https://openrouter.ai/keys (no pide tarjeta)
+// El modelo "x-ai/grok-4-fast:free" es Grok de xAI, gratis (con límite de uso).
+export const OPENROUTER_API_KEY = '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';
+export const GROK_MODEL         = 'x-ai/grok-4-fast:free';
 
 /* ── Mapa estático del sitio: qué hay y dónde ─────────────── */
 export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html con username y contraseña. Su cuenta queda pendiente hasta que un administrador la aprueba.
@@ -151,26 +152,32 @@ ESTILO:
 - Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
 }
 
-/* ── Llamada a la API de Gemini ─────────────────────────────
+/* ── Llamada a la API de Grok (vía OpenRouter, formato OpenAI) ──
    history: [{role:'user'|'assistant', content:string}, ...]   */
-export async function askGemini(systemPrompt, history) {
-  const contents = history.slice(-14).map((m) => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
-  }));
+export async function askGrok(systemPrompt, history) {
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...history.slice(-14).map((m) => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: m.content,
+    })),
+  ];
 
   let res;
   try {
-    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
+    res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-goog-api-key': GEMINI_API_KEY,
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        // Opcionales pero recomendados por OpenRouter para identificar el sitio:
+        'HTTP-Referer': 'https://bravoscomunidadindrhack.github.io',
+        'X-Title': 'Academia Indrhack',
       },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents,
-        generationConfig: { maxOutputTokens: 1000 },
+        model: GROK_MODEL,
+        messages,
+        max_tokens: 1000,
       }),
     });
   } catch (netErr) {
@@ -191,7 +198,7 @@ export async function askGemini(systemPrompt, history) {
     throw new Error(`API ${codigo}: ${motivo}`);
   }
 
-  return data.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('') || 'Sin respuesta.';
+  return data.choices?.[0]?.message?.content || 'Sin respuesta.';
 }
 
 /* ── Recomendación automática al aprobar un quiz ────────────
@@ -218,7 +225,7 @@ ${pendientes.map((c) => `- ID:${c.id} | "${c.titulo}" | Nivel: ${c.nivel || 'Bá
 
 Recomendá UNA sola clase como siguiente paso lógico, priorizando progresión de nivel (Básico → Intermedio → Avanzado) y temática relacionada con "${cursoAprobadoTitulo}". Respondé en español, en un máximo de 2 frases cortas y amigables, mencionando el título exacto de la clase recomendada entre comillas. No uses markdown ni listas.`;
 
-    const reply = await askGemini(prompt, [{ role: 'user', content: 'Recomendame la siguiente clase.' }]);
+    const reply = await askGrok(prompt, [{ role: 'user', content: 'Recomendame la siguiente clase.' }]);
     const mencionado = pendientes.find((c) => reply.includes(c.titulo));
     return { texto: reply.trim(), cursoId: mencionado?.id || null };
   } catch (e) {
