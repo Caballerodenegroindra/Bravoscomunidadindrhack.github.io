@@ -1594,8 +1594,8 @@ tbody tr:last-child td { border-bottom: none; }
 /* ============================================================
    ASISTENTE IA — Burbuja flotante global (js/ia-widget.js)
    ============================================================ */
-#ia-widget { position: fixed; right: 1.1rem; bottom: 5.4rem; z-index: 999; font-family: var(--font-body); }
-@media (min-width: 768px) { #ia-widget { bottom: 1.5rem; } }
+#ia-widget { position: fixed; right: 1rem; bottom: calc(var(--tabbar-h) + 5.25rem); z-index: 999; font-family: var(--font-body); }
+@media (min-width: 768px) { #ia-widget { bottom: 5.5rem; } }
 
 #ia-widget-btn {
   width: 54px; height: 54px; border-radius: 50%;
@@ -1613,7 +1613,7 @@ tbody tr:last-child td { border-bottom: none; }
   display: none;
   flex-direction: column;
   position: fixed;
-  right: 1.1rem; bottom: 5.4rem;
+  right: 1rem; bottom: calc(var(--tabbar-h) + 5.25rem);
   width: min(360px, calc(100vw - 2.2rem));
   height: min(520px, calc(100vh - 8rem));
   background: var(--bg-card);
@@ -1622,7 +1622,7 @@ tbody tr:last-child td { border-bottom: none; }
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
 }
-@media (min-width: 768px) { #ia-widget-panel { bottom: 5.4rem; } }
+@media (min-width: 768px) { #ia-widget-panel { bottom: 5.5rem; } }
 .ia-widget--open #ia-widget-panel { display: flex; }
 
 #ia-widget-header {
