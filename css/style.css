@@ -369,18 +369,24 @@ body.ia-dock-active .help-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) 
   justify-content: center;
   gap: 4px;
   color: var(--text-muted);
-  font-size: 0.56rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   transition: color 0.15s, background 0.15s;
-  padding: 0.4rem 0.05rem;
+  padding: 0.4rem 0.15rem;
   border-radius: var(--radius);
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
   text-align: center;
-  overflow: hidden;
   position: relative;
+}
+.tabbar__label {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .tabbar__item:hover { text-decoration: none; color: var(--text-soft); }
 .tabbar__item:active { background: var(--border-muted); }
