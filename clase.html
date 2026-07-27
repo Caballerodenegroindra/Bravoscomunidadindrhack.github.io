@@ -74,16 +74,16 @@
       font-weight: 600;
       margin-bottom: 0.75rem;
     }
-    .nivel-basico   { background: #c6a96522; color: #c6a965; border: 1px solid #c6a96544; }
-    .nivel-intermedio { background: #c6a96522; color: #c6a965; border: 1px solid #c6a96544; }
+    .nivel-basico   { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-subtle); }
+    .nivel-intermedio { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-subtle); }
     .nivel-avanzado { background: var(--color-accent-emphasis)22; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis)44; }
     .puntos-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      background: #c6a96515;
-      border: 1px solid #c6a96540;
-      color: #c6a965;
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-subtle);
+      color: var(--gold);
       padding: 3px 12px;
       border-radius: 20px;
       font-size: 0.78rem;
@@ -161,7 +161,7 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
-    .section-header-icon--green { background: #3f8f5f14; border: 1px solid #3f8f5f30; }
+    .section-header-icon--green { background: var(--color-success-subtle); border: 1px solid var(--color-success-subtle); }
     .section-header-icon--red   { background: var(--color-accent-emphasis)14; border: 1px solid var(--color-accent-emphasis)30; }
     .section-header h3 { margin: 0; font-size: 1rem; color: var(--text); }
     .section-header p  { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-muted); }
@@ -191,7 +191,7 @@
       font-size: 1.2rem;
       flex-shrink: 0;
     }
-    .termux-title { margin: 0; font-size: 1rem; color: #3f8f5f; font-family: var(--font-body); font-weight: 700; letter-spacing: 0.05em; }
+    .termux-title { margin: 0; font-size: 1rem; color: var(--color-success-fg); font-family: var(--font-body); font-weight: 700; letter-spacing: 0.05em; }
     .termux-subtitle { margin: 0.15rem 0 0; font-size: 0.78rem; color: #5c6c8c; }
 
     /* Command card */
@@ -231,7 +231,7 @@
       overflow: hidden;
     }
     .cmd-prompt {
-      color: #3f8f5f;
+      color: var(--color-success-fg);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem;
       font-weight: 700;
@@ -252,7 +252,7 @@
       background: #0f1d38;
       border: 1px solid #24365c;
       border-radius: 6px;
-      color: #3f8f5f;
+      color: var(--color-success-fg);
       font-size: 0.72rem;
       font-weight: 600;
       padding: 0.3rem 0.65rem;
@@ -264,8 +264,8 @@
       gap: 0.3rem;
       font-family: var(--font-body);
     }
-    .cmd-copy-btn:hover { background: #0f1d38; border-color: #3f8f5f; }
-    .cmd-copy-btn.copied { background: #3f8f5f22; border-color: #3f8f5f; color: #3f8f5f; }
+    .cmd-copy-btn:hover { background: #0f1d38; border-color: var(--color-success-fg); }
+    .cmd-copy-btn.copied { background: var(--color-success-subtle); border-color: var(--color-success-fg); color: var(--color-success-fg); }
     .cmd-copy-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 
     /* Tags inline de comando */
@@ -315,9 +315,9 @@
     .vp-play-icon { font-size: 2.5rem; color: rgba(255,255,255,0.9); text-shadow: 0 0 20px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.2s; }
     .vp-play-icon.show { opacity: 1; }
     .vp-side-bar { position: absolute; right: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
-    .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #3f8f5f; transition: height 0.1s; }
+    .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--color-success-fg); transition: height 0.1s; }
     .vp-bright-bar { position: absolute; left: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
-    .vp-bright-fill { position: absolute; bottom: 0; left: 0; right: 0; background: #c6a965; transition: height 0.1s; }
+    .vp-bright-fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--gold); transition: height 0.1s; }
     .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #0a1428; }
     .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
@@ -339,8 +339,8 @@
     .pregunta-card textarea { width: 100%; min-height: 90px; background: #080810; border: 1px solid #2a2a3e; border-radius: 8px; color: #ddd; font-size: 0.88rem; padding: 0.75rem; resize: vertical; font-family: inherit; box-sizing: border-box; transition: border-color 0.2s; }
     .pregunta-card textarea:focus { outline: none; border-color: var(--color-accent-emphasis); }
     .pregunta-num { display: inline-block; background: var(--color-accent-emphasis)18; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis)40; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; flex-shrink: 0; }
-    .quiz-ya-enviado { background: #c6a9650e; border: 1px solid #c6a96530; border-radius: 12px; padding: 1.25rem; color: #c6a965; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.75rem; }
-    .quiz-aprobado { background: #3f8f5f0e; border: 1px solid #3f8f5f30; border-radius: 12px; padding: 1.25rem; color: #3f8f5f; }
+    .quiz-ya-enviado { background: var(--gold-subtle); border: 1px solid var(--gold-subtle); border-radius: 12px; padding: 1.25rem; color: var(--gold); font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.75rem; }
+    .quiz-aprobado { background: var(--color-success-subtle); border: 1px solid var(--color-success-subtle); border-radius: 12px; padding: 1.25rem; color: var(--color-success-fg); }
     .quiz-rechazado { background: var(--color-accent-emphasis)0e; border: 1px solid var(--color-accent-emphasis)30; border-radius: 12px; padding: 1.25rem; color: var(--color-danger-fg); }
 
     /* ── MATERIAL BTN ── */
@@ -358,18 +358,18 @@
       transition: border-color 0.2s, color 0.2s, background 0.2s;
       margin-bottom: 1rem;
     }
-    .material-btn:hover { border-color: #c6a96555; color: #c6a965; background: #c6a96508; }
+    .material-btn:hover { border-color: var(--gold-subtle); color: var(--gold); background: var(--gold-subtle); }
 
     /* ── PROGRESS STEPS ── */
     .progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.25rem; }
     .step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #444; white-space: nowrap; }
     .step.active { color: var(--color-accent-emphasis); }
-    .step.done { color: #3f8f5f; }
+    .step.done { color: var(--color-success-fg); }
     .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #222; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
     .step.active .step-dot { border-color: var(--color-accent-emphasis); color: var(--color-accent-emphasis); }
-    .step.done .step-dot { border-color: #3f8f5f; color: #3f8f5f; background: #3f8f5f14; }
+    .step.done .step-dot { border-color: var(--color-success-fg); color: var(--color-success-fg); background: var(--color-success-subtle); }
     .step-line { width: 30px; height: 2px; background: #1a1a28; flex-shrink: 0; }
-    .step.done + .step .step-line { background: #3f8f5f30; }
+    .step.done + .step .step-line { background: var(--color-success-subtle); }
 
     /* ── DIVIDER ── */
     .section-divider {
@@ -385,7 +385,7 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
@@ -406,7 +406,7 @@
 
   <nav class="tabbar" aria-label="Navegación principal">
     <div class="tabbar__inner">
-      <a href="cursos.html" class="tabbar__item">
+      <a href="cursos.html" class="tabbar__item active">
         <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
         Cursos
       </a>
@@ -436,7 +436,7 @@
 
   <main>
     <div class="container section">
-      <a href="cursos.html" style="color:#555;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem;transition:color 0.2s" onmouseover="this.style.color='var(--color-accent-emphasis)'" onmouseout="this.style.color='#555'">
+      <a href="cursos.html" class="link-back">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
         Volver a Cursos
       </a>
@@ -456,7 +456,7 @@
         </div>
       </div>
 
-      <div id="loading" style="color:#555;text-align:center;padding:3rem;font-size:0.9rem">Cargando clase…</div>
+      <div id="loading" style="color:var(--text-muted);text-align:center;padding:3rem;font-size:0.9rem">Cargando clase…</div>
       <div id="clase-contenido" style="display:none"></div>
       <a href="#" id="clase-chat-fab" class="clase-chat-fab" aria-label="Preguntar sobre esta clase en el chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
@@ -468,6 +468,7 @@
   <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético <br /> <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a></footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>
@@ -486,7 +487,7 @@
     const puntosMap  = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
 
     if (!cursoId) {
-      loading.innerHTML = '<p style="color:var(--color-danger-fg)">No se especificó ninguna clase. <a href="cursos.html" style="color:#c6a965">Volver</a></p>';
+      loading.innerHTML = '<p style="color:var(--color-danger-fg)">No se especificó ninguna clase. <a href="cursos.html" style="color:var(--gold)">Volver</a></p>';
     }
 
     onAuthStateChanged(auth, async (user) => {

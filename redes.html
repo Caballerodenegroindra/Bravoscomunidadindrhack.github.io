@@ -31,10 +31,10 @@
       gap: var(--gap-md);
     }
     .social-card__icon {
-      font-family: var(--font-title);
+      font-family: var(--font-heading);
       font-size: 1.6rem;
-      color: var(--accent);
-      text-shadow: var(--shadow-accent);
+      color: var(--gold);
+      text-shadow: 0 0 14px rgba(198,169,101,0.35);
     }
   </style>
 </head>
@@ -45,7 +45,7 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
@@ -97,7 +97,7 @@
   </nav>
 
   <main>
-    <div class="container section">
+    <div class="container section reveal">
       <h1 class="section-title">Nuestras <span class="accent">redes</span></h1>
       <p class="section-subtitle">Únete a la comunidad de Academia Indrhack en nuestros canales oficiales.</p>
 
@@ -136,6 +136,7 @@
   </footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>

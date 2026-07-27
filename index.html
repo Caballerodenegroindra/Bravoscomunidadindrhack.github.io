@@ -94,6 +94,7 @@
   <main>
     <!-- HERO -->
     <section class="hero">
+      <span class="hero__eyebrow">SALA DE SITUACIÓN · COMUNIDAD ACTIVA</span>
       <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" class="hero__logo-img" />
       <h1 class="hero__logo">ACADEMIA <span class="mark">INDRHACK</span></h1>
       <p class="hero__subtitle">Formación en Informática · Ciberseguridad · Hacking Ético</p>
@@ -105,7 +106,7 @@
     </section>
 
     <!-- SECCIÓN INFORMATIVA -->
-    <section class="container section" style="padding-top:0">
+    <section class="container section reveal" style="padding-top:0">
       <h2 class="section-title" style="text-align:center;margin-bottom:0.4rem">
         ¿Qué es <span class="accent">Academia Indrhack</span>?
       </h2>
@@ -113,7 +114,7 @@
         Comunidad dedicada a la formación en informática, ciberseguridad y hacking ético. Desde cero hasta niveles avanzados.
       </p>
 
-      <div class="card-grid">
+      <div class="card-grid reveal-stagger">
         <div class="card">
           <h3 style="margin-bottom:0.5rem">🛡️ Ciberseguridad</h3>
           <p class="section-subtitle" style="margin:0">Aprende a proteger sistemas, redes y datos contra amenazas reales.</p>
@@ -138,7 +139,7 @@
     </section>
 
     <!-- SECCIÓN MISIÓN -->
-    <section class="container section">
+    <section class="container section reveal">
       <h2 class="section-title" style="text-align:center;margin-bottom:0.4rem">
         Nuestra <span class="accent">misión</span>
       </h2>
@@ -146,22 +147,34 @@
         Democratizar el acceso al conocimiento en ciberseguridad, para que cualquier persona —sin experiencia previa— aprenda a protegerse en su vida digital.
       </p>
 
-      <div class="card-grid">
-        <div class="card">
-          <h3 style="margin-bottom:0.5rem">🎯 Conócelo para defenderte</h3>
-          <p class="section-subtitle" style="margin:0">Entendemos cómo funcionan las amenazas reales para anticiparnos a ellas, siempre con un enfoque legal y ético.</p>
+      <div class="dossier" style="max-width:760px;margin:0 auto">
+        <div class="dossier__row">
+          <span class="dossier__tag">PRINCIPIO 01</span>
+          <div class="dossier__body">
+            <h3>Conócelo para defenderte</h3>
+            <p>Entendemos cómo funcionan las amenazas reales para anticiparnos a ellas, siempre con un enfoque legal y ético.</p>
+          </div>
         </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.5rem">🆓 Educación sin barreras</h3>
-          <p class="section-subtitle" style="margin:0">Formación 100% gratuita, porque el conocimiento de seguridad digital no debería ser un privilegio.</p>
+        <div class="dossier__row">
+          <span class="dossier__tag">PRINCIPIO 02</span>
+          <div class="dossier__body">
+            <h3>Educación sin barreras</h3>
+            <p>Formación 100% gratuita, porque el conocimiento de seguridad digital no debería ser un privilegio.</p>
+          </div>
         </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.5rem">🌱 Desde cero</h3>
-          <p class="section-subtitle" style="margin:0">No necesitas experiencia previa. Empezamos por lo básico y avanzamos juntos, a tu ritmo.</p>
+        <div class="dossier__row">
+          <span class="dossier__tag">PRINCIPIO 03</span>
+          <div class="dossier__body">
+            <h3>Desde cero</h3>
+            <p>No necesitas experiencia previa. Empezamos por lo básico y avanzamos juntos, a tu ritmo.</p>
+          </div>
         </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.5rem">🤝 Comunidad, no solo contenido</h3>
-          <p class="section-subtitle" style="margin:0">Chat, ranking, dudas resueltas en vivo: aprendemos en conjunto, no en solitario.</p>
+        <div class="dossier__row">
+          <span class="dossier__tag">PRINCIPIO 04</span>
+          <div class="dossier__body">
+            <h3>Comunidad, no solo contenido</h3>
+            <p>Chat, ranking, dudas resueltas en vivo: aprendemos en conjunto, no en solitario.</p>
+          </div>
         </div>
       </div>
 
@@ -178,6 +191,7 @@
   </footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>

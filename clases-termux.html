@@ -22,12 +22,12 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="panel-usuario.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="panel-usuario.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="panel-usuario.html" title="Ir a tu panel">Mi Panel</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="chat.html" title="Chatear con la comunidad">Chat</a>
-      <a href="clases-termux.html" title="Comandos de Termux" style="color:var(--primary)">Termux</a>
+      <a href="clases-termux.html" class="active" title="Comandos de Termux">Termux</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
@@ -71,7 +71,7 @@
   </nav>
 
   <main>
-    <div class="container section">
+    <div class="container section reveal">
       <h1 class="section-title">Clases de <span class="accent">Termux</span></h1>
       <p class="section-subtitle">Comandos listos para copiar y pegar en Termux. Tocá "Copiar" en un solo comando, o "Copiar todo" para llevarte el bloque completo de la clase.</p>
 
@@ -101,6 +101,7 @@
   </footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>

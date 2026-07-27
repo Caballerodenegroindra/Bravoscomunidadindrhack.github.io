@@ -32,11 +32,11 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
-      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="noticias.html" class="active" title="Ver noticias y novedades">Noticias</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
@@ -84,7 +84,7 @@
   </nav>
 
   <main>
-    <div class="container section">
+    <div class="container section reveal">
       <h1 class="section-title">Noticias y <span class="accent">Novedades</span></h1>
       <p class="section-subtitle">Enterate de las últimas clases, eventos y anuncios importantes de la academia.</p>
 
@@ -101,6 +101,7 @@
   </footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>

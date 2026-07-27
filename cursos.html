@@ -370,10 +370,10 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
-      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="cursos.html" class="active" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
@@ -420,7 +420,7 @@
   </nav>
 
   <main>
-    <div class="container section">
+    <div class="container section reveal">
       <h1 class="section-title">Nuestros <span class="accent">Cursos</span></h1>
       <p class="section-subtitle">Rutas de aprendizaje en informática, ciberseguridad, hacking ético y privacidad digital.</p>
 
@@ -491,6 +491,7 @@
   <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético <br /> <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a></footer>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>
@@ -868,7 +869,7 @@
         const midY = y1 + (y2 - y1) / 2;
         const color = activo ? 'var(--gold)' : 'var(--border)';
         const opacity = activo ? 0.9 : 0.35;
-        return `<path d="M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}" fill="none" stroke="${color === 'var(--gold)' ? '#c6a965' : '#3a4a70'}" stroke-width="1.5" opacity="${opacity}"></path>`;
+        return `<path d="M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}" fill="none" stroke="${color === 'var(--gold)' ? 'var(--gold)' : '#3a4a70'}" stroke-width="1.5" opacity="${opacity}"></path>`;
       }
 
       function addNode({ cls, x, y, w, h, html, onClick }) {

@@ -26,18 +26,18 @@
       width: 100%;
       max-width: 480px;
       background: #0a1428;
-      border: 2px solid #c6a965;
+      border: 2px solid var(--gold);
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       font-family: 'Share Tech Mono', monospace;
-      box-shadow: 0 0 40px #c6a96533, 0 0 80px #ffffff08;
+      box-shadow: 0 0 40px var(--gold-subtle), 0 0 80px #ffffff08;
     }
 
     .ficha-header {
       background: linear-gradient(135deg, #0a1428 0%, #0f1d38 100%);
       padding: 1.5rem 1.5rem 1rem;
-      border-bottom: 1px solid #c6a96566;
+      border-bottom: 1px solid var(--gold-subtle);
       position: relative;
       overflow: hidden;
     }
@@ -73,12 +73,12 @@
     .ficha-badge-rango {
       display: inline-block;
       margin-top: 0.75rem;
-      background: #c6a96522;
-      border: 1px solid #c6a965;
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold);
       border-radius: 20px;
       padding: 3px 14px;
       font-size: 0.75rem;
-      color: #c6a965;
+      color: var(--gold);
       letter-spacing: 2px;
     }
 
@@ -127,7 +127,7 @@
 
     .ficha-divider {
       border: none;
-      border-top: 1px solid #c6a96533;
+      border-top: 1px solid var(--gold-subtle);
       margin: 0;
     }
 
@@ -158,7 +158,7 @@
 
     .ficha-footer {
       background: #0a1428;
-      border-top: 1px solid #c6a96533;
+      border-top: 1px solid var(--gold-subtle);
       padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
@@ -174,7 +174,7 @@
     .ficha-watermark {
       font-family: var(--font-body);
       font-size: 0.6rem;
-      color: #c6a96544;
+      color: var(--gold-subtle);
       letter-spacing: 3px;
     }
 
@@ -203,7 +203,7 @@
     <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
@@ -231,7 +231,7 @@
         <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
         Chat
       </a>
-      <a href="panel-usuario.html" class="tabbar__item">
+      <a href="panel-usuario.html" class="tabbar__item active">
         <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span>
         Mi Panel
       </a>
@@ -291,7 +291,7 @@
               </div>
               <div class="ficha-field">
                 <div class="ficha-label">Estado</div>
-                <div class="ficha-value" style="color:#3f8f5f" id="ficha-estado">—</div>
+                <div class="ficha-value" style="color:var(--color-success-fg)" id="ficha-estado">—</div>
               </div>
             </div>
 
@@ -326,6 +326,7 @@
   <!-- html2canvas para convertir a imagen -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>
@@ -379,7 +380,7 @@
             cursosEl.innerHTML = cursosData.map(c =>
               '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
               '<span>' + (c.categoria || '') + ' — ' + c.titulo + '</span>' +
-              '<span style="color:#c6a965;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + c.puntuacion + '/10</span>' +
+              '<span style="color:var(--gold);font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + c.puntuacion + '/10</span>' +
               '</div>'
             ).join('');
           }
@@ -395,7 +396,7 @@
             const p = d.data();
             return '<div class="ficha-curso-item" style="display:flex;justify-content:space-between;align-items:center">' +
               '<span>' + (p.nombre || '—') + '</span>' +
-              '<span style="color:#c6a965;font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + (p.puntuacion || '—') + '/10</span>' +
+              '<span style="color:var(--gold);font-weight:600;font-size:0.8rem;margin-left:0.5rem">' + (p.puntuacion || '—') + '/10</span>' +
               '</div>';
           }).join('');
         }

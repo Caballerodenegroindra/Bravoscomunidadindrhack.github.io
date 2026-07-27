@@ -311,8 +311,8 @@
     .online-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: #3f8f5f;
-      box-shadow: 0 0 6px #3f8f5f;
+      background: var(--color-success-fg);
+      box-shadow: 0 0 6px var(--color-success-fg);
       display: inline-block;
     }
 
@@ -1235,7 +1235,7 @@
       background: none;
       border: 1px solid rgba(179,56,44,0.45);
       border-radius: 6px;
-      color: #b3382c;
+      color: var(--color-danger-fg);
       cursor: pointer;
       padding: 0.25rem 0.6rem;
       font-size: 0.72rem;
@@ -1257,8 +1257,8 @@
     .live-pulse-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: #b3382c;
-      box-shadow: 0 0 6px #b3382c;
+      background: var(--color-danger-fg);
+      box-shadow: 0 0 6px var(--color-danger-fg);
       display: inline-block;
       animation: livePulse 1.4s infinite;
       flex-shrink: 0;
@@ -1274,7 +1274,7 @@
       font-size: 0.6rem;
       font-weight: 800;
       letter-spacing: 0.06em;
-      color: #b3382c;
+      color: var(--color-danger-fg);
       text-transform: uppercase;
     }
     .room-item__live-badge.scheduled { color: var(--text-muted); }
@@ -1323,7 +1323,7 @@
       font-family: var(--font-body);
       transition: border-color 0.12s, color 0.12s;
     }
-    .live-controls__finish-btn:hover { border-color: #b3382c; color: #b3382c; }
+    .live-controls__finish-btn:hover { border-color: var(--color-danger-fg); color: var(--color-danger-fg); }
 
     /* Chips de pasos (vista admin) */
     .step-chips {
@@ -1360,7 +1360,7 @@
       transition: background 0.12s, box-shadow 0.12s;
     }
     .step-chip--next:hover { background: rgba(179,56,44,0.16); box-shadow: 0 0 16px rgba(179,56,44,0.25); }
-    .step-chip--next .step-chip__label { color: #b3382c; }
+    .step-chip--next .step-chip__label { color: var(--color-danger-fg); }
     .step-chip--locked { opacity: 0.4; }
 
     /* Barra de progreso (vista usuario) */
@@ -1381,7 +1381,7 @@
       flex-shrink: 0;
     }
     .live-progress__dot--done { background: var(--success); border-color: var(--success); box-shadow: 0 0 6px rgba(63,143,95,0.5); }
-    .live-progress__dot--current { background: #b3382c; border-color: #b3382c; box-shadow: 0 0 6px rgba(179,56,44,0.6); animation: livePulse 1.4s infinite; }
+    .live-progress__dot--current { background: var(--color-danger-fg); border-color: var(--color-danger-fg); box-shadow: 0 0 6px rgba(179,56,44,0.6); animation: livePulse 1.4s infinite; }
 
     .live-complete-btn {
       align-self: flex-start;
@@ -1432,7 +1432,7 @@
       font-weight: 800;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: #b3382c;
+      color: var(--color-danger-fg);
       margin-bottom: 0.4rem;
     }
     .msg__step-label svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
@@ -1479,7 +1479,7 @@
       align-items: center;
       gap: 6px;
     }
-    .live-create__title svg { width: 14px; height: 14px; stroke: #b3382c; fill: none; stroke-width: 2; }
+    .live-create__title svg { width: 14px; height: 14px; stroke: var(--color-danger-fg); fill: none; stroke-width: 2; }
     .live-create__close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; line-height: 1; }
     .live-create__close:hover { color: var(--text); }
     .live-create__body {
@@ -1540,7 +1540,7 @@
       justify-content: space-between;
       font-size: 0.68rem;
       font-weight: 800;
-      color: #b3382c;
+      color: var(--color-danger-fg);
       letter-spacing: 0.05em;
     }
     .live-step-row__remove {
@@ -1551,7 +1551,7 @@
       font-size: 0.9rem;
       line-height: 1;
     }
-    .live-step-row__remove:hover { color: #b3382c; }
+    .live-step-row__remove:hover { color: var(--color-danger-fg); }
 
     .btn-add-step {
       align-self: flex-start;
@@ -1561,7 +1561,7 @@
       background: none;
       border: 1px dashed rgba(179,56,44,0.4);
       border-radius: 20px;
-      color: #b3382c;
+      color: var(--color-danger-fg);
       font-size: 0.72rem;
       font-weight: 700;
       padding: 0.35rem 0.85rem;
@@ -1578,7 +1578,7 @@
     }
     .btn-crear-clase-viva {
       width: 100%;
-      background: #b3382c;
+      background: var(--color-danger-fg);
       border: none;
       border-radius: 24px;
       color: #fff;
@@ -1622,7 +1622,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
     <a href="index.html" class="navbar__brand">
-      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack" style="height:36px;width:36px;object-fit:contain;border-radius:50%">
+      <img src="assets/img/logo-indrhack.png" alt="Academia Indrhack">
       ACADEMIA INDRHACK
     </a>
     <nav class="navbar__links">
@@ -1911,6 +1911,7 @@
   </div>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js"></script>
@@ -2340,7 +2341,7 @@
               .filter(u => u.uid !== ME.uid)
               .sort((a, b) => (a.displayName || a.username || '').localeCompare(b.displayName || b.username || ''));
           } catch (e) {
-            listEl.innerHTML = `<p style="padding:1rem;color:#c9776d;font-size:0.85rem;text-align:center">Error: ${escapeHtml(e.message)}</p>`;
+            listEl.innerHTML = `<p style="padding:1rem;color:var(--color-danger-fg);font-size:0.85rem;text-align:center">Error: ${escapeHtml(e.message)}</p>`;
             return;
           }
         }
@@ -2511,7 +2512,7 @@
           .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
         renderMessages(msgs);
       }, (err) => {
-        el.innerHTML = `<p style="color:#c9776d;padding:1.5rem;font-size:0.85rem;text-align:center">
+        el.innerHTML = `<p style="color:var(--color-danger-fg);padding:1.5rem;font-size:0.85rem;text-align:center">
           Error al cargar mensajes: ${escapeHtml(err.message)}
         </p>`;
       });
@@ -2794,7 +2795,7 @@
           .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
         renderLiveMessages();
       }, (err) => {
-        el.innerHTML = `<p style="color:#c9776d;padding:1.5rem;font-size:0.85rem;text-align:center">
+        el.innerHTML = `<p style="color:var(--color-danger-fg);padding:1.5rem;font-size:0.85rem;text-align:center">
           Error al cargar mensajes: ${escapeHtml(err.message)}
         </p>`;
       });
@@ -3360,7 +3361,7 @@
             body.appendChild(opt);
           });
         } catch(e) {
-          body.innerHTML = `<p style="color:#c9776d;font-size:0.82rem;text-align:center;padding:1rem">
+          body.innerHTML = `<p style="color:var(--color-danger-fg);font-size:0.82rem;text-align:center;padding:1rem">
             Error al cargar certificados.
           </p>`;
         }
@@ -3505,7 +3506,7 @@
               return ca !== 0 ? ca : ((a.orden || 0) - (b.orden || 0));
             });
         } catch(e) {
-          pickerList.innerHTML = `<p style="padding:1rem;color:#c9776d;font-size:0.85rem;text-align:center">Error al cargar clases.</p>`;
+          pickerList.innerHTML = `<p style="padding:1rem;color:var(--color-danger-fg);font-size:0.85rem;text-align:center">Error al cargar clases.</p>`;
           return;
         }
       }

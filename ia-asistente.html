@@ -160,7 +160,7 @@
     .curso-card-inline .ct { font-size: 0.76rem; font-weight: 600; color: var(--text); }
     .curso-card-inline .cs { font-size: 0.68rem; color: var(--text-soft); margin-top: 2px; }
     .nb { display:inline-block; padding:1px 7px; border-radius:var(--radius-pill); font-size:0.62rem; font-weight:700; margin-right:5px; }
-    .nb-b { background:#c6a96522; color:#1c3f73; border:1px solid #1c3f73; }
+    .nb-b { background:var(--gold-subtle); color:#1c3f73; border:1px solid #1c3f73; }
     .nb-i { background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b; }
     .nb-a { background:#cc220022; color:#cc2200; border:1px solid #cc2200; }
 
@@ -358,6 +358,7 @@
   </main>
 
   <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/back-confirm.js"></script>
@@ -575,7 +576,7 @@
       } catch(e) {
         rmTyping();
         console.error('Error del asistente IA:', e);
-        const errDiv = appendMsg('assistant', `<strong style="color:#b3382c">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo, o preguntale directamente a la comunidad.<br><span style="font-size:0.75rem;opacity:0.7">${esc(e.message || String(e))}</span>`);
+        const errDiv = appendMsg('assistant', `<strong style="color:var(--color-danger-fg)">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo, o preguntale directamente a la comunidad.<br><span style="font-size:0.75rem;opacity:0.7">${esc(e.message || String(e))}</span>`);
         errDiv.querySelector('.msg-bubble--ia').appendChild(buildCommunityBtn(text, null));
       }
 
