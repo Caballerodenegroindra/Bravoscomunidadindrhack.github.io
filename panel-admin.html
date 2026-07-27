@@ -300,7 +300,23 @@
           <button class="btn btn--small btn--outline" data-wa-filter="todos" style="border-color:var(--border);color:var(--text-muted)">👥 Todos <span data-wa-count="todos"></span></button>
           <button class="btn btn--small btn--outline" data-wa-filter="en" style="border-color:#3f8f5f;color:#3f8f5f">✅ En WhatsApp <span data-wa-count="en"></span></button>
           <button class="btn btn--small btn--outline" data-wa-filter="fuera" style="border-color:#b3382c;color:#b3382c">❌ Fuera <span data-wa-count="fuera"></span></button>
+          <button class="btn btn--small btn--primary" id="btn-abrir-sync-wa">🔄 Sincronizar con WhatsApp</button>
         </div>
+
+        <details id="sync-wa-panel" style="margin-bottom:1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;">
+          <summary style="cursor:pointer;font-weight:600">🔄 Sincronizar lista del grupo de WhatsApp</summary>
+          <p class="section-subtitle" style="margin:0.6rem 0">
+            Pega aquí todos los números que están <strong>actualmente</strong> en el grupo (uno por línea, o separados por coma/espacio — cualquier formato sirve: con o sin +, con o sin espacios/guiones).
+            Al confirmar, se marcará <strong>"En el grupo"</strong> a quien coincida, y <strong>"Fuera del grupo"</strong> a todos los demás miembros aprobados.
+          </p>
+          <textarea id="sync-wa-input" rows="8" placeholder="+54 9 3854 12-34-56&#10;543854123456&#10;93854123456&#10;..." style="width:100%;background:var(--color-canvas-inset);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:0.6rem;font-family:monospace;font-size:0.85rem;"></textarea>
+          <div style="display:flex;gap:0.6rem;margin-top:0.7rem;flex-wrap:wrap">
+            <button class="btn btn--primary btn--small" id="btn-preview-sync-wa">Previsualizar cambios</button>
+            <button class="btn btn--danger btn--small" id="btn-confirm-sync-wa" style="display:none">✅ Confirmar y aplicar</button>
+          </div>
+          <div id="sync-wa-result" style="margin-top:0.8rem;font-size:0.85rem;max-height:320px;overflow:auto;"></div>
+        </details>
+
         <div data-members-body style="margin-top:1rem">
           <p class="section-subtitle">Cargando miembros…</p>
         </div>
@@ -696,6 +712,7 @@
         users = await fetchAllUsers();
         renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
         renderMembers(users);
+        setupSyncWhatsApp(users);
       } catch (err) {
         console.error('Error cargando usuarios:', err);
       }
@@ -953,6 +970,104 @@
           if (btn.dataset.action === 'rechazar') await rejectUser(uid);
           row.remove();
         });
+      });
+    }
+
+    /**
+     * Convierte cualquier formato de número (+54 9 3854-12-34-56,
+     * 543854123456, 3854 12 34 56, etc.) en una "clave" comparable,
+     * usando los últimos 8 dígitos. Así no importa si tiene o no el
+     * "+", el código de país, el "9" de celular en Argentina, guiones
+     * o espacios: dos números que representen el mismo teléfono
+     * quedan con la misma clave.
+     */
+    function normalizarTelefono(raw) {
+      const digitos = (raw || '').replace(/\D/g, '');
+      return digitos.length > 8 ? digitos.slice(-8) : digitos;
+    }
+
+    function extraerNumeros(texto) {
+      return texto
+        .split(/[\n,;]+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+
+    function setupSyncWhatsApp(users) {
+      const btnAbrir   = document.getElementById('btn-abrir-sync-wa');
+      const panel       = document.getElementById('sync-wa-panel');
+      const input       = document.getElementById('sync-wa-input');
+      const btnPreview  = document.getElementById('btn-preview-sync-wa');
+      const btnConfirm  = document.getElementById('btn-confirm-sync-wa');
+      const resultEl    = document.getElementById('sync-wa-result');
+
+      let pendingChanges = [];
+
+      btnAbrir?.addEventListener('click', () => { panel.open = true; input.focus(); });
+
+      btnPreview?.addEventListener('click', () => {
+        const numerosPegados = extraerNumeros(input.value);
+        if (numerosPegados.length === 0) {
+          resultEl.innerHTML = '<p style="color:#c99a2e">Pega al menos un número primero.</p>';
+          return;
+        }
+
+        const clavesGrupo = new Set(numerosPegados.map(normalizarTelefono).filter((k) => k.length >= 6));
+
+        const conTelefono = users.filter((u) => (u.phone || '').replace(/\D/g, '').length >= 6);
+        const clavesUsadas = new Set();
+
+        pendingChanges = [];
+        conTelefono.forEach((u) => {
+          const clave = normalizarTelefono(u.phone);
+          const estaEnGrupo = clavesGrupo.has(clave);
+          if (estaEnGrupo) clavesUsadas.add(clave);
+          if (!!u.enGrupo !== estaEnGrupo) {
+            pendingChanges.push({ uid: u.uid, username: u.username || u.uid, from: !!u.enGrupo, to: estaEnGrupo });
+          }
+        });
+
+        const sinTelefono = users.filter((u) => (u.phone || '').replace(/\D/g, '').length < 6);
+        const noMatcheados = [...clavesGrupo].filter((c) => !clavesUsadas.has(c));
+
+        let html = `<p><strong>${pendingChanges.length}</strong> miembros van a cambiar de estado:</p>`;
+        if (pendingChanges.length > 0) {
+          html += '<ul style="margin:0.4rem 0 0.8rem;padding-left:1.2rem">' +
+            pendingChanges.map((c) => `<li>${c.username}: ${c.from ? '✅ En el grupo' : '❌ Fuera'} → ${c.to ? '✅ En el grupo' : '❌ Fuera'}</li>`).join('') +
+            '</ul>';
+        }
+        if (sinTelefono.length > 0) {
+          html += `<p style="color:#c99a2e">⚠️ ${sinTelefono.length} miembros no tienen teléfono guardado, no se pueden verificar (quedan sin tocar).</p>`;
+        }
+        if (noMatcheados.length > 0) {
+          html += `<p style="color:var(--text-muted)">ℹ️ ${noMatcheados.length} números que pegaste no coinciden con ningún miembro registrado (puede ser gente en el grupo que no está en la página).</p>`;
+        }
+        if (pendingChanges.length === 0) {
+          html += '<p style="color:#3f8f5f">Todo ya está sincronizado, no hay cambios que aplicar.</p>';
+        }
+
+        resultEl.innerHTML = html;
+        btnConfirm.style.display = pendingChanges.length > 0 ? 'inline-flex' : 'none';
+      });
+
+      btnConfirm?.addEventListener('click', async () => {
+        if (pendingChanges.length === 0) return;
+        btnConfirm.disabled = true;
+        btnConfirm.textContent = 'Aplicando…';
+        try {
+          await Promise.all(pendingChanges.map((c) =>
+            updateDoc(doc(db, 'users', c.uid), { enGrupo: c.to })
+          ));
+          resultEl.innerHTML = `<p style="color:#3f8f5f">✅ Listo. ${pendingChanges.length} miembros actualizados.</p>`;
+          pendingChanges = [];
+          btnConfirm.style.display = 'none';
+          setTimeout(() => location.reload(), 1200);
+        } catch (e) {
+          resultEl.innerHTML += `<p style="color:#b3382c">❌ Error: ${e.message}</p>`;
+        } finally {
+          btnConfirm.disabled = false;
+          btnConfirm.textContent = '✅ Confirmar y aplicar';
+        }
       });
     }
 

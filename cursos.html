@@ -958,12 +958,12 @@
       const descargaBtn = c.descarga && logueado
         ? `<a href="${c.descarga}" target="_blank" download class="btn btn--primary">⬇ Descargar material</a>`
         : c.descarga
-          ? `<div style="background:var(--color-accent-emphasis)22;border:1px solid var(--color-accent-emphasis);border-radius:8px;padding:0.75rem;margin-top:0.5rem;color:#ff6b6b;font-size:0.85rem">🔒 Debes <a href="login.html" style="color:var(--color-accent-fg)">iniciar sesión</a> para descargar este material.</div>`
+          ? `<div style="background:var(--color-accent-emphasis)22;border:1px solid var(--color-accent-emphasis);border-radius:8px;padding:0.75rem;margin-top:0.5rem;color:#ff6b6b;font-size:0.85rem">🔒 <a href="registro.html" style="color:var(--color-accent-fg)">Regístrate gratis</a> para descargar este material.</div>`
           : '';
 
       const verClaseBtn = logueado
         ? `<a href="clase.html?id=${c.id}" class="btn btn--primary" style="width:100%;justify-content:center;text-align:center">📖 Ver clase y rendir quiz</a>`
-        : `<a href="login.html" class="btn btn--outline" style="width:100%;justify-content:center;text-align:center">🔒 Iniciar sesión para acceder</a>`;
+        : `<a href="registro.html" class="btn btn--outline" style="width:100%;justify-content:center;text-align:center">🔒 Regístrate gratis para acceder</a>`;
 
       const enlaceBtn = c.enlace && logueado
         ? `<a href="${c.enlace}" target="_blank" class="btn btn--outline">🔗 Recurso externo</a>`

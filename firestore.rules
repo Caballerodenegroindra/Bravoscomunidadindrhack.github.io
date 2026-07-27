@@ -35,14 +35,23 @@ service cloud.firestore {
     }
 
     // ───────────────────────────────────────────────────────
-    // NOMBRES DE USUARIO (para validar unicidad sin exponer
-    // perfiles completos con email/teléfono)
+    // NOMBRES DE USUARIO (para validar unicidad y resolver el
+    // login sin exponer perfiles completos con teléfono, etc.)
+    // NOTA: este documento SÍ guarda el email (necesario para que
+    // el login por username funcione sin backend propio), por lo
+    // tanto el email queda públicamente consultable por username.
+    // El teléfono y el resto del perfil NO están acá.
     // ───────────────────────────────────────────────────────
     match /usernames/{username} {
       allow read: if true;
       // "create" solo dispara si el documento (username) no existe
       // todavía, así Firestore ya impide duplicados de forma nativa.
-      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      // El admin puede crear/corregir en nombre de otros (necesario
+      // para la migración única de cuentas creadas antes de este
+      // sistema, y para arreglos manuales de soporte).
+      allow create: if isAdmin() ||
+        (isSignedIn() && request.resource.data.uid == request.auth.uid
+          && username.matches('^[a-z0-9]{3,20}$'));
       allow update, delete: if isAdmin();
     }
 
@@ -62,7 +71,8 @@ service cloud.firestore {
 
       allow create: if isOwner(userId)
         && request.resource.data.rol == 'usuario'
-        && request.resource.data.estado == 'pendiente';
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.username.matches('^[a-z0-9]{3,20}$');
 
       allow update: if isAdmin() || (
         isOwner(userId) &&
