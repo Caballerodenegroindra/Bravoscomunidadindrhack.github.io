@@ -73,8 +73,8 @@
 
   /* ── App chrome ── */
   --nav-h:    68px;
-  --tabbar-h: 60px;
-  --ia-dock-h: 60px;
+  --tabbar-h: 68px;
+  --ia-dock-h: 64px;
   --radius:   2px;
   --radius-sm: 2px;
   --radius-md: 3px;
@@ -360,34 +360,46 @@ body.ia-dock-active .help-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) 
   height: 100%;
 }
 .tabbar__item {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   color: var(--text-muted);
-  font-size: 0.6rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  transition: color 0.15s;
-  padding: 0.5rem 0.25rem;
+  transition: color 0.15s, background 0.15s;
+  padding: 0.4rem 0.15rem;
   border-radius: var(--radius);
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
+  position: relative;
 }
 .tabbar__item:hover { text-decoration: none; color: var(--text-soft); }
 .tabbar__item:active { background: var(--border-muted); }
 .tabbar__item.active { color: var(--gold); }
+.tabbar__item.active::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--gold);
+}
 .tabbar__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px; height: 24px;
+  width: 26px; height: 26px;
 }
 .tabbar__icon svg {
-  width: 18px; height: 18px;
+  width: 21px; height: 21px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.7;
@@ -1781,8 +1793,8 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 0.55rem 0.75rem;
   padding-bottom: calc(0.55rem + env(safe-area-inset-bottom, 0));
   background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -6px 24px rgba(0,0,0,0.25);
+  border-top: 1px solid var(--color-border-subtle);
+  box-shadow: 0 -6px 24px rgba(0,0,0,0.3);
 }
 @media (min-width: 641px) {
   #ia-widget-dock {
@@ -1796,23 +1808,28 @@ tbody tr:last-child td { border-bottom: none; }
 #ia-widget-avatar {
   position: relative;
   flex-shrink: 0;
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 42px; height: 42px; border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--primary-emphasis));
   color: #0a1428; border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 0 2px rgba(198,169,101,0.18), 0 4px 10px rgba(0,0,0,0.35);
 }
-#ia-widget-avatar:hover { transform: scale(1.06); }
-#ia-widget-avatar svg { width: 22px; height: 22px; }
+#ia-widget-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 3px rgba(198,169,101,0.3), 0 4px 12px rgba(0,0,0,0.4); }
+#ia-widget-avatar svg { width: 24px; height: 24px; }
 
 #ia-widget-input {
   flex: 1; resize: none; max-height: 90px;
+  min-height: 40px;
   background: var(--color-canvas-inset);
   border: 1px solid var(--border);
   border-radius: 999px;
   color: var(--text);
   font-family: inherit; font-size: 0.85rem;
+  line-height: 1.3rem;
   padding: 0.6rem 1rem;
+  display: flex; align-items: center;
+  box-sizing: border-box;
 }
 #ia-widget-input:focus { outline: none; border-color: var(--primary); }
 
@@ -1835,6 +1852,7 @@ tbody tr:last-child td { border-bottom: none; }
   height: min(65vh, 520px);
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-top: 2px solid var(--gold);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
@@ -1849,6 +1867,7 @@ tbody tr:last-child td { border-bottom: none; }
   font-weight: 700; font-size: 0.9rem; color: var(--text);
   flex-shrink: 0;
 }
+#ia-widget-header-title { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--gold); }
 #ia-widget-header-actions { display: flex; align-items: center; gap: 0.5rem; }
 #ia-widget-expand, #ia-widget-minimize {
   background: none; border: none; color: var(--text-muted);
