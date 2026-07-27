@@ -357,6 +357,7 @@ body.ia-dock-active .help-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) 
 }
 .tabbar__inner {
   display: flex;
+  width: 100%;
   height: 100%;
 }
 .tabbar__item {
