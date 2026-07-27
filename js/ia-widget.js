@@ -71,7 +71,10 @@ function initWidget() {
   wrap.innerHTML = `
     <div id="ia-widget-panel" role="dialog" aria-label="Asistente de IA">
       <div id="ia-widget-header">
-        <span>🤖 Asistente Indrhack</span>
+        <span id="ia-widget-header-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3C8.4 3 5.8 5.8 5.8 9.4c0 1.9.6 3.3 1.15 4.5L4 20.5h16L17.05 13.9c.55-1.2 1.15-2.6 1.15-4.5C18.2 5.8 15.6 3 12 3z"/><path d="M9.3 13.6c-.35-1.7-.2-3.1.35-4.2M14.7 13.6c.35-1.7.2-3.1-.35-4.2"/><circle cx="9.7" cy="12.2" r="0.9" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12.2" r="0.9" fill="currentColor" stroke="none"/></svg>
+          Asistente Indrhack
+        </span>
         <div id="ia-widget-header-actions">
           <a href="ia-asistente.html" id="ia-widget-expand" title="Abrir chat completo">⤢</a>
           <button type="button" id="ia-widget-minimize" aria-label="Minimizar">⌄</button>
@@ -81,7 +84,7 @@ function initWidget() {
     </div>
     <div id="ia-widget-dock">
       <button type="button" id="ia-widget-avatar" aria-label="Abrir asistente IA" title="Preguntale a la IA">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2 2 0 012 2v1h1a3 3 0 013 3v1h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a3 3 0 01-3 3H8a3 3 0 01-3-3v-1H4a1 1 0 01-1-1v-3a1 1 0 011-1h1V8a3 3 0 013-3h1V4a2 2 0 012-2z"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C8.4 3 5.8 5.8 5.8 9.4c0 1.9.6 3.3 1.15 4.5L4 20.5h16L17.05 13.9c.55-1.2 1.15-2.6 1.15-4.5C18.2 5.8 15.6 3 12 3z"/><path d="M9.3 13.6c-.35-1.7-.2-3.1.35-4.2M14.7 13.6c.35-1.7.2-3.1-.35-4.2"/><circle cx="9.7" cy="12.2" r="0.9" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12.2" r="0.9" fill="currentColor" stroke="none"/></svg>
         <span id="ia-widget-ping"></span>
       </button>
       <textarea id="ia-widget-input" placeholder="Preguntale algo a la IA sobre esta página…" rows="1"></textarea>
@@ -106,16 +109,37 @@ function initWidget() {
     ping.classList.add('show');
   }
 
+  let scrollY = 0;
+  function lockBackgroundScroll() {
+    scrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+  function unlockBackgroundScroll() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollY);
+  }
+
   function openPanel() {
     if (opened) return;
     opened = true;
     wrap.classList.add('ia-widget--open');
     ping.classList.remove('show');
+    lockBackgroundScroll();
     if (!history.length) greet();
   }
   function closePanel() {
+    if (!opened) return;
     opened = false;
     wrap.classList.remove('ia-widget--open');
+    unlockBackgroundScroll();
   }
 
   avatar.addEventListener('click', () => {
@@ -123,6 +147,21 @@ function initWidget() {
   });
   inpEl.addEventListener('focus', openPanel);
   minBt.addEventListener('click', closePanel);
+
+  // En móvil, cuando aparece el teclado virtual, el navegador reduce
+  // el "visual viewport" pero el dock sigue fijo respecto al layout
+  // viewport completo, por lo que puede quedar tapado o flotando raro.
+  // Lo re-posicionamos para que quede siempre pegado justo arriba del
+  // teclado mientras se está escribiendo.
+  if (window.visualViewport && window.matchMedia('(max-width: 640px)').matches) {
+    const ajustarPorTeclado = () => {
+      const vv = window.visualViewport;
+      const solapado = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      wrap.style.bottom = solapado > 40 ? `${solapado}px` : '';
+    };
+    window.visualViewport.addEventListener('resize', ajustarPorTeclado);
+    window.visualViewport.addEventListener('scroll', ajustarPorTeclado);
+  }
 
   inpEl.addEventListener('input', () => {
     inpEl.style.height = 'auto';
@@ -149,6 +188,11 @@ function initWidget() {
       saludo = '¡Hola! Preguntame lo que necesites sobre la academia.';
     }
     appendMsg('assistant', fmt(saludo));
+    // Se guarda en el historial para que, mientras siga en la misma
+    // pestaña (abra y cierre el panel las veces que quiera, navegue
+    // entre páginas, etc.), no se vuelva a repetir el saludo.
+    history.push({ role: 'assistant', content: saludo });
+    saveHistory();
   }
 
   function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
