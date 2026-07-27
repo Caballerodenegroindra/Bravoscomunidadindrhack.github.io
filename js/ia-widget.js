@@ -109,6 +109,20 @@ function initWidget() {
     ping.classList.add('show');
   }
 
+  const dockEl = wrap.querySelector('#ia-widget-dock');
+
+  function ajustarAlturaPanel() {
+    const vpH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    const disponible = vpH - dockEl.offsetHeight - 16;
+    const maxDeseado = Math.min(window.innerHeight * 0.65, 520);
+    panel.style.height = `${Math.max(220, Math.min(disponible, maxDeseado))}px`;
+  }
+  ajustarAlturaPanel();
+  window.addEventListener('resize', ajustarAlturaPanel);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', ajustarAlturaPanel);
+  }
+
   let scrollY = 0;
   function lockBackgroundScroll() {
     scrollY = window.scrollY || window.pageYOffset || 0;
@@ -132,6 +146,7 @@ function initWidget() {
     opened = true;
     wrap.classList.add('ia-widget--open');
     ping.classList.remove('show');
+    ajustarAlturaPanel();
     lockBackgroundScroll();
     if (!history.length) greet();
   }
@@ -147,21 +162,6 @@ function initWidget() {
   });
   inpEl.addEventListener('focus', openPanel);
   minBt.addEventListener('click', closePanel);
-
-  // En móvil, cuando aparece el teclado virtual, el navegador reduce
-  // el "visual viewport" pero el dock sigue fijo respecto al layout
-  // viewport completo, por lo que puede quedar tapado o flotando raro.
-  // Lo re-posicionamos para que quede siempre pegado justo arriba del
-  // teclado mientras se está escribiendo.
-  if (window.visualViewport && window.matchMedia('(max-width: 640px)').matches) {
-    const ajustarPorTeclado = () => {
-      const vv = window.visualViewport;
-      const solapado = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      wrap.style.bottom = solapado > 40 ? `${solapado}px` : '';
-    };
-    window.visualViewport.addEventListener('resize', ajustarPorTeclado);
-    window.visualViewport.addEventListener('scroll', ajustarPorTeclado);
-  }
 
   inpEl.addEventListener('input', () => {
     inpEl.style.height = 'auto';
