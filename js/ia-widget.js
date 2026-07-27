@@ -109,18 +109,42 @@ function initWidget() {
     ping.classList.add('show');
   }
 
-  const dockEl = wrap.querySelector('#ia-widget-dock');
+  const dockEl   = wrap.querySelector('#ia-widget-dock');
+  const tabbarEl = document.querySelector('.tabbar');
 
   function ajustarAlturaPanel() {
-    const vpH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    const disponible = vpH - dockEl.offsetHeight - 16;
-    const maxDeseado = Math.min(window.innerHeight * 0.65, 520);
-    panel.style.height = `${Math.max(220, Math.min(disponible, maxDeseado))}px`;
+    const vv  = window.visualViewport;
+    const vpH = (vv && vv.height) || window.innerHeight;
+    // Nunca debe pedir más alto de lo que realmente cabe arriba del dock
+    // (con o sin teclado abierto): si no, el panel se corre hacia arriba
+    // y tapa su propio encabezado (el botón de minimizar, el "⌄").
+    const disponible = Math.max(120, vpH - dockEl.offsetHeight - 12);
+    const maxDeseado = Math.min(vpH * 0.65, 520);
+    panel.style.height = `${Math.min(disponible, maxDeseado)}px`;
   }
+
+  // En Android/iOS, cuando aparece el teclado, el navegador achica el
+  // "visual viewport" pero los elementos position:fixed suelen seguir
+  // anclados al viewport de layout (que no cambia), así que quedan
+  // flotando a mitad de pantalla o tapados por el teclado. Para que el
+  // dock del chat Y la tabbar de navegación queden siempre pegados justo
+  // arriba del teclado (sin hueco y sin que salten), los desplazamos a
+  // mano según lo que el teclado esté tapando.
+  function syncConTeclado() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const tapado = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+    const t = tapado > 1 ? `translateY(-${tapado}px)` : '';
+    wrap.style.transform = t;
+    if (tabbarEl) tabbarEl.style.transform = t;
+    ajustarAlturaPanel();
+  }
+
   ajustarAlturaPanel();
-  window.addEventListener('resize', ajustarAlturaPanel);
+  window.addEventListener('resize', syncConTeclado);
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', ajustarAlturaPanel);
+    window.visualViewport.addEventListener('resize', syncConTeclado);
+    window.visualViewport.addEventListener('scroll', syncConTeclado);
   }
 
   let scrollY = 0;
@@ -146,8 +170,11 @@ function initWidget() {
     opened = true;
     wrap.classList.add('ia-widget--open');
     ping.classList.remove('show');
-    ajustarAlturaPanel();
+    syncConTeclado();
     lockBackgroundScroll();
+    // El teclado tarda un poco en aparecer/desaparecer en móvil; volvemos
+    // a sincronizar unos instantes después para no quedar desalineados.
+    setTimeout(syncConTeclado, 300);
     if (!history.length) greet();
   }
   function closePanel() {
