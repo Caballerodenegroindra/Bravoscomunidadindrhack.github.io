@@ -354,6 +354,10 @@ body.ia-dock-active .help-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 0 0.25rem env(safe-area-inset-bottom, 0);
+  /* Se desplaza junto al teclado (ver syncConTeclado en ia-widget.js)
+     para quedar siempre pegada arriba de él, sin hueco. */
+  transition: transform 0.12s ease-out;
+  will-change: transform;
 }
 .tabbar__inner {
   display: flex;
@@ -1789,7 +1793,14 @@ tbody tr:last-child td { border-bottom: none; }
    a punta; en desktop flota como una barra abajo a la derecha.
    Al tocarla/escribir se despliega el panel de charla arriba.
    ============================================================ */
-#ia-widget { position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 999; font-family: var(--font-body); }
+#ia-widget {
+  position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 999;
+  font-family: var(--font-body);
+  /* Se desplaza junto al teclado (ver syncConTeclado en ia-widget.js)
+     para quedar siempre pegado arriba de él, sin hueco. */
+  transition: transform 0.12s ease-out;
+  will-change: transform;
+}
 @media (min-width: 641px) {
   #ia-widget { left: auto; right: 1.25rem; bottom: 1.25rem; width: min(400px, calc(100vw - 2.5rem)); }
 }
