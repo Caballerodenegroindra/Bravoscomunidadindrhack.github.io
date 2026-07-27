@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
   <style>
     /* ── PRESENCIA ── */
     /* Mobile-first: tarjeta de 2 líneas (evita que "Última conexión"
@@ -162,12 +162,12 @@
 
   <nav class="tabbar" aria-label="Navegación admin">
     <div class="tabbar__inner">
-      <a href="#resumen" class="tabbar__item active" data-tab="resumen"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>Resumen</a>
-      <a href="#solicitudes" class="tabbar__item" data-tab="solicitudes"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></span>Solicitudes</a>
-      <a href="#miembros" class="tabbar__item" data-tab="miembros"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Miembros</a>
-      <a href="#presencia" class="tabbar__item" data-tab="presencia"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Presencia</a>
-      <a href="#cursos" class="tabbar__item" data-tab="cursos"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Cursos</a>
-      <button class="tabbar__item" id="admin-more-btn"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span>Más</button>
+      <a href="#resumen" class="tabbar__item active" data-tab="resumen"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span><span class="tabbar__label">Resumen</span></a>
+      <a href="#solicitudes" class="tabbar__item" data-tab="solicitudes"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></span><span class="tabbar__label">Solicitudes</span></a>
+      <a href="#miembros" class="tabbar__item" data-tab="miembros"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span><span class="tabbar__label">Miembros</span></a>
+      <a href="#presencia" class="tabbar__item" data-tab="presencia"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span class="tabbar__label">Presencia</span></a>
+      <a href="#cursos" class="tabbar__item" data-tab="cursos"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="tabbar__label">Cursos</span></a>
+      <button class="tabbar__item" id="admin-more-btn"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span><span class="tabbar__label">Más</span></button>
     </div>
   </nav>
 
@@ -683,7 +683,7 @@
   <script src="js/reveal.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
-  <script type="module" src="js/ia-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
