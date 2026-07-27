@@ -567,7 +567,8 @@
 
       } catch(e) {
         rmTyping();
-        const errDiv = appendMsg('assistant', '<strong style="color:#b3382c">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo, o preguntale directamente a la comunidad.');
+        console.error('Error del asistente IA:', e);
+        const errDiv = appendMsg('assistant', `<strong style="color:#b3382c">⚠ Error de conexión.</strong> Revisá tu internet e intentá de nuevo, o preguntale directamente a la comunidad.<br><span style="font-size:0.75rem;opacity:0.7">${esc(e.message || String(e))}</span>`);
         errDiv.querySelector('.msg-bubble--ia').appendChild(buildCommunityBtn(text, null));
       }
 
