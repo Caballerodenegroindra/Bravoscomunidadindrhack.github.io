@@ -152,6 +152,26 @@
   <script type="module" src="js/ia-widget.js"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // El enlace del grupo de WhatsApp lo define el administrador desde
+    // Configuración → "Configuración del sitio" (Firestore config/site).
+    // Si todavía no lo configuró, se mantiene el enlace de respaldo del HTML.
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, 'config', 'site'));
+        const link = snap.exists() ? snap.data().whatsappGrupo : null;
+        if (link) {
+          document.getElementById('wa-modal-link').href = link;
+        }
+      } catch (e) {
+        // Si falla, se conserva el enlace de respaldo.
+      }
+    })();
+  </script>
+
+  <script type="module">
     import { registerUser } from './js/auth.js';
 
     const form = document.getElementById('register-form');
@@ -253,7 +273,7 @@
         Tu solicitud fue enviada, pero <strong style="color:#fff">todavía no está completa</strong>.<br><br>
         Para ser aprobado, debes unirte a nuestro grupo de WhatsApp y solicitar el ingreso. Si no lo haces, <strong style="color:#ff8a8a">tu solicitud no será aprobada y será eliminada</strong>.
       </p>
-      <a href="https://chat.whatsapp.com/KZih1zGXFn7F6ANc3H2RqL" target="_blank"
+      <a href="https://chat.whatsapp.com/KZih1zGXFn7F6ANc3H2RqL" target="_blank" id="wa-modal-link"
          style="display:block;background:#25D366;color:#fff;font-weight:700;font-size:1rem;padding:0.9rem 1rem;border-radius:12px;text-decoration:none;margin-bottom:0.75rem;">
         💬 Unirme al grupo ahora (obligatorio)
       </a>

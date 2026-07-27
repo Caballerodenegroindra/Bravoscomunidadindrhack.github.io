@@ -370,6 +370,7 @@
     import {
       cargarCursos, buildCursosContext,
       cargarProgresoUsuario, buildProgresoContext,
+      cargarQuizzesPendientes, buildQuizzesPendientesContext,
       cargarConfigSitio, buildConfigContext,
       buildSystemPrompt, askIA, nombrePagina,
     } from './js/ia-core.js';
@@ -381,6 +382,7 @@
     let CURSOS    = [];   // [{id, titulo, descripcion, categoria, nivel, publicado}]
     let USER_INFO = null; // info del usuario logueado
     let PROGRESO  = [];   // clases ya aprobadas por el usuario
+    let PENDIENTES = [];  // quizzes ya enviados, esperando revisión
     let CONFIG    = {};   // enlaces oficiales (config/site)
     let history   = [];   // historial del chat
     let busy      = false;
@@ -416,6 +418,7 @@
           const snap = await getDoc(doc(db, 'users', user.uid));
           if (snap.exists()) USER_INFO = { uid: user.uid, ...snap.data() };
           PROGRESO = await cargarProgresoUsuario(user.uid);
+          PENDIENTES = await cargarQuizzesPendientes(user.uid);
         } catch(e) {}
       }
     });
@@ -536,6 +539,7 @@
         userInfo: USER_INFO,
         cursosCtx: buildCursosContext(CURSOS, BASE_URL),
         progresoCtx: buildProgresoContext(PROGRESO),
+        pendientesCtx: buildQuizzesPendientesContext(PENDIENTES),
         paginaCtx: nombrePagina(location.pathname),
         configCtx: buildConfigContext(CONFIG),
       });
