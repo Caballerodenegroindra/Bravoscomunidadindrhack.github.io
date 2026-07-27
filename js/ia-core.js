@@ -69,6 +69,32 @@ export function nombrePagina(pathname) {
   return NOMBRES_PAGINA[file] || null;
 }
 
+/* ── Pie proactivo por página: qué le puede ofrecer la IA ahí mismo,
+   sin que el usuario tenga que pedirlo. Se usa como saludo cuando
+   abre el dock por primera vez en esa página durante la sesión. ── */
+const CONSEJOS_PAGINA = {
+  'index.html': '¿Querés que te cuente cómo funciona la academia o te ayude a empezar?',
+  'cursos.html': '¿Te ayudo a elegir por dónde arrancar según tu nivel?',
+  'clase.html': '¿Tenés dudas del contenido o del quiz de esta clase? Preguntame.',
+  'panel-usuario.html': '¿Querés que revisemos tu progreso y qué te conviene estudiar ahora?',
+  'perfil.html': '¿Necesitás una mano para completar tu perfil?',
+  'ficha.html': 'Si algo de tu ficha no cierra, decime y lo vemos.',
+  'titulos.html': '¿Vemos qué te falta para tu próximo título?',
+  'chat.html': 'Si buscás algo puntual de una conversación, contame qué es.',
+  'noticias.html': '¿Te resumo las últimas novedades de la academia?',
+  'redes.html': '¿Buscás algún canal o grupo en particular?',
+  'configuracion.html': '¿Necesitás ayuda con algún ajuste de tu cuenta?',
+  'notificaciones.html': '¿Querés que te explique alguno de tus avisos?',
+  'panel-admin.html': '¿Te armo un resumen rápido de solicitudes o miembros pendientes?',
+  'login.html': '¿Tenés problemas para entrar? Contame qué pasa.',
+  'registro.html': '¿Tenés dudas sobre cómo registrarte? Preguntame.',
+  'ayuda.html': '¿No encontrás lo que buscás en la guía? Preguntame directo.',
+};
+export function consejoPagina(pathname) {
+  const file = (pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
+  return CONSEJOS_PAGINA[file] || null;
+}
+
 /* ── Cursos: se cachean en memoria durante la sesión de la pestaña ── */
 let _cursosCache = null;
 export async function cargarCursos(force = false) {
@@ -153,14 +179,38 @@ export function buildProgresoContext(progreso) {
     progreso.map((p) => `- "${p.cursoTitulo}" (Nivel: ${p.nivel || '—'}, ${p.puntos || 0} pts)`).join('\n');
 }
 
+/* ── Quizzes que el usuario ya envió y esperan revisión del admin ──
+   Le sirve a la IA para no recomendar de nuevo algo que ya está en
+   cola, y para poder tranquilizar al usuario ("ya lo tengo enviado,
+   están esperando aprobación"). ── */
+export async function cargarQuizzesPendientes(uid) {
+  if (!uid) return [];
+  try {
+    const snap = await getDocs(query(
+      collection(db, 'quiz_submissions'),
+      where('uid', '==', uid),
+      where('estado', '==', 'pendiente')
+    ));
+    return snap.docs.map((d) => d.data());
+  } catch (e) {
+    return [];
+  }
+}
+
+export function buildQuizzesPendientesContext(pendientes) {
+  if (!pendientes || !pendientes.length) return 'No tiene quizzes pendientes de revisión.';
+  return 'Quizzes que el usuario YA envió y están esperando revisión del administrador (no le digas que los envíe de nuevo):\n' +
+    pendientes.map((s) => `- "${s.cursoTitulo || s.cursoId}"`).join('\n');
+}
+
 /* ── Arma el system prompt completo ────────────────────────
-   opts: { userInfo, cursosCtx, progresoCtx, paginaCtx, configCtx }  */
-export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, paginaCtx, configCtx }) {
+   opts: { userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }  */
+export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }) {
   const userCtx = userInfo
     ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}, rango: ${userInfo.rango || '—'}, puntos: ${userInfo.puntos || 0}.`
     : 'El usuario no ha iniciado sesión.';
 
-  return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. Estás disponible en TODAS las páginas del sitio (no solo en el chat de IA), así que ayudás con cualquier duda sobre la plataforma, no solo sobre cursos.
+  return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora según su progreso real, etc. No esperes a que pregunten algo genérico: si el contexto de la página o su progreso dan pie a una sugerencia útil, ofrecela vos.
 
 CONTEXTO DEL USUARIO:
 ${userCtx}
@@ -168,6 +218,9 @@ ${paginaCtx ? `Ahora mismo el usuario está en: ${paginaCtx}.` : ''}
 
 PROGRESO DEL USUARIO:
 ${progresoCtx || 'No disponible.'}
+
+QUIZZES PENDIENTES DE REVISIÓN:
+${pendientesCtx || 'No disponible.'}
 
 CLASES DISPONIBLES EN LA ACADEMIA (datos reales de Firestore, cada una con su enlace directo):
 ${cursosCtx}
@@ -186,6 +239,9 @@ Si el usuario pide el grupo de WhatsApp, el canal de WhatsApp, Facebook o YouTub
 
 CÓMO HACER PREGUNTAS ACLARATORIAS:
 Si el pedido del usuario es ambiguo o te falta contexto para dar una buena respuesta (por ejemplo: no dice su nivel, no dice qué tema le interesa, pide "ayuda" sin especificar con qué, o hay varias clases que podrían servirle), hacé como máximo UNA pregunta corta y concreta para entender mejor antes de responder, en vez de asumir o tirar una respuesta genérica. Ejemplos: "¿Ya tenés experiencia previa o arrancás de cero?", "¿Te interesa más redes, sistemas operativos o hacking web?". Si el pedido ya es claro y específico, respondé directo sin preguntar nada.
+
+CÓMO INCENTIVAR Y ACOMPAÑAR:
+Tu trabajo no es solo responder, es que la persona sienta que avanza. Reconocé logros reales (puntos, rango, quizzes aprobados) cuando aparezcan en el contexto, celebralos brevemente, y siempre que puedas cerrá con un siguiente paso concreto y alcanzable (una clase puntual, no un consejo genérico como "seguí estudiando"). Si ves que tiene quizzes pendientes de revisión, tranquilizala: ya están en cola, no hace falta reenviarlos.
 
 PERSONALIDAD Y RITMO DE CONVERSACIÓN:
 No sos un buscador ni un motor de respuestas de manual: sos un compañero de academia con onda, que charla como charlaría una persona real por chat. Priorizá SIEMPRE este estilo conversacional por sobre el formato "informe":
