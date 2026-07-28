@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
   <style>
     /* ── LAYOUT PRINCIPAL ── */
     .ia-page {
@@ -374,6 +374,7 @@
       cargarConfigSitio, buildConfigContext,
       buildSystemPrompt, askIA, nombrePagina,
     } from './js/ia-core.js';
+    import { registrarPreguntaIA } from './js/tema-stats.js';
 
     // URL base del sitio para armar enlaces compartibles absolutos
     const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
@@ -548,6 +549,7 @@
         const reply = await askIA(systemPrompt, history);
         history.push({ role: 'assistant', content: reply });
         rmTyping();
+        registrarPreguntaIA(text); // fire-and-forget, solo guarda el tema (no el texto)
 
         // Detectar si la respuesta menciona clases para mostrar tarjetas
         const msgDiv = appendMsg('assistant', fmt(reply));

@@ -171,6 +171,25 @@ service cloud.firestore {
     }
 
     // ───────────────────────────────────────────────────────
+    // TENDENCIAS DE PREGUNTAS (público, anónimo, agregado)
+    // Alimenta el bloque de la portada "lo que más pregunta la
+    // comunidad". Solo se guardan CONTEOS por tema y país, nunca
+    // texto de preguntas ni datos personales — por eso se permite
+    // escribir sin sesión (el widget de IA vive también en la
+    // portada, antes de loguearse). Se limita qué campos se puede
+    // tocar y el formato del id del documento para reducir el
+    // margen de abuso desde la consola del navegador.
+    // ───────────────────────────────────────────────────────
+    match /tema_stats/{docId} {
+      allow read: if true;
+      allow create, update: if
+        docId.matches('^(global|pais_[A-Z]{2})$') &&
+        request.resource.data.diff(resource == null ? {} : resource.data)
+          .affectedKeys().hasOnly(['conteos', 'total', 'actualizado', 'nombre']);
+      allow delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
     // CHAT
     // ───────────────────────────────────────────────────────
     match /chat_rooms/{roomId} {

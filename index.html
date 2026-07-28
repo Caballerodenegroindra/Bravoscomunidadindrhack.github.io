@@ -22,8 +22,8 @@
   <meta name="twitter:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -110,6 +110,16 @@
       </div>
     </section>
 
+    <!-- TENDENCIAS: lo que más pregunta la comunidad a la IA,
+         según el país del visitante. Se completa por JS (ver
+         script de tendencias más abajo); arranca en un estado
+         de carga discreto para no dar saltos de layout. -->
+    <section class="container reveal" style="padding-top:var(--gap-xl)">
+      <div id="tendencias-ia" class="trend-panel" aria-live="polite">
+        <p class="trend-panel__loading">Consultando qué está preguntando la comunidad…</p>
+      </div>
+    </section>
+
     <!-- FRANJA DE ESTADÍSTICAS -->
     <section class="container reveal" style="padding-top:var(--gap-xl)">
       <div class="stat-strip">
@@ -172,17 +182,17 @@
 
       <div class="steps reveal-stagger">
         <div class="step">
-          <span class="step__num">1</span>
+          <span class="step__num">01</span>
           <h3 class="step__title">Registrate gratis</h3>
           <p class="step__desc">Creá tu cuenta en un par de minutos. No hace falta ninguna tarjeta ni conocimiento previo.</p>
         </div>
         <div class="step">
-          <span class="step__num">2</span>
+          <span class="step__num">02</span>
           <h3 class="step__title">Elegí tu curso</h3>
           <p class="step__desc">Explorá los cursos disponibles y arrancá por el que más te interese, a tu propio ritmo.</p>
         </div>
         <div class="step">
-          <span class="step__num">3</span>
+          <span class="step__num">03</span>
           <h3 class="step__title">Sumate a la comunidad</h3>
           <p class="step__desc">Participá del chat, las clases en vivo y resolvé dudas junto a otras personas que están aprendiendo.</p>
         </div>
@@ -245,19 +255,19 @@
 
       <div class="faq">
         <details class="faq-item">
-          <summary>¿Necesito experiencia previa en informática?</summary>
+          <summary><span class="faq-item__q">Q01</span><span class="faq-item__text">¿Necesito experiencia previa en informática?</span></summary>
           <div class="faq-item__body">No, para nada. Los cursos están pensados para arrancar desde cero, con explicaciones paso a paso.</div>
         </details>
         <details class="faq-item">
-          <summary>¿Tiene algún costo?</summary>
+          <summary><span class="faq-item__q">Q02</span><span class="faq-item__text">¿Tiene algún costo?</span></summary>
           <div class="faq-item__body">No. La formación en Academia Indrhack es 100% gratuita.</div>
         </details>
         <details class="faq-item">
-          <summary>¿Hay un límite de edad para sumarme?</summary>
+          <summary><span class="faq-item__q">Q03</span><span class="faq-item__text">¿Hay un límite de edad para sumarme?</span></summary>
           <div class="faq-item__body">No. La comunidad está abierta a personas de todas las edades que quieran aprender.</div>
         </details>
         <details class="faq-item">
-          <summary>¿Cómo participo de las clases en vivo?</summary>
+          <summary><span class="faq-item__q">Q04</span><span class="faq-item__text">¿Cómo participo de las clases en vivo?</span></summary>
           <div class="faq-item__body">Una vez registrado, vas a ver los horarios de las próximas clases en tu panel de usuario y en la sección de Noticias.</div>
         </details>
       </div>
@@ -288,6 +298,45 @@
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { detectarPais, obtenerTendencias, obtenerFraseTendencias } from './js/tema-stats.js';
+
+    (async function renderTendencias() {
+      const host = document.getElementById('tendencias-ia');
+      if (!host) return;
+      try {
+        const pais = await detectarPais();
+        const { items } = await obtenerTendencias(pais);
+
+        if (!items.length) {
+          host.innerHTML = `
+            <p class="trend-panel__title">📡 Todavía no hay suficientes preguntas registradas</p>
+            <p class="trend-panel__empty">Sé de los primeros en preguntarle algo a la IA de la academia — cada pregunta ayuda a mostrar acá lo que le interesa a la comunidad.</p>`;
+          return;
+        }
+
+        const donde = pais?.nombre && pais.code !== 'GLOBAL' ? pais.nombre : 'la comunidad';
+        const tagsHtml = items.map((it) => `<span class="trend-panel__tag">${it.label}</span>`).join('');
+
+        host.innerHTML = `
+          <p class="trend-panel__eyebrow">EN VIVO · SEGÚN ${donde.toUpperCase()}</p>
+          <p class="trend-panel__title">Lo que más pregunta la comunidad</p>
+          <div class="trend-panel__tags">${tagsHtml}</div>
+          <p class="trend-panel__blurb" id="tendencias-ia-blurb"></p>`;
+
+        obtenerFraseTendencias(items, pais).then((frase) => {
+          const el = document.getElementById('tendencias-ia-blurb');
+          if (el && frase) el.textContent = frase;
+        });
+      } catch (e) {
+        console.warn('No se pudieron cargar las tendencias:', e);
+        host.innerHTML = `
+          <p class="trend-panel__title">📡 Preguntale lo que quieras a la IA</p>
+          <p class="trend-panel__empty">Abrí el asistente de acá abajo y contale qué te gustaría aprender.</p>`;
+      }
+    })();
+  </script>
 
   <script type="module">
     import { auth } from './js/firebase-config.js';
