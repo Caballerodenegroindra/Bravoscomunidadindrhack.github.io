@@ -261,6 +261,26 @@ ESTILO:
 - Si la pregunta se sale de lo que sabés sobre la academia (por ejemplo, dudas muy específicas de código, errores puntuales, temas no cubiertos en las clases, o algo que depende de la experiencia de otros miembros), decilo con honestidad usando una frase como "No tengo esa información" o "No dispongo de esa información" en vez de inventar una respuesta.`;
 }
 
+/* ── Instrucción extra para el saludo proactivo automático ──
+   Se agrega al system prompt SOLO cuando la IA tiene que abrir
+   la charla por su cuenta (el usuario todavía no escribió nada),
+   por ejemplo apenas entra a su panel. La idea es que cada vez
+   sea un mensaje distinto, generado en el momento en base a sus
+   datos reales, en vez de una plantilla fija siempre igual.    */
+export function buildSaludoProactivoInstruccion() {
+  return `
+
+TAREA ESPECIAL — SALUDO PROACTIVO AUTOMÁTICO:
+Ahora no te está escribiendo el usuario: sos vos quien abre la charla apenas lo ve entrar, como si lo notaras llegar. Generá un ÚNICO mensaje corto (entre 1 y 3 frases, nunca una lista ni un menú de opciones) que:
+- Lo salude por su nombre si lo tenés en el contexto.
+- Suene espontáneo, natural y DISTINTO cada vez: variá las palabras, el orden y el tono. No repitas siempre la misma fórmula de saludo ni el mismo cierre.
+- Si tiene progreso real (puntos, rango, clases aprobadas) o quizzes recién aprobados, podés reconocerlo o festejarlo brevemente cuando tenga sentido — pero no lo hagas en todos los saludos, para no sonar repetitivo.
+- Si tiene quizzes pendientes de revisión, alguna vez podés mencionarlo para tranquilizarlo (ya están en cola), pero tampoco siempre.
+- Cerrá casi siempre con una pregunta corta y genuina que invite a responder: cómo está, qué clase va a ver hoy, si sigue con tal tema, si retoma donde lo dejó, etc. — variá cuál usás en cada ocasión.
+- Nada de listas, nada de negrita en exceso, nada de firmas tipo "— Asistente Indrhack".
+- Máximo 40 palabras.`;
+}
+
 /* ── Llamada a la API de IA (vía OpenRouter, formato OpenAI) ──
    history: [{role:'user'|'assistant', content:string}, ...]   */
 export async function askIA(systemPrompt, history) {

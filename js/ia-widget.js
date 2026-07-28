@@ -24,7 +24,8 @@ import {
   cargarProgresoUsuario, buildProgresoContext,
   cargarQuizzesPendientes, buildQuizzesPendientesContext,
   cargarConfigSitio, buildConfigContext,
-  buildSystemPrompt, askIA, nombrePagina, consejoPagina,
+  buildSystemPrompt, buildSaludoProactivoInstruccion,
+  askIA, nombrePagina, consejoPagina,
 } from './ia-core.js';
 import { registrarPreguntaIA } from './tema-stats.js';
 
@@ -44,6 +45,14 @@ const HIST_KEY = 'ia-widget-history';
 // proactivo para no repetirlo cada vez que el usuario navega.
 const SALUDADO_KEY = 'ia-widget-saludado';
 
+// Páginas donde la IA se abre SOLA apenas carga la sesión del usuario
+// (sin que tenga que tocar el dock), como si lo notara llegar. Por
+// ahora solo en su panel principal, que es lo más parecido a un
+// "inicio" cada vez que entra a la academia. Se puede sumar más
+// archivos a esta lista si se quiere el mismo comportamiento en
+// otras páginas (ej. 'index.html').
+const PAGINAS_SALUDO_AUTOMATICO = ['panel-usuario.html'];
+
 function initWidget() {
   document.body.classList.add('ia-dock-active');
 
@@ -56,13 +65,34 @@ function initWidget() {
   let busy        = false;
   let opened      = false;
 
+  let autoAbierto = false; // evita disparar el saludo automático más de una vez
+
   onSessionChange((profile) => {
     userInfo = profile;
     if (profile) {
-      cargarProgresoUsuario(profile.uid).then((p) => { progreso = p; });
-      cargarQuizzesPendientes(profile.uid).then((p) => { pendientes = p; });
+      Promise.all([
+        cargarProgresoUsuario(profile.uid),
+        cargarQuizzesPendientes(profile.uid),
+      ]).then(([p, q]) => {
+        progreso   = p;
+        pendientes = q;
+        intentarSaludoAutomatico();
+      });
     }
   });
+
+  // Apenas ya sabemos quién es y qué avances tiene (para que el saludo
+  // sea relevante y no genérico), si estamos en una página marcada para
+  // esto y todavía no se lo saludó en esta pestaña, la IA "abre" el
+  // panel sola y arranca la charla — sin que el usuario tenga que
+  // tocar nada.
+  function intentarSaludoAutomatico() {
+    if (autoAbierto) return;
+    if (!PAGINAS_SALUDO_AUTOMATICO.includes(ARCHIVO_ACTUAL)) return;
+    if (history.length || yaSaludadoEnEstaPagina()) return;
+    autoAbierto = true;
+    setTimeout(() => openPanel(), 900);
+  }
   cargarCursos().then((c) => { cursos = c; });
   cargarConfigSitio().then((c) => { config = c; });
 
@@ -205,26 +235,50 @@ function initWidget() {
   });
   sendBtn.addEventListener('click', () => { openPanel(); send(); });
 
-  function greet() {
+  async function greet() {
     marcarSaludadoEnEstaPagina();
-    const donde  = nombrePagina(location.pathname);
-    const tip    = consejoPagina(location.pathname);
-    const nombre = userInfo ? (userInfo.displayName || userInfo.username) : null;
+    showTyping();
+    try {
+      // Le pedimos a la IA que arranque ELLA la charla, con un mensaje
+      // corto, personalizado con los datos reales del usuario y distinto
+      // cada vez (no una plantilla fija repetida siempre igual).
+      const systemPrompt = buildSystemPrompt({
+        userInfo,
+        cursosCtx: buildCursosContext(cursos, BASE_URL),
+        progresoCtx: buildProgresoContext(progreso),
+        pendientesCtx: buildQuizzesPendientesContext(pendientes),
+        paginaCtx: nombrePagina(location.pathname),
+        configCtx: buildConfigContext(config),
+      }) + buildSaludoProactivoInstruccion();
 
-    let saludo;
-    if (nombre && donde) {
-      saludo = `¡Hola, **${nombre}**! Te veo en **${donde}**. ${tip || '¿En qué te ayudo?'}`;
-    } else if (donde) {
-      saludo = `¡Hola! Estás en **${donde}**. ${tip || '¿En qué te ayudo?'}`;
-    } else {
-      saludo = '¡Hola! Preguntame lo que necesites sobre la academia.';
+      const saludo = await askIA(systemPrompt, [
+        { role: 'user', content: 'Arrancá vos la charla ahora, con un saludo espontáneo y personalizado.' },
+      ]);
+
+      rmTyping();
+      appendMsg('assistant', fmt(saludo));
+      // Se guarda en el historial para que, mientras siga en la misma
+      // pestaña (abra y cierre el panel las veces que quiera, navegue
+      // entre páginas, etc.), no se vuelva a repetir el saludo.
+      history.push({ role: 'assistant', content: saludo });
+      saveHistory();
+    } catch (e) {
+      // Si falla la conexión con la IA, no dejamos el panel vacío:
+      // caemos a un saludo simple armado en el momento (no queda
+      // guardado como si fuera de la IA, así que si reabre más tarde
+      // con conexión sí va a poder generar uno real).
+      rmTyping();
+      console.error('Error generando saludo proactivo:', e);
+      const donde  = nombrePagina(location.pathname);
+      const tip    = consejoPagina(location.pathname);
+      const nombre = userInfo ? (userInfo.displayName || userInfo.username) : null;
+      const saludo = nombre && donde
+        ? `¡Hola, **${nombre}**! Te veo en **${donde}**. ${tip || '¿En qué te ayudo?'}`
+        : '¡Hola! Preguntame lo que necesites sobre la academia.';
+      appendMsg('assistant', fmt(saludo));
+      history.push({ role: 'assistant', content: saludo });
+      saveHistory();
     }
-    appendMsg('assistant', fmt(saludo));
-    // Se guarda en el historial para que, mientras siga en la misma
-    // pestaña (abra y cierre el panel las veces que quiera, navegue
-    // entre páginas, etc.), no se vuelva a repetir el saludo.
-    history.push({ role: 'assistant', content: saludo });
-    saveHistory();
   }
 
   function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
