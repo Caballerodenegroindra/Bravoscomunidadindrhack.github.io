@@ -26,6 +26,7 @@ import {
   cargarConfigSitio, buildConfigContext,
   buildSystemPrompt, askIA, nombrePagina, consejoPagina,
 } from './ia-core.js';
+import { registrarPreguntaIA } from './tema-stats.js';
 
 // URL base del sitio (sirve para armar enlaces compartibles absolutos,
 // funciona tanto si está en la raíz como en una subcarpeta).
@@ -301,6 +302,7 @@ function initWidget() {
       saveHistory();
       rmTyping();
       appendMsg('assistant', fmt(reply));
+      registrarPreguntaIA(text); // fire-and-forget, solo guarda el tema (no el texto)
     } catch (e) {
       rmTyping();
       console.error('Error del asistente IA:', e);
