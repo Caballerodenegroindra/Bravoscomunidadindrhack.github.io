@@ -1942,6 +1942,11 @@ tbody tr:last-child td { border-bottom: none; }
     z-index: 199;
     max-height: calc(100dvh - var(--nav-h) - 1rem);
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  body.nav-open {
+    overflow: hidden;
   }
   .navbar__links.open {
     transform: translateY(0) scale(1);
