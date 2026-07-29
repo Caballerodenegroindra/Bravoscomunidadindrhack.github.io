@@ -59,7 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.querySelector('.navbar__toggle');
   const links  = document.querySelector('.navbar__links');
   if (toggle && links) {
-    toggle.addEventListener('click', () => links.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      const abierto = links.classList.toggle('open');
+      document.body.classList.toggle('nav-open', abierto);
+    });
+    // Si se toca un link del menú (navega a otra página) o se cierra
+    // por otro medio, nos aseguramos de no dejar el scroll bloqueado.
+    links.addEventListener('click', (e) => {
+      if (e.target.closest('a')) document.body.classList.remove('nav-open');
+    });
   }
 
   // ── Estado de sesión en barra superior ──

@@ -34,9 +34,13 @@ import { registrarPreguntaIA } from './tema-stats.js';
 const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
 
 // En el chat de página completa ya está la IA a pantalla completa,
-// así que ahí no mostramos el dock para no duplicar.
+// así que ahí no mostramos el dock para no duplicar. Tampoco en
+// registro/login: esas páginas ya tienen su propio formulario con
+// campos pegados abajo, y la barra fija de la IA queda encima
+// generando una "doble barra de escribir" confusa en mobile.
 const ARCHIVO_ACTUAL = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
-if (ARCHIVO_ACTUAL !== 'ia-asistente.html') {
+const PAGINAS_SIN_DOCK_IA = ['ia-asistente.html', 'registro.html', 'login.html'];
+if (!PAGINAS_SIN_DOCK_IA.includes(ARCHIVO_ACTUAL)) {
   document.addEventListener('DOMContentLoaded', initWidget);
 }
 
