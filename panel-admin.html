@@ -263,6 +263,9 @@
         <div class="panel-header">
           <h1 class="section-title">Solicitudes</h1>
         </div>
+        <div style="margin-bottom:0.75rem">
+          <input type="search" placeholder="🔍 Buscar por número…" class="field" style="width:100%" data-request-search />
+        </div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -962,22 +965,41 @@
       if (fueraEl) fueraEl.textContent = users.filter(u => !u.enGrupo).length;
     }
 
-    function renderRequests(requests) {
-      const body = document.querySelector('[data-requests-body]');
+    let _solicitudesData = [];
 
-      if (requests.length === 0) {
-        body.innerHTML = '<tr><td colspan="6">No hay solicitudes pendientes.</td></tr>';
+    function renderRequests(requests) {
+      _solicitudesData = requests;
+      pintarSolicitudes();
+    }
+
+    function pintarSolicitudes() {
+      const body = document.querySelector('[data-requests-body]');
+      const searchEl = document.querySelector('[data-request-search]');
+      const term = (searchEl?.value || '').trim().toLowerCase();
+      const termDigits = term.replace(/\D/g, '');
+
+      let list = _solicitudesData;
+      if (term) {
+        list = list.filter((u) => {
+          const numero = (u.phone || '').toLowerCase();
+          const numeroDigits = numero.replace(/\D/g, '');
+          return numero.includes(term) || (termDigits && numeroDigits.includes(termDigits));
+        });
+      }
+
+      if (list.length === 0) {
+        body.innerHTML = `<tr><td colspan="6">${term ? 'No hay solicitudes con ese número.' : 'No hay solicitudes pendientes.'}</td></tr>`;
         return;
       }
 
-      body.innerHTML = requests.map((u) => `
+      body.innerHTML = list.map((u) => `
         <tr data-uid="${u.uid}">
-          <td><img src="${u.photoURL || 'assets/img/avatar-placeholder.svg'}" alt="" width="36" height="36" style="border-radius:50%"></td>
-          <td>${u.username}</td>
-          <td>${u.phone || '—'}</td>
-          <td>${formatFecha(u.fechaIngreso)}</td>
-          <td>${badge(u.estado)}</td>
-          <td class="table-actions">
+          <td data-label="Foto"><img src="${u.photoURL || 'assets/img/avatar-placeholder.svg'}" alt="" width="36" height="36" style="border-radius:50%"></td>
+          <td data-label="Usuario">${u.username}</td>
+          <td data-label="Número">${u.phone || '—'}</td>
+          <td data-label="Fecha">${formatFecha(u.fechaIngreso)}</td>
+          <td data-label="Estado">${badge(u.estado)}</td>
+          <td class="table-actions" data-label="Acciones">
             <button class="btn btn--small btn--outline" data-action="aprobar">Aprobar</button>
             <button class="btn btn--small btn--danger" data-action="rechazar">Rechazar</button>
             <a class="btn btn--small btn--ghost" href="perfil.html?uid=${u.uid}">Ver perfil</a>
@@ -991,10 +1013,13 @@
           const uid = row.dataset.uid;
           if (btn.dataset.action === 'aprobar') await approveUser(uid);
           if (btn.dataset.action === 'rechazar') await rejectUser(uid);
+          _solicitudesData = _solicitudesData.filter((u) => u.uid !== uid);
           row.remove();
         });
       });
     }
+
+    document.querySelector('[data-request-search]')?.addEventListener('input', pintarSolicitudes);
 
     /**
      * Convierte cualquier formato de número (+54 9 3854-12-34-56,
