@@ -57,7 +57,10 @@ function initChatWidget() {
       <div id="chat-widget-header">
         <span id="chat-widget-header-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          General
+          <span id="chat-widget-header-text">
+            <span id="chat-widget-header-title-main">General</span>
+            <span id="chat-widget-header-subtitle">Chat grupal de la comunidad</span>
+          </span>
         </span>
         <div id="chat-widget-header-actions">
           <a href="chat.html" id="chat-widget-expand" title="Abrir chat completo" aria-label="Abrir chat completo">
@@ -78,15 +81,38 @@ function initChatWidget() {
 
   const fab     = wrap.querySelector('#chat-widget-fab');
   const badge   = wrap.querySelector('#chat-widget-badge');
+  const panel   = wrap.querySelector('#chat-widget-panel');
   const minBt   = wrap.querySelector('#chat-widget-minimize');
   const msgsEl  = wrap.querySelector('#chat-widget-msgs');
   const inpEl   = wrap.querySelector('#chat-widget-input');
   const sendBtn = wrap.querySelector('#chat-widget-send');
 
+  // El panel se posiciona con "bottom" (pegado arriba del botón), pero
+  // su alto se calculaba solo en vh/px fijos sin saber cuánto mide
+  // realmente el navbar de arriba. En pantallas más bajas eso hacía
+  // que el panel "creciera" por encima del techo visible y su propio
+  // encabezado (título "General" + botones de expandir/cerrar) quedara
+  // tapado detrás del navbar. Acá lo calculamos en base al alto real
+  // disponible, igual que hace el dock de la IA.
+  function ajustarAlturaPanel() {
+    const vv  = window.visualViewport;
+    const vpH = (vv && vv.height) || window.innerHeight;
+    const navbarEl = document.querySelector('.navbar');
+    const navH = (navbarEl ? navbarEl.getBoundingClientRect().height : 72) + 12;
+    const bottomPx = parseFloat(getComputedStyle(panel).bottom) || 0;
+    const disponible = Math.max(220, vpH - bottomPx - navH);
+    const maxDeseado  = Math.min(vpH * 0.65, 520);
+    panel.style.height = `${Math.min(disponible, maxDeseado)}px`;
+  }
+  window.addEventListener('resize', ajustarAlturaPanel);
+  window.visualViewport?.addEventListener('resize', ajustarAlturaPanel);
+  ajustarAlturaPanel();
+
   function openPanel() {
     if (!ME || opened) return;
     opened = true;
     wrap.classList.add('chat-widget--open');
+    ajustarAlturaPanel();
     marcarComoLeido();
     setTimeout(() => { msgsEl.scrollTop = msgsEl.scrollHeight; }, 30);
   }

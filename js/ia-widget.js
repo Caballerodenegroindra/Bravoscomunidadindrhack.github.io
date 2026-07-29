@@ -38,8 +38,12 @@ const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
 // registro/login: esas páginas ya tienen su propio formulario con
 // campos pegados abajo, y la barra fija de la IA queda encima
 // generando una "doble barra de escribir" confusa en mobile.
+// chat.html tampoco: ese layout ya ocupa toda la altura disponible
+// (100dvh - navbar - tabbar) con su propia caja de texto pegada
+// abajo, y el dock de la IA quedaba flotando encima tapándola / dando
+// la sensación de "dos teclados" superpuestos.
 const ARCHIVO_ACTUAL = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
-const PAGINAS_SIN_DOCK_IA = ['ia-asistente.html', 'registro.html', 'login.html'];
+const PAGINAS_SIN_DOCK_IA = ['ia-asistente.html', 'registro.html', 'login.html', 'chat.html'];
 if (!PAGINAS_SIN_DOCK_IA.includes(ARCHIVO_ACTUAL)) {
   document.addEventListener('DOMContentLoaded', initWidget);
 }
@@ -56,6 +60,14 @@ const SALUDADO_KEY = 'ia-widget-saludado';
 // archivos a esta lista si se quiere el mismo comportamiento en
 // otras páginas (ej. 'index.html').
 const PAGINAS_SALUDO_AUTOMATICO = ['panel-usuario.html'];
+
+// Para un visitante que TODAVÍA no inició sesión, el dock no debe
+// quedar como una caja muda esperando que alguien le escriba algo:
+// en las páginas públicas donde es más probable que llegue antes de
+// registrarse, se presenta solo (una vez por página y por pestaña)
+// para que se note que hay alguien "atendiendo" desde el arranque, en
+// vez de dar la sensación de un buscador vacío sin resultados.
+const PAGINAS_SALUDO_INVITADO = ['index.html', 'ayuda.html', 'cursos.html'];
 
 function initWidget() {
   document.body.classList.add('ia-dock-active');
@@ -82,6 +94,8 @@ function initWidget() {
         pendientes = q;
         intentarSaludoAutomatico();
       });
+    } else {
+      intentarSaludoInvitado();
     }
   });
 
@@ -96,6 +110,23 @@ function initWidget() {
     if (history.length || yaSaludadoEnEstaPagina()) return;
     autoAbierto = true;
     setTimeout(() => openPanel(), 900);
+  }
+
+  // Si todavía no hay sesión (visitante sin loguearse), igual la IA se
+  // presenta sola apenas carga la página: mejor que dejar el dock quieto
+  // con solo el placeholder, como si no hubiera nadie del otro lado.
+  function intentarSaludoInvitado() {
+    if (autoAbierto) return;
+    if (!PAGINAS_SALUDO_INVITADO.includes(ARCHIVO_ACTUAL)) return;
+    if (history.length || yaSaludadoEnEstaPagina()) return;
+    autoAbierto = true;
+    setTimeout(() => {
+      // Si justo en este ratito se resolvió que SÍ hay sesión (login
+      // recién restaurado), dejamos que sea el flujo de arriba el que
+      // decida el saludo, para no duplicarlo.
+      if (userInfo) { autoAbierto = false; return; }
+      openPanel();
+    }, 1400);
   }
   cargarCursos().then((c) => { cursos = c; });
   cargarConfigSitio().then((c) => { config = c; });
@@ -231,7 +262,7 @@ function initWidget() {
 
   inpEl.addEventListener('input', () => {
     inpEl.style.height = 'auto';
-    inpEl.style.height = Math.min(inpEl.scrollHeight, 90) + 'px';
+    inpEl.style.height = Math.min(inpEl.scrollHeight, 64) + 'px';
     sendBtn.disabled = !inpEl.value.trim() || busy;
   });
   inpEl.addEventListener('keydown', (e) => {
