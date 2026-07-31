@@ -217,7 +217,7 @@ body::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url('assets/img/fondo-emblema.jpg');
+  background-image: url('../assets/img/fondo-emblema.jpg');
   background-repeat: no-repeat;
   background-position: center 12%;
   background-size: min(46vw, 480px) auto;
@@ -1590,6 +1590,36 @@ tbody tr:last-child td { border-bottom: none; }
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+/* ── INDICADOR DE SCROLL ──
+   Riel fino y fijo en el borde derecho: el largo del riel es toda
+   la página, el segmento dorado que se mueve adentro es lo que se
+   está viendo ahora — para saber de un vistazo cuánto falta para
+   llegar al final (o al principio) sin tener que seguir scrolleando
+   a ciegas. Se esconde en pantallas cortas sin scroll real. */
+#scroll-progress {
+  position: fixed;
+  top: calc(var(--nav-h) + 0.5rem);
+  bottom: calc(var(--tabbar-h) + 0.5rem);
+  right: 0.3rem;
+  width: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--border-muted);
+  z-index: 240;
+  pointer-events: none;
+  opacity: 0.85;
+}
+#scroll-progress__thumb {
+  width: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  box-shadow: 0 0 8px rgba(201,171,97,0.45);
+  will-change: transform, height;
+}
+@media (min-width: 641px) {
+  #scroll-progress { bottom: 0.5rem; top: calc(var(--nav-h) + 0.5rem); }
+}
+:root[data-theme="light"] #scroll-progress { background: var(--border); opacity: 0.7; }
 
 /* ── NOVEDADES (panel principal) ──
    Distinto de .alert / Noticias: son tarjetas chicas y horizontales
