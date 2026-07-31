@@ -2273,6 +2273,11 @@ tbody tr:last-child td { border-bottom: none; }
   transition: transform 0.12s ease-out;
   will-change: transform;
 }
+/* Además del z-index, se esconde del todo mientras haya un modal
+   abierto (ver hayModalAbierto() en ia-widget.js): algunos modales no
+   cubren el 100% del alto de pantalla, y el dock se veía "asomar" en
+   ese hueco aunque quedara detrás en el orden de apilado. */
+.ia-widget--tras-modal { display: none !important; }
 @media (min-width: 641px) {
   #ia-widget { left: auto; right: 1.25rem; bottom: 1.25rem; width: min(400px, calc(100vw - 2.5rem)); }
 }
