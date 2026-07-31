@@ -1189,7 +1189,7 @@
           btnConfirm.style.display = 'none';
           setTimeout(() => location.reload(), 1200);
         } catch (e) {
-          resultEl.innerHTML += `<p style="color:var(--color-danger-fg)">❌ Error: ${e.message}</p>`;
+          resultEl.innerHTML += `<p style="color:var(--color-danger-fg);overflow-wrap:anywhere;word-break:break-word;max-width:100%">❌ Error: ${e.message}</p>`;
         } finally {
           btnConfirm.disabled = false;
           btnConfirm.textContent = '✅ Confirmar y aplicar';
@@ -2397,7 +2397,7 @@
           </div>
         `;
       } catch(e) {
-        listEl.innerHTML = `<p style="color:var(--color-danger-fg)">Error: ${e.message}</p>`;
+        listEl.innerHTML = `<p style="color:var(--color-danger-fg);overflow-wrap:anywhere;word-break:break-word;max-width:100%">Error: ${e.message}</p>`;
       }
     }
 
@@ -2663,14 +2663,16 @@
       listEl.innerHTML = '<p class="section-subtitle">Cargando…</p>';
 
       try {
-        let q;
-        if (estado === 'todos') {
-          q = query(collection(db, 'voluntarios_dev'), orderBy('fecha', 'desc'));
-        } else {
-          q = query(collection(db, 'voluntarios_dev'), where('estado', '==', estado), orderBy('fecha', 'desc'));
-        }
+        // Se trae todo ordenado por fecha y se filtra por estado acá
+        // mismo (en vez de un where+orderBy combinado) para no
+        // depender de crear un índice compuesto en Firestore.
+        const q = query(collection(db, 'voluntarios_dev'), orderBy('fecha', 'desc'));
         const snap = await getDocs(q);
-        _colaboraCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (estado !== 'todos') {
+          docs = docs.filter(s => s.estado === estado);
+        }
+        _colaboraCache = docs;
 
         if (estado === 'pendiente') {
           const badge = document.getElementById('c-count-pendiente');
@@ -2718,7 +2720,7 @@
           </div>
         `;
       } catch (e) {
-        listEl.innerHTML = `<p style="color:var(--color-danger-fg)">Error: ${e.message}</p>`;
+        listEl.innerHTML = `<p style="color:var(--color-danger-fg);overflow-wrap:anywhere;word-break:break-word;max-width:100%">Error: ${e.message}</p>`;
       }
     }
 
