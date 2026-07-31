@@ -310,13 +310,23 @@
       const cont = document.getElementById('tarjeta-inteligente');
       if (!cont) return;
 
-      // ① Prioridad máxima: si todavía no sabemos si es programador o
-      // tiene experiencia técnica, se lo preguntamos acá mismo (una
-      // sola vez), en vez de mandarlo a completar un formulario largo.
+      // ① Prioridad máxima: si todavía no completó el mini-cuestionario
+      // de onboarding (nivel técnico, qué sabe hacer y si ayudaría a
+      // futuros proyectos), se lo preguntamos acá mismo, paso a paso,
+      // en vez de mandarlo a completar un formulario largo.
       if (!profile.nivelProgramacion) {
+        renderPreguntaNivel();
+        return;
+      }
+      if (!profile.onboardingExtra) {
+        renderPreguntaConocimientos();
+        return;
+      }
+
+      function renderPreguntaNivel() {
         cont.innerHTML = `
           <div class="card" id="card-pregunta-nivel" style="border-color:rgba(198,169,101,0.35);background:rgba(198,169,101,0.05)">
-            <p class="section-subtitle" style="margin:0 0 0.4rem">🤖 Una pregunta rápida del asistente</p>
+            <p class="section-subtitle" style="margin:0 0 0.4rem">🤖 Una pregunta rápida del asistente <span style="opacity:0.6">(1/3)</span></p>
             <h3 style="margin:0 0 0.6rem;font-size:1rem">¿Sos programador o tenés experiencia técnica?</h3>
             <p style="margin:0 0 1rem;font-size:0.85rem;color:var(--text-soft)">Nos sirve para ajustar las clases y las recomendaciones de la IA a tu nivel. Se guarda directo en tu perfil.</p>
             <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
@@ -333,17 +343,89 @@
             try {
               await updateDoc(doc(db, 'users', profile.uid), { nivelProgramacion: nivel });
               profile.nivelProgramacion = nivel;
-              cont.innerHTML = `<div class="card" style="border-color:rgba(63,143,95,0.35)">
-                <p style="margin:0;font-size:0.9rem">✅ Gracias, quedó guardado en tu <a href="perfil.html" style="color:var(--color-accent-fg)">perfil</a> (${RANGOS_TEXTO[nivel]}). Vamos a tenerlo en cuenta para lo que te recomendemos.</p>
-              </div>`;
-              setTimeout(() => renderTarjetaInteligente(profile), 2200);
+              renderPreguntaConocimientos();
             } catch (e) {
               cont.querySelector('div').insertAdjacentHTML('beforeend', '<p style="margin:0.5rem 0 0;color:var(--color-danger-fg);font-size:0.8rem">❌ No se pudo guardar, probá de nuevo.</p>');
               cont.querySelectorAll('[data-nivel]').forEach((b) => b.disabled = false);
             }
           });
         });
-        return;
+      }
+
+      function renderPreguntaConocimientos() {
+        cont.innerHTML = `
+          <div class="card" id="card-pregunta-conocimientos" style="border-color:rgba(198,169,101,0.35);background:rgba(198,169,101,0.05)">
+            <p class="section-subtitle" style="margin:0 0 0.4rem">🤖 Una pregunta rápida del asistente <span style="opacity:0.6">(2/3)</span></p>
+            <h3 style="margin:0 0 0.6rem;font-size:1rem">¿Qué conocimientos tenés?</h3>
+            <p style="margin:0 0 0.75rem;font-size:0.85rem;color:var(--text-soft)">Contanos qué sabés hacer o qué te gusta (programación, diseño, redes, hardware, lo que sea). Se guarda en tu perfil, en "Lo que sé".</p>
+            <textarea id="input-conocimientos" rows="2" placeholder="Ej: HTML/CSS y algo de JavaScript, o todavía nada, estoy arrancando..." style="width:100%;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.6rem;resize:vertical;box-sizing:border-box;font-family:inherit;margin-bottom:0.75rem"></textarea>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button type="button" class="btn btn--primary btn--small" id="btn-conocimientos-continuar">Continuar</button>
+              <button type="button" class="btn btn--outline btn--small" id="btn-conocimientos-omitir">Omitir por ahora</button>
+            </div>
+          </div>`;
+
+        const guardarYSeguir = async (valor) => {
+          document.getElementById('btn-conocimientos-continuar').disabled = true;
+          document.getElementById('btn-conocimientos-omitir').disabled = true;
+          try {
+            await updateDoc(doc(db, 'users', profile.uid), { loQueSe: valor });
+            profile.loQueSe = valor;
+            renderPreguntaColaborar();
+          } catch (e) {
+            cont.querySelector('div').insertAdjacentHTML('beforeend', '<p style="margin:0.5rem 0 0;color:var(--color-danger-fg);font-size:0.8rem">❌ No se pudo guardar, probá de nuevo.</p>');
+            document.getElementById('btn-conocimientos-continuar').disabled = false;
+            document.getElementById('btn-conocimientos-omitir').disabled = false;
+          }
+        };
+
+        document.getElementById('btn-conocimientos-continuar').addEventListener('click', () => {
+          guardarYSeguir(document.getElementById('input-conocimientos').value.trim());
+        });
+        document.getElementById('btn-conocimientos-omitir').addEventListener('click', () => {
+          guardarYSeguir(profile.loQueSe || '');
+        });
+      }
+
+      function renderPreguntaColaborar() {
+        cont.innerHTML = `
+          <div class="card" id="card-pregunta-colaborar" style="border-color:rgba(198,169,101,0.35);background:rgba(198,169,101,0.05)">
+            <p class="section-subtitle" style="margin:0 0 0.4rem">🤖 Una pregunta rápida del asistente <span style="opacity:0.6">(3/3)</span></p>
+            <h3 style="margin:0 0 0.6rem;font-size:1rem">¿Ayudarías a la comunidad en futuros proyectos?</h3>
+            <p style="margin:0 0 1rem;font-size:0.85rem;color:var(--text-soft)">A veces surgen proyectos para construir entre todos (como esta misma app). Nos sirve saber si te gustaría sumarte cuando aparezca uno.</p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button type="button" class="btn btn--primary btn--small" data-colaborar="si">🙌 Sí, contá conmigo</button>
+              <button type="button" class="btn btn--outline btn--small" data-colaborar="talvez">🤔 Tal vez, más adelante</button>
+              <button type="button" class="btn btn--outline btn--small" data-colaborar="no">🙅 Por ahora no</button>
+            </div>
+          </div>`;
+
+        cont.querySelectorAll('[data-colaborar]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const valor = btn.dataset.colaborar;
+            cont.querySelectorAll('[data-colaborar]').forEach((b) => b.disabled = true);
+            try {
+              await updateDoc(doc(db, 'users', profile.uid), {
+                ayudaFuturosProyectos: valor,
+                onboardingExtra: true,
+              });
+              profile.ayudaFuturosProyectos = valor;
+              profile.onboardingExtra = true;
+              const MSG = {
+                si: '✅ ¡Genial! Te vamos a avisar apenas surja un proyecto para colaborar.',
+                talvez: '✅ Gracias, quedó guardado. Podés cambiarlo cuando quieras desde tu perfil.',
+                no: '✅ Gracias por avisarnos, quedó guardado en tu perfil.',
+              };
+              cont.innerHTML = `<div class="card" style="border-color:rgba(63,143,95,0.35)">
+                <p style="margin:0;font-size:0.9rem">${MSG[valor]}</p>
+              </div>`;
+              setTimeout(() => renderTarjetaInteligente(profile), 2200);
+            } catch (e) {
+              cont.querySelector('div').insertAdjacentHTML('beforeend', '<p style="margin:0.5rem 0 0;color:var(--color-danger-fg);font-size:0.8rem">❌ No se pudo guardar, probá de nuevo.</p>');
+              cont.querySelectorAll('[data-colaborar]').forEach((b) => b.disabled = false);
+            }
+          });
+        });
       }
 
       // ② Si ya sabemos eso, priorizamos "continuar donde te quedaste"

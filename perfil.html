@@ -130,6 +130,17 @@
           </div>
 
           <div class="field">
+            <label for="ayuda-futuros-proyectos">¿Ayudarías a la comunidad en futuros proyectos?</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">A veces surgen proyectos para construir entre todos (como esta misma app). Podés cambiar tu respuesta cuando quieras.</small>
+            <select id="ayuda-futuros-proyectos" name="ayudaFuturosProyectos">
+              <option value="">Prefiero no decirlo todavía</option>
+              <option value="si">🙌 Sí, contá conmigo</option>
+              <option value="talvez">🤔 Tal vez, más adelante</option>
+              <option value="no">🙅 Por ahora no</option>
+            </select>
+          </div>
+
+          <div class="field">
             <label for="experiencia">Experiencia</label>
             <small style="color:#888;display:block;margin-bottom:0.4rem">¿En qué proyectos o cosas has trabajado? (Programación, servidores, diseño, hardware, estudio, etc.)</small>
             <textarea id="experiencia" name="experiencia" rows="2"></textarea>
@@ -276,6 +287,7 @@
       profileForm['nivelProgramacion'].value = profile.nivelProgramacion || '';
       profileForm['sobreMi'].value = profile.sobreMi || '';
       profileForm['loQueSe'].value = profile.loQueSe || '';
+      profileForm['ayudaFuturosProyectos'].value = profile.ayudaFuturosProyectos || '';
       profileForm['experiencia'].value = profile.experiencia || '';
       profileForm['intereses'].value = profile.intereses || '';
       profileForm['aprendizaje'].value = profile.aprendizaje || '';
@@ -293,6 +305,8 @@
             nivelProgramacion: profileForm.nivelProgramacion.value,
             sobreMi: profileForm.sobreMi.value.trim(),
             loQueSe: profileForm.loQueSe.value.trim(),
+            ayudaFuturosProyectos: profileForm.ayudaFuturosProyectos.value,
+            onboardingExtra: true,
             experiencia: profileForm.experiencia.value.trim(),
             intereses: profileForm.intereses.value.trim(),
             aprendizaje: profileForm.aprendizaje.value.trim(),
