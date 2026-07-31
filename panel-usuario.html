@@ -122,15 +122,24 @@
         <span class="badge badge--aprobado">✓ Cuenta aprobada</span>
       </div>
 
+      <!-- ⓪ NOVEDADES: lo publicado hace poco (clases y proyectos), NO
+           es lo mismo que "Noticias" (que es un anuncio manual del
+           admin) — esto se detecta solo a partir de lo que se crea
+           en Cursos / Colaborá. Se esconde solo si no hay nada nuevo. -->
+      <div data-novedades-wrap style="display:none;margin-bottom:2rem">
+        <h2 class="section-title" style="margin-bottom:0.75rem;font-size:1rem">Novedades</h2>
+        <div id="novedades-lista" class="novedades-strip"></div>
+      </div>
+
       <!-- TARJETA INTELIGENTE: este espacio rota entre "continuar donde
            te quedaste", una pregunta rápida del asistente (ej. si el
            usuario es programador, para completar su perfil) o una
            sugerencia/felicitación sobre alguna función prioritaria de
            la academia que todavía no probó. Se arma en JS más abajo. -->
-      <div id="tarjeta-inteligente" style="margin-bottom:1.5rem"></div>
+      <div id="tarjeta-inteligente" style="margin-bottom:2rem"></div>
 
       <!-- ① STATS: lo primero que quiere saber un estudiante -->
-      <div class="stat-grid reveal-stagger" style="margin-bottom:1.5rem">
+      <div class="stat-grid reveal-stagger" style="margin-bottom:2rem">
         <div class="stat-card" style="border-color:rgba(198,169,101,0.3)">
           <div class="stat-card__value" data-user-rango style="color:var(--color-accent-fg);font-size:1.1rem">—</div>
           <div class="stat-card__label">🎖️ Rango actual</div>
@@ -150,7 +159,7 @@
       </div>
 
       <!-- ② ACCIÓN PRINCIPAL: ir a estudiar (CTA más importante) -->
-      <div class="card" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-color:rgba(198,169,101,0.25);background:rgba(198,169,101,0.04)">
+      <div class="card" style="margin-bottom:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-color:rgba(198,169,101,0.25);background:rgba(198,169,101,0.04)">
         <div>
           <h2 style="font-size:1rem;font-weight:600;margin-bottom:0.2rem">¿Listo para seguir aprendiendo?</h2>
           <p style="margin:0;font-size:0.875rem;color:var(--text-soft)">Retoma donde lo dejaste o explora nuevos cursos.</p>
@@ -162,18 +171,18 @@
       </div>
 
       <!-- ③ MIS QUIZZES: pendientes y resultados (acción directa del estudiante) -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.75rem">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
         <h2 class="section-title" style="margin:0">Mis <span class="accent">Quizzes</span> 🧠</h2>
         <a href="cursos.html" class="btn btn--small btn--ghost">Ir a cursos →</a>
       </div>
-      <p class="section-subtitle" style="margin-bottom:1rem">Estado de los quizzes que enviaste al administrador.</p>
-      <div id="mis-quizzes-lista" style="margin-bottom:2rem">
+      <p class="section-subtitle" style="margin-bottom:1.25rem">Estado de los quizzes que enviaste al administrador.</p>
+      <div id="mis-quizzes-lista" style="margin-bottom:2.75rem">
         <p class="section-subtitle">Cargando quizzes...</p>
       </div>
 
       <!-- ④ MIS LOGROS: cursos aprobados y proyectos -->
-      <h2 class="section-title" style="margin-bottom:0.75rem">Mis <span class="accent">Logros</span> 🏆</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem">
+      <h2 class="section-title" style="margin-bottom:1rem">Mis <span class="accent">Logros</span> 🏆</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2.75rem">
         <div class="card" style="padding:1rem">
           <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem">📚 CURSOS APROBADOS</div>
           <div id="mis-cursos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
@@ -185,18 +194,18 @@
       </div>
 
       <!-- ⑤ NOTICIAS RECIENTES: mantenerse al día -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.75rem">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
         <h2 class="section-title" style="margin:0">Últimas <span class="accent">Noticias</span> 📰</h2>
         <a href="noticias.html" class="btn btn--small btn--ghost">Ver todas →</a>
       </div>
-      <div id="noticias-recientes" style="margin-bottom:2rem">
+      <div id="noticias-recientes" style="margin-bottom:2.75rem">
         <p class="section-subtitle">Cargando noticias...</p>
       </div>
 
       <!-- ⑤.5 PROYECTOS ACTIVOS PARA COLABORAR: solo se muestra si hay
            alguno publicado (ver loadConvocatoriasPanel más abajo) -->
-      <div id="convocatorias-panel-wrap" style="display:none;margin-bottom:2rem">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.75rem">
+      <div id="convocatorias-panel-wrap" style="display:none;margin-bottom:2.75rem">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
           <h2 class="section-title" style="margin:0">Proyectos para <span class="accent">colaborar</span> 🚀</h2>
           <a href="colabora.html" class="btn btn--small btn--ghost">Ver todos →</a>
         </div>
@@ -204,8 +213,8 @@
       </div>
 
       <!-- ⑥ ACCESOS RÁPIDOS: comunidad y perfil (secundarios) -->
-      <h2 class="section-title" style="margin-bottom:0.75rem">Accesos rápidos</h2>
-      <div class="card-grid reveal-stagger" style="margin-bottom:2rem">
+      <h2 class="section-title" style="margin-bottom:1rem">Accesos rápidos</h2>
+      <div class="card-grid reveal-stagger" style="margin-bottom:2.75rem">
         <a href="chat.html" class="card">
           <h3>💬 Chat</h3>
           <p class="section-subtitle" style="margin:0">Habla con la comunidad, comparte dudas y avances.</p>
@@ -572,6 +581,11 @@
         msg.className = 'form-message show form-message--error';
       }
     });
+  </script>
+
+  <script type="module">
+    import { cargarNovedades } from './js/novedades.js';
+    cargarNovedades('novedades-lista');
   </script>
 
   <script type="module">

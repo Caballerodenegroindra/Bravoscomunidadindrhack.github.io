@@ -781,7 +781,7 @@
       formatFecha,
     } from './js/admin.js';
     import { db } from './js/firebase-config.js';
-    import { doc, updateDoc, addDoc, deleteDoc, collection, getDocs, onSnapshot, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { doc, updateDoc, addDoc, deleteDoc, collection, getDocs, onSnapshot, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { crearNotificacionMasiva, TIPOS_NOTIF } from './js/notificaciones.js';
 
     /* --- Navegación entre pestañas --- */
@@ -1390,7 +1390,7 @@
           await updateDoc(doc(db, 'courses', editingCourseId), data);
           alert('✅ Clase actualizada.');
         } else {
-          const ref = await addDoc(collection(db, 'courses'), data);
+          const ref = await addDoc(collection(db, 'courses'), { ...data, creadoEn: serverTimestamp() });
           alert('✅ Clase creada.');
           if (data.publicado) {
             try {
