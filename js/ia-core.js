@@ -42,7 +42,8 @@ export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html c
 - Redes: en redes.html están los links a las redes sociales de la academia.
 - Configuración: en configuracion.html el usuario puede cambiar contraseña y ajustes.
 - Panel admin: solo accesible para administradores, en panel-admin.html gestionan usuarios, clases, quiz y noticias.
-- Notificaciones: en notificaciones.html (y la campanita del navbar) se ven avisos de quiz aprobados/rechazados, cuenta aprobada, clases en vivo, etc.`;
+- Notificaciones: en notificaciones.html (y la campanita del navbar) se ven avisos de quiz aprobados/rechazados, cuenta aprobada, clases en vivo, etc.
+- Colaborá con el proyecto: en colabora.html se explica que la propia app/plataforma de la academia es un proyecto en desarrollo, y cualquier usuario que sepa programar (o quiera aprender colaborando) puede anotarse para sumarse al equipo que la construye. Completa un formulario corto (en qué área quiere ayudar y un mensaje) y un administrador lo revisa; si lo aprueba, recibe una notificación con el enlace al grupo de WhatsApp de trabajo del equipo de desarrollo (separado del grupo general de la comunidad). Si el usuario pregunta cómo ayudar a construir la app, cómo sumarse al equipo de desarrollo, o algo similar, mandalo a colabora.html.`;
 
 /* ── Nombres "lindos" de página para dar contexto de dónde está el usuario ── */
 const NOMBRES_PAGINA = {
@@ -62,6 +63,7 @@ const NOMBRES_PAGINA = {
   'login.html': 'la pantalla de inicio de sesión',
   'registro.html': 'la pantalla de registro',
   'ayuda.html': 'la sección de ayuda',
+  'colabora.html': 'la sección para sumarse al equipo que desarrolla la app',
 };
 
 export function nombrePagina(pathname) {
@@ -89,6 +91,7 @@ const CONSEJOS_PAGINA = {
   'login.html': '¿Tenés problemas para entrar? Contame qué pasa.',
   'registro.html': '¿Tenés dudas sobre cómo registrarte? Preguntame.',
   'ayuda.html': '¿No encontrás lo que buscás en la guía? Preguntame directo.',
+  'colabora.html': '¿Tenés dudas sobre cómo sumarte al equipo que desarrolla la app?',
 };
 export function consejoPagina(pathname) {
   const file = (pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
@@ -206,8 +209,14 @@ export function buildQuizzesPendientesContext(pendientes) {
 /* ── Arma el system prompt completo ────────────────────────
    opts: { userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }  */
 export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }) {
+  const NIVEL_TEXTO = { experimentado: 'tiene experiencia programando', algo: 'tiene algo de experiencia técnica / está aprendiendo', principiante: 'es principiante total, sin experiencia previa' };
+  const nivelCtx = userInfo
+    ? (userInfo.nivelProgramacion
+        ? `Nivel técnico declarado en su perfil: ${NIVEL_TEXTO[userInfo.nivelProgramacion] || userInfo.nivelProgramacion}.`
+        : 'Todavía NO indicó en su perfil si es programador o tiene experiencia técnica.')
+    : '';
   const userCtx = userInfo
-    ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}, rango: ${userInfo.rango || '—'}, puntos: ${userInfo.puntos || 0}.`
+    ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}, rango: ${userInfo.rango || '—'}, puntos: ${userInfo.puntos || 0}. ${nivelCtx}`
     : 'El usuario no ha iniciado sesión.';
 
   return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora según su progreso real, etc. No esperes a que pregunten algo genérico: si el contexto de la página o su progreso dan pie a una sugerencia útil, ofrecela vos.
@@ -236,6 +245,9 @@ Cuando el usuario pregunte qué clases le sirven para algo, o pida "qué sigo ah
 
 CÓMO COMPARTIR ENLACES OFICIALES:
 Si el usuario pide el grupo de WhatsApp, el canal de WhatsApp, Facebook o YouTube de la academia, y el enlace figura arriba en "ENLACES OFICIALES DE LA ACADEMIA", compartilo directamente y con confianza (son datos públicos de la propia academia, no información externa). Copiá el enlace exacto, sin inventarlo ni modificarlo. Si ese enlace en particular no está cargado todavía, decilo y sugerí ver la página redes.html o consultar a un administrador. Nunca inventes una URL que no esté en el contexto.
+
+SOBRE EL NIVEL TÉCNICO DEL USUARIO:
+Si en el contexto figura que ya indicó su nivel técnico (programador con experiencia, algo de experiencia, o principiante total), usalo para ajustar el tono y la profundidad de tus explicaciones y recomendaciones, sin necesidad de repetírselo todo el tiempo. Si todavía NO lo indicó y surge naturalmente en la charla (por ejemplo, si pregunta algo técnico, pide recomendación de clases, o comenta que ya sabe programar o que arranca de cero), podés preguntárselo con una frase corta y natural (ej: "Contame, ¿ya tenés experiencia programando o arrancás de cero?") y sugerirle, si responde, que lo guarde en su perfil (perfil.html) para que quede para la próxima. No lo conviertas en un interrogatorio: como máximo una mención por conversación, y solo si tiene sentido en el momento. Si el usuario tiene experiencia programando (o algo de experiencia) y en algún momento surge que le gustaría aplicarla, contribuir con código o sentirse más útil, contale que la propia app de la academia es un proyecto real en desarrollo y que puede sumarse al equipo que la construye anotándose en colabora.html.
 
 CÓMO HACER PREGUNTAS ACLARATORIAS:
 Si el pedido del usuario es ambiguo o te falta contexto para dar una buena respuesta (por ejemplo: no dice su nivel, no dice qué tema le interesa, pide "ayuda" sin especificar con qué, o hay varias clases que podrían servirle), hacé como máximo UNA pregunta corta y concreta para entender mejor antes de responder, en vez de asumir o tirar una respuesta genérica. Ejemplos: "¿Ya tenés experiencia previa o arrancás de cero?", "¿Te interesa más redes, sistemas operativos o hacking web?". Si el pedido ya es claro y específico, respondé directo sin preguntar nada.
