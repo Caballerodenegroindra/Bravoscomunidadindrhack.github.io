@@ -145,16 +145,21 @@
       const cont = document.getElementById('convocatorias-lista');
       if (!cont) return;
       try {
+        // Un solo "where" (sin combinarlo con "orderBy" en la misma
+        // consulta) no necesita índice compuesto en Firestore; se
+        // ordena por fecha acá mismo, del lado del cliente.
         const snap = await getDocs(query(
           collection(db, 'convocatorias'),
-          where('activo', '==', true),
-          orderBy('fecha', 'desc')
+          where('activo', '==', true)
         ));
         if (snap.empty) { cont.innerHTML = ''; return; }
 
+        const docs = snap.docs
+          .map(d => d.data())
+          .sort((a, b) => (b.fecha?.toMillis?.() || 0) - (a.fecha?.toMillis?.() || 0));
+
         cont.innerHTML = `<h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.75rem">📢 Proyectos activos buscando ayuda</h2>` +
-          snap.docs.map(d => {
-            const c = d.data();
+          docs.map(c => {
             return `
               <div class="card" style="margin-bottom:0.9rem;border-color:rgba(37,211,102,0.35)">
                 <h3 style="margin:0 0 0.4rem">${c.titulo || ''}</h3>
