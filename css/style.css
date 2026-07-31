@@ -1265,7 +1265,7 @@ p { color: var(--text-soft); font-size: 0.9rem; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.field input,
+.field input:not([type="checkbox"]):not([type="radio"]),
 .field textarea,
 .field select {
   background: var(--color-canvas-inset);
@@ -1280,7 +1280,7 @@ p { color: var(--text-soft); font-size: 0.9rem; }
   min-height: 40px;
   -webkit-appearance: none;
 }
-.field input:focus,
+.field input:not([type="checkbox"]):not([type="radio"]):focus,
 .field textarea:focus,
 .field select:focus {
   outline: none;
@@ -1290,6 +1290,15 @@ p { color: var(--text-soft); font-size: 0.9rem; }
 .field input::placeholder { color: var(--text-muted); }
 .field textarea { resize: vertical; min-height: 80px; }
 .field select option { background: var(--bg-card); color: var(--text); }
+.field input[type="checkbox"],
+.field input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  flex-shrink: 0;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
 
 .form-message {
   margin-top: var(--gap-md);
@@ -2055,7 +2064,7 @@ tbody tr:last-child td { border-bottom: none; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
 
   .btn { min-height: 44px; }
-  .field input,
+  .field input:not([type="checkbox"]):not([type="radio"]),
   .field textarea,
   .field select {
     min-height: 44px;
