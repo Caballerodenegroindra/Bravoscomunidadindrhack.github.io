@@ -148,6 +148,22 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // ───────────────────────────────────────────────────────
+    // VOLUNTARIOS DEL PROYECTO (equipo de desarrollo de la app)
+    // Cualquier usuario aprobado puede pedir sumarse al equipo que
+    // desarrolla la app. El admin revisa y aprueba/rechaza; solo él
+    // puede cambiar el estado (para poder mandar el enlace del grupo
+    // de trabajo de WhatsApp solo a quien se apruebe).
+    // ───────────────────────────────────────────────────────
+    match /voluntarios_dev/{docId} {
+      allow read: if isSignedIn() &&
+        (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.estado == 'pendiente';
+      allow update, delete: if isAdmin();
+    }
+
     match /quiz_logros/{docId} {
       allow read: if isSignedIn();
       allow create, update, delete: if isAdmin();
@@ -155,6 +171,15 @@ service cloud.firestore {
 
     match /user_titles/{docId} {
       allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CONVOCATORIAS DE COLABORACIÓN (proyectos activos que el
+    // admin publica para que la comunidad se sume por WhatsApp)
+    // ───────────────────────────────────────────────────────
+    match /convocatorias/{docId} {
+      allow read: if true;
       allow create, update, delete: if isAdmin();
     }
 

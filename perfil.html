@@ -79,6 +79,7 @@
         <a href="panel-usuario.html">Resumen</a>
         <a href="cursos.html">Cursos</a>
         <a href="perfil.html" class="active">Perfil</a>
+        <a href="colabora.html">🚀 Colaborá</a>
         <a href="redes.html">Redes</a>
       </nav>
     </aside>
@@ -103,6 +104,17 @@
           <div class="field">
             <label for="display-name">Nombre visible</label>
             <input type="text" id="display-name" name="displayName" placeholder="Tu nombre en la academia" />
+          </div>
+
+          <div class="field">
+            <label for="nivel-programacion">¿Sos programador o tenés experiencia técnica?</label>
+            <small style="color:#888;display:block;margin-bottom:0.4rem">Usamos esto para personalizar las recomendaciones que te hace la IA y la academia.</small>
+            <select id="nivel-programacion" name="nivelProgramacion">
+              <option value="">Prefiero no decirlo todavía</option>
+              <option value="experimentado">Sí, tengo experiencia programando</option>
+              <option value="algo">Tengo algo de experiencia / estoy aprendiendo</option>
+              <option value="principiante">No, soy principiante total</option>
+            </select>
           </div>
 
           <div class="field">
@@ -261,6 +273,7 @@
       }
 
       profileForm['displayName'].value = target.displayName || '';
+      profileForm['nivelProgramacion'].value = profile.nivelProgramacion || '';
       profileForm['sobreMi'].value = profile.sobreMi || '';
       profileForm['loQueSe'].value = profile.loQueSe || '';
       profileForm['experiencia'].value = profile.experiencia || '';
@@ -277,6 +290,7 @@
         try {
           await updateDoc(doc(db, 'users', profile.uid), {
             displayName: profileForm.displayName.value.trim(),
+            nivelProgramacion: profileForm.nivelProgramacion.value,
             sobreMi: profileForm.sobreMi.value.trim(),
             loQueSe: profileForm.loQueSe.value.trim(),
             experiencia: profileForm.experiencia.value.trim(),

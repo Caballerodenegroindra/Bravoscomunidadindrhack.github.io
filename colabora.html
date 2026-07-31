@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1428" />
+  <title>Colaborá con el proyecto — Academia Indrhack</title>
+  <meta name="description" content="Sumate al equipo que desarrolla la app de Academia Indrhack." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
+    <nav class="navbar__links">
+      <a href="panel-usuario.html" title="Ir a tu panel">Mi Panel</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="chat.html" title="Chatear con la comunidad">Chat</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="tabbar" aria-label="Navegación principal">
+    <div class="tabbar__inner">
+      <a href="cursos.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+        <span class="tabbar__label">Cursos</span>
+      </a>
+      <a href="chat.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+        <span class="tabbar__label">Chat</span>
+      </a>
+      <a href="panel-usuario.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="4 17 4 10 12 3 20 10 20 17"/><rect x="9" y="17" width="6" height="7"/></svg></span>
+        <span class="tabbar__label">Mi Panel</span>
+      </a>
+      <a href="ia-asistente.html" class="tabbar__item">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></span>
+        <span class="tabbar__label">IA</span>
+      </a>
+      <a href="notificaciones.html" class="tabbar__item" style="position:relative">
+        <span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+        <span class="tabbar__label">Avisos</span>
+        <span class="notif-dot" data-notif-dot style="display:none"></span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="dashboard">
+    <aside class="sidebar">
+      <p class="sidebar__title">Mi panel</p>
+      <nav class="sidebar__links">
+        <a href="panel-usuario.html">Resumen</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="colabora.html" class="active">🚀 Colaborá</a>
+        <a href="redes.html">Redes</a>
+      </nav>
+    </aside>
+
+    <section class="panel-content">
+      <h1 class="section-title">🚀 Sumate al <span class="accent">equipo del proyecto</span></h1>
+      <p class="section-subtitle" style="margin-bottom:1.5rem">Esta misma plataforma es un proyecto vivo, hecho y mantenido por gente de la comunidad. Si sabés programar o te gustaría aprender ayudando de verdad, este es el lugar.</p>
+
+      <!-- Proyectos activos publicados (convocatorias) -->
+      <div id="convocatorias-lista" style="max-width:640px;margin-bottom:1.5rem"></div>
+
+      <!-- Explicación del proyecto -->
+      <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(198,169,101,0.3);background:rgba(198,169,101,0.04)">
+        <h2 class="section-title" style="font-size:1.05rem">📱 El proyecto: la app de Academia Indrhack</h2>
+        <p style="margin:0 0 0.75rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+          Todo lo que estás usando ahora mismo — cursos, quizzes, chat, ranking, asistente IA — es un desarrollo en constante evolución. Se mejora con web (HTML, CSS, JavaScript) y Firebase, y siempre hay funciones nuevas por construir, errores por corregir y ideas por probar.
+        </p>
+        <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+          Buscamos sumar gente a un <strong>grupo de trabajo aparte</strong> (por WhatsApp) donde se coordina el desarrollo: no hace falta ser un experto, con ganas de aportar y aprender alcanza.
+        </p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem">
+          <span class="badge badge--info">💻 Frontend</span>
+          <span class="badge badge--info">🔥 Firebase / Backend</span>
+          <span class="badge badge--info">🎨 Diseño UI/UX</span>
+          <span class="badge badge--info">🐞 Testing y reportes</span>
+          <span class="badge badge--info">💡 Ideas y contenido</span>
+        </div>
+      </div>
+
+      <!-- Estado / formulario -->
+      <div id="colabora-contenido" class="card" style="max-width:640px">
+        <p class="section-subtitle">Cargando…</p>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+    <br />
+    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/chat-widget.js?v=1"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import {
+      collection, getDocs, query, where, orderBy,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // Proyectos activos publicados por el admin (convocatorias)
+    function whatsappHref(valor) {
+      const v = (valor || '').trim();
+      if (!v) return '#';
+      if (/^https?:\/\//i.test(v)) return v;
+      const digitos = v.replace(/[^0-9]/g, '');
+      return digitos ? `https://wa.me/${digitos}` : '#';
+    }
+
+    (async () => {
+      const cont = document.getElementById('convocatorias-lista');
+      if (!cont) return;
+      try {
+        const snap = await getDocs(query(
+          collection(db, 'convocatorias'),
+          where('activo', '==', true),
+          orderBy('fecha', 'desc')
+        ));
+        if (snap.empty) { cont.innerHTML = ''; return; }
+
+        cont.innerHTML = `<h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.75rem">📢 Proyectos activos buscando ayuda</h2>` +
+          snap.docs.map(d => {
+            const c = d.data();
+            return `
+              <div class="card" style="margin-bottom:0.9rem;border-color:rgba(37,211,102,0.35)">
+                <h3 style="margin:0 0 0.4rem">${c.titulo || ''}</h3>
+                <p style="margin:0 0 0.85rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6;white-space:pre-wrap">${c.descripcion || ''}</p>
+                <a href="${whatsappHref(c.whatsapp)}" target="_blank" rel="noopener" class="btn btn--primary">📲 Unirme al grupo de WhatsApp</a>
+              </div>`;
+          }).join('');
+      } catch (err) {
+        console.error('Error cargando convocatorias:', err);
+        cont.innerHTML = '';
+      }
+    })();
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import {
+      collection, addDoc, doc, updateDoc, getDoc,
+      query, where, orderBy, limit, getDocs, Timestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { requireApprovedUser } from './js/auth.js';
+
+    const AREAS = [
+      { id: 'frontend', label: '💻 Frontend (HTML/CSS/JS)' },
+      { id: 'backend', label: '🔥 Backend / Firebase' },
+      { id: 'diseno', label: '🎨 Diseño UI/UX' },
+      { id: 'testing', label: '🐞 Testing y reporte de errores' },
+      { id: 'ideas', label: '💡 Ideas y contenido' },
+      { id: 'otro', label: '✨ Otro' },
+    ];
+
+    const NIVEL_TEXTO = { experimentado: 'Con experiencia programando', algo: 'Algo de experiencia / aprendiendo', principiante: 'Principiante total' };
+    const ESTADO_INFO = {
+      pendiente: { color: 'var(--gold)', icono: '⏳', texto: 'Tu solicitud está en revisión. Te avisamos por notificación apenas la vea un administrador.' },
+      aprobado:  { color: 'var(--color-success-fg)', icono: '✅', texto: '¡Ya sos parte del equipo!' },
+      rechazado: { color: 'var(--color-danger-fg)', icono: '❌', texto: 'Por ahora no fue posible sumarte al equipo.' },
+    };
+
+    const cont = document.getElementById('colabora-contenido');
+
+    requireApprovedUser('login.html').then(async (profile) => {
+      if (!profile) return;
+
+      let config = {};
+      try {
+        const snap = await getDoc(doc(db, 'config', 'site'));
+        config = snap.exists() ? snap.data() : {};
+      } catch (e) {}
+
+      // ¿Ya tiene una solicitud enviada? Buscamos la más reciente.
+      let solicitud = null;
+      try {
+        const snap = await getDocs(query(
+          collection(db, 'voluntarios_dev'),
+          where('uid', '==', profile.uid),
+          orderBy('fecha', 'desc'),
+          limit(1)
+        ));
+        if (!snap.empty) solicitud = { id: snap.docs[0].id, ...snap.docs[0].data() };
+      } catch (e) { /* si falla el índice, simplemente mostramos el formulario */ }
+
+      if (solicitud && (solicitud.estado === 'pendiente' || solicitud.estado === 'aprobado')) {
+        renderEstado(solicitud, config);
+      } else {
+        renderFormulario(profile, solicitud);
+      }
+
+      function renderEstado(sol, config) {
+        const info = ESTADO_INFO[sol.estado] || ESTADO_INFO.pendiente;
+        const linkGrupo = config.whatsappProyecto;
+        cont.innerHTML = `
+          <div style="border-left:3px solid ${info.color};padding-left:0.9rem">
+            <p style="margin:0 0 0.5rem;font-weight:700;color:${info.color}">${info.icono} ${info.texto}</p>
+            ${sol.estado === 'aprobado' && linkGrupo ? `
+              <a href="${linkGrupo}" target="_blank" rel="noopener" class="btn btn--primary" style="margin-top:0.5rem">📲 Unirme al grupo de trabajo</a>
+            ` : ''}
+            ${sol.estado === 'aprobado' && !linkGrupo ? `<p style="font-size:0.85rem;color:var(--text-soft)">El administrador todavía no cargó el enlace del grupo. Revisá tus notificaciones en un rato.</p>` : ''}
+            ${sol.estado === 'rechazado' && sol.feedback ? `<p style="font-size:0.85rem;color:var(--text-soft);margin-top:0.5rem"><em>"${sol.feedback}"</em></p>` : ''}
+          </div>
+          ${sol.estado === 'rechazado' ? '<button class="btn btn--outline btn--small" id="btn-reintentar" style="margin-top:1rem">Volver a solicitar</button>' : ''}
+        `;
+        document.getElementById('btn-reintentar')?.addEventListener('click', () => renderFormulario(profile, sol));
+      }
+
+      function renderFormulario(profile, solicitudPrevia) {
+        cont.innerHTML = `
+          <h2 class="section-title" style="font-size:1.05rem">Contanos cómo te gustaría ayudar</h2>
+          ${solicitudPrevia?.estado === 'rechazado' ? '<p class="section-subtitle" style="margin-bottom:0.75rem">Podés volver a intentarlo cuando quieras.</p>' : ''}
+          <form id="colabora-form">
+            <div class="field">
+              <label for="colabora-nivel">¿Sos programador o tenés experiencia técnica?</label>
+              <select id="colabora-nivel" name="nivelProgramacion">
+                <option value="">Prefiero no decirlo</option>
+                <option value="experimentado">Sí, tengo experiencia programando</option>
+                <option value="algo">Tengo algo de experiencia / estoy aprendiendo</option>
+                <option value="principiante">No, pero quiero aprender ayudando</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>¿En qué área te gustaría ayudar?</label>
+              <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.3rem">
+                ${AREAS.map(a => `
+                  <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:400;cursor:pointer">
+                    <input type="checkbox" name="areas" value="${a.id}" style="width:auto" /> ${a.label}
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+            <div class="field">
+              <label for="colabora-mensaje">Contanos brevemente</label>
+              <small style="color:#888;display:block;margin-bottom:0.4rem">¿Por qué te gustaría sumarte? ¿Ya trabajaste en algo parecido?</small>
+              <textarea id="colabora-mensaje" name="mensaje" rows="3" placeholder="Ej: Estudio JS hace unos meses y quiero practicar en un proyecto real..."></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">Enviar solicitud</button>
+            <div class="form-message" id="colabora-message"></div>
+          </form>
+        `;
+
+        document.getElementById('colabora-nivel').value = profile.nivelProgramacion || '';
+
+        document.getElementById('colabora-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const btn = form.querySelector('button[type="submit"]');
+          const msg = document.getElementById('colabora-message');
+          const nivel = form.nivelProgramacion.value;
+          const areas = Array.from(form.querySelectorAll('input[name="areas"]:checked')).map(el => el.value);
+          const mensaje = form.mensaje.value.trim();
+
+          btn.disabled = true;
+          btn.textContent = 'Enviando…';
+          try {
+            await addDoc(collection(db, 'voluntarios_dev'), {
+              uid: profile.uid,
+              username: profile.username || '',
+              displayName: profile.displayName || profile.username || '',
+              nivelProgramacion: nivel,
+              areas,
+              mensaje,
+              estado: 'pendiente',
+              fecha: Timestamp.now(),
+            });
+
+            // Si el usuario no tenía cargado el nivel técnico en su perfil
+            // general, aprovechamos y lo guardamos ahí también.
+            if (nivel && !profile.nivelProgramacion) {
+              try { await updateDoc(doc(db, 'users', profile.uid), { nivelProgramacion: nivel }); } catch (e) {}
+            }
+
+            renderEstado({ estado: 'pendiente' }, config);
+          } catch (err) {
+            msg.textContent = '❌ ' + (err.message || 'No se pudo enviar la solicitud.');
+            msg.className = 'form-message show form-message--error';
+            btn.disabled = false;
+            btn.textContent = 'Enviar solicitud';
+          }
+        });
+      }
+    });
+  </script>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+  <script type="module">import { marcarVisita } from './js/activity-track.js'; marcarVisita('colabora');</script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

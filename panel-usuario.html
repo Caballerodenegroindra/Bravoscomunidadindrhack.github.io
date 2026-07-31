@@ -92,6 +92,7 @@
         <a href="chat.html">💬 Chat</a>
         <a href="redes.html">🌐 Redes</a>
         <a href="noticias.html">📰 Noticias</a>
+        <a href="colabora.html">🚀 Colaborá con el proyecto</a>
       </nav>
 
       <div class="sidebar__divider"></div>
@@ -120,16 +121,12 @@
         <span class="badge badge--aprobado">✓ Cuenta aprobada</span>
       </div>
 
-      <!-- Continuar donde te quedaste (se muestra solo si hay una última clase) -->
-      <a href="clase.html" id="continuar-card" class="card" style="display:none;margin-bottom:1.5rem;text-decoration:none;color:var(--text);border-color:rgba(204,34,0,0.35)">
-        <div style="display:flex;align-items:center;gap:0.75rem;justify-content:space-between;flex-wrap:wrap">
-          <div>
-            <p class="section-subtitle" style="margin:0 0 3px">▶️ Continuar donde te quedaste</p>
-            <h3 style="margin:0;font-size:1rem" id="continuar-titulo">—</h3>
-          </div>
-          <span class="btn btn--primary btn--small">Ir a la clase</span>
-        </div>
-      </a>
+      <!-- TARJETA INTELIGENTE: este espacio rota entre "continuar donde
+           te quedaste", una pregunta rápida del asistente (ej. si el
+           usuario es programador, para completar su perfil) o una
+           sugerencia/felicitación sobre alguna función prioritaria de
+           la academia que todavía no probó. Se arma en JS más abajo. -->
+      <div id="tarjeta-inteligente" style="margin-bottom:1.5rem"></div>
 
       <!-- ① STATS: lo primero que quiere saber un estudiante -->
       <div class="stat-grid reveal-stagger" style="margin-bottom:1.5rem">
@@ -285,27 +282,150 @@
         if (backLink) backLink.style.display = 'block';
       }
 
-      // "Continuar donde te quedaste": si el usuario ya vio alguna clase,
-      // apuntamos directo a esa clase en vez del genérico clase.html.
+      // Actualiza el link del sidebar ("Última clase") si ya hay una.
       if (profile.ultimaClase && profile.ultimaClase.id) {
         const { id, titulo, completada } = profile.ultimaClase;
         const href = `clase.html?id=${id}`;
-
         const sidebarLink = document.getElementById('link-continuar-clase');
         if (sidebarLink) {
           sidebarLink.href = href;
           sidebarLink.textContent = completada ? `🔁 Repasar: ${titulo}` : `▶️ Continuar: ${titulo}`;
         }
-
-        const card = document.getElementById('continuar-card');
-        const cardTitulo = document.getElementById('continuar-titulo');
-        if (card && cardTitulo) {
-          cardTitulo.textContent = titulo || 'Clase';
-          card.href = href;
-          card.style.display = 'block';
-        }
       }
+
+      renderTarjetaInteligente(profile);
     });
+  </script>
+
+  <!-- TARJETA INTELIGENTE: pregunta rápida de perfil, continuar clase,
+       o sugerencia/felicitación sobre alguna función de la academia. -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { obtenerVisitas } from './js/activity-track.js';
+
+    const RANGOS_TEXTO = { experimentado: 'con experiencia programando', algo: 'con algo de experiencia', principiante: 'principiante total' };
+
+    window.renderTarjetaInteligente = function renderTarjetaInteligente(profile) {
+      const cont = document.getElementById('tarjeta-inteligente');
+      if (!cont) return;
+
+      // ① Prioridad máxima: si todavía no sabemos si es programador o
+      // tiene experiencia técnica, se lo preguntamos acá mismo (una
+      // sola vez), en vez de mandarlo a completar un formulario largo.
+      if (!profile.nivelProgramacion) {
+        cont.innerHTML = `
+          <div class="card" id="card-pregunta-nivel" style="border-color:rgba(198,169,101,0.35);background:rgba(198,169,101,0.05)">
+            <p class="section-subtitle" style="margin:0 0 0.4rem">🤖 Una pregunta rápida del asistente</p>
+            <h3 style="margin:0 0 0.6rem;font-size:1rem">¿Sos programador o tenés experiencia técnica?</h3>
+            <p style="margin:0 0 1rem;font-size:0.85rem;color:var(--text-soft)">Nos sirve para ajustar las clases y las recomendaciones de la IA a tu nivel. Se guarda directo en tu perfil.</p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button type="button" class="btn btn--primary btn--small" data-nivel="experimentado">💻 Sí, tengo experiencia</button>
+              <button type="button" class="btn btn--outline btn--small" data-nivel="algo">🌱 Algo, estoy aprendiendo</button>
+              <button type="button" class="btn btn--outline btn--small" data-nivel="principiante">🆕 No, arranco de cero</button>
+            </div>
+          </div>`;
+
+        cont.querySelectorAll('[data-nivel]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const nivel = btn.dataset.nivel;
+            cont.querySelectorAll('[data-nivel]').forEach((b) => b.disabled = true);
+            try {
+              await updateDoc(doc(db, 'users', profile.uid), { nivelProgramacion: nivel });
+              profile.nivelProgramacion = nivel;
+              cont.innerHTML = `<div class="card" style="border-color:rgba(63,143,95,0.35)">
+                <p style="margin:0;font-size:0.9rem">✅ Gracias, quedó guardado en tu <a href="perfil.html" style="color:var(--color-accent-fg)">perfil</a> (${RANGOS_TEXTO[nivel]}). Vamos a tenerlo en cuenta para lo que te recomendemos.</p>
+              </div>`;
+              setTimeout(() => renderTarjetaInteligente(profile), 2200);
+            } catch (e) {
+              cont.querySelector('div').insertAdjacentHTML('beforeend', '<p style="margin:0.5rem 0 0;color:var(--color-danger-fg);font-size:0.8rem">❌ No se pudo guardar, probá de nuevo.</p>');
+              cont.querySelectorAll('[data-nivel]').forEach((b) => b.disabled = false);
+            }
+          });
+        });
+        return;
+      }
+
+      // ② Si ya sabemos eso, priorizamos "continuar donde te quedaste"
+      // cuando hay una clase en curso.
+      if (profile.ultimaClase && profile.ultimaClase.id) {
+        const { id, titulo, completada } = profile.ultimaClase;
+        const href = `clase.html?id=${id}`;
+        cont.innerHTML = `
+          <a href="${href}" class="card" style="display:block;text-decoration:none;color:var(--text);border-color:rgba(204,34,0,0.35)">
+            <div style="display:flex;align-items:center;gap:0.75rem;justify-content:space-between;flex-wrap:wrap">
+              <div>
+                <p class="section-subtitle" style="margin:0 0 3px">${completada ? '🔁 Repasar clase' : '▶️ Continuar donde te quedaste'}</p>
+                <h3 style="margin:0;font-size:1rem">${titulo || 'Clase'}</h3>
+              </div>
+              <span class="btn btn--primary btn--small">Ir a la clase</span>
+            </div>
+          </a>`;
+        return;
+      }
+
+      // ③ Si no hay nada de eso, rotamos entre una felicitación por su
+      // progreso real y una sugerencia de alguna función prioritaria
+      // que todavía no probó (según lo que "recolectamos" de su
+      // navegación con activity-track.js).
+      const visitas = obtenerVisitas();
+      const candidatas = [];
+
+      if ((profile.nivelProgramacion === 'experimentado' || profile.nivelProgramacion === 'algo') && !visitas.colabora) {
+        candidatas.push({
+          icono: '🚀', titulo: 'Che, ¿sabías que buscamos gente para el proyecto?',
+          texto: 'Esta misma app es un proyecto en desarrollo. Con tu experiencia técnica, podés sumarte al equipo que la construye.',
+          link: 'colabora.html', cta: 'Quiero ayudar', peso: 2,
+        });
+      }
+      if ((profile.puntos || 0) > 0) {
+        candidatas.push({
+          icono: '🎉', titulo: `¡Ya llevás ${profile.puntos} puntos!`,
+          texto: `Vas como rango <strong>${profile.rango || 'Recluta'}</strong>. Seguí así para subir de nivel.`,
+          link: 'cursos.html', cta: 'Ver más cursos',
+        });
+      }
+      if (!visitas.chat) {
+        candidatas.push({
+          icono: '💬', titulo: 'Todavía no probaste el Chat',
+          texto: 'Ahí está la comunidad: podés compartir dudas, avances y conocer a otros estudiantes.',
+          link: 'chat.html', cta: 'Ir al chat',
+        });
+      }
+      if (!visitas['ia-asistente']) {
+        candidatas.push({
+          icono: '🤖', titulo: '¿Ya hablaste con el asistente IA?',
+          texto: 'Te puede recomendar clases según tu nivel, resolver dudas o explicarte un tema puntual.',
+          link: 'ia-asistente.html', cta: 'Preguntar a la IA',
+        });
+      }
+      if (!visitas.titulos) {
+        candidatas.push({
+          icono: '🏆', titulo: 'Revisá tus Títulos',
+          texto: 'Ahí se acumulan los certificados y logros que vas ganando en la academia.',
+          link: 'titulos.html', cta: 'Ver mis títulos',
+        });
+      }
+      candidatas.push({
+        icono: '📚', titulo: '¿Por dónde seguimos?',
+        texto: 'Explorá el catálogo de cursos: hay clases de nivel Básico, Intermedio y Avanzado.',
+        link: 'cursos.html', cta: 'Ver cursos',
+      });
+
+      const pool = [];
+      candidatas.forEach((c) => { for (let i = 0; i < (c.peso || 1); i++) pool.push(c); });
+      const elegida = pool[Math.floor(Math.random() * pool.length)];
+      cont.innerHTML = `
+        <a href="${elegida.link}" class="card" style="display:block;text-decoration:none;color:var(--text)">
+          <div style="display:flex;align-items:center;gap:0.75rem;justify-content:space-between;flex-wrap:wrap">
+            <div>
+              <p class="section-subtitle" style="margin:0 0 3px">${elegida.icono} ${elegida.titulo}</p>
+              <h3 style="margin:0;font-size:0.9rem;font-weight:500;color:var(--text-soft)">${elegida.texto}</h3>
+            </div>
+            <span class="btn btn--outline btn--small">${elegida.cta}</span>
+          </div>
+        </a>`;
+    };
   </script>
 
   <script>

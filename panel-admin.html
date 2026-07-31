@@ -179,6 +179,7 @@
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📰 Noticias</a>
     <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
+    <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#clases-vivo" data-tab="clases-vivo" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📡 Clases en vivo</a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
@@ -196,6 +197,7 @@
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
         <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
+        <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#clases-vivo" data-tab="clases-vivo">📡 Clases en vivo</a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
@@ -411,7 +413,12 @@
               <label for="cfg-wa-canal">Canal de WhatsApp</label>
               <input type="url" id="cfg-wa-canal" name="whatsappCanal" />
             </div>
-            <button type="submit" class="btn btn--outline btn--small">Guardar</button>
+            <div class="field">
+              <label for="cfg-wa-proyecto">Grupo de WhatsApp del equipo de desarrollo (proyecto app)</label>
+              <small style="color:#888;display:block;margin-bottom:0.4rem">Se comparte solo con quienes se les aprueba la solicitud en la pestaña "Equipo de desarrollo".</small>
+              <input type="url" id="cfg-wa-proyecto" name="whatsappProyecto" placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <button type="submit" class="btn btn--outline btn--small" style="margin-top:0.5rem">Guardar</button>
             <div class="form-message" id="site-config-message"></div>
           </form>
         </div>
@@ -461,6 +468,47 @@
         <p class="section-subtitle">Crea el catálogo de proyectos. Luego asígnalos a los miembros desde el botón 🏆 Logros en cada miembro.</p>
         <div id="proyectos-admin-grid">
           <p class="section-subtitle">Toca la pestaña para cargar...</p>
+        </div>
+      </div>
+
+      <!-- EQUIPO DE DESARROLLO (voluntarios para el proyecto de la app) -->
+      <div class="tab-section hidden" id="colabora-admin">
+        <div class="panel-header">
+          <div>
+            <h1 class="section-title">Equipo de desarrollo <span class="accent">🚀</span></h1>
+            <p class="section-subtitle">Solicitudes de miembros que quieren ayudar a construir la app. Al aprobar, se les notifica con el enlace del grupo de trabajo cargado en Configuración.</p>
+          </div>
+        </div>
+
+        <!-- CONVOCATORIAS: proyectos activos publicados para colaborar -->
+        <div class="card" style="margin-bottom:1.5rem;border-color:rgba(37,211,102,0.3)">
+          <div class="panel-header" style="margin-bottom:0.75rem">
+            <div>
+              <h2 class="section-title" style="font-size:1.05rem;margin:0">📢 Proyectos activos para colaborar</h2>
+              <p class="section-subtitle" style="margin:0.25rem 0 0">Publicá un proyecto (título, descripción y el link o número de WhatsApp) para que la comunidad lo vea en "Colaborá" y se sume directo al grupo.</p>
+            </div>
+            <button class="btn btn--primary btn--small" id="btn-nueva-convocatoria">+ Nueva convocatoria</button>
+          </div>
+          <div id="convocatorias-admin-grid">
+            <p class="section-subtitle">Toca la pestaña para cargar...</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
+          <button class="btn btn--small btn--primary" data-cfilter="pendiente">⏳ Pendientes <span id="c-count-pendiente" style="background:#ffffff22;padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
+          <button class="btn btn--small btn--outline" data-cfilter="aprobado">✅ Aprobados</button>
+          <button class="btn btn--small btn--outline" data-cfilter="rechazado">❌ Rechazados</button>
+          <button class="btn btn--small btn--outline" data-cfilter="todos">👁 Todos</button>
+        </div>
+        <div id="colabora-admin-list">
+          <p class="section-subtitle">Seleccioná un filtro para ver las solicitudes…</p>
+        </div>
+      </div>
+
+      <div id="colabora-review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem">
+        <div class="card" style="width:100%;max-width:600px;margin:auto;position:relative">
+          <button id="colabora-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.5rem">✕</button>
+          <div id="colabora-modal-content"></div>
         </div>
       </div>
 
@@ -516,6 +564,36 @@
         <div class="field"><label>Nombre del proyecto</label><input type="text" name="nombre" required placeholder="Ej: Crear número virtual" /></div>
         <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3" placeholder="¿En qué consistió el proyecto?"></textarea></div>
         <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Crear proyecto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CONVOCATORIA -->
+  <div id="convocatoria-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="convocatoria-modal-title" class="section-title" style="margin:0;font-size:1.1rem">Nueva convocatoria</h2>
+        <button id="convocatoria-modal-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="convocatoria-form">
+        <div class="field">
+          <label>Título del proyecto</label>
+          <input type="text" name="titulo" required placeholder="Ej: App de Academia Indrhack" />
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="4" required placeholder="Contá de qué se trata el proyecto y qué tipo de ayuda buscás..."></textarea>
+        </div>
+        <div class="field">
+          <label>Link o número de WhatsApp para unirse</label>
+          <small style="color:#888;display:block;margin-bottom:0.4rem">Pegá el link del grupo (https://chat.whatsapp.com/...) o un número con código de país (ej: 5491122334455).</small>
+          <input type="text" name="whatsapp" required placeholder="https://chat.whatsapp.com/... o 5491122334455" />
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="activo" id="convocatoria-activo" checked />
+          <label for="convocatoria-activo">Mostrar como proyecto activo</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar convocatoria</button>
       </form>
     </div>
   </div>
@@ -1709,6 +1787,137 @@
     import { db } from './js/firebase-config.js';
     import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+    // ---- CONVOCATORIAS (proyectos activos para colaborar) ----
+    const convocatoriasGrid = document.getElementById('convocatorias-admin-grid');
+    const convocatoriaModal = document.getElementById('convocatoria-modal');
+    const convocatoriaForm = document.getElementById('convocatoria-form');
+    const convocatoriaModalTitle = document.getElementById('convocatoria-modal-title');
+    let convocatoriaEditId = null;
+
+    function whatsappHref(valor) {
+      const v = (valor || '').trim();
+      if (!v) return '#';
+      if (/^https?:\/\//i.test(v)) return v;
+      const digitos = v.replace(/[^0-9]/g, '');
+      return digitos ? `https://wa.me/${digitos}` : '#';
+    }
+
+    async function loadConvocatorias() {
+      if (!convocatoriasGrid) return;
+      convocatoriasGrid.innerHTML = '<p class="section-subtitle">Cargando...</p>';
+      try {
+        const snap = await getDocs(query(collection(db, 'convocatorias'), orderBy('fecha', 'desc')));
+
+        if (snap.empty) {
+          convocatoriasGrid.innerHTML = '<p class="section-subtitle">No hay convocatorias creadas aún.</p>';
+          return;
+        }
+
+        convocatoriasGrid.innerHTML = snap.docs.map(d => {
+          const c = { id: d.id, ...d.data() };
+          return `<div class="card" style="margin-bottom:0.75rem;padding:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;flex-wrap:wrap">
+              <div style="flex:1">
+                <h3 style="margin:0 0 0.25rem;font-size:1rem">${c.titulo || ''}</h3>
+                <p style="color:var(--text-soft);font-size:0.78rem;margin:0 0 0.5rem">
+                  ${c.activo ? '✅ Activo (visible en Colaborá)' : '⏸ Oculto'}
+                </p>
+                <p style="color:var(--text-soft);font-size:0.85rem;margin:0 0 0.5rem;white-space:pre-wrap">${c.descripcion || ''}</p>
+                <p style="color:var(--text-soft);font-size:0.78rem;margin:0 0 0.75rem">📲 ${c.whatsapp || ''}</p>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                  <button onclick="editarConvocatoria('${d.id}')" class="btn btn--small btn--outline">✏️ Editar</button>
+                  <button onclick="eliminarConvocatoria('${d.id}')" class="btn btn--small btn--danger">🗑 Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (err) {
+        console.error('Error cargando convocatorias:', err);
+        convocatoriasGrid.innerHTML = '<p class="section-subtitle">Ocurrió un error al cargar las convocatorias.</p>';
+      }
+    }
+
+    function abrirModalConvocatoria() {
+      if (convocatoriaModal) convocatoriaModal.style.display = 'flex';
+    }
+
+    function cerrarModalConvocatoria() {
+      if (convocatoriaModal) convocatoriaModal.style.display = 'none';
+    }
+
+    document.getElementById('btn-nueva-convocatoria')?.addEventListener('click', () => {
+      convocatoriaEditId = null;
+      convocatoriaForm?.reset();
+      if (convocatoriaModalTitle) convocatoriaModalTitle.textContent = 'Nueva convocatoria';
+      abrirModalConvocatoria();
+    });
+
+    document.getElementById('convocatoria-modal-close')?.addEventListener('click', cerrarModalConvocatoria);
+
+    window.editarConvocatoria = async (id) => {
+      try {
+        const snap = await getDocs(query(collection(db, 'convocatorias')));
+        const docSnap = snap.docs.find(d => d.id === id);
+        if (!docSnap) return;
+        const c = docSnap.data();
+        convocatoriaForm.titulo.value = c.titulo || '';
+        convocatoriaForm.descripcion.value = c.descripcion || '';
+        convocatoriaForm.whatsapp.value = c.whatsapp || '';
+        convocatoriaForm.activo.checked = !!c.activo;
+        convocatoriaEditId = id;
+        if (convocatoriaModalTitle) convocatoriaModalTitle.textContent = 'Editar convocatoria';
+        abrirModalConvocatoria();
+      } catch (err) {
+        console.error('Error al abrir convocatoria para editar:', err);
+        alert('No se pudo cargar la convocatoria.');
+      }
+    };
+
+    window.eliminarConvocatoria = async (id) => {
+      if (!confirm('¿Eliminar esta convocatoria?')) return;
+      try {
+        await deleteDoc(doc(db, 'convocatorias', id));
+        loadConvocatorias();
+      } catch (err) {
+        console.error('Error al eliminar convocatoria:', err);
+        alert('No se pudo eliminar la convocatoria.');
+      }
+    };
+
+    convocatoriaForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: convocatoriaForm.titulo.value.trim(),
+        descripcion: convocatoriaForm.descripcion.value.trim(),
+        whatsapp: convocatoriaForm.whatsapp.value.trim(),
+        activo: convocatoriaForm.activo.checked,
+      };
+      try {
+        if (convocatoriaEditId) {
+          await updateDoc(doc(db, 'convocatorias', convocatoriaEditId), data);
+          alert('✅ Convocatoria actualizada.');
+        } else {
+          await addDoc(collection(db, 'convocatorias'), { ...data, fecha: new Date() });
+          alert('✅ Convocatoria creada.');
+        }
+        cerrarModalConvocatoria();
+        convocatoriaEditId = null;
+        loadConvocatorias();
+      } catch (err) {
+        console.error('Error al guardar convocatoria:', err);
+        alert('No se pudo guardar la convocatoria. Revisa la consola para más detalles.');
+      }
+    });
+
+    // Cargar convocatorias cuando se abre la pestaña "Equipo de desarrollo"
+    document.querySelectorAll('[data-tab="colabora-admin"]').forEach(t => {
+      t.addEventListener('click', loadConvocatorias);
+    });
+    if ((window.location.hash || '').replace('#', '') === 'colabora-admin') {
+      loadConvocatorias();
+    }
+
     // ---- NOTICIAS ----
     const noticiasGrid = document.getElementById('noticias-admin-grid');
     const noticiaModal = document.getElementById('noticia-modal');
@@ -2427,6 +2636,214 @@
     });
   </script>
 
+  <script type="module">
+    /* =====================================================
+       ACADEMIA INDRHACK — Equipo de desarrollo (Admin)
+       Revisión de solicitudes para colaborar en el proyecto
+       de la app (colección voluntarios_dev).
+       ===================================================== */
+    import { db } from './js/firebase-config.js';
+    import {
+      collection, getDocs, doc, getDoc, updateDoc,
+      query, where, orderBy, Timestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { crearNotificacion, TIPOS_NOTIF } from './js/notificaciones.js';
+
+    const cModal = document.getElementById('colabora-review-modal');
+    const cModalContent = document.getElementById('colabora-modal-content');
+    document.getElementById('colabora-modal-close').onclick = () => cModal.style.display = 'none';
+
+    const NIVEL_TEXTO = { experimentado: '💻 Con experiencia programando', algo: '🌱 Algo de experiencia', principiante: '🆕 Principiante total', '': '— No indicado' };
+    const AREA_TEXTO = { frontend: 'Frontend', backend: 'Backend / Firebase', diseno: 'Diseño UI/UX', testing: 'Testing y errores', ideas: 'Ideas y contenido', otro: 'Otro' };
+
+    let _colaboraCache = null;
+
+    async function loadColaboraList(estado) {
+      const listEl = document.getElementById('colabora-admin-list');
+      listEl.innerHTML = '<p class="section-subtitle">Cargando…</p>';
+
+      try {
+        let q;
+        if (estado === 'todos') {
+          q = query(collection(db, 'voluntarios_dev'), orderBy('fecha', 'desc'));
+        } else {
+          q = query(collection(db, 'voluntarios_dev'), where('estado', '==', estado), orderBy('fecha', 'desc'));
+        }
+        const snap = await getDocs(q);
+        _colaboraCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (estado === 'pendiente') {
+          const badge = document.getElementById('c-count-pendiente');
+          if (badge) badge.textContent = _colaboraCache.length;
+        }
+
+        if (_colaboraCache.length === 0) {
+          listEl.innerHTML = '<p class="section-subtitle">No hay solicitudes en este estado.</p>';
+          return;
+        }
+
+        const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
+        const estadoIcon  = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
+
+        listEl.innerHTML = `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Nivel</th>
+                  <th>Áreas</th>
+                  <th>Enviado</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${_colaboraCache.map(s => {
+                  const fecha = s.fecha?.toDate ? s.fecha.toDate().toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '—';
+                  const color = estadoColor[s.estado] || 'var(--text-muted)';
+                  const icon  = estadoIcon[s.estado]  || '?';
+                  const areas = (s.areas || []).map(a => AREA_TEXTO[a] || a).join(', ') || '—';
+                  return `<tr>
+                    <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:var(--text-muted);font-size:0.75rem">${s.displayName || ''}</span></td>
+                    <td style="font-size:0.8rem">${NIVEL_TEXTO[s.nivelProgramacion] || '—'}</td>
+                    <td style="font-size:0.8rem;max-width:180px">${areas}</td>
+                    <td style="font-size:0.78rem;color:var(--text-muted)">${fecha}</td>
+                    <td><span style="color:${color};font-weight:700">${icon} ${s.estado}</span></td>
+                    <td><button class="btn btn--small btn--outline" onclick="window.verColaboraSolicitud('${s.id}')">👁 Revisar</button></td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (e) {
+        listEl.innerHTML = `<p style="color:var(--color-danger-fg)">Error: ${e.message}</p>`;
+      }
+    }
+
+    document.querySelectorAll('[data-cfilter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-cfilter]').forEach(b => b.className = 'btn btn--small btn--outline');
+        btn.className = 'btn btn--small btn--primary';
+        loadColaboraList(btn.dataset.cfilter);
+      });
+    });
+
+    document.querySelectorAll('[data-tab="colabora-admin"]').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('[data-cfilter]').forEach(b => b.className = 'btn btn--small btn--outline');
+        const pendBtn = document.querySelector('[data-cfilter="pendiente"]');
+        if (pendBtn) pendBtn.className = 'btn btn--small btn--primary';
+        loadColaboraList('pendiente');
+      });
+    });
+
+    window.verColaboraSolicitud = function (subId) {
+      const sub = _colaboraCache?.find(s => s.id === subId);
+      if (!sub) return;
+      const areas = (sub.areas || []).map(a => AREA_TEXTO[a] || a).join(', ') || '—';
+      const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
+
+      cModalContent.innerHTML = `
+        <h2 style="margin:0 0 0.25rem;padding-right:2rem;font-size:1.1rem">Solicitud de @${sub.username || '—'}</h2>
+        <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 1.25rem">${sub.displayName || ''}</p>
+        <p style="font-size:0.85rem;margin:0 0 0.4rem"><strong>Nivel técnico:</strong> ${NIVEL_TEXTO[sub.nivelProgramacion] || '—'}</p>
+        <p style="font-size:0.85rem;margin:0 0 0.75rem"><strong>Áreas de interés:</strong> ${areas}</p>
+        <div style="background:var(--color-canvas-inset);border-radius:8px;padding:0.75rem;font-size:0.875rem;line-height:1.6;white-space:pre-wrap;margin-bottom:1rem">${sub.mensaje || '<em style="color:var(--text-muted)">Sin mensaje.</em>'}</div>
+
+        ${sub.estado === 'pendiente' ? `
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+            <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 0.5rem">Motivo si lo rechazás (opcional):</p>
+            <textarea id="colabora-feedback" placeholder="Ej: Por ahora no hay lugar en esa área, ¡probá más adelante!" style="width:100%;min-height:70px;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.65rem;resize:vertical;box-sizing:border-box;font-family:inherit"></textarea>
+            <div style="display:flex;gap:0.75rem;margin-top:1rem">
+              <button class="btn btn--primary" style="flex:1" onclick="window.aprobarColabora('${sub.id}', '${sub.uid}')">✅ APROBAR y avisarle</button>
+              <button class="btn btn--outline" style="flex:1;border-color:var(--color-accent-fg);color:var(--color-accent-fg)" onclick="window.rechazarColabora('${sub.id}', '${sub.uid}')">❌ RECHAZAR</button>
+            </div>
+          </div>
+        ` : `
+          <div style="background:${estadoColor[sub.estado]}11;border:1px solid ${estadoColor[sub.estado]}44;border-radius:8px;padding:0.75rem;color:${estadoColor[sub.estado]};font-size:0.875rem">
+            ${sub.estado === 'aprobado' ? '✅ Aprobado — ya se le avisó con el enlace del grupo.' : `❌ Rechazado.${sub.feedback ? ' Motivo: ' + sub.feedback : ''}`}
+          </div>
+        `}
+      `;
+      cModal.style.display = 'flex';
+      cModal.scrollTop = 0;
+    };
+
+    window.aprobarColabora = async function (subId, uid) {
+      try {
+        const btn = cModal.querySelector('.btn--primary');
+        if (btn) { btn.disabled = true; btn.textContent = 'Procesando…'; }
+
+        const cfgSnap = await getDoc(doc(db, 'config', 'site'));
+        const linkGrupo = cfgSnap.exists() ? (cfgSnap.data().whatsappProyecto || '') : '';
+
+        await updateDoc(doc(db, 'voluntarios_dev', subId), {
+          estado: 'aprobado',
+          fechaRevision: Timestamp.now(),
+        });
+
+        await crearNotificacion({
+          uid,
+          tipo: TIPOS_NOTIF.COLABORADOR_APROBADO,
+          titulo: '🚀 ¡Bienvenido/a al equipo de desarrollo!',
+          mensaje: linkGrupo
+            ? `Tu solicitud fue aprobada. Sumate al grupo de trabajo acá: ${linkGrupo}`
+            : 'Tu solicitud fue aprobada. En breve te compartimos el enlace del grupo de trabajo.',
+          link: 'colabora.html',
+        });
+
+        alert('✅ Solicitud aprobada. Se le notificó con el enlace del grupo.');
+        cModal.style.display = 'none';
+        const activeFilter = document.querySelector('[data-cfilter].btn--primary')?.dataset?.cfilter || 'pendiente';
+        loadColaboraList(activeFilter);
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    };
+
+    window.rechazarColabora = async function (subId, uid) {
+      const feedback = document.getElementById('colabora-feedback')?.value?.trim() || 'Por ahora no fue posible sumarte al equipo.';
+      try {
+        await updateDoc(doc(db, 'voluntarios_dev', subId), {
+          estado: 'rechazado',
+          feedback,
+          fechaRevision: Timestamp.now(),
+        });
+
+        await crearNotificacion({
+          uid,
+          tipo: TIPOS_NOTIF.SISTEMA,
+          titulo: 'Tu solicitud al equipo de desarrollo',
+          mensaje: feedback,
+          link: 'colabora.html',
+        });
+
+        alert('❌ Solicitud rechazada.');
+        cModal.style.display = 'none';
+        const activeFilter = document.querySelector('[data-cfilter].btn--primary')?.dataset?.cfilter || 'pendiente';
+        loadColaboraList(activeFilter);
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    };
+
+    // Badge de pendientes (sidebar + menú "Más")
+    (async function updateColaboraPendienteCount() {
+      try {
+        const snap = await getDocs(query(collection(db, 'voluntarios_dev'), where('estado', '==', 'pendiente')));
+        const count = snap.size;
+        const sidebarBadge = document.getElementById('sidebar-colabora-badge');
+        const moreBadge    = document.getElementById('more-colabora-badge');
+        if (count > 0) {
+          if (sidebarBadge) { sidebarBadge.textContent = count; sidebarBadge.style.display = 'inline'; }
+          if (moreBadge)    { moreBadge.textContent = count;    moreBadge.style.display = 'inline'; }
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <script>
     // Admin "Más" menu
     const moreBtn  = document.getElementById('admin-more-btn');
@@ -2447,6 +2864,7 @@
       if (moreMenu) moreMenu.style.display = 'none';
     });
   </script>
+
 
   <!-- CLASES EN VIVO: gestión desde el panel admin -->
   <script type="module">
@@ -2564,6 +2982,7 @@
         siteForm.facebook.value     = data.facebook || '';
         siteForm.youtube.value      = data.youtube || '';
         siteForm.whatsappCanal.value = data.whatsappCanal || '';
+        siteForm.whatsappProyecto.value = data.whatsappProyecto || '';
       } catch (err) {
         console.error('Error cargando configuración del sitio:', err);
       }
@@ -2593,6 +3012,7 @@
             facebook: siteForm.facebook.value.trim(),
             youtube: siteForm.youtube.value.trim(),
             whatsappCanal: siteForm.whatsappCanal.value.trim(),
+            whatsappProyecto: siteForm.whatsappProyecto.value.trim(),
           }, { merge: true });
           siteMsg.textContent = '✅ Configuración guardada.';
           siteMsg.className = 'form-message show form-message--success';
