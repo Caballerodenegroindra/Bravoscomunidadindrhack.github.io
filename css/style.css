@@ -219,14 +219,20 @@ body::after {
   pointer-events: none;
   background-image: url('../assets/img/fondo-emblema.jpg');
   background-repeat: no-repeat;
-  background-position: center 12%;
-  background-size: min(46vw, 480px) auto;
+  /* Offset fijo (no en %) para que el emblema quede siempre debajo
+     del navbar, nunca recortado detrás de su barra opaca sin
+     importar el alto de la pantalla. */
+  background-position: center calc(var(--nav-h) + 1.75rem);
+  background-size: min(42vw, 440px) auto;
   opacity: 0.07;
   mix-blend-mode: luminosity;
 }
 :root[data-theme="light"] body::after { opacity: 0.045; mix-blend-mode: multiply; }
 @media (max-width: 640px) {
-  body::after { background-size: min(78vw, 420px) auto; background-position: center 8%; }
+  body::after {
+    background-size: min(64vw, 320px) auto;
+    background-position: center calc(var(--nav-h) + 1.25rem);
+  }
 }
 .navbar, .tabbar, main, .footer, #ia-widget, .help-fab { position: relative; z-index: 1; }
 
