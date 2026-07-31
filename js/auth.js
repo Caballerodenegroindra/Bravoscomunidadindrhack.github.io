@@ -82,6 +82,8 @@ export async function registerUser({ phone, username, password, email }) {
       rango: 'Recluta',
       enGrupo: false,
       nivelProgramacion: '',
+      onboardingExtra: false,
+      ayudaFuturosProyectos: '',
       sobreMi: '',
       loQueSe: '',
       experiencia: '',
