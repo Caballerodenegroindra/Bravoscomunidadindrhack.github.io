@@ -1527,7 +1527,7 @@ tbody tr:last-child td { border-bottom: none; }
 .panel-content {
   flex: 1;
   padding: var(--gap-xl);
-  background: var(--bg);
+  background: transparent;
   min-width: 0;
 }
 .panel-header {
