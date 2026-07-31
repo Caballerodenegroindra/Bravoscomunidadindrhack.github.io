@@ -31,9 +31,12 @@ if (ARCHIVO_ACTUAL !== 'chat.html') {
   document.addEventListener('DOMContentLoaded', initChatWidget);
 }
 
-// Guardamos, por pestaña, el timestamp (ms) del último mensaje que
-// el usuario ya vio, para saber cuántos mensajes nuevos avisar con
-// el globito rojo sobre el botón cuando el panel está cerrado.
+// Guardamos el timestamp (ms) del último mensaje que el usuario ya
+// vio, para saber cuántos mensajes nuevos avisar con el globito rojo
+// sobre el botón cuando el panel está cerrado. Usamos localStorage
+// (no sessionStorage) para que quede recordado de verdad: si el
+// usuario ya abrió el chat y vio los mensajes, no debe volver a
+// aparecer el mismo aviso al recargar la página o reabrir el sitio.
 const VISTO_KEY = 'chat-widget-visto';
 
 function initChatWidget() {
@@ -167,12 +170,12 @@ function initChatWidget() {
 
   /* ── Contador de no leídos (por pestaña) ── */
   function ultimoVisto() {
-    try { return Number(sessionStorage.getItem(VISTO_KEY) || 0); } catch (e) { return 0; }
+    try { return Number(localStorage.getItem(VISTO_KEY) || 0); } catch (e) { return 0; }
   }
   function marcarComoLeido() {
     const ultimo = msgs[msgs.length - 1];
     const t = ultimo?.createdAt?.seconds ? ultimo.createdAt.seconds * 1000 : Date.now();
-    try { sessionStorage.setItem(VISTO_KEY, String(t)); } catch (e) {}
+    try { localStorage.setItem(VISTO_KEY, String(t)); } catch (e) {}
     badge.classList.remove('show');
   }
   function actualizarBadge() {
