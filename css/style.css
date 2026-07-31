@@ -2262,7 +2262,11 @@ tbody tr:last-child td { border-bottom: none; }
    Al tocarla/escribir se despliega el panel de charla arriba.
    ============================================================ */
 #ia-widget {
-  position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 999;
+  /* z-index bajo el de cualquier modal del sitio (todos usan 999)
+     para que, al abrir un formulario/modal en cualquier sección
+     (ej. "Nueva convocatoria", "Nueva noticia", cursos, etc.), el
+     dock de la IA quede siempre detrás y no lo tape. */
+  position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 500;
   font-family: var(--font-body);
   /* Se desplaza junto al teclado (ver syncConTeclado en ia-widget.js)
      para quedar siempre pegado arriba de él, sin hueco. */
