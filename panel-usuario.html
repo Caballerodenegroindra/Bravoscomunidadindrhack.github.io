@@ -32,6 +32,7 @@
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <a href="colabora.html" title="Sumate a colaborar con el proyecto">🚀 Colaborá</a>
       <div class="navbar__session" data-session-slot></div>
     </nav>
     <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
@@ -190,6 +191,16 @@
       </div>
       <div id="noticias-recientes" style="margin-bottom:2rem">
         <p class="section-subtitle">Cargando noticias...</p>
+      </div>
+
+      <!-- ⑤.5 PROYECTOS ACTIVOS PARA COLABORAR: solo se muestra si hay
+           alguno publicado (ver loadConvocatoriasPanel más abajo) -->
+      <div id="convocatorias-panel-wrap" style="display:none;margin-bottom:2rem">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.75rem">
+          <h2 class="section-title" style="margin:0">Proyectos para <span class="accent">colaborar</span> 🚀</h2>
+          <a href="colabora.html" class="btn btn--small btn--ghost">Ver todos →</a>
+        </div>
+        <div id="convocatorias-panel"></div>
       </div>
 
       <!-- ⑥ ACCESOS RÁPIDOS: comunidad y perfil (secundarios) -->
@@ -598,6 +609,46 @@
     } catch(e) {
       grid.innerHTML = '<p class="section-subtitle">No se pudieron cargar las noticias.</p>';
     }
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    function whatsappHref(valor) {
+      const v = (valor || '').trim();
+      if (!v) return '#';
+      if (/^https?:\/\//i.test(v)) return v;
+      const digitos = v.replace(/[^0-9]/g, '');
+      return digitos ? `https://wa.me/${digitos}` : '#';
+    }
+
+    (async () => {
+      const wrap = document.getElementById('convocatorias-panel-wrap');
+      const cont = document.getElementById('convocatorias-panel');
+      if (!wrap || !cont) return;
+      try {
+        // Un solo "where" (sin combinarlo con orderBy) para no depender
+        // de un índice compuesto en Firestore; se ordena acá mismo.
+        const snap = await getDocs(query(collection(db, 'convocatorias'), where('activo', '==', true)));
+        if (snap.empty) return; // el wrap queda oculto (display:none por defecto)
+
+        const docs = snap.docs
+          .map(d => d.data())
+          .sort((a, b) => (b.fecha?.toMillis?.() || 0) - (a.fecha?.toMillis?.() || 0))
+          .slice(0, 2);
+
+        cont.innerHTML = docs.map(c => `
+          <div class="card" style="margin-bottom:0.75rem;border-color:rgba(37,211,102,0.35)">
+            <h3 style="margin:0 0 0.35rem;font-size:0.95rem">${c.titulo || ''}</h3>
+            <p style="margin:0 0 0.7rem;font-size:0.8125rem;color:var(--text-soft)">${(c.descripcion || '').substring(0,140)}${(c.descripcion || '').length > 140 ? '…' : ''}</p>
+            <a href="${whatsappHref(c.whatsapp)}" target="_blank" rel="noopener" class="btn btn--small btn--primary">📲 Unirme al grupo</a>
+          </div>`).join('');
+        wrap.style.display = '';
+      } catch (err) {
+        console.error('Error cargando convocatorias en Mi Panel:', err);
+      }
+    })();
   </script>
 
   <script type="module">
