@@ -182,6 +182,30 @@ function initWidget() {
   const dockEl   = wrap.querySelector('#ia-widget-dock');
   const tabbarEl = document.querySelector('.tabbar');
 
+  // El z-index ya lo deja detrás de cualquier modal, pero en pantallas
+  // chicas el modal no siempre cubre el 100% del alto (deja huecos
+  // arriba/abajo de la tarjeta), así que el dock se veía "asomar" igual
+  // en esos huecos. Más simple y más robusto: mientras haya CUALQUIER
+  // modal del sitio abierto, escondemos el dock del todo. Todos los
+  // modales del sitio siguen el mismo patrón (position:fixed + inset:0,
+  // mostrados/ocultados cambiando style.display), así que detectarlos
+  // así funciona para los que ya existen y para los que se agreguen
+  // después, sin tener que tocar cada modal uno por uno.
+  function hayModalAbierto() {
+    return Array.from(document.querySelectorAll('div[style*="inset:0"]')).some(
+      (el) => el !== wrap && getComputedStyle(el).display !== 'none'
+    );
+  }
+  function actualizarVisibilidadPorModal() {
+    const tapado = hayModalAbierto();
+    wrap.classList.toggle('ia-widget--tras-modal', tapado);
+    if (tapado && opened) closePanel();
+  }
+  actualizarVisibilidadPorModal();
+  new MutationObserver(actualizarVisibilidadPorModal).observe(document.body, {
+    attributes: true, attributeFilter: ['style'], subtree: true, childList: true,
+  });
+
   function ajustarAlturaPanel() {
     const vv  = window.visualViewport;
     const vpH = (vv && vv.height) || window.innerHeight;
