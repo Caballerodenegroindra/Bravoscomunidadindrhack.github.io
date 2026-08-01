@@ -12,16 +12,16 @@
      Se suma un verde terminal como acento de señal — el "pulso"
      de la sala de situación — usado con moderación (estados en
      vivo, cursor, glow de foco) para dar el carácter "hacking". */
-  --color-canvas-default:      #080e1c;
-  --color-canvas-subtle:       #0e1b34;
-  --color-canvas-inset:        #050a15;
-  --color-border-default:      #223255;
-  --color-border-muted:        #182643;
-  --color-border-subtle:       rgba(201,171,97,0.18);
+  --color-canvas-default:      #1b1f29;
+  --color-canvas-subtle:       #262b38;
+  --color-canvas-inset:        #15181f;
+  --color-border-default:      #3c4256;
+  --color-border-muted:        #2e3342;
+  --color-border-subtle:       rgba(201,171,97,0.22);
 
-  --color-fg-default:          #e9edf5;
-  --color-fg-muted:            #96a4c4;
-  --color-fg-subtle:           #6a789c;
+  --color-fg-default:          #eceef3;
+  --color-fg-muted:            #a7afc4;
+  --color-fg-subtle:           #838aa0;
   --color-fg-on-emphasis:      #ffffff;
 
   --color-accent-fg:           #c9a961;
@@ -53,7 +53,7 @@
   /* ── Alias semánticos ── */
   --bg:            var(--color-canvas-default);
   --bg-card:       var(--color-canvas-subtle);
-  --bg-elevated:   #142544;
+  --bg-elevated:   #303649;
   --primary:       var(--color-accent-fg);
   --primary-emphasis: var(--color-accent-emphasis);
   --text:          var(--color-fg-default);
@@ -96,39 +96,39 @@
   --primary-glow: var(--color-accent-subtle);
 
   /* ── Sombras (discretas, documentales) ── */
-  --shadow-sm:  0 1px 0 rgba(6,10,20,0.15);
-  --shadow:     0 1px 2px rgba(6,10,20,0.35), 0 6px 18px rgba(6,10,20,0.28);
-  --shadow-lg:  0 10px 30px rgba(4,8,16,0.45);
+  --shadow-sm:  0 1px 0 rgba(10,12,18,0.18);
+  --shadow:     0 1px 2px rgba(10,12,18,0.32), 0 6px 18px rgba(10,12,18,0.26);
+  --shadow-lg:  0 10px 30px rgba(8,10,15,0.4);
 
   /* ── Sistema de profundidad 3D ──
      Bisel superior (luz) + sombra interna inferior (sombra propia) +
      "canto" sólido debajo de cada superficie, como si tuviera
      espesor real. Se combinan en .card/.panel-block/.stat-card/.btn
      para que todo el sitio comparta la misma sensación de volumen. */
-  --bevel-top:      rgba(255,255,255,0.07);
-  --bevel-bottom:   rgba(0,0,0,0.4);
-  --edge-color:     #040810;
+  --bevel-top:      rgba(255,255,255,0.08);
+  --bevel-bottom:   rgba(0,0,0,0.28);
+  --edge-color:     #12141c;
   --lift-shadow:    0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
                      0 3px 0 var(--edge-color),
-                     0 4px 10px rgba(4,8,16,0.5),
-                     0 16px 34px rgba(4,8,16,0.5);
+                     0 4px 10px rgba(9,11,16,0.4),
+                     0 16px 34px rgba(9,11,16,0.4);
   --lift-shadow-hover: 0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
                      0 6px 0 var(--edge-color),
-                     0 10px 18px rgba(4,8,16,0.55),
-                     0 26px 46px rgba(4,8,16,0.55);
+                     0 10px 18px rgba(9,11,16,0.45),
+                     0 26px 46px rgba(9,11,16,0.45);
   --lift-shadow-press: 0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
-                     0 6px 14px rgba(4,8,16,0.4);
+                     0 6px 14px rgba(9,11,16,0.32);
 
   /* ── Fondos de barras ── */
-  --chrome-bg:        rgba(10,20,40,0.97);
-  --chrome-bg-solid:  rgba(10,20,40,0.99);
-  --chrome-bg-strong: rgba(8,16,32,1);
+  --chrome-bg:        rgba(27,31,41,0.97);
+  --chrome-bg-solid:  rgba(27,31,41,0.99);
+  --chrome-bg-strong: rgba(23,26,35,1);
 
   /* ── Movimiento (orquestado, discreto) ── */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
@@ -323,7 +323,7 @@ summary:focus-visible,
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 var(--gold-subtle), 0 8px 20px rgba(4,8,16,0.3);
+  box-shadow: 0 1px 0 var(--gold-subtle), 0 8px 20px rgba(9,11,16,0.3);
 }
 
 .navbar__brand {
@@ -344,7 +344,7 @@ summary:focus-visible,
   border-radius: 50%;
   border: 2px solid var(--gold);
   padding: 1px;
-  box-shadow: 0 2px 6px rgba(4,8,16,0.4), 0 0 0 1px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(9,11,16,0.4), 0 0 0 1px rgba(0,0,0,0.15);
 }
 .navbar__brand:hover { text-decoration: none; color: var(--text); }
 
@@ -458,11 +458,11 @@ summary:focus-visible,
   color: var(--text);
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: inset 0 1px 0 var(--bevel-top), 0 2px 0 var(--edge-color), 0 5px 10px rgba(4,8,16,0.3);
+  box-shadow: inset 0 1px 0 var(--bevel-top), 0 2px 0 var(--edge-color), 0 5px 10px rgba(9,11,16,0.3);
   transition: background 0.15s, border-color 0.15s, transform 0.12s, box-shadow 0.12s;
 }
-.theme-toggle:hover { background: var(--bg-elevated); border-color: var(--gold); transform: translateY(-2px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 3px 0 var(--edge-color), 0 8px 16px rgba(4,8,16,0.35); }
-.theme-toggle:active { transform: translateY(1px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 0 0 var(--edge-color), 0 2px 5px rgba(4,8,16,0.25); }
+.theme-toggle:hover { background: var(--bg-elevated); border-color: var(--gold); transform: translateY(-2px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 3px 0 var(--edge-color), 0 8px 16px rgba(9,11,16,0.35); }
+.theme-toggle:active { transform: translateY(1px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 0 0 var(--edge-color), 0 2px 5px rgba(9,11,16,0.25); }
 .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .theme-toggle .icon-sun { display: none; }
 :root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
@@ -488,13 +488,13 @@ summary:focus-visible,
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
-  box-shadow: inset 0 1px 0 var(--bevel-top), 0 3px 0 var(--edge-color), 0 10px 20px rgba(4,8,16,0.4);
+  box-shadow: inset 0 1px 0 var(--bevel-top), 0 3px 0 var(--edge-color), 0 10px 20px rgba(9,11,16,0.4);
   cursor: pointer;
   text-decoration: none;
   transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 .help-fab:hover { text-decoration: none; background: var(--gold); color: #101a2e; transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 5px 0 var(--edge-color), 0 16px 28px rgba(201,171,97,0.28); }
-.help-fab:active { transform: translateY(2px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 1px 0 var(--edge-color), 0 4px 10px rgba(4,8,16,0.3); }
+.help-fab:active { transform: translateY(2px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 1px 0 var(--edge-color), 0 4px 10px rgba(9,11,16,0.3); }
 @media (min-width: 641px) {
   .help-fab { bottom: 1.25rem; }
 }
@@ -532,7 +532,7 @@ body.ia-dock-active .help-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) 
   height: var(--tabbar-h);
   background: var(--chrome-bg-solid);
   border-top: 2px solid var(--color-accent-emphasis);
-  box-shadow: 0 -8px 20px rgba(4,8,16,0.3);
+  box-shadow: 0 -8px 20px rgba(9,11,16,0.3);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 0 0.25rem env(safe-area-inset-bottom, 0);
@@ -860,7 +860,7 @@ main { min-height: calc(100dvh - var(--nav-h)); }
   background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.1)), var(--color-accent-emphasis);
   color: #ffffff;
   border-color: var(--color-accent-emphasis);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 3px 0 var(--edge-color), 0 6px 16px rgba(4,8,16,0.4);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 3px 0 var(--edge-color), 0 6px 16px rgba(9,11,16,0.4);
 }
 .btn--primary:hover {
   background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.06)), var(--gold);
@@ -870,7 +870,7 @@ main { min-height: calc(100dvh - var(--nav-h)); }
   transform: translateY(-2px);
 }
 .btn--primary:active {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 1px 0 var(--edge-color), 0 2px 6px rgba(4,8,16,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 1px 0 var(--edge-color), 0 2px 6px rgba(9,11,16,0.3);
   transform: translateY(2px);
 }
 
@@ -907,7 +907,7 @@ main { min-height: calc(100dvh - var(--nav-h)); }
   background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(0,0,0,0.08)), var(--gold);
   color: #101a2e;
   border-color: var(--gold);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 var(--edge-color), 0 6px 16px rgba(4,8,16,0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 var(--edge-color), 0 6px 16px rgba(9,11,16,0.35);
 }
 .btn--accent:hover {
   background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(0,0,0,0.06)), #b3944f;
@@ -916,7 +916,7 @@ main { min-height: calc(100dvh - var(--nav-h)); }
   transform: translateY(-2px);
 }
 .btn--accent:active {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 0 var(--edge-color), 0 2px 6px rgba(4,8,16,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 0 var(--edge-color), 0 2px 6px rgba(9,11,16,0.3);
   transform: translateY(2px);
 }
 
@@ -1060,7 +1060,7 @@ a.card h3 { color: var(--primary); font-family: var(--font-heading); }
   background: radial-gradient(circle at 32% 28%, var(--bg-elevated) 0%, var(--bg-card) 100%);
   border: 1px solid var(--border);
   font-size: 1.35rem;
-  box-shadow: inset 0 1px 0 var(--bevel-top), inset 0 -2px 3px var(--bevel-bottom), 0 3px 8px rgba(4,8,16,0.35), 0 1px 0 var(--pb-accent);
+  box-shadow: inset 0 1px 0 var(--bevel-top), inset 0 -2px 3px var(--bevel-bottom), 0 3px 8px rgba(9,11,16,0.35), 0 1px 0 var(--pb-accent);
 }
 .panel-block__head .section-title { margin: 0; }
 .panel-block__head .section-subtitle { margin: 0.2rem 0 0; }
