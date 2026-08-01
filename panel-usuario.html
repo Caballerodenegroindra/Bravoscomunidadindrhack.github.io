@@ -171,62 +171,118 @@
       </div>
 
       <!-- ③ MIS QUIZZES: pendientes y resultados (acción directa del estudiante) -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
-        <h2 class="section-title" style="margin:0">Mis <span class="accent">Quizzes</span> 🧠</h2>
-        <a href="cursos.html" class="btn btn--small btn--ghost">Ir a cursos →</a>
-      </div>
-      <p class="section-subtitle" style="margin-bottom:1.25rem">Estado de los quizzes que enviaste al administrador.</p>
-      <div id="mis-quizzes-lista" style="margin-bottom:2.75rem">
-        <p class="section-subtitle">Cargando quizzes...</p>
+      <div class="panel-block panel-block--gold reveal">
+        <div class="panel-block__eyebrow">Sección 01 · Evaluación</div>
+        <div class="panel-block__head">
+          <div class="panel-block__head-left">
+            <span class="panel-block__icon">🧠</span>
+            <div>
+              <h2 class="section-title">Mis <span class="accent">Quizzes</span></h2>
+              <p class="section-subtitle">Estado de los quizzes que enviaste al administrador.</p>
+            </div>
+          </div>
+          <a href="cursos.html" class="btn btn--small btn--ghost">Ir a cursos →</a>
+        </div>
+        <div class="panel-block__body">
+          <div id="mis-quizzes-lista">
+            <p class="section-subtitle">Cargando quizzes...</p>
+          </div>
+        </div>
       </div>
 
       <!-- ④ MIS LOGROS: cursos aprobados y proyectos -->
-      <h2 class="section-title" style="margin-bottom:1rem">Mis <span class="accent">Logros</span> 🏆</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2.75rem">
-        <div class="card" style="padding:1rem">
-          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem">📚 CURSOS APROBADOS</div>
-          <div id="mis-cursos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+      <div class="panel-block panel-block--blue reveal">
+        <div class="panel-block__eyebrow">Sección 02 · Trayectoria</div>
+        <div class="panel-block__head">
+          <div class="panel-block__head-left">
+            <span class="panel-block__icon">🏆</span>
+            <div>
+              <h2 class="section-title">Mis <span class="accent">Logros</span></h2>
+              <p class="section-subtitle">Lo que ya conquistaste dentro de la academia.</p>
+            </div>
+          </div>
         </div>
-        <div class="card" style="padding:1rem">
-          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem">🏆 PROYECTOS</div>
-          <div id="mis-proyectos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+        <div class="panel-block__body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+            <div class="card" style="padding:1.25rem">
+              <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem">📚 CURSOS APROBADOS</div>
+              <div id="mis-cursos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+            </div>
+            <div class="card" style="padding:1.25rem">
+              <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem">🏆 PROYECTOS</div>
+              <div id="mis-proyectos-logros"><p style="color:var(--text-muted);font-size:0.85rem">Cargando...</p></div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ⑤ NOTICIAS RECIENTES: mantenerse al día -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
-        <h2 class="section-title" style="margin:0">Últimas <span class="accent">Noticias</span> 📰</h2>
-        <a href="noticias.html" class="btn btn--small btn--ghost">Ver todas →</a>
-      </div>
-      <div id="noticias-recientes" style="margin-bottom:2.75rem">
-        <p class="section-subtitle">Cargando noticias...</p>
+      <div class="panel-block panel-block--gold reveal">
+        <div class="panel-block__eyebrow">Sección 03 · Al día</div>
+        <div class="panel-block__head">
+          <div class="panel-block__head-left">
+            <span class="panel-block__icon">📰</span>
+            <div>
+              <h2 class="section-title">Últimas <span class="accent">Noticias</span></h2>
+              <p class="section-subtitle">Los últimos anuncios de la academia.</p>
+            </div>
+          </div>
+          <a href="noticias.html" class="btn btn--small btn--ghost">Ver todas →</a>
+        </div>
+        <div class="panel-block__body">
+          <div id="noticias-recientes">
+            <p class="section-subtitle">Cargando noticias...</p>
+          </div>
+        </div>
       </div>
 
       <!-- ⑤.5 PROYECTOS ACTIVOS PARA COLABORAR: solo se muestra si hay
            alguno publicado (ver loadConvocatoriasPanel más abajo) -->
-      <div id="convocatorias-panel-wrap" style="display:none;margin-bottom:2.75rem">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem">
-          <h2 class="section-title" style="margin:0">Proyectos para <span class="accent">colaborar</span> 🚀</h2>
+      <div id="convocatorias-panel-wrap" class="panel-block panel-block--signal reveal" style="display:none">
+        <div class="panel-block__eyebrow">Sección 04 · Comunidad</div>
+        <div class="panel-block__head">
+          <div class="panel-block__head-left">
+            <span class="panel-block__icon">🚀</span>
+            <div>
+              <h2 class="section-title">Proyectos para <span class="accent">colaborar</span></h2>
+              <p class="section-subtitle">Sumate a un equipo y ponete a prueba en algo real.</p>
+            </div>
+          </div>
           <a href="colabora.html" class="btn btn--small btn--ghost">Ver todos →</a>
         </div>
-        <div id="convocatorias-panel"></div>
+        <div class="panel-block__body">
+          <div id="convocatorias-panel"></div>
+        </div>
       </div>
 
       <!-- ⑥ ACCESOS RÁPIDOS: comunidad y perfil (secundarios) -->
-      <h2 class="section-title" style="margin-bottom:1rem">Accesos rápidos</h2>
-      <div class="card-grid reveal-stagger" style="margin-bottom:2.75rem">
-        <a href="chat.html" class="card">
-          <h3>💬 Chat</h3>
-          <p class="section-subtitle" style="margin:0">Habla con la comunidad, comparte dudas y avances.</p>
-        </a>
-        <a href="titulos.html" class="card">
-          <h3>🏆 Mis Títulos</h3>
-          <p class="section-subtitle" style="margin:0">Consulta tus certificados y títulos obtenidos.</p>
-        </a>
-        <a href="redes.html" class="card">
-          <h3>🌐 Redes</h3>
-          <p class="section-subtitle" style="margin:0">Únete a los canales oficiales de la academia.</p>
-        </a>
+      <div class="panel-block panel-block--blue reveal">
+        <div class="panel-block__eyebrow">Sección 05 · Atajos</div>
+        <div class="panel-block__head">
+          <div class="panel-block__head-left">
+            <span class="panel-block__icon">⚡</span>
+            <div>
+              <h2 class="section-title">Accesos <span class="accent">rápidos</span></h2>
+              <p class="section-subtitle">Todo lo demás, a un toque de distancia.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-block__body">
+          <div class="card-grid reveal-stagger">
+            <a href="chat.html" class="card">
+              <h3>💬 Chat</h3>
+              <p class="section-subtitle" style="margin:0">Habla con la comunidad, comparte dudas y avances.</p>
+            </a>
+            <a href="titulos.html" class="card">
+              <h3>🏆 Mis Títulos</h3>
+              <p class="section-subtitle" style="margin:0">Consulta tus certificados y títulos obtenidos.</p>
+            </a>
+            <a href="redes.html" class="card">
+              <h3>🌐 Redes</h3>
+              <p class="section-subtitle" style="margin:0">Únete a los canales oficiales de la academia.</p>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- ⑦ CAMBIAR CONTRASEÑA: al final, es raro hacerlo -->
