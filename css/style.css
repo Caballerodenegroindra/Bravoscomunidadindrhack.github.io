@@ -887,6 +887,99 @@ a.card h3 { color: var(--primary); font-family: var(--font-heading); }
   gap: var(--gap-lg);
 }
 
+/* ── PANEL BLOCK ──
+   Cada sección del panel de usuario vive en su propia "ficha": aire
+   generoso, remate visual propio (línea superior en degradé, esquina
+   tipo terminal, rótulo numerado en monoespaciada) y un color de
+   acento que puede variar por sección (--pb-accent) para dar ritmo
+   sin salirse de la paleta ya definida. Pensado para leerse una
+   sección a la vez en vez de una sola pared continua de contenido. */
+.panel-block {
+  --pb-accent: var(--gold);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl) var(--gap-lg);
+  margin-bottom: var(--gap-2xl);
+}
+.panel-block::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--pb-accent), transparent);
+  opacity: 0.85;
+}
+.panel-block::after {
+  content: "";
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 38px; height: 38px;
+  border-bottom: 2px solid var(--pb-accent);
+  border-right: 2px solid var(--pb-accent);
+  border-bottom-right-radius: var(--radius-lg);
+  opacity: 0.22;
+  pointer-events: none;
+}
+.panel-block--signal { --pb-accent: var(--signal); }
+.panel-block--blue   { --pb-accent: var(--color-accent-emphasis); }
+.panel-block--gold   { --pb-accent: var(--gold); }
+
+.panel-block__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pb-accent);
+  margin-bottom: 0.9rem;
+}
+.panel-block__eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+.panel-block__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: var(--gap-md);
+  padding-bottom: var(--gap-md);
+  border-bottom: 1px dashed var(--border-muted);
+}
+.panel-block__head-left { display: flex; align-items: center; gap: 0.9rem; min-width: 0; }
+.panel-block__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  font-size: 1.35rem;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.panel-block__head .section-title { margin: 0; }
+.panel-block__head .section-subtitle { margin: 0.2rem 0 0; }
+.panel-block__body { position: relative; }
+
+@media (max-width: 640px) {
+  .panel-block { padding: var(--gap-lg) var(--gap-md); margin-bottom: var(--gap-xl); border-radius: var(--radius-md); }
+  .panel-block__icon { width: 2.4rem; height: 2.4rem; font-size: 1.1rem; }
+}
+
 /* ── LISTA DOSSIER — variante para alternar el ritmo de las secciones ── */
 .dossier {
   display: flex;
