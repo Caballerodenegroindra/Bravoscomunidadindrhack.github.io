@@ -2543,3 +2543,37 @@ body.ia-dock-active #chat-widget-panel { bottom: calc(var(--tabbar-h) + var(--ia
 }
 #chat-widget-send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: var(--color-fg-on-emphasis); }
 #chat-widget-send:disabled { opacity: 0.4; cursor: default; }
+
+/* ====================== GATE DE ACCESO (páginas que requieren cuenta) ======================
+   En vez de redirigir de golpe a login.html, estas páginas muestran primero
+   qué van a encontrar ahí adentro y recién después ofrecen iniciar sesión o
+   registrarse. El visitante decide con información, no a ciegas. */
+.auth-gate {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.auth-gate__list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.auth-gate__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.auth-gate__list li i {
+  flex-shrink: 0;
+  font-style: normal;
+}
+.auth-gate__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
