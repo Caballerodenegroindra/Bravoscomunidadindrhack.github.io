@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1428" />
+  <meta name="theme-color" content="#f7f7f5" />
   <title>Clase — Academia Indrhack</title>
   <meta name="description" content="Contenido de clase de Academia Indrhack." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -492,44 +492,50 @@
       loading.innerHTML = '<p style="color:var(--color-danger-fg)">No se especificó ninguna clase. <a href="cursos.html" style="color:var(--gold)">Volver</a></p>';
     }
 
+    // La clase (video, descripción, comandos, descarga y recurso) es
+    // pública: se carga siempre, haya o no sesión iniciada. Solo el
+    // quiz (para sumar puntos y ranking) pide una cuenta aprobada.
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        loading.innerHTML = '<div style="text-align:center;padding:2rem"><p style="color:var(--color-danger-fg);margin-bottom:1rem">🔒 Regístrate gratis para ver esta clase.</p><a href="registro.html" class="btn btn--primary">Registrarme gratis</a></div>';
-        return;
-      }
+      if (!cursoId) return;
       try {
-        const userSnap = await getDoc(doc(db, 'users', user.uid));
-        const userData = userSnap.data();
-        if (!userSnap.exists() || userData.estado !== 'aprobado') {
-          loading.innerHTML = '<p style="color:var(--color-danger-fg);text-align:center">⚠️ Tu cuenta aún no está aprobada. Contacta al administrador.</p>';
-          return;
-        }
-        if (!cursoId) return;
         const cursoSnap = await getDoc(doc(db, 'courses', cursoId));
         if (!cursoSnap.exists()) {
           loading.innerHTML = '<p style="color:var(--color-danger-fg)">Clase no encontrada.</p>';
           return;
         }
         const curso = { id: cursoSnap.id, ...cursoSnap.data() };
-        const quizSnap = await getDocs(query(
-          collection(db, 'quiz_submissions'),
-          where('cursoId', '==', cursoId),
-          where('uid', '==', user.uid)
-        ));
-        const submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
-        renderClase(curso, userData, user.uid, submission);
 
-        // Guardamos qué clase vio por última vez para que "Mi panel"
-        // pueda ofrecerle "Continuar donde te quedaste" directo a esta clase.
-        setDoc(doc(db, 'users', user.uid), {
-          ultimaClase: {
-            id: curso.id,
-            titulo: curso.titulo || 'Clase',
-            categoria: curso.categoria || '',
-            completada: !!(submission && submission.estado === 'aprobado'),
-            fecha: serverTimestamp(),
-          },
-        }, { merge: true }).catch(() => { /* no bloqueamos la vista de la clase si esto falla */ });
+        let userData = null;
+        let submission = null;
+
+        if (user) {
+          const userSnap = await getDoc(doc(db, 'users', user.uid));
+          if (userSnap.exists() && userSnap.data().estado === 'aprobado') {
+            userData = userSnap.data();
+            const quizSnap = await getDocs(query(
+              collection(db, 'quiz_submissions'),
+              where('cursoId', '==', cursoId),
+              where('uid', '==', user.uid)
+            ));
+            submission = quizSnap.empty ? null : { id: quizSnap.docs[0].id, ...quizSnap.docs[0].data() };
+          }
+        }
+
+        renderClase(curso, userData, user ? user.uid : null, submission);
+
+        // Guardamos qué clase vio por última vez (solo si hay cuenta)
+        // para que "Mi panel" pueda ofrecer "Continuar donde te quedaste".
+        if (userData) {
+          setDoc(doc(db, 'users', user.uid), {
+            ultimaClase: {
+              id: curso.id,
+              titulo: curso.titulo || 'Clase',
+              categoria: curso.categoria || '',
+              completada: !!(submission && submission.estado === 'aprobado'),
+              fecha: serverTimestamp(),
+            },
+          }, { merge: true }).catch(() => { /* no bloqueamos la vista de la clase si esto falla */ });
+        }
       } catch(e) {
         loading.innerHTML = '<p style="color:var(--color-danger-fg)">Error al cargar: ' + e.message + '</p>';
       }
@@ -675,7 +681,12 @@
       ];
 
       let quizHTML = '';
-      if (submission) {
+      if (!uid) {
+        quizHTML = `
+          <p class="quiz-subtitle">Podés ver toda la clase sin cuenta. Para rendir este quiz, sumar puntos y aparecer en el ranking, creá una cuenta gratis.</p>
+          <a href="registro.html" class="btn btn--primary" style="width:100%;justify-content:center;text-align:center">Crear cuenta gratis</a>
+        `;
+      } else if (submission) {
         if (submission.estado === 'aprobado') {
           quizHTML = `
             <div class="quiz-aprobado">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Mis Títulos — Academia Indrhack</title>
@@ -70,8 +70,8 @@
       width: 100%;
       min-height: 480px;
       background: #fdfcf8;
-      border: 3px solid #8B0000;
-      outline: 1px solid #8B0000;
+      border: 3px solid var(--danger);
+      outline: 1px solid var(--danger);
       outline-offset: -8px;
       position: relative;
       padding: 2.2rem 2.5rem 1.5rem;
@@ -112,7 +112,7 @@
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.7rem;
       letter-spacing: 0.3em;
-      color: #8B0000;
+      color: var(--danger);
       position: relative; z-index: 2;
     }
 
@@ -146,9 +146,9 @@
       font-family: 'Playfair Display', serif;
       font-weight: 700;
       font-size: clamp(1.4rem, 5vw, 2.1rem);
-      color: #8B0000;
+      color: var(--danger);
       margin: 0.3rem 0 0.8rem;
-      border-bottom: 1.5px solid #8B0000;
+      border-bottom: 1.5px solid var(--danger);
       padding-bottom: 0.3rem;
       display: inline-block;
       position: relative; z-index: 2;
@@ -174,7 +174,7 @@
       justify-content: center;
     }
 
-    .cert-meta strong { color: #8B0000; }
+    .cert-meta strong { color: var(--danger); }
 
     .cert-motto {
       font-family: 'Share Tech Mono', monospace;
@@ -320,10 +320,10 @@
       <div id="certificado">
         <div class="cert-watermark"><img src="assets/img/logo-indrhack.png" alt=""></div>
 
-        <div class="cert-corner cert-corner--tl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
-        <div class="cert-corner cert-corner--tr"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
-        <div class="cert-corner cert-corner--bl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
-        <div class="cert-corner cert-corner--br"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="#8B0000" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="#8B0000"/></svg></div>
+        <div class="cert-corner cert-corner--tl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="var(--danger)" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="var(--danger)"/></svg></div>
+        <div class="cert-corner cert-corner--tr"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="var(--danger)" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="var(--danger)"/></svg></div>
+        <div class="cert-corner cert-corner--bl"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="var(--danger)" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="var(--danger)"/></svg></div>
+        <div class="cert-corner cert-corner--br"><svg viewBox="0 0 60 60"><path d="M2 2 L2 30 M2 2 L30 2" stroke="var(--danger)" stroke-width="1.5" fill="none"/><circle cx="2" cy="2" r="2" fill="var(--danger)"/></svg></div>
 
         <img class="cert-logo" src="assets/img/logo-indrhack.png" alt="Logo" />
         <div class="cert-org">ACADEMIA INDRHACK · COMUNIDAD</div>

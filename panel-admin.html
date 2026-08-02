@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel administrador — Academia Indrhack</title>
@@ -43,7 +43,7 @@
     }
     .presence-dot--online  { background: var(--color-success-fg); box-shadow: 0 0 6px var(--color-success-fg); }
     .presence-dot--recent  { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-    .presence-dot--offline { background: #333; }
+    .presence-dot--offline { background: var(--text-muted); }
 
     .presence-username {
       grid-area: user;
@@ -177,9 +177,9 @@
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
     <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📰 Noticias</a>
-    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
+    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
-    <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
+    <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#clases-vivo" data-tab="clases-vivo" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📡 Clases en vivo</a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
@@ -195,9 +195,9 @@
         <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
-        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
+        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
-        <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--gold);color:#000;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
+        <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#clases-vivo" data-tab="clases-vivo">📡 Clases en vivo</a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
@@ -415,7 +415,7 @@
             </div>
             <div class="field">
               <label for="cfg-wa-proyecto">Grupo de WhatsApp del equipo de desarrollo (proyecto app)</label>
-              <small style="color:#888;display:block;margin-bottom:0.4rem">Se comparte solo con quienes se les aprueba la solicitud en la pestaña "Equipo de desarrollo".</small>
+              <small style="color:var(--text-muted);display:block;margin-bottom:0.4rem">Se comparte solo con quienes se les aprueba la solicitud en la pestaña "Equipo de desarrollo".</small>
               <input type="url" id="cfg-wa-proyecto" name="whatsappProyecto" placeholder="https://chat.whatsapp.com/..." />
             </div>
             <button type="submit" class="btn btn--outline btn--small" style="margin-top:0.5rem">Guardar</button>
@@ -443,7 +443,7 @@
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
-          <button class="btn btn--small btn--primary" data-qfilter="pendiente">⏳ Pendientes <span id="q-count-pendiente" style="background:#ffffff22;padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
+          <button class="btn btn--small btn--primary" data-qfilter="pendiente">⏳ Pendientes <span id="q-count-pendiente" style="background:rgba(0,0,0,0.15);padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
           <button class="btn btn--small btn--outline" data-qfilter="aprobado">✅ Aprobados</button>
           <button class="btn btn--small btn--outline" data-qfilter="rechazado">❌ Rechazados</button>
           <button class="btn btn--small btn--outline" data-qfilter="todos">👁 Todos</button>
@@ -495,7 +495,7 @@
         </div>
 
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
-          <button class="btn btn--small btn--primary" data-cfilter="pendiente">⏳ Pendientes <span id="c-count-pendiente" style="background:#ffffff22;padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
+          <button class="btn btn--small btn--primary" data-cfilter="pendiente">⏳ Pendientes <span id="c-count-pendiente" style="background:rgba(0,0,0,0.15);padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
           <button class="btn btn--small btn--outline" data-cfilter="aprobado">✅ Aprobados</button>
           <button class="btn btn--small btn--outline" data-cfilter="rechazado">❌ Rechazados</button>
           <button class="btn btn--small btn--outline" data-cfilter="todos">👁 Todos</button>
@@ -586,7 +586,7 @@
         </div>
         <div class="field">
           <label>Link o número de WhatsApp para unirse</label>
-          <small style="color:#888;display:block;margin-bottom:0.4rem">Pegá el link del grupo (https://chat.whatsapp.com/...) o un número con código de país (ej: 5491122334455).</small>
+          <small style="color:var(--text-muted);display:block;margin-bottom:0.4rem">Pegá el link del grupo (https://chat.whatsapp.com/...) o un número con código de país (ej: 5491122334455).</small>
           <input type="text" name="whatsapp" required placeholder="https://chat.whatsapp.com/... o 5491122334455" />
         </div>
         <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
@@ -735,7 +735,7 @@
         <div class="field"><label>Enlace de descarga</label><input type="text" name="descarga" placeholder="https://..." /></div>
 
         <!-- PREGUNTAS DEL QUIZ -->
-        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #222">
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
           <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:var(--color-accent-fg);margin:0 0 0.75rem">🧠 PREGUNTAS DEL QUIZ (4)</p>
           <div class="field"><label>Pregunta 1</label><input type="text" name="quiz_p1" placeholder="¿Cuál es el concepto principal de esta clase?" /></div>
           <div class="field"><label>Pregunta 2</label><input type="text" name="quiz_p2" placeholder="¿Qué pasos seguirías para aplicar lo aprendido?" /></div>
@@ -744,12 +744,12 @@
         </div>
 
         <!-- COMANDOS TERMUX -->
-        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid #0f1d38">
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
             <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:var(--color-success-fg);margin:0">💻 COMANDOS TERMUX</p>
-            <button type="button" id="btn-add-cmd" style="background:#0f1d38;border:1px solid #24365c;border-radius:6px;color:var(--color-success-fg);font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
+            <button type="button" id="btn-add-cmd" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--color-success-fg);font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
           </div>
-          <p style="font-size:0.77rem;color:#5c6c8c;margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic. Cada bloque tiene: etiqueta, descripción del comando y el comando en sí.</p>
+          <p style="font-size:0.77rem;color:var(--text-muted);margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic. Cada bloque tiene: etiqueta, descripción del comando y el comando en sí.</p>
           <div id="termux-cmds-container"></div>
         </div>
 
@@ -1134,7 +1134,7 @@
       btnPreview?.addEventListener('click', () => {
         const numerosPegados = extraerNumeros(input.value);
         if (numerosPegados.length === 0) {
-          resultEl.innerHTML = '<p style="color:#c99a2e">Pega al menos un número primero.</p>';
+          resultEl.innerHTML = '<p style="color:var(--warning)">Pega al menos un número primero.</p>';
           return;
         }
 
@@ -1163,7 +1163,7 @@
             '</ul>';
         }
         if (sinTelefono.length > 0) {
-          html += `<p style="color:#c99a2e">⚠️ ${sinTelefono.length} miembros no tienen teléfono guardado, no se pueden verificar (quedan sin tocar).</p>`;
+          html += `<p style="color:var(--warning)">⚠️ ${sinTelefono.length} miembros no tienen teléfono guardado, no se pueden verificar (quedan sin tocar).</p>`;
         }
         if (noMatcheados.length > 0) {
           html += `<p style="color:var(--text-muted)">ℹ️ ${noMatcheados.length} números que pegaste no coinciden con ningún miembro registrado (puede ser gente en el grupo que no está en la página).</p>`;
@@ -1419,20 +1419,20 @@
     function addCmdBlock(data) {
       const idx  = termuxContainer.children.length;
       const wrap = document.createElement('div');
-      wrap.style.cssText = 'background:#0a1428;border:1px solid #0f1d38;border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
+      wrap.style.cssText = 'background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
       wrap.innerHTML = `
         <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
         <div class="field" style="margin-bottom:0.5rem">
-          <label style="font-size:0.75rem;color:#5c6c8c">Etiqueta (título corto)</label>
-          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border-color:#0f1d38;font-size:0.85rem" />
+          <label style="font-size:0.75rem;color:var(--text-muted)">Etiqueta (título corto)</label>
+          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border-color:var(--border);font-size:0.85rem" />
         </div>
         <div class="field" style="margin-bottom:0.5rem">
-          <label style="font-size:0.75rem;color:#5c6c8c">Descripción / para qué sirve</label>
-          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border-color:#0f1d38;font-size:0.85rem" />
+          <label style="font-size:0.75rem;color:var(--text-muted)">Descripción / para qué sirve</label>
+          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border-color:var(--border);font-size:0.85rem" />
         </div>
         <div class="field" style="margin-bottom:0">
           <label style="font-size:0.75rem;color:var(--color-success-fg)">Comando <span style="color:var(--text-muted)">(lo que se copia)</span></label>
-          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:#060d1c;border:1px solid #24365c;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#e8ecf3" />
+          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text)" />
         </div>
       `;
       termuxContainer.appendChild(wrap);

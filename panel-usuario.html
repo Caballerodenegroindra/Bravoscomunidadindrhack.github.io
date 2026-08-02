@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1428" />
+  <meta name="theme-color" content="#f7f7f5" />
   <title>Mi panel — Academia Indrhack</title>
   <meta name="description" content="Panel personal del estudiante en Academia Indrhack." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -296,14 +296,14 @@
               <label for="pwd-nueva">Nueva contraseña</label>
               <div class="pwd-wrap" style="position:relative">
                 <input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" />
-                <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
+                <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
               </div>
             </div>
             <div class="field">
               <label for="pwd-confirmar">Confirmar nueva contraseña</label>
               <div class="pwd-wrap" style="position:relative">
                 <input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la contraseña" />
-                <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
+                <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
               </div>
             </div>
             <button type="submit" class="btn btn--outline">Cambiar contraseña</button>

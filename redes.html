@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1428" />
+  <meta name="theme-color" content="#f7f7f5" />
   <title>Redes — Academia Indrhack</title>
   <meta name="description" content="Seguí a Academia Indrhack en redes sociales y sumate a la comunidad." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -34,7 +34,7 @@
       font-family: var(--font-heading);
       font-size: 1.6rem;
       color: var(--gold);
-      text-shadow: 0 0 14px rgba(198,169,101,0.35);
+      text-shadow: 0 0 14px rgba(20,20,18,0.35);
     }
   </style>
 </head>
@@ -100,7 +100,7 @@
   <main>
     <div class="container section reveal">
       <h1 class="section-title">Nuestras <span class="accent">redes</span></h1>
-      <p class="section-subtitle">Únete a la comunidad de Academia Indrhack en nuestros canales oficiales.</p>
+      <p class="section-subtitle">Todos los cursos y clases son públicos, sin necesidad de cuenta. Estos son los canales para sumarte a la comunidad.</p>
 
       <div class="card-grid">
         <div class="card social-card">
@@ -117,20 +117,20 @@
 
         <div class="card social-card">
           <span class="social-card__icon">◈ Canal de WhatsApp</span>
-          <p class="section-subtitle">Avisos oficiales y novedades de cursos directo a tu teléfono.</p>
+          <p class="section-subtitle">Avisos oficiales y novedades de cursos directo a tu teléfono. Abierto para todos, sin cuenta.</p>
           <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
         </div>
 
-        <div class="card social-card">
-          <span class="social-card__icon">◇ Grupo de WhatsApp</span>
-          <p class="section-subtitle">Conversa con otros estudiantes y comparte recursos.</p>
-          <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
+        <div class="card social-card" id="card-grupo-general">
+          <span class="social-card__icon">◇ Grupo general</span>
+          <p class="section-subtitle">Chat de la comunidad: hacé preguntas, conversá con otros estudiantes y pedí ayuda. Para entrar hace falta crear una cuenta y ser aprobado.</p>
+          <a class="btn btn--outline btn--small" id="btn-grupo-general" href="registro.html">Crear cuenta para unirme</a>
         </div>
 
         <div class="card social-card">
-          <span class="social-card__icon">🚀 Equipo de desarrollo</span>
-          <p class="section-subtitle">¿Sabés programar o querés aprender ayudando? Sumate al equipo que construye esta app.</p>
-          <a class="btn btn--outline btn--small" href="colabora.html">Quiero ayudar</a>
+          <span class="social-card__icon">🚀 Colaboradores y programadores</span>
+          <p class="section-subtitle">¿Sabés programar o querés ayudar a crear cursos y contenido? Sumate al equipo que construye esta app y la academia.</p>
+          <a class="btn btn--outline btn--small" href="colabora.html">Quiero colaborar</a>
         </div>
       </div>
     </div>
@@ -154,14 +154,16 @@
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     const snap = await getDoc(doc(db, 'config', 'site'));
-    if (snap.exists()) {
-      const data = snap.data();
-      const links = document.querySelectorAll('.btn--outline');
-      if (data.facebook) links[0].href = data.facebook;
-      if (data.youtube) links[1].href = data.youtube;
-      if (data.whatsappCanal) links[2].href = data.whatsappCanal;
-      if (data.whatsappGrupo) links[3].href = data.whatsappGrupo;
-    }
+    const siteConfig = snap.exists() ? snap.data() : {};
+
+    const links = document.querySelectorAll('.card-grid .btn--outline');
+    if (siteConfig.facebook) links[0].href = siteConfig.facebook;
+    if (siteConfig.youtube) links[1].href = siteConfig.youtube;
+    if (siteConfig.whatsappCanal) links[2].href = siteConfig.whatsappCanal;
+
+    // El botón del grupo general recién apunta al enlace real de WhatsApp
+    // si la cuenta ya está aprobada; si no, sigue llevando a registro.html.
+    window._siteConfig = siteConfig;
   </script>
 
   <script type="module">
@@ -169,6 +171,8 @@
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const btnGrupoGeneral = document.getElementById('btn-grupo-general');
 
     // Smart inicio link - redirect to panel if logged in
     onAuthStateChanged(auth, async (user) => {
@@ -179,6 +183,14 @@
           if (snap.exists() && snap.data().estado === 'aprobado') {
             const panel = snap.data().rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html';
             inicioLinks.forEach(a => { a.href = panel; a.textContent = 'Mi Panel'; });
+
+            const link = window._siteConfig && window._siteConfig.whatsappGrupo;
+            if (btnGrupoGeneral && link) {
+              btnGrupoGeneral.href = link;
+              btnGrupoGeneral.target = '_blank';
+              btnGrupoGeneral.rel = 'noopener';
+              btnGrupoGeneral.textContent = 'Abrir grupo';
+            }
             return;
           }
         } catch(e) {}

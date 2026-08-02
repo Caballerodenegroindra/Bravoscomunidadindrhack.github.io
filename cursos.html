@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"dark");}catch(e){}</script>
+  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1428" />
+  <meta name="theme-color" content="#f7f7f5" />
   <title>Cursos — Academia Indrhack</title>
   <meta name="description" content="Explorá el catálogo completo de cursos de Academia Indrhack: ciberseguridad, hacking ético, Termux y más." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -88,7 +88,7 @@
       font-size: 0.9rem;
       min-height: 44px;
     }
-    .cursos-search input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(198,169,101,0.2); }
+    .cursos-search input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(20,20,18,0.2); }
     .cursos-search input::placeholder { color: var(--text-muted); }
     .cursos-search__clear {
       position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
@@ -256,7 +256,7 @@
       text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);
       border: 1px dashed var(--border); border-radius: var(--radius-md);
     }
-    mark.hl { background: rgba(198,169,101,0.35); color: var(--gold); border-radius: 2px; padding: 0 1px; }
+    mark.hl { background: rgba(20,20,18,0.14); color: var(--text); font-weight: 700; border-radius: 2px; padding: 0 1px; }
 
     /* ====================== VISTA MAPA CONCEPTUAL ====================== */
     .mapa-panel {
@@ -331,7 +331,7 @@
       padding: 0.55rem 0.7rem;
       display: flex; align-items: center; gap: 0.4rem;
     }
-    .map-node--categoria:hover { box-shadow: 0 0 0 3px rgba(198,169,101,0.18); }
+    .map-node--categoria:hover { box-shadow: 0 0 0 3px rgba(20,20,18,0.18); }
     .map-node--categoria .map-node__icon { font-size: 1rem; }
     .map-node--categoria .map-node__title { font-size: 0.82rem; font-weight: 700; color: var(--text); line-height: 1.25; }
     .map-node--categoria .map-node__sub { font-size: 0.65rem; color: var(--text-muted); }
@@ -501,9 +501,6 @@
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { auth } from './js/firebase-config.js';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     /* ===== Referencias DOM ===== */
     const container      = document.getElementById('cursos-container');
@@ -538,14 +535,6 @@
     let searchTerm      = '';
     let vistaActual     = 'lista';
     let mapaRenderizado = false;
-
-    /* ===== Sesión ===== */
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const snap = await getDoc(doc(db, 'users', user.uid));
-        if (snap.exists()) window._currentUser = { uid: user.uid, ...snap.data() };
-      }
-    });
 
     /* ===== Carga de cursos ===== */
     async function cargarCursos() {
@@ -954,22 +943,20 @@
 
     /* ===== Modal detalle de curso ===== */
     function abrirModal(c) {
-      const user = window._currentUser || null;
-      const logueado = user && user.estado === 'aprobado';
       const puntos = puntosMap[c.nivel] || 100;
       const enlaceCompartir = enlaceCurso(c);
 
-      const descargaBtn = c.descarga && logueado
+      // Cursos, clases, descargas y recursos son públicos: no hace falta
+      // cuenta ni aprobación para verlos. El registro queda reservado
+      // para quien quiera sumarse a la comunidad (chat general o equipo
+      // de colaboradores) desde la sección "Redes".
+      const descargaBtn = c.descarga
         ? `<a href="${c.descarga}" target="_blank" download class="btn btn--primary">⬇ Descargar material</a>`
-        : c.descarga
-          ? `<div style="background:var(--color-accent-emphasis)22;border:1px solid var(--color-accent-emphasis);border-radius:8px;padding:0.75rem;margin-top:0.5rem;color:#ff6b6b;font-size:0.85rem">🔒 <a href="registro.html" style="color:var(--color-accent-fg)">Regístrate gratis</a> para descargar este material.</div>`
-          : '';
+        : '';
 
-      const verClaseBtn = logueado
-        ? `<a href="clase.html?id=${c.id}" class="btn btn--primary" style="width:100%;justify-content:center;text-align:center">📖 Ver clase y rendir quiz</a>`
-        : `<a href="registro.html" class="btn btn--outline" style="width:100%;justify-content:center;text-align:center">🔒 Regístrate gratis para acceder</a>`;
+      const verClaseBtn = `<a href="clase.html?id=${c.id}" class="btn btn--primary" style="width:100%;justify-content:center;text-align:center">📖 Ver clase</a>`;
 
-      const enlaceBtn = c.enlace && logueado
+      const enlaceBtn = c.enlace
         ? `<a href="${c.enlace}" target="_blank" class="btn btn--outline">🔗 Recurso externo</a>`
         : '';
 
@@ -981,7 +968,7 @@
         </div>
         <h2 style="margin:0 0 0.75rem;padding-right:2rem">${escapeHtml(c.titulo)}</h2>
         <p style="color:#aaa;white-space:pre-wrap;line-height:1.7;margin-bottom:1.25rem">${escapeHtml(c.descripcion || '')}</p>
-        ${c.material && logueado ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">📄 <strong style="color:#fff">Material:</strong> ${escapeHtml(c.material)}</p>` : ''}
+        ${c.material ? `<p style="color:#888;font-size:0.85rem;margin-bottom:0.5rem">📄 <strong style="color:#fff">Material:</strong> ${escapeHtml(c.material)}</p>` : ''}
         <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1.25rem">
           ${verClaseBtn}
           ${descargaBtn}
