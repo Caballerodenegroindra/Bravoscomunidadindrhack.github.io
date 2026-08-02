@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F6F5F1" />
   <title>Participá en la comunidad — Academia Indrhack</title>
   <meta name="description" content="Sumate al chat general de la comunidad o al equipo que desarrolla la app de Academia Indrhack." />
@@ -171,7 +171,7 @@
       collection, addDoc, doc, updateDoc, getDoc,
       query, where, orderBy, limit, getDocs, Timestamp,
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { requireApprovedUser } from './js/auth.js';
+    import { onSessionChange, ESTADOS } from './js/auth.js';
     import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
 
     const AREAS = [
@@ -192,8 +192,28 @@
 
     const cont = document.getElementById('colabora-contenido');
 
-    requireApprovedUser('login.html').then(async (profile) => {
-      if (!profile) return;
+    // Antes esto redirigía TODA la página a login.html apenas cargaba,
+    // incluso para alguien que solo quería leer de qué se trata sumarse
+    // al equipo. Ahora, si no hay sesión (o la cuenta no está aprobada),
+    // solo esta tarjeta muestra un aviso con botones — el resto de la
+    // página (chat, convocatorias, explicación del proyecto) queda visible
+    // para cualquiera, logueado o no.
+    onSessionChange(async (profile) => {
+      if (!profile || profile.estado !== ESTADOS.APROBADO) {
+        cont.innerHTML = `
+          <h2 class="section-title" style="font-size:1.05rem">¿Querés sumarte al equipo?</h2>
+          <p class="section-subtitle" style="margin-bottom:1rem">
+            Para postularte necesitás una cuenta aprobada: contanos tu experiencia y el área en la que
+            te gustaría ayudar, y un administrador revisa tu solicitud. Si ya tenés cuenta, iniciá sesión;
+            si sos nuevo, registrate primero.
+          </p>
+          <div class="auth-gate__actions">
+            <a href="login.html?next=colabora.html" class="btn btn--primary">Iniciar sesión</a>
+            <a href="registro.html" class="btn btn--outline">Registrarte</a>
+          </div>
+        `;
+        return;
+      }
 
       let config = {};
       try {

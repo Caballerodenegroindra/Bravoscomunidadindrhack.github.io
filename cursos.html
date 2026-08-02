@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F6F5F1" />
   <title>Cursos — Academia Indrhack</title>
   <meta name="description" content="Explorá el catálogo completo de cursos de Academia Indrhack: ciberseguridad, hacking ético, Termux y más." />
@@ -847,17 +847,29 @@
     let zoomMapa = 1;
     const ZOOM_MIN = 0.4, ZOOM_MAX = 1.5;
 
-    function aplicarZoomMapa(nivel) {
-      zoomMapa = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, nivel));
+    function aplicarZoomMapa(nivel, sinLimite) {
+      // "sinLimite" lo usa ajustarMapa(): un mapa con muchas clases puede
+      // necesitar bajar de 40% para entrar completo en el panel, y ese
+      // caso no debe quedar atado al límite pensado para el zoom manual.
+      zoomMapa = sinLimite ? Math.max(0.05, nivel) : Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, nivel));
       mapCanvas.style.transform = `scale(${zoomMapa})`;
       document.getElementById('mapZoomLabel').textContent = Math.round(zoomMapa * 100) + '%';
     }
 
     function ajustarMapa() {
       const wrapW = mapWrap.clientWidth;
+      const wrapH = mapWrap.clientHeight;
+      // offsetWidth/offsetHeight reflejan el tamaño "real" (sin escalar)
+      // del canvas: transform: scale() no los altera, solo cambia lo que
+      // se pinta en pantalla.
       const canvasW = mapCanvas.offsetWidth || 1;
-      const factor = Math.min(1, wrapW / canvasW);
-      aplicarZoomMapa(factor > 0 ? factor : 1);
+      const canvasH = mapCanvas.offsetHeight || 1;
+      // Antes solo se tenía en cuenta el ancho, así que el mapa podía
+      // seguir siendo más alto que el panel y quedar cortado verticalmente.
+      // Ahora el factor de ajuste considera ambas dimensiones para que
+      // el mapa completo entre siempre dentro del panel visible.
+      const factor = Math.min(1, wrapW / canvasW, wrapH / canvasH);
+      aplicarZoomMapa(factor > 0 ? factor : ZOOM_MIN, true);
       mapWrap.scrollLeft = 0;
       mapWrap.scrollTop = 0;
     }

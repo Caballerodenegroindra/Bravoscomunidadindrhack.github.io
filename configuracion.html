@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F6F5F1" />
   <title>Configuración — Academia Indrhack</title>
   <meta name="description" content="Configuración de tu cuenta en Academia Indrhack." />
@@ -41,8 +41,24 @@
     <div class="container section reveal">
       <h1 class="section-title">Configuración</h1>
 
+      <!-- Gate: se muestra si todavía no iniciaste sesión, ANTES de pedir nada -->
+      <div class="card auth-gate hidden" id="config-gate">
+        <h3>¿Qué podés hacer acá?</h3>
+        <p class="section-subtitle">Configuración es el panel para manejar tu cuenta de Academia Indrhack.</p>
+        <ul class="auth-gate__list">
+          <li><i>🔑</i> Cambiar tu contraseña cuando quieras.</li>
+          <li><i>👤</i> Ver tu usuario, tu rol y el estado de tu cuenta.</li>
+          <li><i>⚙️</i> Si sos administrador, editar los datos públicos del sitio (redes, lema, enlaces de WhatsApp).</li>
+        </ul>
+        <p class="section-subtitle">Para entrar necesitás una cuenta aprobada. Si ya tenés una, iniciá sesión. Si sos nuevo, registrate primero.</p>
+        <div class="auth-gate__actions">
+          <a href="login.html?next=configuracion.html" class="btn btn--primary">Iniciar sesión</a>
+          <a href="registro.html" class="btn btn--outline">Registrarte</a>
+        </div>
+      </div>
+
       <!-- Cuenta (visible para cualquier miembro aprobado) -->
-      <div class="card" style="max-width:560px; margin-bottom:var(--gap-lg)">
+      <div class="card hidden" id="config-contenido" style="max-width:560px; margin-bottom:var(--gap-lg)">
         <h3>Mi cuenta</h3>
         <p class="section-subtitle">
           Usuario: <strong data-account-username>—</strong><br />
@@ -95,7 +111,7 @@
     </div>
 
       <!-- Cambiar contraseña -->
-      <div class="card" style="max-width:480px;margin-top:2rem">
+      <div class="card hidden" id="config-pwd-card" style="max-width:480px;margin-top:2rem">
         <h2 class="section-title">Cambiar <span class="accent">contraseña</span></h2>
         <form id="pwd-form">
           <div class="field">
@@ -140,10 +156,20 @@
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { requireApprovedUser, logoutUser, ROLES } from './js/auth.js';
+    import { onSessionChange, logoutUser, ROLES, ESTADOS } from './js/auth.js';
 
-    requireApprovedUser('login.html').then(async (profile) => {
-      if (!profile) return;
+    // Antes esto redirigía de una a login.html sin explicar nada. Ahora,
+    // si no hay sesión (o la cuenta todavía no está aprobada), se muestra
+    // el panel informativo "config-gate" y recién ahí la persona elige
+    // iniciar sesión o registrarse.
+    onSessionChange(async (profile) => {
+      if (!profile || profile.estado !== ESTADOS.APROBADO) {
+        document.getElementById('config-gate').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('config-gate').classList.add('hidden');
+      document.getElementById('config-contenido').classList.remove('hidden');
+      document.getElementById('config-pwd-card').classList.remove('hidden');
 
       document.querySelector('[data-account-username]').textContent = profile.username;
       document.querySelector('[data-account-rol]').textContent = profile.rol;

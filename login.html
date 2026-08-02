@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F6F5F1" />
   <title>Iniciar sesión — Academia Indrhack</title>
   <meta name="description" content="Iniciá sesión en Academia Indrhack y continuá tu formación en ciberseguridad y hacking ético." />
@@ -136,7 +136,11 @@
 
       try {
         const profile = await loginUser({ username, password });
-        const destination = profile.rol === ROLES.ADMINISTRADOR ? 'panel-admin.html' : 'panel-usuario.html';
+        // Si llegamos acá desde un "gate" (ej: configuracion.html?next=...)
+        // volvemos a esa página en vez de mandar siempre al panel.
+        const nextParam = new URLSearchParams(window.location.search).get('next');
+        const nextSeguro = nextParam && /^[a-zA-Z0-9_-]+\.html(\?[^\s]*)?$/.test(nextParam) ? nextParam : null;
+        const destination = nextSeguro || (profile.rol === ROLES.ADMINISTRADOR ? 'panel-admin.html' : 'panel-usuario.html');
         window.location.href = destination;
       } catch (error) {
         showMessage(error.message || 'No se pudo iniciar sesión.', 'error');
