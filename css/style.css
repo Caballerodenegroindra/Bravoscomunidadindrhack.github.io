@@ -334,7 +334,13 @@ body.nav-open { overflow: hidden; }
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
-  z-index: 255;
+  /* Debe quedar por debajo del z-index de .navbar (200): .navbar__links
+     vive DENTRO de .navbar, que crea su propio contexto de apilamiento
+     (position:sticky + z-index). Si este fondo tuviera un z-index mayor
+     al de .navbar, quedaría pintado ENCIMA de todo el menú de pantalla
+     completa (aunque .navbar__links declare z-index:260), tapándolo con
+     el velo gris y absorbiendo todos los toques. */
+  z-index: 190;
 }
 .nav-backdrop.open { opacity: 1; pointer-events: auto; }
 
