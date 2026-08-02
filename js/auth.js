@@ -59,7 +59,7 @@ export async function isUsernameTaken(username) {
  * Usa el correo real del usuario como email de autenticación, para
  * que la recuperación de contraseña funcione de verdad.
  */
-export async function registerUser({ phone, username, password, email }) {
+export async function registerUser({ phone, username, password, email, tiposParticipante, habilidades, motivoParticipacion }) {
   const normalizedUsername = username.trim().toLowerCase();
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -68,6 +68,11 @@ export async function registerUser({ phone, username, password, email }) {
   }
 
   const credential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
+
+  // Normaliza a un array válido: ['aprendiz'], ['colaborador'], o ambos.
+  const tipos = Array.isArray(tiposParticipante) && tiposParticipante.length
+    ? tiposParticipante.filter((t) => t === 'aprendiz' || t === 'colaborador')
+    : ['aprendiz'];
 
   try {
     await setDoc(doc(db, 'users', credential.user.uid), {
@@ -81,6 +86,14 @@ export async function registerUser({ phone, username, password, email }) {
       photoURL: '',
       rango: 'Recluta',
       enGrupo: false,
+      // Cómo eligió participar al registrarse: chat general ('aprendiz'),
+      // equipo de desarrollo ('colaborador'), o ambos a la vez.
+      tiposParticipante: tipos,
+      // Solo tiene sentido si eligió 'colaborador': en qué se identifica
+      // (programador, técnico, diseño, etc.) — visible en su perfil.
+      habilidades: Array.isArray(habilidades) ? habilidades : [],
+      // Por qué quiere participar (lo cuenta al registrarse).
+      motivoParticipacion: (motivoParticipacion || '').trim(),
       nivelProgramacion: '',
       onboardingExtra: false,
       ayudaFuturosProyectos: '',
