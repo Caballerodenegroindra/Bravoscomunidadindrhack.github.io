@@ -40,16 +40,57 @@
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
-      <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="colabora.html" title="Sumate a colaborar con el proyecto">🚀 Colaborá</a>
+      <a href="colabora.html" title="Participá en la comunidad">🤝 Participá</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <main>
     <div class="auth-shell">
-      <div class="auth-card reveal">
+      <!-- PASO 1: elegir cómo querés participar (podés elegir las dos) -->
+      <div class="auth-card reveal" id="tipo-participante-step">
+        <h1 class="auth-card__title">¿Cómo querés participar?</h1>
+        <p class="auth-card__subtitle">Podés elegir una opción o las dos. Después completás tus datos para crear la cuenta.</p>
+
+        <div style="display:flex;flex-direction:column;gap:0.9rem;margin-top:1rem">
+          <button type="button" class="card" id="opt-aprendiz" data-tipo="aprendiz" aria-pressed="false" style="text-align:left;cursor:pointer;border-color:rgba(20,20,18,0.3);width:100%">
+            <h2 class="section-title" style="font-size:1.02rem;margin-bottom:0.4rem"><span class="check">☐</span> 🎓 Quiero aprender y participar</h2>
+            <p style="margin:0;font-size:0.88rem;color:var(--text-soft);line-height:1.6">
+              Soy nuevo o estoy aprendiendo. Quiero entrar al chat de WhatsApp de la comunidad, hablar, hacer preguntas y seguir los cursos.
+            </p>
+          </button>
+
+          <!-- Motivo (aparece si eligió "aprendiz") -->
+          <div id="motivo-wrap" class="field" style="display:none;margin:0 0 0 0.25rem">
+            <label for="motivo-participacion">¿Por qué querés participar?</label>
+            <textarea id="motivo-participacion" name="motivoParticipacion" rows="2" placeholder="Ej: Quiero aprender ciberseguridad desde cero y conocer gente con el mismo interés..."></textarea>
+          </div>
+
+          <button type="button" class="card" id="opt-colaborador" data-tipo="colaborador" aria-pressed="false" style="text-align:left;cursor:pointer;border-color:rgba(20,20,18,0.3);width:100%">
+            <h2 class="section-title" style="font-size:1.02rem;margin-bottom:0.4rem"><span class="check">☐</span> 💻 Ya sé programar y quiero colaborar</h2>
+            <p style="margin:0;font-size:0.88rem;color:var(--text-soft);line-height:1.6">
+              Quiero apoyar el desarrollo de la app: modificaciones, herramientas nuevas y los cursos. También voy a poder entrar al chat de la comunidad.
+            </p>
+          </button>
+
+          <!-- Habilidades (aparece si eligió "colaborador") -->
+          <div id="habilidades-wrap" class="field" style="display:none;margin:0 0 0 0.25rem">
+            <label>¿En qué te identificás? (elegí una o más)</label>
+            <div id="habilidades-lista" style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.3rem"></div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-continuar-tipo" class="btn btn--primary btn--block" style="margin-top:1.25rem" disabled>Continuar</button>
+
+        <p class="form-footer">
+          ¿Ya tienes cuenta aprobada? <a href="login.html">Inicia sesión</a>
+        </p>
+      </div>
+
+      <!-- PASO 2: formulario de datos (se muestra tras elegir arriba) -->
+      <div class="auth-card reveal" id="datos-step" style="display:none">
+        <button type="button" id="volver-tipo" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.85rem;margin-bottom:0.75rem;padding:0">← Cambiar opción</button>
         <h1 class="auth-card__title">Crear cuenta</h1>
-        <p class="auth-card__subtitle">Tu solicitud será revisada por un administrador antes de activarse.</p>
+        <p class="auth-card__subtitle" id="datos-subtitle">Tu solicitud será revisada por un administrador antes de activarse.</p>
 
         <form id="register-form" novalidate>
           <div class="field">
@@ -100,10 +141,6 @@
 
           <div class="form-message" id="form-message"></div>
         </form>
-
-        <p class="form-footer">
-          ¿Ya tienes cuenta aprobada? <a href="login.html">Inicia sesión</a>
-        </p>
       </div>
     </div>
   </main>
@@ -125,19 +162,98 @@
     import { db } from './js/firebase-config.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // El enlace del grupo de WhatsApp lo define el administrador desde
-    // Configuración → "Configuración del sitio" (Firestore config/site).
-    // Si todavía no lo configuró, se mantiene el enlace de respaldo del HTML.
+    // Los enlaces de los grupos de WhatsApp los define el administrador
+    // desde Configuración → "Configuración del sitio" (Firestore config/site).
+    // Si todavía no los configuró, se mantienen los de respaldo del HTML.
+    window._waLinks = { grupo: null, proyecto: null };
     (async () => {
       try {
         const snap = await getDoc(doc(db, 'config', 'site'));
-        const link = snap.exists() ? snap.data().whatsappGrupo : null;
-        if (link) {
-          document.getElementById('wa-modal-link').href = link;
+        if (snap.exists()) {
+          const data = snap.data();
+          window._waLinks.grupo = data.whatsappGrupo || null;
+          window._waLinks.proyecto = data.whatsappProyecto || null;
         }
       } catch (e) {
-        // Si falla, se conserva el enlace de respaldo.
+        // Si falla, se conservan los enlaces de respaldo.
       }
+    })();
+  </script>
+
+  <script>
+    // PASO 1: elegir cómo participar (se puede elegir uno o los dos).
+    (function () {
+      const stepTipo = document.getElementById('tipo-participante-step');
+      const stepDatos = document.getElementById('datos-step');
+      const subtitle = document.getElementById('datos-subtitle');
+      const volverBtn = document.getElementById('volver-tipo');
+      const btnAprendiz = document.getElementById('opt-aprendiz');
+      const btnColaborador = document.getElementById('opt-colaborador');
+      const motivoWrap = document.getElementById('motivo-wrap');
+      const habilidadesWrap = document.getElementById('habilidades-wrap');
+      const habilidadesLista = document.getElementById('habilidades-lista');
+      const btnContinuar = document.getElementById('btn-continuar-tipo');
+
+      const HABILIDADES = [
+        { id: 'programador', label: '👨‍💻 Programador/a' },
+        { id: 'tecnico_informatica', label: '🖥️ Técnico en informática' },
+        { id: 'desarrollador_software', label: '🛠️ Desarrollador/a de software' },
+        { id: 'diseno_uiux', label: '🎨 Diseño UI/UX' },
+        { id: 'ciberseguridad', label: '🔐 Ciberseguridad' },
+        { id: 'testing_qa', label: '🧪 Testing / QA (reporte de errores)' },
+        { id: 'redes_sistemas', label: '🌐 Redes y administración de sistemas' },
+        { id: 'documentacion', label: '📝 Documentación y contenido' },
+        { id: 'aprendiz_programacion', label: '📚 Estoy aprendiendo a programar' },
+        { id: 'todo_lo_que_haga_falta', label: '✨ Quiero ayudar en lo que haga falta' },
+      ];
+
+      habilidadesLista.innerHTML = HABILIDADES.map(h => `
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:400;cursor:pointer">
+          <input type="checkbox" name="habilidad" value="${h.id}" style="width:auto" /> ${h.label}
+        </label>
+      `).join('');
+
+      const seleccion = { aprendiz: false, colaborador: false };
+
+      function pintar(btn, activo) {
+        btn.setAttribute('aria-pressed', activo ? 'true' : 'false');
+        btn.style.borderColor = activo ? 'var(--gold, #c9a24b)' : 'rgba(20,20,18,0.3)';
+        btn.style.background = activo ? 'rgba(201,162,75,0.08)' : '';
+        btn.querySelector('.check').textContent = activo ? '☑' : '☐';
+      }
+
+      function actualizar() {
+        motivoWrap.style.display = seleccion.aprendiz ? '' : 'none';
+        habilidadesWrap.style.display = seleccion.colaborador ? '' : 'none';
+        btnContinuar.disabled = !(seleccion.aprendiz || seleccion.colaborador);
+      }
+
+      btnAprendiz.addEventListener('click', () => {
+        seleccion.aprendiz = !seleccion.aprendiz;
+        pintar(btnAprendiz, seleccion.aprendiz);
+        actualizar();
+      });
+      btnColaborador.addEventListener('click', () => {
+        seleccion.colaborador = !seleccion.colaborador;
+        pintar(btnColaborador, seleccion.colaborador);
+        actualizar();
+      });
+
+      btnContinuar.addEventListener('click', () => {
+        if (!(seleccion.aprendiz || seleccion.colaborador)) return;
+        const partes = [];
+        if (seleccion.aprendiz) partes.push('el chat general de la comunidad');
+        if (seleccion.colaborador) partes.push('el equipo de desarrollo');
+        subtitle.textContent = 'Vas a solicitar el ingreso a ' + partes.join(' y a ') + '. Tu solicitud queda pendiente hasta que un administrador la revise.';
+        stepTipo.style.display = 'none';
+        stepDatos.style.display = '';
+        window._tiposSeleccionados = { ...seleccion };
+      });
+
+      volverBtn?.addEventListener('click', () => {
+        stepDatos.style.display = 'none';
+        stepTipo.style.display = '';
+      });
     })();
   </script>
 
@@ -177,6 +293,11 @@
       const password = form.password.value;
       const confirmPassword = form['confirm-password'].value;
 
+      const seleccion = window._tiposSeleccionados || { aprendiz: true, colaborador: false };
+      const tiposParticipante = Object.keys(seleccion).filter((k) => seleccion[k]);
+      const habilidades = Array.from(document.querySelectorAll('input[name="habilidad"]:checked')).map(el => el.value);
+      const motivoParticipacion = document.getElementById('motivo-participacion').value.trim();
+
       if (!phone) {
         showMessage('El número de teléfono es obligatorio.', 'error');
         return;
@@ -211,10 +332,10 @@
       submitBtn.disabled = true;
 
       try {
-        await registerUser({ phone, username, password, email });
+        await registerUser({ phone, username, password, email, tiposParticipante, habilidades, motivoParticipacion });
         form.reset();
-        showMessage('✅ Solicitud enviada. Espera aprobación del administrador.', 'success');
-        document.getElementById('wa-modal').style.display = 'flex';
+        showMessage('✅ Solicitud enviada.', 'success');
+        mostrarModalGrupos(tiposParticipante);
       } catch (error) {
         const msg = error.message || 'No se pudo enviar la solicitud.';
         showMessage('❌ ' + msg, 'error');
@@ -223,6 +344,37 @@
         submitBtn.disabled = false;
       }
     });
+
+    // Arma el mensaje de "pendiente" y muestra el/los botón(es) de
+    // WhatsApp que correspondan a lo que la persona eligió arriba.
+    function mostrarModalGrupos(tipos) {
+      const links = window._waLinks || {};
+      const botonesWrap = document.getElementById('wa-modal-botones');
+      botonesWrap.innerHTML = '';
+
+      if (tipos.includes('aprendiz')) {
+        botonesWrap.innerHTML += `
+          <a href="${links.grupo || 'https://chat.whatsapp.com/KZih1zGXFn7F6ANc3H2RqL'}" data-wa-picker
+             style="display:block;background:#25D366;color:#fff;font-weight:700;font-size:1rem;padding:0.9rem 1rem;border-radius:12px;text-decoration:none;margin-bottom:0.75rem;">
+            💬 Unirme al grupo general
+          </a>`;
+      }
+      if (tipos.includes('colaborador')) {
+        botonesWrap.innerHTML += `
+          <a href="${links.proyecto || '#'}" data-wa-picker
+             style="display:block;background:#1F7A5C;color:#fff;font-weight:700;font-size:1rem;padding:0.9rem 1rem;border-radius:12px;text-decoration:none;margin-bottom:0.75rem;">
+            🛠️ Unirme al grupo de desarrollo
+          </a>`;
+      }
+
+      window._activarSelectorWhatsApp?.(document.getElementById('wa-modal'));
+      document.getElementById('wa-modal').style.display = 'flex';
+    }
+  </script>
+
+  <script type="module">
+    import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
+    window._activarSelectorWhatsApp = activarSelectorWhatsApp;
   </script>
 
   <script>
@@ -237,16 +389,13 @@
   <!-- WhatsApp modal -->
   <div id="wa-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
     <div style="background:#1c1c1a;border:1px solid rgba(255,255,255,0.14);border-radius:18px;padding:2rem 1.5rem;max-width:360px;width:100%;text-align:center;">
-      <div style="font-size:2.5rem;margin-bottom:0.5rem;">⚠️</div>
-      <h2 style="color:#fff;margin-bottom:0.5rem;font-size:1.2rem;">¡Último paso obligatorio!</h2>
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">⏳</div>
+      <h2 style="color:#fff;margin-bottom:0.5rem;font-size:1.2rem;">Solicitud pendiente</h2>
       <p style="color:#ccc;font-size:0.9rem;margin-bottom:1.5rem;">
-        Tu solicitud fue enviada, pero <strong style="color:#fff">todavía no está completa</strong>.<br><br>
-        Para ser aprobado, debes unirte a nuestro grupo de WhatsApp y solicitar el ingreso. Si no lo haces, <strong style="color:#ff8a8a">tu solicitud no será aprobada y será eliminada</strong>.
+        Para ser aceptado, tenés que solicitar el ingreso al grupo o grupos de WhatsApp de abajo.
+        Academia Indrhack te va a estar aceptando en cuanto pueda.
       </p>
-      <a href="https://chat.whatsapp.com/KZih1zGXFn7F6ANc3H2RqL" target="_blank" id="wa-modal-link"
-         style="display:block;background:#25D366;color:#fff;font-weight:700;font-size:1rem;padding:0.9rem 1rem;border-radius:12px;text-decoration:none;margin-bottom:0.75rem;">
-        💬 Unirme al grupo ahora (obligatorio)
-      </a>
+      <div id="wa-modal-botones"></div>
       <button onclick="document.getElementById('wa-modal').style.display='none'"
               style="background:none;border:1px solid #444;color:#888;padding:0.6rem 1.5rem;border-radius:10px;cursor:pointer;font-size:0.88rem;">
         Ya me uní / Lo haré ahora

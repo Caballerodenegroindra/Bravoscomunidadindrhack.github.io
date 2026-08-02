@@ -227,8 +227,19 @@ service cloud.firestore {
          request.resource.data.participants.size() == 2)
       );
 
-      allow update: if isSignedIn() &&
-        (resource.data.type != 'dm' || request.auth.uid in resource.data.participants);
+      // Antes cualquier usuario firmado (en salas grupales) podía
+      // reescribir CUALQUIER campo de la sala, incluyendo "type" y
+      // "participants" — eso permitía, por ejemplo, colarse en una
+      // sala DM ajena editando su lista de participantes. La app
+      // solo actualiza lastMsg/lastAt/msgCount al enviar un mensaje,
+      // así que se limita la escritura a esos campos (el admin
+      // conserva permiso total por separado).
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        (resource.data.type != 'dm' || request.auth.uid in resource.data.participants) &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['lastMsg', 'lastAt', 'msgCount'])
+      );
 
       allow delete: if isAdmin();
     }
@@ -240,7 +251,16 @@ service cloud.firestore {
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 2000
         && canAccessRoom(request.resource.data.roomId);
-      allow update: if isSignedIn() && canAccessRoom(resource.data.roomId);
+      // Antes cualquier usuario con acceso a la sala podía reescribir
+      // CUALQUIER campo del mensaje de otra persona (texto, uid, etc).
+      // Lo único que la app realmente actualiza sobre un mensaje ajeno
+      // es "threadCount" al responder en el hilo, así que se limita
+      // la escritura a ese campo (el dueño del mensaje o el admin
+      // conservan permiso total por separado).
+      allow update: if isAdmin() || isOwner(resource.data.uid) || (
+        isSignedIn() && canAccessRoom(resource.data.roomId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['threadCount'])
+      );
       allow delete: if isOwner(resource.data.uid) || isAdmin();
     }
 

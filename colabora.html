@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#F6F5F1" />
-  <title>Colaborá con el proyecto — Academia Indrhack</title>
-  <meta name="description" content="Sumate al equipo que desarrolla la app de Academia Indrhack." />
+  <title>Participá en la comunidad — Academia Indrhack</title>
+  <meta name="description" content="Sumate al chat general de la comunidad o al equipo que desarrolla la app de Academia Indrhack." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
   <meta name="robots" content="noindex, nofollow" />
@@ -42,39 +42,60 @@
         <a href="panel-usuario.html">Resumen</a>
         <a href="cursos.html">Cursos</a>
         <a href="perfil.html">Perfil</a>
-        <a href="colabora.html" class="active">🚀 Colaborá</a>
+        <a href="colabora.html" class="active">🤝 Participá</a>
         <a href="redes.html">Redes</a>
       </nav>
     </aside>
 
     <section class="panel-content">
-      <h1 class="section-title">🚀 Sumate al <span class="accent">equipo del proyecto</span></h1>
-      <p class="section-subtitle" style="margin-bottom:1.5rem">Esta misma plataforma es un proyecto vivo, hecho y mantenido por gente de la comunidad. Si sabés programar o te gustaría aprender ayudando de verdad, este es el lugar.</p>
+      <h1 class="section-title">🤝 Participá en la <span class="accent">comunidad</span></h1>
+      <p class="section-subtitle" style="margin-bottom:1.5rem">Hay dos formas de sumarte. Elegí la que más te representa — podés cambiar de idea después.</p>
 
-      <!-- Proyectos activos publicados (convocatorias) -->
-      <div id="convocatorias-lista" style="max-width:640px;margin-bottom:1.5rem"></div>
+      <!-- Elegir camino: chat general vs equipo de desarrollo -->
+      <div class="card-grid" style="max-width:640px;margin-bottom:2rem;grid-template-columns:1fr;gap:0.9rem">
+        <a id="opcion-chat" href="chat.html" class="card" style="text-decoration:none;color:inherit;border-color:rgba(20,20,18,0.3);display:block">
+          <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">💬 Chat general de la comunidad</h2>
+          <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+            Quiero hablar con otros estudiantes, hacer preguntas, enterarme de novedades y conversar sobre los cursos. Ideal si estás aprendiendo o recién estás empezando.
+          </p>
+          <span class="btn btn--outline btn--small" style="margin-top:0.9rem;pointer-events:none">Ir al chat →</span>
+        </a>
 
-      <!-- Explicación del proyecto -->
-      <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(20,20,18,0.3);background:rgba(20,20,18,0.04)">
-        <h2 class="section-title" style="font-size:1.05rem">📱 El proyecto: la app de Academia Indrhack</h2>
-        <p style="margin:0 0 0.75rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
-          Todo lo que estás usando ahora mismo — cursos, quizzes, chat, ranking, asistente IA — es un desarrollo en constante evolución. Se mejora con web (HTML, CSS, JavaScript) y Firebase, y siempre hay funciones nuevas por construir, errores por corregir y ideas por probar.
-        </p>
-        <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
-          Buscamos sumar gente a un <strong>grupo de trabajo aparte</strong> (por WhatsApp) donde se coordina el desarrollo: no hace falta ser un experto, con ganas de aportar y aprender alcanza.
-        </p>
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem">
-          <span class="badge badge--info">💻 Frontend</span>
-          <span class="badge badge--info">🔥 Firebase / Backend</span>
-          <span class="badge badge--info">🎨 Diseño UI/UX</span>
-          <span class="badge badge--info">🐞 Testing y reportes</span>
-          <span class="badge badge--info">💡 Ideas y contenido</span>
-        </div>
+        <a href="#equipo-dev" class="card" style="text-decoration:none;color:inherit;border-color:rgba(20,20,18,0.3);display:block" onclick="document.getElementById('equipo-dev').scrollIntoView({behavior:'smooth'})">
+          <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">🛠️ Equipo de desarrollo</h2>
+          <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+            Ya sé programar (o quiero aprender ayudando de verdad) y quiero sumarme a construir y mejorar esta misma app: cursos, herramientas, modificaciones y más.
+          </p>
+          <span class="btn btn--outline btn--small" style="margin-top:0.9rem;pointer-events:none">Ver cómo sumarme ↓</span>
+        </a>
       </div>
 
-      <!-- Estado / formulario -->
-      <div id="colabora-contenido" class="card" style="max-width:640px">
-        <p class="section-subtitle">Cargando…</p>
+      <div id="equipo-dev">
+        <!-- Proyectos activos publicados (convocatorias) -->
+        <div id="convocatorias-lista" style="max-width:640px;margin-bottom:1.5rem"></div>
+
+        <!-- Explicación del proyecto -->
+        <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(20,20,18,0.3);background:rgba(20,20,18,0.04)">
+          <h2 class="section-title" style="font-size:1.05rem">📱 El proyecto: la app de Academia Indrhack</h2>
+          <p style="margin:0 0 0.75rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+            Todo lo que estás usando ahora mismo — cursos, quizzes, chat, ranking, asistente IA — es un desarrollo en constante evolución. Se mejora con web (HTML, CSS, JavaScript) y Firebase, y siempre hay funciones nuevas por construir, errores por corregir y ideas por probar.
+          </p>
+          <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+            Buscamos sumar gente a un <strong>grupo de trabajo aparte</strong> (por WhatsApp) donde se coordina el desarrollo: no hace falta ser un experto, con ganas de aportar y aprender alcanza.
+          </p>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem">
+            <span class="badge badge--info">💻 Frontend</span>
+            <span class="badge badge--info">🔥 Firebase / Backend</span>
+            <span class="badge badge--info">🎨 Diseño UI/UX</span>
+            <span class="badge badge--info">🐞 Testing y reportes</span>
+            <span class="badge badge--info">💡 Ideas y contenido</span>
+          </div>
+        </div>
+
+        <!-- Estado / formulario -->
+        <div id="colabora-contenido" class="card" style="max-width:640px">
+          <p class="section-subtitle">Cargando…</p>
+        </div>
       </div>
 
     </section>
@@ -99,6 +120,7 @@
     import {
       collection, getDocs, query, where, orderBy,
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
 
     // Proyectos activos publicados por el admin (convocatorias)
     function whatsappHref(valor) {
@@ -132,9 +154,10 @@
               <div class="card" style="margin-bottom:0.9rem;border-color:rgba(37,211,102,0.35)">
                 <h3 style="margin:0 0 0.4rem">${c.titulo || ''}</h3>
                 <p style="margin:0 0 0.85rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6;white-space:pre-wrap">${c.descripcion || ''}</p>
-                <a href="${whatsappHref(c.whatsapp)}" target="_blank" rel="noopener" class="btn btn--primary">📲 Unirme al grupo de WhatsApp</a>
+                <a href="${whatsappHref(c.whatsapp)}" data-wa-picker class="btn btn--primary">📲 Unirme al grupo de WhatsApp</a>
               </div>`;
           }).join('');
+        activarSelectorWhatsApp();
       } catch (err) {
         console.error('Error cargando convocatorias:', err);
         cont.innerHTML = '';
@@ -149,6 +172,7 @@
       query, where, orderBy, limit, getDocs, Timestamp,
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
     import { requireApprovedUser } from './js/auth.js';
+    import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
 
     const AREAS = [
       { id: 'frontend', label: '💻 Frontend (HTML/CSS/JS)' },
@@ -202,7 +226,7 @@
           <div style="border-left:3px solid ${info.color};padding-left:0.9rem">
             <p style="margin:0 0 0.5rem;font-weight:700;color:${info.color}">${info.icono} ${info.texto}</p>
             ${sol.estado === 'aprobado' && linkGrupo ? `
-              <a href="${linkGrupo}" target="_blank" rel="noopener" class="btn btn--primary" style="margin-top:0.5rem">📲 Unirme al grupo de trabajo</a>
+              <a href="${linkGrupo}" data-wa-picker class="btn btn--primary" style="margin-top:0.5rem">📲 Unirme al grupo de trabajo</a>
             ` : ''}
             ${sol.estado === 'aprobado' && !linkGrupo ? `<p style="font-size:0.85rem;color:var(--text-soft)">El administrador todavía no cargó el enlace del grupo. Revisá tus notificaciones en un rato.</p>` : ''}
             ${sol.estado === 'rechazado' && sol.feedback ? `<p style="font-size:0.85rem;color:var(--text-soft);margin-top:0.5rem"><em>"${sol.feedback}"</em></p>` : ''}
@@ -210,6 +234,7 @@
           ${sol.estado === 'rechazado' ? '<button class="btn btn--outline btn--small" id="btn-reintentar" style="margin-top:1rem">Volver a solicitar</button>' : ''}
         `;
         document.getElementById('btn-reintentar')?.addEventListener('click', () => renderFormulario(profile, sol));
+        activarSelectorWhatsApp();
       }
 
       function renderFormulario(profile, solicitudPrevia) {

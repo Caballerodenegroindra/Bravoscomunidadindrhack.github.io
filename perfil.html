@@ -31,9 +31,8 @@
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
-      <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="colabora.html" title="Sumate a colaborar con el proyecto">🚀 Colaborá</a>
+      <a href="colabora.html" title="Participá en la comunidad">🤝 Participá</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <main class="dashboard">
@@ -43,7 +42,7 @@
         <a href="panel-usuario.html">Resumen</a>
         <a href="cursos.html">Cursos</a>
         <a href="perfil.html" class="active">Perfil</a>
-        <a href="colabora.html">🚀 Colaborá</a>
+        <a href="colabora.html">🤝 Participá</a>
         <a href="redes.html">Redes</a>
       </nav>
     </aside>
@@ -58,6 +57,20 @@
           <p style="margin:0;color:#aaa;font-size:0.85rem">Rango: <strong id="info-rango">—</strong></p>
           <p style="margin:0;color:#aaa;font-size:0.85rem">Miembro desde: <strong id="info-fecha">—</strong></p>
           <p style="margin:0;color:#aaa;font-size:0.85rem">Teléfono: <strong id="info-phone">—</strong></p>
+        </div>
+      </div>
+
+      <!-- Cómo participa: cargado desde su registro (no editable acá) -->
+      <div class="card" id="participacion-info" style="max-width:560px;margin-bottom:1.5rem;display:none">
+        <h2 class="section-title" style="font-size:1.05rem">🤝 Participación</h2>
+        <div id="participacion-tipos" style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.6rem"></div>
+        <div id="participacion-habilidades-wrap" style="display:none;margin-bottom:0.6rem">
+          <p style="margin:0 0 0.35rem;font-size:0.85rem;color:var(--text-muted)">Se identifica con:</p>
+          <div id="participacion-habilidades" style="display:flex;gap:0.35rem;flex-wrap:wrap"></div>
+        </div>
+        <div id="participacion-motivo-wrap" style="display:none">
+          <p style="margin:0 0 0.25rem;font-size:0.85rem;color:var(--text-muted)">Por qué quiere participar:</p>
+          <p style="margin:0;font-size:0.9rem;font-style:italic" id="participacion-motivo"></p>
         </div>
       </div>
 
@@ -245,6 +258,42 @@
         profileForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
         pwdForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
         document.querySelector('h1.section-title').innerHTML = 'Perfil de <span class="accent">' + (target.username || target.displayName || 'usuario') + '</span>';
+      }
+
+      // Cómo participa (elegido al registrarse)
+      const HABILIDADES_LABEL = {
+        programador: '👨‍💻 Programador/a',
+        tecnico_informatica: '🖥️ Técnico en informática',
+        desarrollador_software: '🛠️ Desarrollador/a de software',
+        diseno_uiux: '🎨 Diseño UI/UX',
+        ciberseguridad: '🔐 Ciberseguridad',
+        testing_qa: '🧪 Testing / QA',
+        redes_sistemas: '🌐 Redes y sistemas',
+        documentacion: '📝 Documentación y contenido',
+        aprendiz_programacion: '📚 Aprendiendo a programar',
+        todo_lo_que_haga_falta: '✨ Ayuda en lo que haga falta',
+      };
+      const tipos = Array.isArray(target.tiposParticipante) ? target.tiposParticipante : [];
+      const habilidades = Array.isArray(target.habilidades) ? target.habilidades : [];
+      const motivo = target.motivoParticipacion || '';
+
+      if (tipos.length || habilidades.length || motivo) {
+        document.getElementById('participacion-info').style.display = '';
+        document.getElementById('participacion-tipos').innerHTML = tipos.map(t => {
+          if (t === 'aprendiz') return '<span class="badge badge--info">🎓 Chat general / aprender</span>';
+          if (t === 'colaborador') return '<span class="badge badge--info">💻 Equipo de desarrollo</span>';
+          return '';
+        }).join('');
+
+        if (habilidades.length) {
+          document.getElementById('participacion-habilidades-wrap').style.display = '';
+          document.getElementById('participacion-habilidades').innerHTML = habilidades
+            .map(h => `<span class="badge badge--info">${HABILIDADES_LABEL[h] || h}</span>`).join('');
+        }
+        if (motivo) {
+          document.getElementById('participacion-motivo-wrap').style.display = '';
+          document.getElementById('participacion-motivo').textContent = '"' + motivo + '"';
+        }
       }
 
       profileForm['displayName'].value = target.displayName || '';
