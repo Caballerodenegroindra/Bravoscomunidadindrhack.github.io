@@ -43,7 +43,7 @@
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
             <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="colabora.html" title="Participá en la comunidad">🤝 Participá</a>
+      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <main>
@@ -72,7 +72,7 @@
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { db } from './js/firebase-config.js';
-    import { collection, getDocs, orderBy, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     const grid = document.getElementById('noticias-grid');
 
@@ -83,8 +83,13 @@
       importante: { label: '⚠️ Importante', color: '#ff3b3b' },
     };
 
+    (async () => {
     try {
-      const q = query(collection(db, 'noticias'), where('publicado', '==', true), orderBy('fecha', 'desc'));
+      // Un solo "where" (sin combinarlo con "orderBy" en la misma consulta)
+      // no necesita índice compuesto en Firestore, así que esto nunca se
+      // rompe por falta de un índice — funciona igual con o sin sesión,
+      // ya que la colección "noticias" es de lectura pública.
+      const q = query(collection(db, 'noticias'), where('publicado', '==', true));
       const snap = await getDocs(q);
 
       if (snap.empty) {
@@ -92,8 +97,11 @@
         return;
       }
 
-      grid.innerHTML = snap.docs.map(d => {
-        const n = d.data();
+      const docs = snap.docs
+        .map(d => d.data())
+        .sort((a, b) => (b.fecha?.toMillis?.() || 0) - (a.fecha?.toMillis?.() || 0));
+
+      grid.innerHTML = docs.map(n => {
         const cat = CATEGORIAS[n.categoria] || { label: n.categoria, color: '#aaa' };
         const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
         return `
@@ -110,6 +118,7 @@
     } catch (err) {
       grid.innerHTML = '<p class="section-subtitle">Error al cargar noticias.</p>';
     }
+    })();
   </script>
 
   <script type="module">
