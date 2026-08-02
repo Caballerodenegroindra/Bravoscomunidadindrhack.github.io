@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script>try{document.documentElement.setAttribute("data-theme", localStorage.getItem("indrhack-theme")||"light");}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel administrador — Academia Indrhack</title>
@@ -136,6 +135,10 @@
   <canvas id="particle-canvas"></canvas>
 
   <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
     <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
     <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
@@ -149,29 +152,8 @@
       <a href="clases-termux.html" title="Comandos de Termux">Termux</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <div class="navbar__session" data-session-slot></div>
-    </nav>
-    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema claro/oscuro">
-      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-
-    <button class="navbar__toggle" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
-  <nav class="tabbar" aria-label="Navegación admin">
-    <div class="tabbar__inner">
-      <a href="#resumen" class="tabbar__item active" data-tab="resumen"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span><span class="tabbar__label">Resumen</span></a>
-      <a href="#solicitudes" class="tabbar__item" data-tab="solicitudes"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></span><span class="tabbar__label">Solicitudes</span></a>
-      <a href="#miembros" class="tabbar__item" data-tab="miembros"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span><span class="tabbar__label">Miembros</span></a>
-      <a href="#presencia" class="tabbar__item" data-tab="presencia"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span class="tabbar__label">Presencia</span></a>
-      <a href="#cursos" class="tabbar__item" data-tab="cursos"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="tabbar__label">Cursos</span></a>
-      <button class="tabbar__item" id="admin-more-btn"><span class="tabbar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span><span class="tabbar__label">Más</span></button>
-    </div>
-  </nav>
-
-  <!-- Admin "Más" mini-menu -->
+    </nav></header>
+<!-- Admin "Más" mini-menu -->
   <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 8px);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:200px;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
     <a href="chat.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">💬 Chat</a>
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
@@ -3027,6 +3009,5 @@
   </script>
 
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
-  <script src="js/theme.js"></script>
 </body>
 </html>
