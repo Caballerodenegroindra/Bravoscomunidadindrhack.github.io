@@ -86,10 +86,10 @@
   --nav-h:    72px;
   --tabbar-h: 72px;
   --ia-dock-h: 64px;
-  --radius:   8px;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius:   10px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
   --radius-pill: 999px;
   --border-strong: #34507f;
   --glow-red: 0 0 16px rgba(230,40,0,0.5);
@@ -146,24 +146,26 @@
 
 /* ============================================================
    TEMA CLARO — se activa con <html data-theme="light">
-   Papel institucional: blanco hueso, azul marino, dorado
+   Paleta neutra: blanco y grises, texto casi negro, acentos
+   discretos. Sin dorado ni azul marino institucional: el color
+   se reserva para estados (éxito/alerta/error), no para el look.
    ============================================================ */
 :root[data-theme="light"] {
-  --color-canvas-default:      #f7f6f2;
+  --color-canvas-default:      #f7f7f5;
   --color-canvas-subtle:       #ffffff;
-  --color-canvas-inset:        #eef0ea;
-  --color-border-default:      #c9cdd6;
-  --color-border-muted:        #dde1e6;
-  --color-border-subtle:       rgba(15,29,56,0.12);
+  --color-canvas-inset:        #efefec;
+  --color-border-default:      #dcdcd6;
+  --color-border-muted:        #e9e9e5;
+  --color-border-subtle:       rgba(20,20,18,0.10);
 
-  --color-fg-default:          #101a2e;
-  --color-fg-muted:            #3f4a63;
-  --color-fg-subtle:           #6b7488;
+  --color-fg-default:          #1a1a18;
+  --color-fg-muted:            #55554f;
+  --color-fg-subtle:           #7c7c75;
   --color-fg-on-emphasis:      #ffffff;
 
-  --color-accent-fg:           #1c3f73;
-  --color-accent-emphasis:     #0f2847;
-  --color-accent-subtle:       rgba(28,63,115,0.08);
+  --color-accent-fg:           #232320;
+  --color-accent-emphasis:     #171715;
+  --color-accent-subtle:       rgba(20,20,18,0.06);
 
   --color-success-fg:          #1f6b3f;
   --color-success-emphasis:    #1a5533;
@@ -177,43 +179,43 @@
   --color-danger-emphasis:     #711f17;
   --color-danger-subtle:       rgba(140,42,32,0.1);
 
-  --color-done-fg:             #3f4a80;
-  --color-done-subtle:         rgba(63,74,128,0.12);
+  --color-done-fg:             #55554f;
+  --color-done-subtle:         rgba(85,85,79,0.12);
 
-  --color-neutral-emphasis:    #6b7488;
+  --color-neutral-emphasis:    #7c7c75;
 
-  --bg-elevated:   #eef0ea;
-  --gold:          #8a6a24;
-  --gold-bright:   #6e5419;
-  --gold-subtle:   rgba(138,106,36,0.12);
-  --signal:        #16805a;
-  --signal-subtle: rgba(22,128,90,0.1);
-  --signal-glow:   0 0 0 3px rgba(22,128,90,0.12);
-  --border-strong: #aab1c2;
+  --bg-elevated:   #efefec;
+  --gold:          #2c2c28;
+  --gold-bright:   #45453f;
+  --gold-subtle:   rgba(44,44,40,0.08);
+  --signal:        #3a3a34;
+  --signal-subtle: rgba(58,58,52,0.08);
+  --signal-glow:   0 0 0 3px rgba(20,20,18,0.08);
+  --border-strong: #c6c6bf;
 
-  --shadow-sm:  0 1px 0 rgba(16,26,46,0.05);
-  --shadow:     0 1px 2px rgba(16,26,46,0.08), 0 8px 20px rgba(16,26,46,0.06);
-  --shadow-lg:  0 12px 30px rgba(16,26,46,0.16);
+  --shadow-sm:  0 1px 0 rgba(20,20,18,0.04);
+  --shadow:     0 1px 2px rgba(20,20,18,0.06), 0 8px 20px rgba(20,20,18,0.05);
+  --shadow-lg:  0 12px 30px rgba(20,20,18,0.12);
 
   --bevel-top:      rgba(255,255,255,0.9);
-  --bevel-bottom:   rgba(16,26,46,0.08);
-  --edge-color:     #d7dbe4;
+  --bevel-bottom:   rgba(20,20,18,0.06);
+  --edge-color:     #e2e2dd;
   --lift-shadow:    0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
                      0 3px 0 var(--edge-color),
-                     0 4px 10px rgba(16,26,46,0.08),
-                     0 16px 30px rgba(16,26,46,0.10);
+                     0 4px 10px rgba(20,20,18,0.05),
+                     0 16px 30px rgba(20,20,18,0.06);
   --lift-shadow-hover: 0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
                      0 6px 0 var(--edge-color),
-                     0 10px 18px rgba(16,26,46,0.10),
-                     0 26px 42px rgba(16,26,46,0.14);
+                     0 10px 18px rgba(20,20,18,0.07),
+                     0 26px 42px rgba(20,20,18,0.08);
   --lift-shadow-press: 0 1px 0 var(--bevel-top) inset,
                      0 -1px 0 var(--bevel-bottom) inset,
                      0 1px 0 var(--edge-color),
-                     0 6px 14px rgba(16,26,46,0.10);
+                     0 6px 14px rgba(20,20,18,0.06);
 }
 
 /* ── RESET ── */
@@ -493,7 +495,7 @@ summary:focus-visible,
   text-decoration: none;
   transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
-.help-fab:hover { text-decoration: none; background: var(--gold); color: #101a2e; transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 5px 0 var(--edge-color), 0 16px 28px rgba(201,171,97,0.28); }
+.help-fab:hover { text-decoration: none; background: var(--gold); color: var(--color-fg-on-emphasis); transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 5px 0 var(--edge-color), 0 16px 28px rgba(201,171,97,0.28); }
 .help-fab:active { transform: translateY(2px); box-shadow: inset 0 1px 0 var(--bevel-top), 0 1px 0 var(--edge-color), 0 4px 10px rgba(9,11,16,0.3); }
 @media (min-width: 641px) {
   .help-fab { bottom: 1.25rem; }
@@ -865,7 +867,7 @@ main { min-height: calc(100dvh - var(--nav-h)); }
 .btn--primary:hover {
   background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.06)), var(--gold);
   border-color: var(--gold);
-  color: #101a2e;
+  color: var(--color-fg-on-emphasis);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 0 var(--edge-color), 0 10px 22px rgba(201,171,97,0.3);
   transform: translateY(-2px);
 }
@@ -905,13 +907,13 @@ main { min-height: calc(100dvh - var(--nav-h)); }
 
 .btn--accent {
   background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(0,0,0,0.08)), var(--gold);
-  color: #101a2e;
+  color: var(--color-fg-on-emphasis);
   border-color: var(--gold);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 var(--edge-color), 0 6px 16px rgba(9,11,16,0.35);
 }
 .btn--accent:hover {
   background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(0,0,0,0.06)), #b3944f;
-  color: #101a2e;
+  color: var(--color-fg-on-emphasis);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 4px 0 var(--edge-color), 0 10px 22px rgba(201,171,97,0.3);
   transform: translateY(-2px);
 }
@@ -2292,34 +2294,36 @@ tbody tr:last-child td { border-bottom: none; }
 
 /* ── RESPONSIVE: NAV (colapsa antes de que 9 enlaces se amontonen) ── */
 @media (max-width: 1024px) {
+  /* Panel lateral ("más opciones"): entra desde la izquierda, a pantalla
+     completa de alto, con fondo blanco/gris simple y bordes redondeados
+     solo del lado que da al contenido. Se abre tocando el botón de menú
+     y se cierra tocando el fondo oscurecido, la tecla Esc, o deslizando
+     el dedo de derecha a izquierda sobre el panel (ver js/main.js). */
   .navbar__links {
     position: fixed;
-    top: calc(var(--nav-h) + 0.5rem);
-    right: 0.65rem;
-    left: auto;
-    width: min(54%, 300px);
+    top: 0;
+    left: 0;
+    right: auto;
+    bottom: 0;
+    width: min(82%, 320px);
     max-width: calc(100vw - 1.3rem);
+    height: 100dvh;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.1rem;
-    padding: var(--gap-sm);
+    gap: 0.15rem;
+    padding: calc(var(--nav-h) + var(--gap-sm)) var(--gap-sm) var(--gap-lg);
     background: var(--chrome-bg-strong);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border: none;
+    border-right: 1px solid var(--border);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
     box-shadow: var(--shadow-lg);
-    transform: translateY(-8px) scale(0.98);
-    transform-origin: top right;
-    opacity: 0;
+    transform: translateX(-100%);
+    transform-origin: top left;
+    opacity: 1;
     pointer-events: none;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    /* Por encima del botón de ayuda y del chat flotante (z-index 250),
-       si no la parte de abajo del menú (incluida "Cerrar sesión")
-       queda tapada/intocable detrás de esos botones. */
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
     z-index: 260;
-    /* Termina antes de llegar a la franja de la tabbar + los botones
-       flotantes de abajo, para que el menú nunca se dibuje detrás de
-       ellos ni haga falta scrollear "a ciegas" para encontrar el final. */
-    max-height: calc(100dvh - var(--nav-h) - var(--tabbar-h) - 4.75rem);
+    max-height: 100dvh;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -2328,11 +2332,24 @@ tbody tr:last-child td { border-bottom: none; }
     overflow: hidden;
   }
   .navbar__links.open {
-    transform: translateY(0) scale(1);
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  /* Fondo oscurecido detrás del panel, creado dinámicamente por main.js */
+  .nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,12,18,0.42);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 255;
+  }
+  .nav-backdrop.open {
     opacity: 1;
     pointer-events: auto;
   }
-  .navbar__links a { width: 100%; border-radius: var(--radius); padding: 0.7rem 0.875rem; text-align: right; }
+  .navbar__links a { width: 100%; border-radius: var(--radius); padding: 0.7rem 0.875rem; text-align: left; }
   .navbar__toggle { display: flex; }
   .navbar__session { display: none; }
   .navbar__links .navbar__session {
@@ -2645,7 +2662,7 @@ tbody tr:last-child td { border-bottom: none; }
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.15s ease, background 0.15s ease;
 }
-#ia-widget-avatar:hover { transform: translateY(-1px); background: var(--color-accent-fg); color: #0a1428; }
+#ia-widget-avatar:hover { transform: translateY(-1px); background: var(--color-accent-fg); color: var(--color-fg-on-emphasis); }
 #ia-widget-avatar svg { width: 19px; height: 19px; }
 
 #ia-widget-input {
@@ -2671,7 +2688,7 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 1rem;
   transition: background 0.15s, border-color 0.15s;
 }
-#ia-widget-send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: #101a2e; }
+#ia-widget-send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: var(--color-fg-on-emphasis); }
 #ia-widget-send:disabled { opacity: 0.4; cursor: default; }
 
 #ia-widget-panel {
@@ -2792,7 +2809,7 @@ tbody tr:last-child td { border-bottom: none; }
   transition: background 0.15s, color 0.15s, transform 0.15s;
 }
 #chat-widget-fab svg { width: 22px; height: 22px; }
-#chat-widget-fab:hover { background: var(--gold); color: #101a2e; transform: translateY(-2px); }
+#chat-widget-fab:hover { background: var(--gold); color: var(--color-fg-on-emphasis); transform: translateY(-2px); }
 @media (min-width: 641px) { #chat-widget-fab { bottom: 1.25rem; } }
 body.ia-dock-active #chat-widget-fab { bottom: calc(var(--tabbar-h) + var(--ia-dock-h) + 0.75rem); }
 @media (min-width: 641px) {
@@ -2944,5 +2961,5 @@ body.ia-dock-active #chat-widget-panel { bottom: calc(var(--tabbar-h) + var(--ia
   font-size: 0.95rem;
   transition: background 0.15s, border-color 0.15s;
 }
-#chat-widget-send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: #101a2e; }
+#chat-widget-send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: var(--color-fg-on-emphasis); }
 #chat-widget-send:disabled { opacity: 0.4; cursor: default; }
