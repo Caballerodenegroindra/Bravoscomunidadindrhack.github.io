@@ -26,11 +26,15 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
     <a href="panel-usuario.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
-    <nav class="navbar__links">
-      <a href="panel-usuario.html" title="Ir a tu panel">Mi Panel</a>
+        <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
-      <a href="chat.html" title="Chatear con la comunidad">Chat</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" class="active" title="Ver tus notificaciones">Notificaciones</a>
+      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
@@ -38,7 +42,7 @@
     <div class="container section reveal">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.5rem">
         <h1 class="section-title" style="margin:0">Tus <span class="accent">notificaciones</span></h1>
-        <div style="display:flex;gap:0.5rem">
+        <div id="notif-acciones" style="display:none;gap:0.5rem">
           <button id="btn-marcar-leidas" class="btn btn--small btn--outline">Marcar todas leídas</button>
           <button id="btn-pedir-permiso" class="btn btn--small btn--outline">🔔 Activar avisos del celular</button>
         </div>
@@ -47,9 +51,52 @@
 
       <div id="notif-permiso-aviso" style="display:none;margin:1rem 0;padding:0.85rem 1rem;border-radius:10px;background:var(--color-attention-subtle);border:1px solid rgba(210,153,34,0.4);color:var(--warning);font-size:0.85rem"></div>
 
-      <div id="notif-lista" style="margin-top:1.5rem">
-        <p class="section-subtitle">Cargando notificaciones…</p>
+      <!-- Vista previa para quien todavía no inició sesión: se muestra la info primero,
+           el registro/login queda como acción al final (no invasivo). -->
+      <div id="notif-preview" style="display:none">
+        <p class="section-subtitle">Así se ven tus notificaciones una vez que tenés una cuenta aprobada:</p>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem">
+          <div class="card" style="display:flex;align-items:center;gap:0.9rem;">
+            <div style="font-size:1.6rem">✅</div>
+            <div style="flex:1">
+              <h3 style="margin:0 0 0.2rem">Tu cuenta fue aprobada</h3>
+              <p class="section-subtitle" style="margin:0">Te avisamos apenas un administrador aprueba tu registro</p>
+            </div>
+            <div style="color:var(--text-muted);font-size:1.3rem">🔒</div>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:0.9rem;">
+            <div style="font-size:1.6rem">📝</div>
+            <div style="flex:1">
+              <h3 style="margin:0 0 0.2rem">Quiz o proyecto corregido</h3>
+              <p class="section-subtitle" style="margin:0">Recibís el aviso apenas se revisa tu entrega</p>
+            </div>
+            <div style="color:var(--text-muted);font-size:1.3rem">🔒</div>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:0.9rem;">
+            <div style="font-size:1.6rem">💬</div>
+            <div style="flex:1">
+              <h3 style="margin:0 0 0.2rem">Mensajes y menciones del chat</h3>
+              <p class="section-subtitle" style="margin:0">Enterate cuando alguien te responde en la comunidad</p>
+            </div>
+            <div style="color:var(--text-muted);font-size:1.3rem">🔒</div>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:0.9rem;">
+            <div style="font-size:1.6rem">📢</div>
+            <div style="flex:1">
+              <h3 style="margin:0 0 0.2rem">Avisos generales de la academia</h3>
+              <p class="section-subtitle" style="margin:0">Clases en vivo, novedades y anuncios importantes</p>
+            </div>
+            <div style="color:var(--text-muted);font-size:1.3rem">🔒</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:2rem;display:flex;flex-direction:column;align-items:center;gap:0.6rem">
+          <a href="registro.html" class="btn btn--primary">Regístrate para activar tus notificaciones</a>
+          <a href="login.html" class="section-subtitle" style="text-decoration:underline">Ya tengo cuenta — Iniciar sesión</a>
+        </div>
       </div>
+
+      <div id="notif-lista" style="margin-top:1.5rem"></div>
     </div>
   </main>
 
@@ -68,7 +115,7 @@
   <script type="module" src="js/back-confirm.js"></script>
 
   <script type="module">
-    import { requireApprovedUser } from './js/auth.js';
+    import { onSessionChange, ESTADOS } from './js/auth.js';
     import {
       escucharNotificaciones,
       marcarLeida,
@@ -78,28 +125,48 @@
     } from './js/notificaciones.js';
 
     const lista = document.getElementById('notif-lista');
+    const preview = document.getElementById('notif-preview');
+    const acciones = document.getElementById('notif-acciones');
     const btnMarcar = document.getElementById('btn-marcar-leidas');
     const btnPermiso = document.getElementById('btn-pedir-permiso');
     const avisoPermiso = document.getElementById('notif-permiso-aviso');
 
-    const profile = await requireApprovedUser();
-    if (!profile) { /* requireApprovedUser ya redirige a login */ }
-    else {
-      escucharNotificaciones(profile.uid, render);
+    let listenerActivo = false;
 
-      btnMarcar.addEventListener('click', async () => {
-        btnMarcar.disabled = true;
-        await marcarTodasLeidas(profile.uid);
-        btnMarcar.disabled = false;
-      });
+    onSessionChange((profile) => {
+      const aprobado = profile && profile.estado === ESTADOS.APROBADO;
 
-      btnPermiso.addEventListener('click', async () => {
-        const permiso = await pedirPermisoNotificaciones();
-        mostrarEstadoPermiso(permiso);
-      });
+      if (!aprobado) {
+        // No hay sesión (o todavía no está aprobada): mostramos la vista
+        // previa con toda la info, y el registro/login queda abajo,
+        // como una acción más — nunca como bloqueo inmediato.
+        acciones.style.display = 'none';
+        lista.innerHTML = '';
+        preview.style.display = 'block';
+        return;
+      }
 
-      mostrarEstadoPermiso(('Notification' in window) ? Notification.permission : 'unsupported');
-    }
+      preview.style.display = 'none';
+      acciones.style.display = 'flex';
+
+      if (!listenerActivo) {
+        listenerActivo = true;
+        escucharNotificaciones(profile.uid, render);
+
+        btnMarcar.addEventListener('click', async () => {
+          btnMarcar.disabled = true;
+          await marcarTodasLeidas(profile.uid);
+          btnMarcar.disabled = false;
+        });
+
+        btnPermiso.addEventListener('click', async () => {
+          const permiso = await pedirPermisoNotificaciones();
+          mostrarEstadoPermiso(permiso);
+        });
+
+        mostrarEstadoPermiso(('Notification' in window) ? Notification.permission : 'unsupported');
+      }
+    });
 
     function mostrarEstadoPermiso(permiso) {
       if (permiso === 'granted') {
