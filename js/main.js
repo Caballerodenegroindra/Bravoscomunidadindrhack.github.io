@@ -56,19 +56,65 @@ function initPresence(uid) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Menú móvil ──
+  // ── Menú móvil (panel lateral izquierdo, tipo "ajustes") ──
   const toggle = document.querySelector('.navbar__toggle');
   const links  = document.querySelector('.navbar__links');
   if (toggle && links) {
+    // Fondo oscurecido detrás del panel: se crea una sola vez por página.
+    let backdrop = document.querySelector('[data-nav-backdrop]');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'nav-backdrop';
+      backdrop.setAttribute('data-nav-backdrop', '');
+      document.body.appendChild(backdrop);
+    }
+
+    const abrirMenu = () => {
+      links.classList.add('open');
+      backdrop.classList.add('open');
+      document.body.classList.add('nav-open');
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+    const cerrarMenu = () => {
+      links.classList.remove('open');
+      backdrop.classList.remove('open');
+      document.body.classList.remove('nav-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
     toggle.addEventListener('click', () => {
-      const abierto = links.classList.toggle('open');
-      document.body.classList.toggle('nav-open', abierto);
+      links.classList.contains('open') ? cerrarMenu() : abrirMenu();
     });
-    // Si se toca un link del menú (navega a otra página) o se cierra
-    // por otro medio, nos aseguramos de no dejar el scroll bloqueado.
+    // Tocar el fondo oscurecido cierra el panel.
+    backdrop.addEventListener('click', cerrarMenu);
+    // Tecla Esc cierra el panel (accesibilidad / teclado).
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && links.classList.contains('open')) cerrarMenu();
+    });
+    // Si se toca un link del menú (navega a otra página), cerramos
+    // para no dejar el scroll bloqueado ni el fondo tapando la página.
     links.addEventListener('click', (e) => {
-      if (e.target.closest('a')) document.body.classList.remove('nav-open');
+      if (e.target.closest('a')) cerrarMenu();
     });
+
+    // Gesto: deslizar el dedo de derecha a izquierda sobre el panel
+    // lo cierra, igual que un panel lateral nativo de una app móvil.
+    let touchStartX = 0, touchStartY = 0, touchTracking = false;
+    links.addEventListener('touchstart', (e) => {
+      if (!links.classList.contains('open')) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchTracking = true;
+    }, { passive: true });
+    links.addEventListener('touchend', (e) => {
+      if (!touchTracking) return;
+      touchTracking = false;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      // Deslizamiento predominantemente horizontal, hacia la izquierda,
+      // de al menos 60px: se interpreta como "cerrar panel".
+      if (dx < -60 && Math.abs(dx) > Math.abs(dy)) cerrarMenu();
+    }, { passive: true });
   }
 
   // ── Estado de sesión en barra superior ──
