@@ -4,7 +4,7 @@
    y registra presencia (online / lastSeen) en Firestore.
    ============================================================ */
 
-import { onSessionChange, logoutUser, ROLES } from './auth.js';
+import { onSessionChange, logoutUser, ROLES, ESTADOS } from './auth.js';
 import { db } from './firebase-config.js';
 import {
   doc, updateDoc, serverTimestamp
@@ -120,8 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Estado de sesión en barra superior ──
   const sessionSlot = document.querySelector('[data-session-slot]');
 
+  // El link "Chat" del menú es el mismo en todas las páginas; solo cambia
+  // su destino según la sesión, para no forzar un login inmediato a quien
+  // todavía no tiene cuenta aprobada (misma idea que las notificaciones).
+  const actualizarLinkChat = (aprobado) => {
+    document.querySelectorAll('[data-nav="chat"]').forEach((a) => {
+      a.href = aprobado ? 'chat.html' : 'chat-preview.html';
+    });
+  };
+
   onSessionChange((profile) => {
     if (!profile) {
+      actualizarLinkChat(false);
       if (_presenceUid) {
         setPresence(_presenceUid, false);
         _presenceUid = null;
@@ -134,6 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return;
     }
+
+    actualizarLinkChat(profile.estado === ESTADOS.APROBADO);
 
     // Registrar presencia
     initPresence(profile.uid);
