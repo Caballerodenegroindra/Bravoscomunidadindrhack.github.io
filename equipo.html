@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#F6F5F1" />
+  <title>Equipo — Academia Indrhack</title>
+  <meta name="description" content="Conocé al líder, los administradores y los miembros destacados de la comunidad Academia Indrhack." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <link rel="canonical" href="https://bravoscomunidadindrhack.github.io/equipo.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Equipo — Academia Indrhack" />
+  <meta property="og:description" content="Conocé al líder, los administradores y los miembros destacados de la comunidad Academia Indrhack." />
+  <meta property="og:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
+  <meta property="og:url" content="https://bravoscomunidadindrhack.github.io/equipo.html" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Equipo — Academia Indrhack" />
+  <meta name="twitter:description" content="Conocé al líder, los administradores y los miembros destacados de la comunidad Academia Indrhack." />
+  <meta name="twitter:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
+  <style>
+    .equipo-seccion { margin: 2rem 0; }
+    .equipo-seccion h2 {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 1.05rem; margin: 0 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .equipo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+    .equipo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+    .equipo-card--lider {
+      max-width: 420px;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px rgba(20,20,18,0.12);
+    }
+    .equipo-card__foto {
+      width: 56px; height: 56px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid var(--border-strong);
+    }
+    .equipo-card__nombre { margin: 0 0 0.15rem; font-size: 0.95rem; font-family: var(--font-heading); font-weight: 700; }
+    .equipo-card__user { margin: 0 0 0.4rem; font-size: 0.76rem; color: var(--text-muted); }
+    .equipo-card__bio { margin: 0; font-size: 0.83rem; color: var(--text-soft); line-height: 1.5; }
+    .equipo-rol-badge {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: var(--radius-pill);
+      margin-bottom: 0.35rem;
+    }
+    .equipo-rol-badge--lider  { background: var(--color-attention-subtle); color: var(--color-attention-fg); }
+    .equipo-rol-badge--admin  { background: var(--color-accent-subtle); color: var(--text); }
+    .equipo-rol-badge--destacado { background: var(--color-success-subtle); color: var(--color-success-fg); }
+    .equipo-vacio { color: var(--text-muted); font-size: 0.85rem; border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
+        <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
+      <a href="equipo.html" class="active" title="Conocé al equipo de Academia Indrhack">Equipo</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav></header>
+<main>
+    <div class="container section reveal">
+      <h1 class="section-title">Nuestro <span class="accent">equipo</span></h1>
+      <p class="section-subtitle">Las personas que lideran y sostienen la comunidad de Academia Indrhack.</p>
+
+      <div class="equipo-seccion">
+        <h2>👑 Líder</h2>
+        <div id="equipo-lider" class="equipo-grid"></div>
+      </div>
+
+      <div class="equipo-seccion">
+        <h2>🛡️ Administradores</h2>
+        <div id="equipo-admins" class="equipo-grid"></div>
+      </div>
+
+      <div class="equipo-seccion">
+        <h2>⭐ Miembros destacados</h2>
+        <div id="equipo-destacados" class="equipo-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+    <br />
+    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    function escapeHtml(str) {
+      return (str || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function tarjeta(p, rol) {
+      const foto = p.foto || 'assets/img/avatar-placeholder.svg';
+      const badgeClass = rol === 'Líder' ? 'lider' : rol === 'Administrador' ? 'admin' : 'destacado';
+      return `
+        <div class="equipo-card ${rol === 'Líder' ? 'equipo-card--lider' : ''}">
+          <img class="equipo-card__foto" src="${escapeHtml(foto)}" alt="" />
+          <div>
+            <span class="equipo-rol-badge equipo-rol-badge--${badgeClass}">${rol}</span>
+            <p class="equipo-card__nombre">${escapeHtml(p.nombre)}</p>
+            ${p.username ? `<p class="equipo-card__user">@${escapeHtml(p.username)}</p>` : ''}
+            ${p.bio ? `<p class="equipo-card__bio">${escapeHtml(p.bio)}</p>` : ''}
+          </div>
+        </div>`;
+    }
+
+    (async () => {
+      const liderWrap = document.getElementById('equipo-lider');
+      const adminsWrap = document.getElementById('equipo-admins');
+      const destacadosWrap = document.getElementById('equipo-destacados');
+
+      try {
+        const snap = await getDoc(doc(db, 'config', 'equipo'));
+        const data = snap.exists() ? snap.data() : {};
+
+        liderWrap.innerHTML = data.lider
+          ? tarjeta(data.lider, 'Líder')
+          : '<div class="equipo-vacio">Todavía no se asignó un líder.</div>';
+
+        const admins = Array.isArray(data.administradores) ? data.administradores : [];
+        adminsWrap.innerHTML = admins.length
+          ? admins.map(p => tarjeta(p, 'Administrador')).join('')
+          : '<div class="equipo-vacio">Todavía no hay administradores cargados acá.</div>';
+
+        const destacados = Array.isArray(data.destacados) ? data.destacados : [];
+        destacadosWrap.innerHTML = destacados.length
+          ? destacados.map(p => tarjeta(p, 'Destacado')).join('')
+          : '<div class="equipo-vacio">Todavía no hay miembros destacados.</div>';
+      } catch (e) {
+        liderWrap.innerHTML = '<div class="equipo-vacio">No se pudo cargar el equipo.</div>';
+      }
+    })();
+  </script>
+
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // Smart inicio link - redirect to panel if logged in
+    onAuthStateChanged(auth, async (user) => {
+      const inicioLinks = document.querySelectorAll('a[href="index.html"]');
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists() && snap.data().estado === 'aprobado') {
+            const panel = snap.data().rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html';
+            inicioLinks.forEach(a => { a.href = panel; a.textContent = 'Mi Panel'; });
+            return;
+          }
+        } catch(e) {}
+      }
+    });
+  </script>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+</body>
+</html>

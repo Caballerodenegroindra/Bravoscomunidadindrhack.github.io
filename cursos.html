@@ -353,6 +353,116 @@
 
     .mapa-hint { font-size: 0.75rem; color: var(--text-muted); padding: 0.6rem 0.9rem 0; margin: 0; }
 
+    /* ====================== GUÍA RÁPIDA (para quien recién llega) ====================== */
+    .cursos-guia {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.2rem;
+      margin: 1.1rem 0;
+      position: relative;
+    }
+    .cursos-guia__cerrar {
+      position: absolute; top: 0.6rem; right: 0.6rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 1.1rem; line-height: 1;
+      padding: 0.4rem; border-radius: 50%;
+    }
+    .cursos-guia__cerrar:hover { color: var(--text); background: var(--color-canvas-inset); }
+    .cursos-guia__paso {
+      flex: 1 1 190px;
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+    }
+    .cursos-guia__num {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--color-accent-emphasis);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+      font-family: var(--font-heading);
+    }
+    .cursos-guia__paso p { margin: 0; font-size: 0.82rem; color: var(--text-soft); line-height: 1.4; }
+    .cursos-guia__paso strong { display: block; color: var(--text); font-size: 0.86rem; margin-bottom: 0.1rem; }
+    .cursos-guia.oculta { display: none; }
+
+    /* ====================== ÍNDICE RÁPIDO DE CATEGORÍAS ====================== */
+    .cursos-indice {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--color-canvas-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.55rem 0.9rem;
+      margin-bottom: 1.1rem;
+      font-size: 0.82rem;
+    }
+    .cursos-indice label { color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+    .cursos-indice select {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.6rem;
+      min-height: 40px;
+    }
+
+    /* ====================== TARJETA: badges de contenido + CTA ====================== */
+    .curso-card__badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.5rem 0 0.15rem; }
+    .curso-card__badge {
+      display: inline-flex; align-items: center; gap: 0.28rem;
+      font-size: 0.68rem; font-weight: 600;
+      color: var(--text-soft);
+      background: var(--color-canvas-inset);
+      border: 1px solid var(--border-muted);
+      border-radius: var(--radius-pill);
+      padding: 0.2rem 0.55rem;
+    }
+    .curso-card__cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: 0.85rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--color-accent-emphasis);
+      color: #fff !important;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: filter 0.15s;
+    }
+    .curso-card__cta:hover { filter: brightness(1.15); }
+
+    /* ====================== BOTÓN VOLVER ARRIBA ====================== */
+    .volver-arriba {
+      position: fixed;
+      right: 1rem;
+      bottom: calc(var(--tabbar-h, 60px) + 1rem);
+      z-index: 220;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--color-accent-emphasis);
+      color: #fff;
+      border: 2px solid var(--gold);
+      display: none;
+      align-items: center; justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+    }
+    .volver-arriba.show { display: flex; }
+
     @media (max-width: 640px) {
       .cursos-toolbar { flex-direction: column; }
       .cursos-vista-toggle { width: 100%; }
@@ -360,6 +470,7 @@
       .cursos-grid { grid-template-columns: 1fr; }
       .mapa-canvas-wrap { height: 52vh; }
       .mapa-leyenda { display: none; }
+      .cursos-guia { padding: 1rem; }
     }
   </style>
 </head>
@@ -381,6 +492,7 @@
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
       <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
+      <a href="equipo.html" title="Conocé al equipo de Academia Indrhack">Equipo</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <main>
@@ -389,6 +501,23 @@
       <p class="section-subtitle">Rutas de aprendizaje en informática, ciberseguridad, hacking ético y privacidad digital.</p>
 
       <div id="cursos-stats" class="cursos-stats"></div>
+
+      <!-- Guía rápida para quien no está familiarizado con la página -->
+      <div id="cursos-guia" class="cursos-guia">
+        <button type="button" class="cursos-guia__cerrar" id="cursos-guia-cerrar" aria-label="Cerrar guía">✕</button>
+        <div class="cursos-guia__paso">
+          <span class="cursos-guia__num">1</span>
+          <p><strong>Elegí una rama</strong> con los botones de abajo (Hacking, Termux, Redes, etc.) o simplemente buscá por nombre.</p>
+        </div>
+        <div class="cursos-guia__paso">
+          <span class="cursos-guia__num">2</span>
+          <p><strong>Tocá una clase</strong> para ver de qué trata: los íconos 🎥 y ⬇ te muestran si tiene video o material descargable.</p>
+        </div>
+        <div class="cursos-guia__paso">
+          <span class="cursos-guia__num">3</span>
+          <p><strong>Tocá "Ver clase"</strong> para mirar el video, leer el contenido y descargar lo que necesites.</p>
+        </div>
+      </div>
 
       <!-- Buscador + selector de vista -->
       <div class="cursos-toolbar">
@@ -399,13 +528,19 @@
         </div>
         <div class="cursos-vista-toggle" role="tablist" aria-label="Cambiar vista">
           <button type="button" class="vista-btn active" data-vista="lista" role="tab" aria-selected="true">📋 Lista</button>
-          <button type="button" class="vista-btn" data-vista="mapa" role="tab" aria-selected="false">🗺️ Mapa conceptual</button>
+          <button type="button" class="vista-btn" data-vista="mapa" role="tab" aria-selected="false">🗺️ Mapa (avanzado)</button>
         </div>
       </div>
 
       <!-- Filtros -->
       <div id="filtros-categoria" class="cursos-chips"></div>
       <div id="filtros-nivel" class="cursos-chips"></div>
+
+      <!-- Índice rápido: saltar directo a una categoría -->
+      <div class="cursos-indice" id="cursos-indice" style="display:none">
+        <label for="ir-a-categoria">📍 Ir directo a:</label>
+        <select id="ir-a-categoria"></select>
+      </div>
 
       <!-- Vista: lista -->
       <div id="vista-lista" class="cursos-vista active">
@@ -452,6 +587,8 @@
 
   <div id="toast-copiado" class="toast-copiado">🔗 Enlace copiado al portapapeles</div>
 
+  <button type="button" id="volver-arriba" class="volver-arriba" aria-label="Volver arriba" title="Volver arriba">↑</button>
+
   <footer class="footer">ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético <br /> <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a></footer>
 
   <script src="js/particles.js"></script>
@@ -480,10 +617,30 @@
     const modal           = document.getElementById('curso-modal');
     const modalContent    = document.getElementById('curso-modal-content');
     const toastEl         = document.getElementById('toast-copiado');
+    const guiaEl          = document.getElementById('cursos-guia');
+    const guiaCerrarBtn   = document.getElementById('cursos-guia-cerrar');
+    const indiceWrap      = document.getElementById('cursos-indice');
+    const indiceSelect    = document.getElementById('ir-a-categoria');
+    const volverArribaBtn = document.getElementById('volver-arriba');
     document.getElementById('curso-modal-close').onclick = () => {
       modal.style.display = 'none';
       try { history.replaceState(null, '', location.pathname); } catch(e) {}
     };
+
+    /* ===== Guía rápida: se puede cerrar y queda recordado ===== */
+    try {
+      if (localStorage.getItem('indrhack_cursos_guia_oculta') === '1') guiaEl.classList.add('oculta');
+    } catch(e) {}
+    guiaCerrarBtn.addEventListener('click', () => {
+      guiaEl.classList.add('oculta');
+      try { localStorage.setItem('indrhack_cursos_guia_oculta', '1'); } catch(e) {}
+    });
+
+    /* ===== Botón "volver arriba" ===== */
+    window.addEventListener('scroll', () => {
+      volverArribaBtn.classList.toggle('show', window.scrollY > 700);
+    }, { passive: true });
+    volverArribaBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     const nivelClass  = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
     const nivelSlug   = { 'Básico': 'basico', 'Intermedio': 'intermedio', 'Avanzado': 'avanzado' };
@@ -519,6 +676,7 @@
         renderStats();
         renderChipsCategoria();
         renderChipsNivel();
+        renderIndice();
         renderCursos();
         abrirDesdeEnlace();
       } catch(e) {
@@ -540,6 +698,10 @@
     /* ===== Utilidades ===== */
     function norm(str) {
       return (str || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function slugCategoria(cat) {
+      return norm(cat).replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'general';
     }
 
     function escapeHtml(str) {
@@ -647,6 +809,33 @@
       });
     }
 
+    /* ===== Índice rápido: saltar a una categoría ===== */
+    function renderIndice() {
+      if (categorias.length < 2) { indiceWrap.style.display = 'none'; return; }
+      indiceWrap.style.display = 'flex';
+      indiceSelect.innerHTML = '<option value="">Elegí una rama...</option>' +
+        categorias.map(cat => `<option value="${escapeHtml(slugCategoria(cat))}">${iconoCategoria(cat)} ${escapeHtml(cat)}</option>`).join('');
+    }
+    indiceSelect.addEventListener('change', () => {
+      const slug = indiceSelect.value;
+      indiceSelect.value = '';
+      if (!slug) return;
+      if (vistaActual !== 'lista') {
+        vistaActual = 'lista';
+        vistaBtns.forEach(b => { const on = b.dataset.vista === 'lista'; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
+        vistaLista.classList.add('active');
+        vistaMapa.classList.remove('active');
+      }
+      if (filtroCategoria !== 'todos') { filtroCategoria = 'todos'; renderChipsCategoria(); renderCursos(); }
+      requestAnimationFrame(() => {
+        const target = document.getElementById('cat-' + slug);
+        if (target) {
+          const y = target.getBoundingClientRect().top + window.scrollY - 74;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      });
+    });
+
     /* ===== Buscador ===== */
     searchInput.addEventListener('input', () => {
       searchTerm = searchInput.value.trim();
@@ -691,7 +880,7 @@
       const grupos = agruparPorCategoria(lista);
 
       container.innerHTML = Object.entries(grupos).map(([cat, cursos]) => `
-        <div class="categoria-header">
+        <div class="categoria-header" id="cat-${slugCategoria(cat)}">
           <span class="categoria-icon">${iconoCategoria(cat)}</span>
           <h2>${escapeHtml(cat)}</h2>
           <span class="categoria-count">${cursos.length} clase${cursos.length !== 1 ? 's' : ''}</span>
@@ -706,14 +895,20 @@
               </div>
               <h3>${resaltar(c.titulo)}</h3>
               <p class="curso-descripcion">${resaltar(c.descripcion || '')}</p>
-              <p class="expand-hint">Toca para ver más →</p>
+              <div class="curso-card__badges">
+                ${c.enlace ? '<span class="curso-card__badge">🎥 Video</span>' : ''}
+                ${c.descarga ? '<span class="curso-card__badge">⬇ Descarga</span>' : ''}
+                ${!c.enlace && !c.descarga ? '<span class="curso-card__badge">📄 Contenido escrito</span>' : ''}
+              </div>
+              <a href="clase.html?id=${c.id}" class="curso-card__cta" data-cta-id="${c.id}">▶ Ver clase</a>
             </div>
           `).join('')}
         </div>
       `).join('');
 
       container.querySelectorAll('.curso-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('[data-cta-id]') || e.target.closest('[data-share-id]')) return;
           const curso = allCursos.find(c => c.id === card.dataset.id);
           abrirModal(curso);
         });
