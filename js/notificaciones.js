@@ -49,7 +49,6 @@ export const TIPOS_NOTIF = {
   CURSO_APROBADO: 'curso_aprobado',
   RANGO: 'rango',
   SISTEMA: 'sistema',
-  CLASE_EN_VIVO: 'clase_en_vivo',
   RESPUESTA_HILO: 'respuesta_hilo',
   CURSO_NUEVO: 'curso_nuevo',
 };
@@ -64,7 +63,6 @@ const ICONOS = {
   curso_aprobado: '📘',
   rango: '⭐',
   sistema: '🔔',
-  clase_en_vivo: '🔴',
   respuesta_hilo: '💬',
   curso_nuevo: '📚',
 };

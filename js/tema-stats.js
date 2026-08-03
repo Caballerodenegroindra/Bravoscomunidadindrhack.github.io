@@ -42,7 +42,6 @@ const TEMAS = {
   cursos:         { label: 'Cursos y clases',      kw: ['curso', 'clase', 'temario', 'contenido', 'material'] },
   quiz:           { label: 'Quizzes',              kw: ['quiz', 'examen', 'evaluaci', 'aprobar', 'pregunta del quiz'] },
   ranking:        { label: 'Puntos y ranking',     kw: ['punto', 'rango', 'ranking', 'nivel', 'posici'] },
-  clases_vivo:    { label: 'Clases en vivo',       kw: ['en vivo', 'directo', 'streaming', 'live'] },
   chat:           { label: 'Chat y comunidad',     kw: ['chat', 'comunidad', 'grupo', 'mensaje'] },
   cuenta:         { label: 'Cuenta y acceso',      kw: ['cuenta', 'registr', 'login', 'iniciar sesi', 'contraseñ', 'usuario'] },
   certificados:   { label: 'Certificados y títulos', kw: ['certificad', 'título', 'titulo', 'diploma', 'insignia', 'badge'] },
