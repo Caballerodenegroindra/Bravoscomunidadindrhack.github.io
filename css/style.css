@@ -1989,6 +1989,17 @@ tbody tr:last-child td { border-bottom: none; }
   body::-webkit-scrollbar { width: 0; }
   .help-fab, #chat-widget-fab { box-shadow: var(--shadow); }
 
+  /* Un poco más de aire a los costados en pantallas chicas: antes
+     el texto y las tarjetas quedaban casi pegados al borde de la
+     pantalla, ahora queda un margen más cómodo. */
+  .container { padding: 0 1.75rem; }
+
+  /* Las tarjetas (.card) usaban el mismo padding grande que en
+     desktop (--gap-lg = 40px), lo que las hacía ver enormes en
+     mobile. Achicamos el padding interno para que se vean más
+     compactas sin perder el margen contra el borde de pantalla. */
+  .card { padding: var(--gap-md); }
+
   .hero {
     min-height: auto;
     padding: var(--gap-2xl) 1.25rem;
