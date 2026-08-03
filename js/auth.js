@@ -84,7 +84,6 @@ export async function registerUser({ phone, username, password, email, tiposPart
       estado: ESTADOS.PENDIENTE,
       fechaIngreso: serverTimestamp(),
       photoURL: '',
-      rango: 'Recluta',
       enGrupo: false,
       // Cómo eligió participar al registrarse: chat general ('aprendiz'),
       // equipo de desarrollo ('colaborador'), o ambos a la vez.

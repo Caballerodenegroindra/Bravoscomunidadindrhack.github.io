@@ -4,19 +4,16 @@
    Módulo compartido usado por:
    - ia-asistente.html   (chat de página completa)
    - js/ia-widget.js     (burbuja flotante presente en todo el sitio)
-   - panel-admin.html    (recomendación automática al aprobar un quiz)
 
    Acá vive TODO lo relacionado a la IA: la clave, el modelo, cómo se
-   arma el contexto (cursos + progreso del usuario + estructura del
-   sitio) y cómo se llama a la API. Si el día de mañana hay que
+   arma el contexto (cursos + estructura del sitio) y cómo se llama
+   a la API. Si el día de mañana hay que
    cambiar de modelo, de proveedor o el texto del prompt, se toca
    este único archivo.
    ============================================================ */
 
 import { db } from './firebase-config.js';
-import {
-  collection, getDocs, query, where,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 // Clave gratuita de OpenRouter: https://openrouter.ai/keys (no pide tarjeta)
 // Usamos "openrouter/free": el auto-router propio de OpenRouter, que elige
@@ -31,9 +28,7 @@ export const IA_MODEL           = 'openrouter/free';
 /* ── Mapa estático del sitio: qué hay y dónde ─────────────── */
 export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html con username y contraseña. Su cuenta queda pendiente hasta que un administrador la aprueba.
 - Login: en login.html usando username. Tras aprobación, accede al panel-usuario.html.
-- Cursos y clases: visibles en cursos.html. Cada clase tiene nivel (Básico/Intermedio/Avanzado), descripción, y un quiz de evaluación.
-- Quiz: al ver una clase en clase.html, el usuario responde 4 preguntas. El admin las revisa y aprueba/rechaza. Si aprueba, gana puntos: Básico=100pts, Intermedio=200pts, Avanzado=400pts.
-- Puntos y ranking: los puntos acumulados definen el rango del usuario y su posición en el ranking visible en panel-usuario.html.
+- Cursos y clases: visibles en cursos.html. Cada clase tiene nivel (Básico/Intermedio/Avanzado) y descripción.
 - Perfil: en perfil.html el usuario puede cambiar nombre visible, bio y foto.
 - Mi ficha: en ficha.html se ven los datos del usuario.
 - Títulos: en titulos.html aparecen los certificados y badges obtenidos.
@@ -41,16 +36,16 @@ export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html c
 - Noticias: en noticias.html se publican anuncios y novedades.
 - Redes: en redes.html están los links a las redes sociales de la academia.
 - Configuración: en configuracion.html el usuario puede cambiar contraseña y ajustes.
-- Panel admin: solo accesible para administradores, en panel-admin.html gestionan usuarios, clases, quiz y noticias.
-- Notificaciones: en notificaciones.html (y la campanita del navbar) se ven avisos de quiz aprobados/rechazados, cuenta aprobada, respuestas en hilos, etc.
+- Panel admin: solo accesible para administradores, en panel-admin.html gestionan usuarios, clases y noticias.
+- Notificaciones: en notificaciones.html (y la campanita del navbar) se ven avisos de cuenta aprobada, respuestas en hilos, etc.
 - Colaborá con el proyecto: en colabora.html se explica que la propia app/plataforma de la academia es un proyecto en desarrollo, y cualquier usuario que sepa programar (o quiera aprender colaborando) puede anotarse para sumarse al equipo que la construye. Completa un formulario corto (en qué área quiere ayudar y un mensaje) y un administrador lo revisa; si lo aprueba, recibe una notificación con el enlace al grupo de WhatsApp de trabajo del equipo de desarrollo (separado del grupo general de la comunidad). Si el usuario pregunta cómo ayudar a construir la app, cómo sumarse al equipo de desarrollo, o algo similar, mandalo a colabora.html.`;
 
 /* ── Nombres "lindos" de página para dar contexto de dónde está el usuario ── */
 const NOMBRES_PAGINA = {
   'index.html': 'la portada / inicio',
   'cursos.html': 'el catálogo de cursos y clases',
-  'clase.html': 'el detalle de una clase (viendo contenido o el quiz)',
-  'panel-usuario.html': 'su panel de usuario (progreso, ranking, puntos)',
+  'clase.html': 'el detalle de una clase',
+  'panel-usuario.html': 'su panel de usuario (progreso)',
   'perfil.html': 'la edición de su perfil',
   'ficha.html': 'su ficha personal',
   'titulos.html': 'sus títulos y certificados',
@@ -77,7 +72,7 @@ export function nombrePagina(pathname) {
 const CONSEJOS_PAGINA = {
   'index.html': '¿Querés que te cuente cómo funciona la academia o te ayude a empezar?',
   'cursos.html': '¿Te ayudo a elegir por dónde arrancar según tu nivel?',
-  'clase.html': '¿Tenés dudas del contenido o del quiz de esta clase? Preguntame.',
+  'clase.html': '¿Tenés dudas del contenido de esta clase? Preguntame.',
   'panel-usuario.html': '¿Querés que revisemos tu progreso y qué te conviene estudiar ahora?',
   'perfil.html': '¿Necesitás una mano para completar tu perfil?',
   'ficha.html': 'Si algo de tu ficha no cierra, decime y lo vemos.',
@@ -159,56 +154,9 @@ export function buildConfigContext(config) {
   return lineas.join('\n');
 }
 
-/* ── Progreso real del usuario (quiz_logros aprobados) ────── */
-export async function cargarProgresoUsuario(uid) {
-  if (!uid) return [];
-  try {
-    const snap = await getDocs(query(
-      collection(db, 'quiz_logros'),
-      where('uid', '==', uid),
-      where('aprobado', '==', true)
-    ));
-    return snap.docs.map((d) => d.data());
-  } catch (e) {
-    return [];
-  }
-}
-
-export function buildProgresoContext(progreso) {
-  if (!progreso || !progreso.length) {
-    return 'El usuario todavía no aprobó ninguna clase/quiz.';
-  }
-  return 'Clases YA completadas y aprobadas por el usuario (no se las vuelvas a recomendar como "nuevas"):\n' +
-    progreso.map((p) => `- "${p.cursoTitulo}" (Nivel: ${p.nivel || '—'}, ${p.puntos || 0} pts)`).join('\n');
-}
-
-/* ── Quizzes que el usuario ya envió y esperan revisión del admin ──
-   Le sirve a la IA para no recomendar de nuevo algo que ya está en
-   cola, y para poder tranquilizar al usuario ("ya lo tengo enviado,
-   están esperando aprobación"). ── */
-export async function cargarQuizzesPendientes(uid) {
-  if (!uid) return [];
-  try {
-    const snap = await getDocs(query(
-      collection(db, 'quiz_submissions'),
-      where('uid', '==', uid),
-      where('estado', '==', 'pendiente')
-    ));
-    return snap.docs.map((d) => d.data());
-  } catch (e) {
-    return [];
-  }
-}
-
-export function buildQuizzesPendientesContext(pendientes) {
-  if (!pendientes || !pendientes.length) return 'No tiene quizzes pendientes de revisión.';
-  return 'Quizzes que el usuario YA envió y están esperando revisión del administrador (no le digas que los envíe de nuevo):\n' +
-    pendientes.map((s) => `- "${s.cursoTitulo || s.cursoId}"`).join('\n');
-}
-
 /* ── Arma el system prompt completo ────────────────────────
-   opts: { userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }  */
-export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, pendientesCtx, paginaCtx, configCtx }) {
+   opts: { userInfo, cursosCtx, paginaCtx, configCtx }  */
+export function buildSystemPrompt({ userInfo, cursosCtx, paginaCtx, configCtx }) {
   const NIVEL_TEXTO = { experimentado: 'tiene experiencia programando', algo: 'tiene algo de experiencia técnica / está aprendiendo', principiante: 'es principiante total, sin experiencia previa' };
   const nivelCtx = userInfo
     ? (userInfo.nivelProgramacion
@@ -216,20 +164,14 @@ export function buildSystemPrompt({ userInfo, cursosCtx, progresoCtx, pendientes
         : 'Todavía NO indicó en su perfil si es programador o tiene experiencia técnica.')
     : '';
   const userCtx = userInfo
-    ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}, rango: ${userInfo.rango || '—'}, puntos: ${userInfo.puntos || 0}. ${nivelCtx}`
+    ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}. ${nivelCtx}`
     : 'El usuario no ha iniciado sesión.';
 
-  return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora según su progreso real, etc. No esperes a que pregunten algo genérico: si el contexto de la página o su progreso dan pie a una sugerencia útil, ofrecela vos.
+  return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora, etc. No esperes a que pregunten algo genérico: si el contexto de la página da pie a una sugerencia útil, ofrecela vos.
 
 CONTEXTO DEL USUARIO:
 ${userCtx}
 ${paginaCtx ? `Ahora mismo el usuario está en: ${paginaCtx}.` : ''}
-
-PROGRESO DEL USUARIO:
-${progresoCtx || 'No disponible.'}
-
-QUIZZES PENDIENTES DE REVISIÓN:
-${pendientesCtx || 'No disponible.'}
 
 CLASES DISPONIBLES EN LA ACADEMIA (datos reales de Firestore, cada una con su enlace directo):
 ${cursosCtx}
@@ -241,7 +183,7 @@ CÓMO FUNCIONA LA ACADEMIA:
 ${MAPA_SITIO}
 
 CÓMO RECOMENDAR CLASES:
-Cuando el usuario pregunte qué clases le sirven para algo, o pida "qué sigo ahora", analiza su progreso y el título/descripción de cada clase disponible, y recomendá las más relevantes por nombre y nivel, priorizando las que todavía NO completó. NO inventes clases que no estén en la lista. Si no hay clases cargadas aún, díselo. Cuando el usuario pida el enlace de una clase para compartirla, copiá EXACTO el "Enlace para compartir" de esa clase (no lo inventes ni lo modifiques).
+Cuando el usuario pregunte qué clases le sirven para algo, o pida "qué sigo ahora", analiza su nivel técnico (si lo indicó) y el título/descripción de cada clase disponible, y recomendá las más relevantes por nombre y nivel, priorizando una progresión lógica (Básico → Intermedio → Avanzado). NO inventes clases que no estén en la lista. Si no hay clases cargadas aún, díselo. Cuando el usuario pida el enlace de una clase para compartirla, copiá EXACTO el "Enlace para compartir" de esa clase (no lo inventes ni lo modifiques).
 
 CÓMO COMPARTIR ENLACES OFICIALES:
 Si el usuario pide el grupo de WhatsApp, el canal de WhatsApp, Facebook o YouTube de la academia, y el enlace figura arriba en "ENLACES OFICIALES DE LA ACADEMIA", compartilo directamente y con confianza (son datos públicos de la propia academia, no información externa). Copiá el enlace exacto, sin inventarlo ni modificarlo. Si ese enlace en particular no está cargado todavía, decilo y sugerí ver la página redes.html o consultar a un administrador. Nunca inventes una URL que no esté en el contexto.
@@ -253,14 +195,14 @@ CÓMO HACER PREGUNTAS ACLARATORIAS:
 Si el pedido del usuario es ambiguo o te falta contexto para dar una buena respuesta (por ejemplo: no dice su nivel, no dice qué tema le interesa, pide "ayuda" sin especificar con qué, o hay varias clases que podrían servirle), hacé como máximo UNA pregunta corta y concreta para entender mejor antes de responder, en vez de asumir o tirar una respuesta genérica. Ejemplos: "¿Ya tenés experiencia previa o arrancás de cero?", "¿Te interesa más redes, sistemas operativos o hacking web?". Si el pedido ya es claro y específico, respondé directo sin preguntar nada.
 
 CÓMO INCENTIVAR Y ACOMPAÑAR:
-Tu trabajo no es solo responder, es que la persona sienta que avanza. Reconocé logros reales (puntos, rango, quizzes aprobados) cuando aparezcan en el contexto, celebralos brevemente, y siempre que puedas cerrá con un siguiente paso concreto y alcanzable (una clase puntual, no un consejo genérico como "seguí estudiando"). Si ves que tiene quizzes pendientes de revisión, tranquilizala: ya están en cola, no hace falta reenviarlos.
+Tu trabajo no es solo responder, es que la persona sienta que avanza. Siempre que puedas, cerrá con un siguiente paso concreto y alcanzable (una clase puntual, no un consejo genérico como "seguí estudiando").
 
 PERSONALIDAD Y RITMO DE CONVERSACIÓN:
 No sos un buscador ni un motor de respuestas de manual: sos un compañero de academia con onda, que charla como charlaría una persona real por chat. Priorizá SIEMPRE este estilo conversacional por sobre el formato "informe":
 - Escribí como si estuvieras chateando, no redactando un documento. Mensajes cortos y con ritmo, no bloques largos de texto salvo que el usuario pida explícitamente profundidad o un tema muy técnico lo requiera.
-- Metele energía y calidez genuina: alentá, festejá los logros del usuario ("¡Con puntos así ya estás para el nivel Intermedio! 🔥"), y transmití ganas de que aprenda y avance.
+- Metele energía y calidez genuina: alentá, festejá los logros del usuario cuando corresponda ("¡Bien ahí, ya estás listo para el nivel Intermedio! 🔥"), y transmití ganas de que aprenda y avance.
 - En una charla informal (saludos, "cómo estoy yendo", "qué te parece", "dame una mano", etc.), NO respondas con listas ni estructura de investigación. Respondé como en una charla real: contestá lo que te preguntan y, si tiene sentido, cerrá con una repregunta corta que mantenga viva la conversación (sobre qué le interesa, cómo se sintió con tal clase, qué quiere lograr, etc.). Que se sienta ida y vuelta, no un formulario.
-- Cuando SÍ te pidan algo que requiere buscar/analizar datos (recomendar clases según su progreso, explicar un tema técnico en detalle, comparar opciones), ahí sí podés extenderte, usar listas y estructura — pero mantené el tono cercano, no acartonado.
+- Cuando SÍ te pidan algo que requiere buscar/analizar datos (recomendar clases, explicar un tema técnico en detalle, comparar opciones), ahí sí podés extenderte, usar listas y estructura — pero mantené el tono cercano, no acartonado.
 - Usá emojis con moderación para darle vida (no en cada línea, pero sí donde sumen: un logro, un ánimo, un saludo).
 - Evitá sonar repetitivo o robótico en los saludos y cierres; variá cómo arrancás y cerrás los mensajes.
 
@@ -286,8 +228,6 @@ TAREA ESPECIAL — SALUDO PROACTIVO AUTOMÁTICO:
 Ahora no te está escribiendo el usuario: sos vos quien abre la charla apenas lo ve entrar, como si lo notaras llegar. Generá un ÚNICO mensaje corto (entre 1 y 3 frases, nunca una lista ni un menú de opciones) que:
 - Lo salude por su nombre si lo tenés en el contexto.
 - Suene espontáneo, natural y DISTINTO cada vez: variá las palabras, el orden y el tono. No repitas siempre la misma fórmula de saludo ni el mismo cierre.
-- Si tiene progreso real (puntos, rango, clases aprobadas) o quizzes recién aprobados, podés reconocerlo o festejarlo brevemente cuando tenga sentido — pero no lo hagas en todos los saludos, para no sonar repetitivo.
-- Si tiene quizzes pendientes de revisión, alguna vez podés mencionarlo para tranquilizarlo (ya están en cola), pero tampoco siempre.
 - Cerrá casi siempre con una pregunta corta y genuina que invite a responder: cómo está, qué clase va a ver hoy, si sigue con tal tema, si retoma donde lo dejó, etc. — variá cuál usás en cada ocasión.
 - Nada de listas, nada de negrita en exceso, nada de firmas tipo "— Asistente Indrhack".
 - Máximo 40 palabras.`;
@@ -340,37 +280,4 @@ export async function askIA(systemPrompt, history) {
   }
 
   return data.choices?.[0]?.message?.content || 'Sin respuesta.';
-}
-
-/* ── Recomendación automática al aprobar un quiz ────────────
-   Se usa desde panel-admin.html justo después de aprobar un quiz,
-   para mandarle al usuario una notificación con el "siguiente paso"
-   sugerido por la IA, en vez de un mensaje genérico fijo.        */
-export async function recomendarSiguienteCurso({ uid, cursoAprobadoTitulo }) {
-  try {
-    const [cursos, progreso] = await Promise.all([
-      cargarCursos(),
-      cargarProgresoUsuario(uid),
-    ]);
-    const completados = new Set(progreso.map((p) => p.cursoTitulo));
-    completados.add(cursoAprobadoTitulo);
-    const pendientes = cursos.filter((c) => !completados.has(c.titulo));
-    if (!pendientes.length) return null;
-
-    const prompt = `Sos el asistente de Academia Indrhack. Un usuario acaba de aprobar la clase "${cursoAprobadoTitulo}".
-
-Clases que ya completó en total: ${[...completados].join(', ')}.
-
-Clases disponibles que todavía NO completó:
-${pendientes.map((c) => `- ID:${c.id} | "${c.titulo}" | Nivel: ${c.nivel || 'Básico'} | ${(c.descripcion || '').slice(0, 150)}`).join('\n')}
-
-Recomendá UNA sola clase como siguiente paso lógico, priorizando progresión de nivel (Básico → Intermedio → Avanzado) y temática relacionada con "${cursoAprobadoTitulo}". Respondé en español, en un máximo de 2 frases cortas y amigables, mencionando el título exacto de la clase recomendada entre comillas. No uses markdown ni listas.`;
-
-    const reply = await askIA(prompt, [{ role: 'user', content: 'Recomendame la siguiente clase.' }]);
-    const mencionado = pendientes.find((c) => reply.includes(c.titulo));
-    return { texto: reply.trim(), cursoId: mencionado?.id || null };
-  } catch (e) {
-    console.error('Error recomendando siguiente curso:', e);
-    return null;
-  }
 }

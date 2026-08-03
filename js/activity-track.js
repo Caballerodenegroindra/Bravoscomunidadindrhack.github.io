@@ -6,7 +6,7 @@
    sensible: solo sirve para que "Mi Panel" sepa qué función todavía
    NO probó y se la sugiera ahí, en vez de repetir siempre lo mismo.
    Es una pista de personalización liviana, nunca se usa para nada
-   importante (permisos, puntos, etc.).
+   importante (permisos, accesos, etc.).
    ============================================================ */
 
 const KEY = 'indrhack-visitas';

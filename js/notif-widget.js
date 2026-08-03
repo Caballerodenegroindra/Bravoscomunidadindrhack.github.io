@@ -7,7 +7,7 @@
    3. Actualizar el puntito rojo / contador en cualquier elemento
       con [data-notif-dot] o [data-notif-count] (tabbar y navbar).
    4. Disparar una notificación nativa del sistema cuando llega un
-      aviso nuevo (por ejemplo: "Quiz aprobado").
+      aviso nuevo (por ejemplo: "Cuenta aprobada").
    ============================================================ */
 
 import { onSessionChange } from './auth.js';

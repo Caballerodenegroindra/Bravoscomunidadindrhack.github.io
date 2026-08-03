@@ -72,10 +72,6 @@ export function setUserRole(uid, rol) {
   return updateDoc(doc(db, 'users', uid), { rol });
 }
 
-export function setUserRango(uid, rango) {
-  return updateDoc(doc(db, 'users', uid), { rango });
-}
-
 /**
  * Elimina el documento de perfil del usuario en Firestore.
  * La cuenta de Authentication debe eliminarse desde una

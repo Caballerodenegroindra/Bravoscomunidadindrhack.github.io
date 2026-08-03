@@ -11,8 +11,6 @@
    Además:
    - Sabe en qué página está el usuario y le ofrece un consejo
      contextual apenas abre el panel por primera vez ahí.
-   - Conoce su progreso real (clases aprobadas, puntos, rango) y
-     sus quizzes pendientes de revisión.
    - Conoce el catálogo completo de cursos y los enlaces oficiales.
    - Mantiene el historial de la charla mientras navega el sitio
      (usa sessionStorage, se resetea si cierra la pestaña).
@@ -21,8 +19,6 @@
 import { onSessionChange } from './auth.js';
 import {
   cargarCursos, buildCursosContext,
-  cargarProgresoUsuario, buildProgresoContext,
-  cargarQuizzesPendientes, buildQuizzesPendientesContext,
   cargarConfigSitio, buildConfigContext,
   buildSystemPrompt, buildSaludoProactivoInstruccion,
   askIA, nombrePagina, consejoPagina,
@@ -74,8 +70,6 @@ function initWidget() {
 
   let userInfo    = null;
   let cursos      = [];
-  let progreso    = [];
-  let pendientes  = [];
   let config      = {};
   let history     = safeLoadHistory();
   let busy        = false;
@@ -86,14 +80,7 @@ function initWidget() {
   onSessionChange((profile) => {
     userInfo = profile;
     if (profile) {
-      Promise.all([
-        cargarProgresoUsuario(profile.uid),
-        cargarQuizzesPendientes(profile.uid),
-      ]).then(([p, q]) => {
-        progreso   = p;
-        pendientes = q;
-        intentarSaludoAutomatico();
-      });
+      intentarSaludoAutomatico();
     } else {
       intentarSaludoInvitado();
     }
@@ -304,8 +291,6 @@ function initWidget() {
       const systemPrompt = buildSystemPrompt({
         userInfo,
         cursosCtx: buildCursosContext(cursos, BASE_URL),
-        progresoCtx: buildProgresoContext(progreso),
-        pendientesCtx: buildQuizzesPendientesContext(pendientes),
         paginaCtx: nombrePagina(location.pathname),
         configCtx: buildConfigContext(config),
       }) + buildSaludoProactivoInstruccion();
@@ -403,8 +388,6 @@ function initWidget() {
     const systemPrompt = buildSystemPrompt({
       userInfo,
       cursosCtx: buildCursosContext(cursos, BASE_URL),
-      progresoCtx: buildProgresoContext(progreso),
-      pendientesCtx: buildQuizzesPendientesContext(pendientes),
       paginaCtx: nombrePagina(location.pathname),
       configCtx: buildConfigContext(config),
     });

@@ -40,28 +40,22 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 export const TIPOS_NOTIF = {
-  QUIZ_APROBADO: 'quiz_aprobado',
-  QUIZ_RECHAZADO: 'quiz_rechazado',
   CUENTA_APROBADA: 'cuenta_aprobada',
   CUENTA_RECHAZADA: 'cuenta_rechazada',
   PROYECTO_APROBADO: 'proyecto_aprobado',
   COLABORADOR_APROBADO: 'colaborador_aprobado',
   CURSO_APROBADO: 'curso_aprobado',
-  RANGO: 'rango',
   SISTEMA: 'sistema',
   RESPUESTA_HILO: 'respuesta_hilo',
   CURSO_NUEVO: 'curso_nuevo',
 };
 
 const ICONOS = {
-  quiz_aprobado: '✅',
-  quiz_rechazado: '❌',
   cuenta_aprobada: '🎉',
   cuenta_rechazada: '⚠️',
   proyecto_aprobado: '🏆',
   colaborador_aprobado: '🚀',
   curso_aprobado: '📘',
-  rango: '⭐',
   sistema: '🔔',
   respuesta_hilo: '💬',
   curso_nuevo: '📚',
@@ -94,9 +88,9 @@ export function iconoNotificacion(tipo) {
  * cualquier parte de la app (panel-admin, auth, etc).
  * Ejemplo:
  *   await crearNotificacion({
- *     uid, tipo: TIPOS_NOTIF.QUIZ_APROBADO,
- *     titulo: '¡Quiz aprobado!',
- *     mensaje: 'Aprobaste el quiz de "Redes I" y ganaste 10 puntos.',
+ *     uid, tipo: TIPOS_NOTIF.CURSO_APROBADO,
+ *     titulo: '¡Nueva clase disponible!',
+ *     mensaje: 'Se publicó "Redes I" en la categoría Redes.',
  *     link: 'ficha.html',
  *   });
  */
