@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
   <style>
     /* ====================== NIVELES (paleta semántica) ====================== */
     .nivel-badge {
@@ -487,7 +487,6 @@
 
     const nivelClass  = { 'Básico': 'nivel-basico', 'Intermedio': 'nivel-intermedio', 'Avanzado': 'nivel-avanzado' };
     const nivelSlug   = { 'Básico': 'basico', 'Intermedio': 'intermedio', 'Avanzado': 'avanzado' };
-    const puntosMap   = { 'Básico': 100, 'Intermedio': 200, 'Avanzado': 400 };
 
     /* ===== Estado ===== */
     let allCursos       = [];
@@ -917,7 +916,6 @@
 
     /* ===== Modal detalle de curso ===== */
     function abrirModal(c) {
-      const puntos = puntosMap[c.nivel] || 100;
       const enlaceCompartir = enlaceCurso(c);
 
       // Cursos, clases, descargas y recursos son públicos: no hace falta
@@ -937,7 +935,6 @@
       modalContent.innerHTML = `
         <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
           <span class="nivel-badge ${nivelClass[c.nivel] || 'nivel-basico'}">${c.nivel || 'Básico'}</span>
-          <span style="background:#ffcc0022;border:1px solid #ffcc00;color:#ffcc00;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700">⭐ ${puntos} puntos</span>
           <span style="color:var(--text-muted);font-size:0.78rem">${iconoCategoria(c.categoria || 'General')} ${escapeHtml(c.categoria || 'General')}</span>
         </div>
         <h2 style="margin:0 0 0.75rem;padding-right:2rem">${escapeHtml(c.titulo)}</h2>

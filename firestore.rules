@@ -77,10 +77,7 @@ service cloud.firestore {
       allow update: if isAdmin() || (
         isOwner(userId) &&
         request.resource.data.rol    == resource.data.rol &&
-        request.resource.data.estado == resource.data.estado &&
-        request.resource.data.rango  == resource.data.rango &&
-        request.resource.data.get('puntos', 0)      == resource.data.get('puntos', 0) &&
-        request.resource.data.get('puntosTotal', 0) == resource.data.get('puntosTotal', 0)
+        request.resource.data.estado == resource.data.estado
       );
 
       allow delete: if isAdmin();
@@ -97,7 +94,7 @@ service cloud.firestore {
     // ───────────────────────────────────────────────────────
     // NOTIFICACIONES
     // ───────────────────────────────────────────────────────
-    // La mayoría (cuenta, quiz, proyecto, curso nuevo) las crea
+    // La mayoría (cuenta, proyecto, curso nuevo) las crea
     // solo el admin. Excepción: "respuesta_hilo",
     // que puede crearla cualquier usuario logueado porque se
     // dispara cuando OTRO usuario (no el admin) responde un
@@ -138,17 +135,6 @@ service cloud.firestore {
     }
 
     // ───────────────────────────────────────────────────────
-    // QUIZZES
-    // ───────────────────────────────────────────────────────
-    match /quiz_submissions/{subId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.estado == 'pendiente';
-      allow update, delete: if isAdmin();
-    }
-
-    // ───────────────────────────────────────────────────────
     // VOLUNTARIOS DEL PROYECTO (equipo de desarrollo de la app)
     // Cualquier usuario aprobado puede pedir sumarse al equipo que
     // desarrolla la app. El admin revisa y aprueba/rechaza; solo él
@@ -162,11 +148,6 @@ service cloud.firestore {
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.estado == 'pendiente';
       allow update, delete: if isAdmin();
-    }
-
-    match /quiz_logros/{docId} {
-      allow read: if isSignedIn();
-      allow create, update, delete: if isAdmin();
     }
 
     match /user_titles/{docId} {

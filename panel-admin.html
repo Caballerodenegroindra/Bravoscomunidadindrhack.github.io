@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
   <style>
     /* ── PRESENCIA ── */
     /* Mobile-first: tarjeta de 2 líneas (evita que "Última conexión"
@@ -84,15 +84,6 @@
       content: "Últ. vez: ";
       color: var(--text-muted);
     }
-    .presence-rank {
-      grid-area: rank;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
     .presence-table {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -124,7 +115,6 @@
       }
       .presence-username { min-width: 120px; flex: none; }
       .presence-phone { min-width: 110px; flex: none; }
-      .presence-rank { min-width: 70px; }
       .presence-status-text { flex: 1; text-align: left; }
       .presence-lastseen { min-width: 140px; }
       .presence-lastseen::before { content: none; }
@@ -157,7 +147,6 @@
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
     <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
     <a href="#noticias" data-tab="noticias" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📰 Noticias</a>
-    <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
     <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
@@ -174,7 +163,6 @@
         <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
-        <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
         <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
@@ -224,17 +212,6 @@
             <div class="stat-card__value" data-stat="fuera-grupo" style="color:var(--color-danger-fg)">—</div>
             <div class="stat-card__label">❌ Fuera de WhatsApp</div>
           </div>
-          <div class="stat-card" style="border-color:var(--gold-subtle);cursor:pointer" onclick="document.querySelector('[data-tab=\'quizzes\']').click()">
-            <div class="stat-card__value" data-stat="quizzes-pendientes" style="color:var(--gold)">—</div>
-            <div class="stat-card__label">⏳ Quizzes pendientes</div>
-          </div>
-        </div>
-
-        <!-- RANKING -->
-        <h2 class="section-title" style="margin-top:2rem">🏅 Ranking de <span class="accent">Puntos</span></h2>
-        <p class="section-subtitle" style="margin-bottom:1rem">Posición de todos los miembros según puntos acumulados por quizzes aprobados.</p>
-        <div id="admin-ranking-lista">
-          <p class="section-subtitle">Cargando ranking…</p>
         </div>
       </div>
 
@@ -275,8 +252,6 @@
           <select data-member-sort class="field" style="min-width:160px;padding:0.5rem">
             <option value="nuevo">Más nuevos primero</option>
             <option value="viejo">Más viejos primero</option>
-            <option value="rango-asc">Menor rango primero</option>
-            <option value="rango-desc">Mayor rango primero</option>
           </select>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
@@ -410,31 +385,6 @@
         </div>
         <div id="noticias-admin-grid">
           <p class="section-subtitle">Cargando...</p>
-        </div>
-      </div>
-
-      <div class="tab-section hidden" id="quizzes">
-        <div class="panel-header">
-          <div>
-            <h1 class="section-title">Quizzes <span class="accent">📋</span></h1>
-            <p class="section-subtitle">Revisá las respuestas enviadas por los miembros y aprobá o rechazá.</p>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
-          <button class="btn btn--small btn--primary" data-qfilter="pendiente">⏳ Pendientes <span id="q-count-pendiente" style="background:rgba(0,0,0,0.15);padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
-          <button class="btn btn--small btn--outline" data-qfilter="aprobado">✅ Aprobados</button>
-          <button class="btn btn--small btn--outline" data-qfilter="rechazado">❌ Rechazados</button>
-          <button class="btn btn--small btn--outline" data-qfilter="todos">👁 Todos</button>
-        </div>
-        <div id="quiz-submissions-list">
-          <p class="section-subtitle">Seleccioná un filtro para ver las respuestas enviadas…</p>
-        </div>
-      </div>
-
-      <div id="quiz-review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem">
-        <div class="card" style="width:100%;max-width:650px;margin:auto;position:relative">
-          <button id="quiz-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.5rem">✕</button>
-          <div id="quiz-modal-content"></div>
         </div>
       </div>
 
@@ -698,15 +648,6 @@
         <div class="field"><label>Enlace de la clase (YouTube, Drive, etc.)</label><input type="text" name="enlace" placeholder="https://..." /></div>
         <div class="field"><label>Enlace de descarga</label><input type="text" name="descarga" placeholder="https://..." /></div>
 
-        <!-- PREGUNTAS DEL QUIZ -->
-        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
-          <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:var(--color-accent-fg);margin:0 0 0.75rem">🧠 PREGUNTAS DEL QUIZ (4)</p>
-          <div class="field"><label>Pregunta 1</label><input type="text" name="quiz_p1" placeholder="¿Cuál es el concepto principal de esta clase?" /></div>
-          <div class="field"><label>Pregunta 2</label><input type="text" name="quiz_p2" placeholder="¿Qué pasos seguirías para aplicar lo aprendido?" /></div>
-          <div class="field"><label>Pregunta 3</label><input type="text" name="quiz_p3" placeholder="¿Qué riesgos o precauciones debes tener en cuenta?" /></div>
-          <div class="field"><label>Pregunta 4</label><input type="text" name="quiz_p4" placeholder="¿Cómo explicarías este tema a alguien que no lo conoce?" /></div>
-        </div>
-
         <!-- COMANDOS TERMUX -->
         <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
@@ -944,7 +885,6 @@
         if (term) list = list.filter(u =>
           (u.username||'').toLowerCase().includes(term) ||
           (u.displayName||'').toLowerCase().includes(term) ||
-          (u.rango||'').toLowerCase().includes(term) ||
           (u.phone||'').toLowerCase().includes(term)
         );
 
@@ -971,7 +911,6 @@
               <span style="width:10px;flex-shrink:0"></span>
               <span style="min-width:120px">Usuario</span>
               <span style="min-width:110px">Teléfono</span>
-              <span style="min-width:70px">Rango</span>
               <span style="flex:1">Estado</span>
               <span style="min-width:140px;text-align:right">Última conexión</span>
             </div>
@@ -982,7 +921,6 @@
                   <span class="presence-dot ${dotClass[level]}"></span>
                   <span class="presence-username">${u.username || u.displayName || u.uid}</span>
                   <span class="presence-phone">${u.phone || '—'}</span>
-                  <span class="presence-rank">${u.rango || 'Recluta'}</span>
                   <span class="presence-status-text ${statusClass[level]}">${statusLabel[level]}</span>
                   <span class="presence-lastseen">${fmtLastSeen(u)}</span>
                 </div>`;
@@ -1169,8 +1107,6 @@
           return;
         }
 
-        const RANGOS = ['Recluta','Aprendiz','Iniciado','Operador','Especialista','Leyenda','Colaborador','Mentor','Coordinador','Moderador','Administrador','Director','Fundador'];
-
         body.innerHTML = list.map((u) => `
           <div class="card" data-uid="${u.uid}" style="margin-bottom:1rem;padding:1rem">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
@@ -1184,12 +1120,6 @@
                   </small>` : ''}
               </div>
               ${badge(u.estado)}
-            </div>
-            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap">
-              <label style="color:var(--text-muted);font-size:0.8rem">Rango:</label>
-              <select class="rango-select" data-uid="${u.uid}" style="background:var(--color-canvas-inset);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:0.82rem;flex:1;min-width:130px">
-                ${RANGOS.map(r => '<option value="' + r + '" ' + (u.rango === r ? 'selected' : '') + '>' + r + '</option>').join('')}
-              </select>
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
               <label style="color:var(--text-muted);font-size:0.8rem">WhatsApp:</label>
@@ -1233,14 +1163,6 @@
           });
         });
 
-        // Rango selector
-        document.querySelectorAll('.rango-select').forEach((sel) => {
-          sel.addEventListener('change', async () => {
-            await updateDoc(doc(db, 'users', sel.dataset.uid), { rango: sel.value });
-            alert('✅ Rango actualizado a: ' + sel.value);
-          });
-        });
-
         // WhatsApp toggle
         document.querySelectorAll('.whatsapp-toggle').forEach((btn) => {
           btn.addEventListener('click', async () => {
@@ -1256,15 +1178,11 @@
         });
       }
 
-      const RANGOS_ORDER = ['Recluta','Aprendiz','Iniciado','Operador','Especialista','Leyenda','Colaborador','Mentor','Coordinador','Moderador','Administrador','Director','Fundador'];
-
       function getSorted(list) {
         const sort = document.querySelector('[data-member-sort]').value;
         const sorted = [...list];
         if (sort === 'nuevo') sorted.sort((a,b) => (b.fechaIngreso?.seconds||0) - (a.fechaIngreso?.seconds||0));
         if (sort === 'viejo') sorted.sort((a,b) => (a.fechaIngreso?.seconds||0) - (b.fechaIngreso?.seconds||0));
-        if (sort === 'rango-asc') sorted.sort((a,b) => RANGOS_ORDER.indexOf(a.rango||'Recluta') - RANGOS_ORDER.indexOf(b.rango||'Recluta'));
-        if (sort === 'rango-desc') sorted.sort((a,b) => RANGOS_ORDER.indexOf(b.rango||'Recluta') - RANGOS_ORDER.indexOf(a.rango||'Recluta'));
         return sorted;
       }
 
@@ -1344,12 +1262,6 @@
         enlace: enlaceVal,
         descarga: descargaVal,
         publicado: modalForm.publicado.checked,
-        quiz_preguntas: [
-          modalForm.quiz_p1?.value?.trim() || '¿Cuál es el concepto principal de esta clase?',
-          modalForm.quiz_p2?.value?.trim() || '¿Qué pasos seguirías para aplicar lo aprendido?',
-          modalForm.quiz_p3?.value?.trim() || '¿Qué riesgos o precauciones debes tener en cuenta?',
-          modalForm.quiz_p4?.value?.trim() || '¿Cómo explicarías este tema a alguien que no lo conoce?',
-        ],
         termux_comandos: getTermuxCmds(),
       };
 
@@ -1502,12 +1414,6 @@
             modalForm.enlace.value = course.enlace || '';
             modalForm.descarga.value = course.descarga || '';
             modalForm.publicado.checked = course.publicado !== false;
-            // Cargar preguntas del quiz
-            const qs = course.quiz_preguntas || [];
-            if (modalForm.quiz_p1) modalForm.quiz_p1.value = qs[0] || '';
-            if (modalForm.quiz_p2) modalForm.quiz_p2.value = qs[1] || '';
-            if (modalForm.quiz_p3) modalForm.quiz_p3.value = qs[2] || '';
-            if (modalForm.quiz_p4) modalForm.quiz_p4.value = qs[3] || '';
             // Cargar comandos termux
             loadTermuxCmds(course.termux_comandos || []);
             modal.style.display = 'flex';
@@ -2277,331 +2183,6 @@
       alert('✅ Logros del proyecto guardados.');
       document.getElementById('proyecto-miembros-modal').style.display = 'none';
     };
-  </script>
-
-  <script type="module">
-    /* =====================================================
-       ACADEMIA INDRHACK — Sistema de Quizzes (Admin)
-       ===================================================== */
-    import { db } from './js/firebase-config.js';
-    import {
-      collection, getDocs, doc, getDoc, updateDoc, addDoc,
-      query, where, orderBy, Timestamp, increment
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { crearNotificacion, TIPOS_NOTIF } from './js/notificaciones.js';
-    import { recomendarSiguienteCurso } from './js/ia-core.js';
-
-    const modal = document.getElementById('quiz-review-modal');
-    const modalContent = document.getElementById('quiz-modal-content');
-    document.getElementById('quiz-modal-close').onclick = () => modal.style.display = 'none';
-
-    let _quizCache = null;
-
-    async function loadQuizSubmissions(estado) {
-      const listEl = document.getElementById('quiz-submissions-list');
-      listEl.innerHTML = '<p class="section-subtitle">Cargando…</p>';
-
-      try {
-        let q;
-        if (estado === 'todos') {
-          q = query(collection(db, 'quiz_submissions'), orderBy('fechaEnvio', 'desc'));
-        } else {
-          q = query(
-            collection(db, 'quiz_submissions'),
-            where('estado', '==', estado),
-            orderBy('fechaEnvio', 'desc')
-          );
-        }
-        const snap = await getDocs(q);
-        _quizCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        if (_quizCache.length === 0) {
-          listEl.innerHTML = '<p class="section-subtitle">No hay envíos en este estado.</p>';
-          return;
-        }
-
-        // Update pendiente count badge
-        if (estado === 'pendiente') {
-          const badge = document.getElementById('q-count-pendiente');
-          if (badge) badge.textContent = _quizCache.length;
-        }
-
-        const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
-        const estadoIcon = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
-
-        listEl.innerHTML = `
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Clase</th>
-                  <th>Nivel / Pts</th>
-                  <th>Enviado</th>
-                  <th>Estado</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${_quizCache.map(s => {
-                  const fecha = s.fechaEnvio?.toDate ? s.fechaEnvio.toDate().toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '—';
-                  const color = estadoColor[s.estado] || 'var(--text-muted)';
-                  const icon = estadoIcon[s.estado] || '?';
-                  return `<tr>
-                    <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:var(--text-muted);font-size:0.75rem">${s.displayName || ''}</span></td>
-                    <td style="font-size:0.85rem;max-width:200px">${s.cursoTitulo || s.cursoId}</td>
-                    <td><span style="color:${color};font-size:0.8rem">${s.nivel || '—'}</span><br><span style="color:var(--gold);font-size:0.75rem">⭐ ${s.puntos || 0} pts</span></td>
-                    <td style="font-size:0.78rem;color:var(--text-muted)">${fecha}</td>
-                    <td><span style="color:${color};font-weight:700">${icon} ${s.estado}</span></td>
-                    <td>
-                      <button class="btn btn--small btn--outline" onclick="window.verQuizSubmission('${s.id}')">
-                        👁 Revisar
-                      </button>
-                    </td>
-                  </tr>`;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-      } catch(e) {
-        listEl.innerHTML = `<p style="color:var(--color-danger-fg);overflow-wrap:anywhere;word-break:break-word;max-width:100%">Error: ${e.message}</p>`;
-      }
-    }
-
-    // Botones filtro
-    document.querySelectorAll('[data-qfilter]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-qfilter]').forEach(b => b.className = 'btn btn--small btn--outline');
-        btn.className = 'btn btn--small btn--primary';
-        loadQuizSubmissions(btn.dataset.qfilter);
-      });
-    });
-
-    // Cargar al hacer click en tab
-    document.querySelectorAll('[data-tab="quizzes"]').forEach(t => {
-      t.addEventListener('click', () => {
-        // auto-load pending
-        document.querySelectorAll('[data-qfilter]').forEach(b => b.className = 'btn btn--small btn--outline');
-        const pendBtn = document.querySelector('[data-qfilter="pendiente"]');
-        if (pendBtn) pendBtn.className = 'btn btn--small btn--primary';
-        loadQuizSubmissions('pendiente');
-      });
-    });
-
-    window.verQuizSubmission = async function(subId) {
-      const sub = _quizCache?.find(s => s.id === subId);
-      if (!sub) return;
-
-      const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
-      const fecha = sub.fechaEnvio?.toDate ? sub.fechaEnvio.toDate().toLocaleString('es-MX') : '—';
-
-      modalContent.innerHTML = `
-        <h2 style="margin:0 0 0.25rem;padding-right:2rem;font-size:1.1rem">Respuestas del Quiz</h2>
-        <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 1.25rem">@${sub.username} · ${sub.cursoTitulo} · ${fecha}</p>
-
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
-          <span style="background:var(--gold-subtle);border:1px solid var(--gold);color:var(--gold);padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700">⭐ ${sub.puntos} puntos en juego</span>
-          <span style="color:${estadoColor[sub.estado]};font-weight:700;font-size:0.85rem">${sub.estado.toUpperCase()}</span>
-        </div>
-
-        ${(sub.respuestas || []).map((r, i) => `
-          <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
-            <p style="color:var(--color-accent-fg);font-size:0.78rem;font-weight:700;margin:0 0 0.4rem">PREGUNTA ${i + 1}</p>
-            <p style="color:var(--text-soft);font-size:0.875rem;margin:0 0 0.65rem;line-height:1.5">${r.pregunta}</p>
-            <p style="color:var(--text);font-size:0.9rem;line-height:1.6;background:var(--color-canvas-inset);border-radius:6px;padding:0.65rem;margin:0;white-space:pre-wrap">${r.respuesta || '<em style="color:var(--text-muted)">Sin respuesta</em>'}</p>
-          </div>
-        `).join('')}
-
-        ${sub.estado === 'pendiente' ? `
-          <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)">
-            <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 0.5rem">Feedback para el usuario (opcional):</p>
-            <textarea id="quiz-feedback" placeholder="Ej: Excelente respuesta. / Repasá el punto 3 de la clase." style="width:100%;min-height:80px;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.65rem;resize:vertical;box-sizing:border-box;font-family:inherit"></textarea>
-            <div style="display:flex;gap:0.75rem;margin-top:1rem">
-              <button class="btn btn--primary" style="flex:1" onclick="window.aprobarQuiz('${sub.id}', '${sub.uid}', ${sub.puntos}, '${sub.cursoId}', '${sub.cursoTitulo?.replace(/'/g,"\\'")}', '${sub.nivel}')">
-                ✅ APROBAR — Asignar ${sub.puntos} puntos
-              </button>
-              <button class="btn btn--outline" style="flex:1;border-color:var(--color-accent-fg);color:var(--color-accent-fg)" onclick="window.rechazarQuiz('${sub.id}', '${sub.uid}')">
-                ❌ RECHAZAR
-              </button>
-            </div>
-          </div>
-        ` : `
-          <div style="background:${estadoColor[sub.estado]}11;border:1px solid ${estadoColor[sub.estado]}44;border-radius:8px;padding:0.75rem;color:${estadoColor[sub.estado]};font-size:0.875rem;margin-top:1rem">
-            ${sub.estado === 'aprobado' ? '✅ Quiz aprobado — puntos asignados automáticamente.' : `❌ Rechazado. ${sub.feedback ? 'Feedback: ' + sub.feedback : ''}`}
-          </div>
-        `}
-      `;
-
-      modal.style.display = 'flex';
-      modal.scrollTop = 0;
-    };
-
-    window.aprobarQuiz = async function(subId, uid, puntos, cursoId, cursoTitulo, nivel) {
-      const feedback = document.getElementById('quiz-feedback')?.value?.trim() || 'Quiz aprobado. ¡Felicidades!';
-      try {
-        const btn = modal.querySelector('.btn--primary');
-        if (btn) { btn.disabled = true; btn.textContent = 'Procesando…'; }
-
-        // 1. Actualizar submission
-        await updateDoc(doc(db, 'quiz_submissions', subId), {
-          estado: 'aprobado',
-          feedback,
-          fechaRevision: Timestamp.now(),
-        });
-
-        // 2. Sumar puntos al usuario (usando increment atómico)
-        await updateDoc(doc(db, 'users', uid), {
-          puntos: increment(puntos),
-          puntosTotal: increment(puntos),
-        });
-
-        // 3. Registrar badge/certificado en colección de logros de quiz
-        await addDoc(collection(db, 'quiz_logros'), {
-          uid,
-          cursoId,
-          cursoTitulo,
-          nivel: nivel || 'Básico',
-          puntos,
-          aprobado: true,
-          fecha: Timestamp.now(),
-        });
-
-        // 4. Notificar al usuario (dentro de la app + aviso del navegador/celular)
-        await crearNotificacion({
-          uid,
-          tipo: TIPOS_NOTIF.QUIZ_APROBADO,
-          titulo: '¡Quiz aprobado! ✅',
-          mensaje: `Aprobaste el quiz de "${cursoTitulo}" y ganaste ${puntos} puntos.`,
-          link: 'ficha.html',
-        });
-
-        alert(`✅ Quiz aprobado. Se asignaron ${puntos} puntos a @${uid.substring(0,8)}.`);
-        modal.style.display = 'none';
-
-        // Refrescar lista
-        const activeFilter = document.querySelector('[data-qfilter].btn--primary')?.dataset?.qfilter || 'pendiente';
-        loadQuizSubmissions(activeFilter);
-
-        // Actualizar badge de pendientes
-        updatePendienteCount();
-
-        // 5. La IA analiza el progreso del usuario y sugiere la siguiente
-        //    clase como notificación aparte. No bloquea el flujo si falla.
-        recomendarSiguienteCurso({ uid, cursoAprobadoTitulo: cursoTitulo })
-          .then((rec) => {
-            if (!rec) return;
-            return crearNotificacion({
-              uid,
-              tipo: TIPOS_NOTIF.CURSO_APROBADO,
-              titulo: '🤖 Tu asistente IA te recomienda...',
-              mensaje: rec.texto,
-              link: rec.cursoId ? `clase.html?id=${rec.cursoId}` : 'cursos.html',
-            });
-          })
-          .catch((e) => console.error('No se pudo generar recomendación IA:', e));
-      } catch(e) {
-        alert('Error: ' + e.message);
-      }
-    };
-
-    window.rechazarQuiz = async function(subId, uid) {
-      const feedback = document.getElementById('quiz-feedback')?.value?.trim() || 'Respuestas insuficientes. Repasá el contenido e intentá de nuevo.';
-      try {
-        await updateDoc(doc(db, 'quiz_submissions', subId), {
-          estado: 'rechazado',
-          feedback,
-          fechaRevision: Timestamp.now(),
-        });
-
-        await crearNotificacion({
-          uid,
-          tipo: TIPOS_NOTIF.QUIZ_RECHAZADO,
-          titulo: 'Quiz no aprobado',
-          mensaje: feedback,
-          link: 'ficha.html',
-        });
-
-        alert('❌ Quiz rechazado. El usuario puede volver a intentarlo.');
-        modal.style.display = 'none';
-        const activeFilter = document.querySelector('[data-qfilter].btn--primary')?.dataset?.qfilter || 'pendiente';
-        loadQuizSubmissions(activeFilter);
-        updatePendienteCount();
-      } catch(e) {
-        alert('Error: ' + e.message);
-      }
-    };
-
-    async function updatePendienteCount() {
-      try {
-        const snap = await getDocs(query(collection(db, 'quiz_submissions'), where('estado', '==', 'pendiente')));
-        const count = snap.size;
-
-        // Badge en botón filtro de quizzes
-        const badge = document.getElementById('q-count-pendiente');
-        if (badge) badge.textContent = count;
-
-        // Stat card en resumen
-        const statEl = document.querySelector('[data-stat="quizzes-pendientes"]');
-        if (statEl) statEl.textContent = count;
-
-        // Badges visuales en sidebar y menú móvil
-        const sidebarBadge = document.getElementById('sidebar-quiz-badge');
-        const moreBadge    = document.getElementById('more-quiz-badge');
-        if (count > 0) {
-          if (sidebarBadge) { sidebarBadge.textContent = count; sidebarBadge.style.display = 'inline'; }
-          if (moreBadge)    { moreBadge.textContent = count;    moreBadge.style.display = 'inline'; }
-        } else {
-          if (sidebarBadge) sidebarBadge.style.display = 'none';
-          if (moreBadge)    moreBadge.style.display = 'none';
-        }
-      } catch(e) {}
-    }
-
-    // Cargar count al iniciar el panel
-    updatePendienteCount();
-
-    // ── RANKING en Resumen ──
-    async function loadRanking() {
-      const el = document.getElementById('admin-ranking-lista');
-      if (!el) return;
-      try {
-        const snap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
-        const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }))
-          .sort((a, b) => (b.puntos || 0) - (a.puntos || 0));
-
-        if (users.length === 0) {
-          el.innerHTML = '<p class="section-subtitle">Ningún miembro tiene puntos todavía.</p>';
-          return;
-        }
-
-        const medalias = ['🥇', '🥈', '🥉'];
-        el.innerHTML = `
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-            ${users.map((u, i) => {
-              const pts = u.puntos || 0;
-              const medalla = medalias[i] || `#${i + 1}`;
-              const isTop = i < 3;
-              return `<div style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;border-bottom:1px solid var(--border-muted);${isTop ? 'background:var(--bg-elevated)' : ''}">
-                <span style="font-size:${isTop ? '1.2rem' : '0.85rem'};width:32px;text-align:center;font-weight:700;color:${isTop ? 'var(--text)' : 'var(--text-muted)'}">${medalla}</span>
-                <div style="flex:1">
-                  <p style="margin:0;font-size:0.9rem;font-weight:600;color:var(--text)">@${u.username || u.uid?.substring(0,8)}</p>
-                  <p style="margin:0.1rem 0 0;color:var(--text-muted);font-size:0.75rem">${u.displayName || ''} ${u.rango ? '· ' + u.rango : ''}</p>
-                </div>
-                <span style="font-size:0.95rem;font-weight:700;color:var(--gold)">⭐ ${pts}</span>
-              </div>`;
-            }).join('')}
-          </div>
-        `;
-      } catch(e) {
-        el.innerHTML = '<p class="section-subtitle" style="color:var(--color-danger-fg)">Error al cargar ranking.</p>';
-      }
-    }
-
-    loadRanking();
-    document.querySelectorAll('[data-tab="resumen"]').forEach(t => {
-      t.addEventListener('click', loadRanking);
-    });
   </script>
 
   <script type="module">

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#F6F5F1" />
+  <title>Iniciar sesión — Academia Indrhack</title>
+  <meta name="description" content="Iniciá sesión en Academia Indrhack y continuá tu formación en ciberseguridad y hacking ético." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <link rel="canonical" href="https://bravoscomunidadindrhack.github.io/login.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Iniciar sesión — Academia Indrhack" />
+  <meta property="og:description" content="Iniciá sesión en Academia Indrhack y continuá tu formación en ciberseguridad y hacking ético." />
+  <meta property="og:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
+  <meta property="og:url" content="https://bravoscomunidadindrhack.github.io/login.html" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Iniciar sesión — Academia Indrhack" />
+  <meta name="twitter:description" content="Iniciá sesión en Academia Indrhack y continuá tu formación en ciberseguridad y hacking ético." />
+  <meta name="twitter:image" content="https://bravoscomunidadindrhack.github.io/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
+        <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav></header>
+
+  <!-- TABBAR (móvil) -->
+<main>
+    <div class="auth-shell">
+      <div class="auth-card reveal">
+        <h1 class="auth-card__title">Iniciar sesión</h1>
+        <p class="auth-card__subtitle">Accede con tu usuario y contraseña aprobados.</p>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required placeholder="usuario_indrhack" />
+          </div>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <div style="position:relative">
+              <input type="password" id="password" name="password" required placeholder="••••••••" style="padding-right:2.5rem" />
+              <button type="button" onclick="togglePwd('password')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">Iniciar sesión</button>
+
+          <div class="form-message" id="form-message"></div>
+        </form>
+
+        <p class="form-footer" style="margin-bottom:0.5rem">
+          <a href="#" id="forgot-link" style="color:var(--gold)">¿Olvidaste tu contraseña?</a>
+        </p>
+
+        <p class="form-footer">
+          ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
+        </p>
+
+        <!-- Caja de recuperación, oculta por defecto -->
+        <div id="forgot-box" style="display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+          <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.75rem">
+            Escribe tu nombre de usuario. Te enviaremos un enlace al correo con el que te registraste.
+          </p>
+          <div class="field">
+            <label for="forgot-username">Usuario</label>
+            <input type="text" id="forgot-username" placeholder="usuario_indrhack" />
+          </div>
+          <button type="button" id="forgot-submit" class="btn btn--outline btn--block">Enviar enlace de recuperación</button>
+          <div class="form-message" id="forgot-message"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+    <br />
+    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+  <script type="module">
+    import { loginUser, ROLES, requestPasswordReset } from './js/auth.js';
+
+    const form = document.getElementById('login-form');
+    const message = document.getElementById('form-message');
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = `form-message show form-message--${type}`;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      message.className = 'form-message';
+
+      const username = form.username.value.trim();
+      const password = form.password.value;
+
+      if (!username || !password) {
+        showMessage('Usuario y contraseña son obligatorios.', 'error');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+
+      try {
+        const profile = await loginUser({ username, password });
+        // Si llegamos acá desde un "gate" (ej: configuracion.html?next=...)
+        // volvemos a esa página en vez de mandar siempre al panel.
+        const nextParam = new URLSearchParams(window.location.search).get('next');
+        const nextSeguro = nextParam && /^[a-zA-Z0-9_-]+\.html(\?[^\s]*)?$/.test(nextParam) ? nextParam : null;
+        const destination = nextSeguro || (profile.rol === ROLES.ADMINISTRADOR ? 'panel-admin.html' : 'panel-usuario.html');
+        window.location.href = destination;
+      } catch (error) {
+        showMessage(error.message || 'No se pudo iniciar sesión.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // --- Recuperar contraseña ---
+    const forgotLink = document.getElementById('forgot-link');
+    const forgotBox = document.getElementById('forgot-box');
+    const forgotMessage = document.getElementById('forgot-message');
+    const forgotSubmit = document.getElementById('forgot-submit');
+
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotBox.style.display = forgotBox.style.display === 'none' ? 'block' : 'none';
+    });
+
+    forgotSubmit.addEventListener('click', async () => {
+      const username = document.getElementById('forgot-username').value.trim();
+      forgotMessage.className = 'form-message';
+
+      if (!username) {
+        forgotMessage.textContent = 'Escribe tu nombre de usuario.';
+        forgotMessage.className = 'form-message show form-message--error';
+        return;
+      }
+
+      forgotSubmit.disabled = true;
+      forgotSubmit.textContent = 'Enviando...';
+
+      try {
+        const email = await requestPasswordReset(username);
+        const masked = email.replace(/(.{2}).+(@.+)/, '$1***$2');
+        forgotMessage.textContent = '✅ Te enviamos un enlace a ' + masked + '. Revisa también spam.';
+        forgotMessage.className = 'form-message show form-message--success';
+      } catch (error) {
+        forgotMessage.textContent = '❌ ' + (error.message || 'No se pudo enviar el correo.');
+        forgotMessage.className = 'form-message show form-message--error';
+      } finally {
+        forgotSubmit.disabled = false;
+        forgotSubmit.textContent = 'Enviar enlace de recuperación';
+      }
+    });
+  </script>
+
+  <script>
+  function togglePwd(id) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  }
+  </script>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+</body>
+</html>

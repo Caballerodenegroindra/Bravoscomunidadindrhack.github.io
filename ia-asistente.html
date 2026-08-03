@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
   <style>
     /* ── LAYOUT PRINCIPAL ── */
     .ia-page {
@@ -293,14 +293,12 @@
             </svg>
           </div>
           <div class="ia-welcome-title">¿EN QUÉ TE AYUDO?</div>
-          <div class="ia-welcome-sub">Pregúntame sobre las clases, cómo funciona la academia, el sistema de puntos, cómo registrarte o cualquier tema de ciberseguridad.</div>
+          <div class="ia-welcome-sub">Pregúntame sobre las clases, cómo funciona la academia, cómo registrarte o cualquier tema de ciberseguridad.</div>
           <div class="ia-chips" id="chips">
             <span class="ia-chip" onclick="chip(this)">¿Qué clases hay disponibles?</span>
-            <span class="ia-chip" onclick="chip(this)">¿Cómo funciona el sistema de puntos?</span>
             <span class="ia-chip" onclick="chip(this)">¿Cómo me registro?</span>
             <span class="ia-chip" onclick="chip(this)">¿Qué es el hacking ético?</span>
             <span class="ia-chip" onclick="chip(this)">Quiero aprender desde cero</span>
-            <span class="ia-chip" onclick="chip(this)">¿Cómo funciona el quiz?</span>
           </div>
         </div>
       </div>
@@ -332,8 +330,6 @@
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import {
       cargarCursos, buildCursosContext,
-      cargarProgresoUsuario, buildProgresoContext,
-      cargarQuizzesPendientes, buildQuizzesPendientesContext,
       cargarConfigSitio, buildConfigContext,
       buildSystemPrompt, askIA, nombrePagina,
     } from './js/ia-core.js';
@@ -347,8 +343,6 @@
     // ── Estado global ──
     let CURSOS    = [];   // [{id, titulo, descripcion, categoria, nivel, publicado}]
     let USER_INFO = null; // info del usuario logueado
-    let PROGRESO  = [];   // clases ya aprobadas por el usuario
-    let PENDIENTES = [];  // quizzes ya enviados, esperando revisión
     let CONFIG    = {};   // enlaces oficiales (config/site)
     let history   = [];   // historial del chat
     let busy      = false;
@@ -376,15 +370,13 @@
       }
     }
 
-    // ── Detectar usuario logueado + su progreso real ──
+    // ── Detectar usuario logueado ──
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
           const snap = await getDoc(doc(db, 'users', user.uid));
           if (snap.exists()) USER_INFO = { uid: user.uid, ...snap.data() };
-          PROGRESO = await cargarProgresoUsuario(user.uid);
-          PENDIENTES = await cargarQuizzesPendientes(user.uid);
         } catch(e) {}
       }
     });
@@ -499,8 +491,6 @@
       const systemPrompt = buildSystemPrompt({
         userInfo: USER_INFO,
         cursosCtx: buildCursosContext(CURSOS, BASE_URL),
-        progresoCtx: buildProgresoContext(PROGRESO),
-        pendientesCtx: buildQuizzesPendientesContext(PENDIENTES),
         paginaCtx: nombrePagina(location.pathname),
         configCtx: buildConfigContext(CONFIG),
       });

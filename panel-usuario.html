@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
 </head>
 <body>
   <canvas id="particle-canvas"></canvas>
@@ -63,9 +63,7 @@
       <p class="sidebar__title">Mi cuenta</p>
       <nav class="sidebar__links">
         <a href="panel-usuario.html" class="active">🏠 Resumen</a>
-        <a href="titulos.html">🏆 Mis Títulos</a>
         <a href="ficha.html">📋 Mi Ficha</a>
-        <a href="#ranking" id="sidebar-ranking-link">🏅 Ranking</a>
         <a href="perfil.html">👤 Perfil</a>
         <a href="configuracion.html">⚙️ Configuración</a>
       </nav>
@@ -103,18 +101,6 @@
 
       <!-- ① STATS: lo primero que quiere saber un estudiante -->
       <div class="stat-grid reveal-stagger" style="margin-bottom:2rem">
-        <div class="stat-card" style="border-color:rgba(198,169,101,0.3)">
-          <div class="stat-card__value" data-user-rango style="color:var(--color-accent-fg);font-size:1.1rem">—</div>
-          <div class="stat-card__label">🎖️ Rango actual</div>
-        </div>
-        <div class="stat-card" style="border-color:rgba(227,179,65,0.3)">
-          <div class="stat-card__value" data-user-puntos style="color:var(--gold)">—</div>
-          <div class="stat-card__label">⭐ Puntos totales</div>
-        </div>
-        <div class="stat-card" style="border-color:rgba(63,143,95,0.3)">
-          <div class="stat-card__value" data-user-ranking style="color:var(--color-success-fg)">—</div>
-          <div class="stat-card__label">🏅 Ranking global</div>
-        </div>
         <div class="stat-card">
           <div class="stat-card__value" data-user-username style="font-size:1rem">—</div>
           <div class="stat-card__label">👤 Usuario</div>
@@ -130,26 +116,6 @@
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
           <a href="cursos.html" class="btn btn--primary">📚 Ver cursos</a>
           <a href="ia-asistente.html" class="btn btn--outline">🤖 Preguntar a la IA</a>
-        </div>
-      </div>
-
-      <!-- ③ MIS QUIZZES: pendientes y resultados (acción directa del estudiante) -->
-      <div class="panel-block panel-block--gold reveal">
-        <div class="panel-block__eyebrow">Sección 01 · Evaluación</div>
-        <div class="panel-block__head">
-          <div class="panel-block__head-left">
-            <span class="panel-block__icon">🧠</span>
-            <div>
-              <h2 class="section-title">Rendir <span class="accent">cursos</span></h2>
-              <p class="section-subtitle">Estado de los quizzes que enviaste para aprobar cada curso.</p>
-            </div>
-          </div>
-          <a href="cursos.html" class="btn btn--small btn--ghost">Ir a cursos →</a>
-        </div>
-        <div class="panel-block__body">
-          <div id="mis-quizzes-lista">
-            <p class="section-subtitle">Cargando quizzes...</p>
-          </div>
         </div>
       </div>
 
@@ -236,10 +202,6 @@
               <h3>💬 Comunidad</h3>
               <p class="section-subtitle" style="margin:0">Preguntale a la IA o al chat de WhatsApp de la comunidad.</p>
             </a>
-            <a href="titulos.html" class="card">
-              <h3>🏆 Mis Títulos</h3>
-              <p class="section-subtitle" style="margin:0">Consulta tus certificados y títulos obtenidos.</p>
-            </a>
             <a href="redes.html" class="card">
               <h3>🌐 Redes</h3>
               <p class="section-subtitle" style="margin:0">Únete a los canales oficiales de la academia.</p>
@@ -278,22 +240,6 @@
     </section>
   </main>
 
-  <!-- RANKING OVERLAY -->
-  <div id="ranking-overlay" style="display:none;position:fixed;inset:0;background:rgba(1,4,9,0.88);z-index:500;overflow-y:auto;padding:1rem">
-    <div style="max-width:560px;margin:auto">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-top:0.5rem">
-        <div>
-          <h1 class="section-title" style="margin:0">🏅 Ranking <span class="accent">Global</span></h1>
-          <p class="section-subtitle" style="margin:0.25rem 0 0">Clasificación por puntos totales</p>
-        </div>
-        <button id="ranking-close" class="btn btn--outline btn--small">✕ Cerrar</button>
-      </div>
-      <div id="ranking-lista">
-        <p class="section-subtitle">Cargando ranking…</p>
-      </div>
-    </div>
-  </div>
-
   <footer class="footer">
     ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
     <br />
@@ -313,7 +259,6 @@
       if (!profile) return;
       document.querySelector('[data-user-name]').textContent = profile.displayName || profile.username;
       document.querySelector('[data-user-username]').textContent = '@' + profile.username;
-      document.querySelector('[data-user-rango]').textContent = profile.rango || 'Iniciado';
       const fecha = profile.fechaIngreso?.toDate ? profile.fechaIngreso.toDate() : null;
       if (profile.rol === 'administrador') {
         const backLink = document.getElementById('admin-back-link');
@@ -498,13 +443,6 @@
           link: 'colabora.html', cta: 'Quiero ayudar', peso: 2,
         });
       }
-      if ((profile.puntos || 0) > 0) {
-        candidatas.push({
-          icono: '🎉', titulo: `¡Ya llevás ${profile.puntos} puntos!`,
-          texto: `Vas como rango <strong>${profile.rango || 'Recluta'}</strong>. Seguí así para subir de nivel.`,
-          link: 'cursos.html', cta: 'Ver más cursos',
-        });
-      }
       if (!visitas.colabora) {
         candidatas.push({
           icono: '💬', titulo: 'Todavía no probaste la Comunidad',
@@ -517,13 +455,6 @@
           icono: '🤖', titulo: '¿Ya hablaste con el asistente IA?',
           texto: 'Te puede recomendar clases según tu nivel, resolver dudas o explicarte un tema puntual.',
           link: 'ia-asistente.html', cta: 'Preguntar a la IA',
-        });
-      }
-      if (!visitas.titulos) {
-        candidatas.push({
-          icono: '🏆', titulo: 'Revisá tus Títulos',
-          texto: 'Ahí se acumulan los certificados y logros que vas ganando en la academia.',
-          link: 'titulos.html', cta: 'Ver mis títulos',
         });
       }
       candidatas.push({
@@ -734,151 +665,6 @@
     });
   </script>
 
-  <script type="module">
-    import { db, auth } from './js/firebase-config.js';
-    import { collection, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-    const estadoColor = { pendiente: 'var(--color-attention-fg)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
-    const estadoIcon  = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-
-      try {
-        const snap = await getDocs(query(
-          collection(db, 'quiz_submissions'),
-          where('uid', '==', user.uid),
-          orderBy('fechaEnvio', 'desc')
-        ));
-        const el = document.getElementById('mis-quizzes-lista');
-        if (snap.empty) {
-          el.innerHTML = '<p class="section-subtitle">No enviaste ningún quiz todavía. <a href="cursos.html">Ver cursos →</a></p>';
-        } else {
-          el.innerHTML = snap.docs.map(d => {
-            const s = d.data();
-            const color = estadoColor[s.estado] || 'var(--text-muted)';
-            const icon  = estadoIcon[s.estado]  || '?';
-            const fecha = s.fechaEnvio?.toDate ? s.fechaEnvio.toDate().toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '—';
-            return `<div class="card" style="margin-bottom:0.65rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
-              <div style="flex:1;min-width:180px">
-                <p style="margin:0;font-size:0.9rem;font-weight:600;color:var(--text)">${s.cursoTitulo || s.cursoId}</p>
-                <p style="margin:0.2rem 0 0;color:var(--text-muted);font-size:0.75rem">${fecha}</p>
-                ${s.feedback && s.estado !== 'pendiente' ? `<p style="margin:0.35rem 0 0;color:var(--text-soft);font-size:0.78rem;font-style:italic">"${s.feedback}"</p>` : ''}
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem">
-                <span style="color:${color};font-weight:600;font-size:0.875rem">${icon} ${s.estado}</span>
-                ${s.estado === 'aprobado' ? `<span style="color:var(--gold);font-size:0.78rem;font-weight:600">+${s.puntos} pts</span>` : ''}
-                ${s.estado !== 'rechazado' ? '' : `<a href="clase.html?id=${s.cursoId}" class="btn btn--small btn--outline" style="font-size:0.72rem">Reintentar →</a>`}
-              </div>
-            </div>`;
-          }).join('');
-        }
-      } catch(e) {
-        const el = document.getElementById('mis-quizzes-lista');
-        if (el) el.innerHTML = '<p class="section-subtitle" style="color:var(--color-danger-fg)">Error al cargar quizzes.</p>';
-      }
-
-      try {
-        const allUsersSnap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
-        const allUsers = allUsersSnap.docs.map(d => ({ uid: d.id, puntos: d.data().puntos || 0 }));
-        allUsers.sort((a, b) => b.puntos - a.puntos);
-
-        const myPos = allUsers.findIndex(u => u.uid === user.uid) + 1;
-        const myPts = allUsers.find(u => u.uid === user.uid)?.puntos || 0;
-
-        const puntosEl = document.querySelector('[data-user-puntos]');
-        const rankEl   = document.querySelector('[data-user-ranking]');
-        if (puntosEl) puntosEl.textContent = myPts;
-        if (rankEl) rankEl.textContent = myPos > 0 ? '#' + myPos : '—';
-      } catch(e) {}
-    });
-  </script>
-
-  <script type="module">
-    import { db, auth } from './js/firebase-config.js';
-    import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-    const overlay  = document.getElementById('ranking-overlay');
-    const lista    = document.getElementById('ranking-lista');
-    const closeBtn = document.getElementById('ranking-close');
-    const tabBtn   = document.getElementById('tab-ranking-btn');
-    const sideLink = document.getElementById('sidebar-ranking-link');
-
-    let loaded = false;
-
-    async function loadRanking() {
-      if (loaded) return;
-      loaded = true;
-      lista.innerHTML = '<p class="section-subtitle">Cargando…</p>';
-
-      const meUser = auth.currentUser;
-      try {
-        const snap = await getDocs(query(collection(db, 'users'), where('estado', '==', 'aprobado')));
-        const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
-        users.sort((a, b) => (b.puntos || 0) - (a.puntos || 0));
-
-        const TOPES = [
-          { min: 0,    label: 'Bronce',   color: '#cd7f32' },
-          { min: 100,  label: 'Plata',    color: '#c0c0c0' },
-          { min: 250,  label: 'Oro',      color: '#e3b341' },
-          { min: 500,  label: 'Platino',  color: '#1c3f73' },
-          { min: 1000, label: 'Diamante', color: '#a371f7' },
-        ];
-        function getTope(pts) {
-          let t = TOPES[0];
-          for (const tp of TOPES) { if (pts >= tp.min) t = tp; }
-          return t;
-        }
-
-        const medalIcons = ['🥇', '🥈', '🥉'];
-
-        lista.innerHTML = users.map((u, i) => {
-          const pos  = i + 1;
-          const pts  = u.puntos || 0;
-          const tope = getTope(pts);
-          const esYo = meUser && u.uid === meUser.uid;
-          const medal = pos <= 3
-            ? medalIcons[pos - 1]
-            : `<span style="font-size:0.85rem;font-weight:600;color:var(--text-muted)">#${pos}</span>`;
-
-          return `<div class="card" style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;${esYo ? 'border-color:rgba(198,169,101,0.4);background:rgba(198,169,101,0.05)' : ''}">
-            <div style="width:32px;text-align:center;flex-shrink:0;font-size:1.1rem">${medal}</div>
-            <div style="flex:1;min-width:0">
-              <p style="margin:0;font-weight:600;font-size:0.9rem;color:${esYo ? 'var(--color-accent-fg)' : 'var(--text)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-                @${u.username || '—'}${esYo ? ' <span class="badge badge--info" style="font-size:0.65rem;margin-left:4px">Tú</span>' : ''}
-              </p>
-              <p style="margin:0.1rem 0 0;font-size:0.72rem;color:${tope.color};font-weight:500">${tope.label}</p>
-            </div>
-            <div style="text-align:right;flex-shrink:0">
-              <p style="margin:0;font-weight:700;font-size:1rem;color:var(--gold)">${pts}</p>
-              <p style="margin:0;font-size:0.7rem;color:var(--text-muted)">pts</p>
-            </div>
-          </div>`;
-        }).join('') || '<p class="section-subtitle">No hay miembros aún.</p>';
-      } catch(e) {
-        lista.innerHTML = '<p class="section-subtitle" style="color:var(--color-danger-fg)">No se pudo cargar el ranking.</p>';
-      }
-    }
-
-    function openRanking(e) {
-      e && e.preventDefault();
-      overlay.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-      loadRanking();
-    }
-    function closeRanking() {
-      overlay.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-
-    tabBtn?.addEventListener('click', openRanking);
-    sideLink?.addEventListener('click', openRanking);
-    closeBtn?.addEventListener('click', closeRanking);
-    overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeRanking(); });
-    if (window.location.hash === '#ranking') openRanking();
-  </script>
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>
