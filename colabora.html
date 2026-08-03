@@ -30,7 +30,6 @@
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
@@ -52,17 +51,33 @@
 
     <section class="panel-content">
       <h1 class="section-title">Participar en la <span class="accent">comunidad</span></h1>
-      <p class="section-subtitle" style="margin-bottom:1.5rem">Hay dos formas de sumarte. Elegí la que más te representa — podés cambiar de idea después.</p>
+      <p class="section-subtitle" style="margin-bottom:0.6rem">Hay dos formas de sumarte. Elegí la que más te representa — podés cambiar de idea después.</p>
+
+      <!-- Explicación de cómo funciona participar en la comunidad -->
+      <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(37,211,102,0.35);background:rgba(37,211,102,0.05)">
+        <h2 class="section-title" style="font-size:1rem;margin-bottom:0.5rem">📲 ¿Cómo funciona participar acá?</h2>
+        <p style="margin:0 0 0.6rem;font-size:0.88rem;color:var(--text-soft);line-height:1.65">
+          Todo el chat de la Academia pasa por <strong>WhatsApp</strong>: ahí está el grupo general para conversar con
+          otros estudiantes, hacer preguntas y enterarte de novedades. El equipo de programadores que desarrolla esta
+          misma app también se coordina en WhatsApp, en un grupo aparte, específico para el trabajo de desarrollo.
+        </p>
+        <p style="margin:0;font-size:0.88rem;color:var(--text-soft);line-height:1.65">
+          Para escribir en cualquiera de esos grupos necesitás tener una cuenta <strong>registrada y aceptada</strong>
+          por un administrador. Mientras eso pasa (o si todavía no querés registrarte), podés preguntarle lo que
+          necesites al <strong>asistente de IA</strong> en cualquier momento, sin restricciones.
+        </p>
+      </div>
 
       <!-- Elegir camino: chat general vs equipo de desarrollo -->
       <div class="card-grid" style="max-width:640px;margin-bottom:2rem;grid-template-columns:1fr;gap:0.9rem">
-        <a id="opcion-chat" href="chat.html" class="card" style="text-decoration:none;color:inherit;border-color:rgba(20,20,18,0.3);display:block">
+        <div id="opcion-chat" class="card" style="border-color:rgba(20,20,18,0.3)">
           <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">💬 Chat general de la comunidad</h2>
-          <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
-            Quiero hablar con otros estudiantes, hacer preguntas, enterarme de novedades y conversar sobre los cursos. Ideal si estás aprendiendo o recién estás empezando.
+          <p style="margin:0 0 0.9rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
+            Quiero hablar con otros estudiantes, hacer preguntas, enterarme de novedades y conversar sobre los cursos.
+            Ideal si estás aprendiendo o recién estás empezando.
           </p>
-          <span class="btn btn--outline btn--small" style="margin-top:0.9rem;pointer-events:none">Ir al chat →</span>
-        </a>
+          <div id="opcion-chat-opciones">Cargando…</div>
+        </div>
 
         <a href="#equipo-dev" class="card" style="text-decoration:none;color:inherit;border-color:rgba(20,20,18,0.3);display:block" onclick="document.getElementById('equipo-dev').scrollIntoView({behavior:'smooth'})">
           <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">🛠️ Equipo de desarrollo</h2>
@@ -115,8 +130,20 @@
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
-  <script type="module" src="js/chat-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { renderOpcionesPreguntar, activarCopiaPregunta } from './js/preguntar-widget.js';
+    import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
+
+    (async () => {
+      const cont = document.getElementById('opcion-chat-opciones');
+      if (!cont) return;
+      cont.innerHTML = await renderOpcionesPreguntar();
+      activarSelectorWhatsApp(cont);
+      activarCopiaPregunta(cont);
+    })();
+  </script>
 
   <script type="module">
     import { db } from './js/firebase-config.js';

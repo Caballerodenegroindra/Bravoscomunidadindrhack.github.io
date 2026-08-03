@@ -30,7 +30,6 @@
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
@@ -54,7 +53,7 @@
       <div class="sidebar__divider"></div>
       <p class="sidebar__title">Comunidad</p>
       <nav class="sidebar__links">
-        <a href="chat.html">💬 Chat</a>
+        <a href="colabora.html#opcion-chat">💬 Preguntar / Comunidad</a>
         <a href="redes.html">🌐 Redes</a>
         <a href="noticias.html">📰 Noticias</a>
         <a href="colabora.html">Participar en la comunidad</a>
@@ -233,9 +232,9 @@
         </div>
         <div class="panel-block__body">
           <div class="card-grid reveal-stagger">
-            <a href="chat.html" class="card">
-              <h3>💬 Chat</h3>
-              <p class="section-subtitle" style="margin:0">Habla con la comunidad, comparte dudas y avances.</p>
+            <a href="colabora.html#opcion-chat" class="card">
+              <h3>💬 Comunidad</h3>
+              <p class="section-subtitle" style="margin:0">Preguntale a la IA o al chat de WhatsApp de la comunidad.</p>
             </a>
             <a href="titulos.html" class="card">
               <h3>🏆 Mis Títulos</h3>
@@ -306,7 +305,6 @@
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
-  <script type="module" src="js/chat-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireApprovedUser } from './js/auth.js';
@@ -507,11 +505,11 @@
           link: 'cursos.html', cta: 'Ver más cursos',
         });
       }
-      if (!visitas.chat) {
+      if (!visitas.colabora) {
         candidatas.push({
-          icono: '💬', titulo: 'Todavía no probaste el Chat',
-          texto: 'Ahí está la comunidad: podés compartir dudas, avances y conocer a otros estudiantes.',
-          link: 'chat.html', cta: 'Ir al chat',
+          icono: '💬', titulo: 'Todavía no probaste la Comunidad',
+          texto: 'Preguntale a la IA cuando quieras, o sumate al chat de WhatsApp de la comunidad (cuenta registrada y aceptada).',
+          link: 'colabora.html#opcion-chat', cta: 'Ir a Comunidad',
         });
       }
       if (!visitas['ia-asistente']) {

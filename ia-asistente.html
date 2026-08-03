@@ -246,7 +246,6 @@
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
@@ -339,6 +338,8 @@
       buildSystemPrompt, askIA, nombrePagina,
     } from './js/ia-core.js';
     import { registrarPreguntaIA } from './js/tema-stats.js';
+    import { renderSoloWhatsApp, activarCopiaPregunta } from './js/preguntar-widget.js';
+    import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
 
     // URL base del sitio para armar enlaces compartibles absolutos
     const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
@@ -442,26 +443,21 @@
       return UNCERTAIN_PATTERNS.some((rx) => rx.test(texto));
     }
 
-    // ── Construye el botón "Preguntale a la comunidad" ──
-    function buildCommunityBtn(userQuestion, cursoMencionado) {
-      const params = new URLSearchParams();
-      if (cursoMencionado) {
-        params.set('curso', cursoMencionado.id);
-        params.set('titulo', cursoMencionado.titulo || 'Clase');
-        params.set('cat', cursoMencionado.categoria || '');
-      }
-      if (userQuestion) params.set('pregunta', userQuestion);
-      const href = `chat.html${params.toString() ? '?' + params.toString() : ''}`;
-
-      const a = document.createElement('a');
-      a.className = 'ask-community-btn';
-      a.href = href;
-      a.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-        </svg>
-        Preguntale a la comunidad`;
-      return a;
+    // ── Construye el bloque "Preguntá lo mismo en el chat de WhatsApp
+    //    de la comunidad" (solo disponible para cuentas registradas y
+    //    aceptadas; si no, invita a registrarse). Reemplaza al viejo
+    //    botón que llevaba al chat interno (chat.html). ──
+    function buildCommunityBtn(userQuestion) {
+      const wrap = document.createElement('div');
+      wrap.className = 'ask-community-wrap';
+      wrap.style.marginTop = '0.6rem';
+      wrap.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+      renderSoloWhatsApp(userQuestion || '').then((html) => {
+        wrap.innerHTML = html;
+        activarSelectorWhatsApp(wrap);
+        activarCopiaPregunta(wrap);
+      });
+      return wrap;
     }
 
     function appendMsg(role, html, raw) {

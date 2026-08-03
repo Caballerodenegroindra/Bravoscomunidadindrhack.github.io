@@ -53,7 +53,6 @@
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
       <a href="redes.html" class="active" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
@@ -63,25 +62,19 @@
     </nav></header>
 <main>
     <div class="container section reveal">
-      <h1 class="section-title">Nuestras <span class="accent">redes</span></h1>
+      <h1 class="section-title">Redes sociales <span class="accent">Academia Indrhack</span></h1>
       <p class="section-subtitle">Todos los cursos y clases son públicos, sin necesidad de cuenta. Estos son los canales para sumarte a la comunidad.</p>
 
       <div class="card-grid">
         <div class="card social-card">
-          <span class="social-card__icon">▣ Facebook</span>
-          <p class="section-subtitle">Noticias, publicaciones y novedades de la academia.</p>
-          <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
-        </div>
-
-        <div class="card social-card">
-          <span class="social-card__icon">▶ YouTube</span>
-          <p class="section-subtitle">Tutoriales y clases gratuitas sobre ciberseguridad y hacking ético.</p>
-          <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
-        </div>
-
-        <div class="card social-card">
           <span class="social-card__icon">◈ Canal de WhatsApp</span>
           <p class="section-subtitle">Avisos oficiales y novedades de cursos directo a tu teléfono. Abierto para todos, sin cuenta.</p>
+          <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
+        </div>
+
+        <div class="card social-card">
+          <span class="social-card__icon">▣ Facebook</span>
+          <p class="section-subtitle">Noticias, publicaciones y novedades de la academia.</p>
           <a class="btn btn--outline btn--small" href="#" target="_blank" rel="noopener">Abrir</a>
         </div>
 
@@ -92,7 +85,7 @@
         </div>
 
         <div class="card social-card">
-          <span class="social-card__icon">🚀 Colaboradores y programadores</span>
+          <span class="social-card__icon">Colaboradores y programadores</span>
           <p class="section-subtitle">¿Sabés programar o querés ayudar a crear cursos y contenido? Sumate al equipo que construye esta app y la academia.</p>
           <a class="btn btn--outline btn--small" href="colabora.html">Quiero colaborar</a>
         </div>
@@ -111,7 +104,6 @@
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
-  <script type="module" src="js/chat-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { db } from './js/firebase-config.js';
@@ -121,9 +113,8 @@
     const siteConfig = snap.exists() ? snap.data() : {};
 
     const links = document.querySelectorAll('.card-grid .btn--outline');
-    if (siteConfig.facebook) links[0].href = siteConfig.facebook;
-    if (siteConfig.youtube) links[1].href = siteConfig.youtube;
-    if (siteConfig.whatsappCanal) links[2].href = siteConfig.whatsappCanal;
+    if (siteConfig.whatsappCanal) links[0].href = siteConfig.whatsappCanal;
+    if (siteConfig.facebook) links[1].href = siteConfig.facebook;
 
     // El botón del grupo general recién apunta al enlace real de WhatsApp
     // si la cuenta ya está aprobada; si no, sigue llevando a registro.html.

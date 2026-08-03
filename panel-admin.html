@@ -144,7 +144,6 @@
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
       <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="chat-preview.html" data-nav="chat" title="Chatear con la comunidad">Chat</a>
       <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
       <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
@@ -161,7 +160,6 @@
     <a href="#quizzes" data-tab="quizzes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧠 Quizzes <span id="more-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
     <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
-    <a href="#clases-vivo" data-tab="clases-vivo" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📡 Clases en vivo</a>
     <a href="#configuracion" data-tab="configuracion" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">⚙️ Configuración</a>
   </div>
 
@@ -179,7 +177,6 @@
         <a href="#quizzes" data-tab="quizzes">🧠 Quizzes <span id="sidebar-quiz-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
         <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
-        <a href="#clases-vivo" data-tab="clases-vivo">📡 Clases en vivo</a>
         <a href="#configuracion" data-tab="configuracion">⚙️ Config</a>
       </nav>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
@@ -493,20 +490,6 @@
         </div>
       </div>
 
-      <!-- CLASES EN VIVO -->
-      <div class="tab-section hidden" id="clases-vivo">
-        <div class="panel-header">
-          <div>
-            <h1 class="section-title">Clases en vivo</h1>
-            <p class="section-subtitle" style="margin:0">Programá, iniciá y cerrá las clases en vivo del chat. Para armar los pasos, usá "+ Nueva clase en vivo" dentro de chat.html; acá administrás el ciclo de vida.</p>
-          </div>
-          <a href="chat.html" class="btn btn--primary btn--small">💬 Ir al chat</a>
-        </div>
-        <div id="clases-vivo-grid" style="display:flex;flex-direction:column;gap:0.75rem;margin-top:1rem">
-          <p class="section-subtitle">Cargando clases en vivo…</p>
-        </div>
-      </div>
-
     </section>
   </main>
 
@@ -748,7 +731,6 @@
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
-  <script type="module" src="js/chat-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
   <script type="module">
     import { requireAdmin, ESTADOS, ROLES } from './js/auth.js';
@@ -2850,101 +2832,6 @@
 
     document.addEventListener('click', () => {
       if (moreMenu) moreMenu.style.display = 'none';
-    });
-  </script>
-
-
-  <!-- CLASES EN VIVO: gestión desde el panel admin -->
-  <script type="module">
-    import { db } from './js/firebase-config.js';
-    import {
-      collection, doc, getDocs, deleteDoc, updateDoc, query, orderBy,
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-    import { requireAdmin } from './js/auth.js';
-
-    const grid = document.getElementById('clases-vivo-grid');
-    let cargado = false;
-
-    function estadoBadge(status) {
-      const map = {
-        'programada': '<span class="badge badge--pendiente">🗓️ Programada</span>',
-        'en-vivo':    '<span class="badge badge--aprobado">🔴 En vivo</span>',
-        'finalizada': '<span class="badge badge--info">✅ Finalizada</span>',
-      };
-      return map[status] || `<span class="badge">${status}</span>`;
-    }
-
-    async function loadClasesVivo() {
-      if (cargado) return;
-      cargado = true;
-      try {
-        const snap = await getDocs(query(collection(db, 'live_classes'), orderBy('createdAt', 'desc')));
-        const sesiones = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-
-        if (sesiones.length === 0) {
-          grid.innerHTML = '<p class="section-subtitle">Todavía no se creó ninguna clase en vivo. Usá "+ Nueva clase en vivo" dentro del chat comunitario.</p>';
-          return;
-        }
-
-        grid.innerHTML = sesiones.map((s) => `
-          <div class="card" data-live-id="${s.id}" style="display:flex;flex-direction:column;gap:0.5rem">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;flex-wrap:wrap">
-              <div>
-                <h3 style="margin:0;font-size:0.95rem">${escapeHtml(s.title || 'Sin título')}</h3>
-                <p class="section-subtitle" style="margin:2px 0 0">${escapeHtml(s.categoria || 'General')} · Paso ${s.currentStep || 0}/${s.totalSteps || 0}</p>
-              </div>
-              ${estadoBadge(s.status)}
-            </div>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem">
-              <a class="btn btn--outline btn--small" href="chat.html?viva=${s.id}">💬 Abrir en chat</a>
-              ${s.status !== 'finalizada' ? `<button class="btn btn--small btn--danger" data-action="finalizar">Finalizar</button>` : ''}
-              <button class="btn btn--small btn--danger" data-action="eliminar" style="background:transparent;border:1px solid var(--color-danger-fg);color:var(--color-danger-fg)">Eliminar</button>
-            </div>
-          </div>
-        `).join('');
-
-        grid.querySelectorAll('[data-action="finalizar"]').forEach((btn) => {
-          btn.addEventListener('click', async (e) => {
-            const id = e.target.closest('[data-live-id]').dataset.liveId;
-            if (!confirm('¿Finalizar esta clase en vivo?')) return;
-            await updateDoc(doc(db, 'live_classes', id), { status: 'finalizada' });
-            cargado = false;
-            loadClasesVivo();
-          });
-        });
-
-        grid.querySelectorAll('[data-action="eliminar"]').forEach((btn) => {
-          btn.addEventListener('click', async (e) => {
-            const id = e.target.closest('[data-live-id]').dataset.liveId;
-            if (!confirm('¿Eliminar esta clase en vivo? Esta acción no se puede deshacer.')) return;
-            try {
-              const stepsSnap = await getDocs(collection(db, 'live_classes', id, 'steps'));
-              await Promise.all(stepsSnap.docs.map((d) => deleteDoc(d.ref)));
-              await deleteDoc(doc(db, 'live_classes', id));
-              cargado = false;
-              loadClasesVivo();
-            } catch (err) {
-              alert('❌ Error al eliminar: ' + err.message);
-            }
-          });
-        });
-      } catch (err) {
-        grid.innerHTML = `<p class="section-subtitle" style="color:var(--color-danger-fg)">Error al cargar: ${err.message}</p>`;
-      }
-    }
-
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    document.querySelectorAll('[data-tab="clases-vivo"]').forEach((t) => {
-      t.addEventListener('click', loadClasesVivo);
-    });
-
-    requireAdmin('index.html').then((admin) => {
-      if (!admin) return;
-      // Si el panel se abre directamente en #clases-vivo, cargamos igual.
-      if (window.location.hash.replace('#', '') === 'clases-vivo') loadClasesVivo();
     });
   </script>
 

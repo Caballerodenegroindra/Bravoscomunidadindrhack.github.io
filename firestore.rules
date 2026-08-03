@@ -97,8 +97,8 @@ service cloud.firestore {
     // ───────────────────────────────────────────────────────
     // NOTIFICACIONES
     // ───────────────────────────────────────────────────────
-    // La mayoría (cuenta, quiz, proyecto, curso nuevo, clase en
-    // vivo) las crea solo el admin. Excepción: "respuesta_hilo",
+    // La mayoría (cuenta, quiz, proyecto, curso nuevo) las crea
+    // solo el admin. Excepción: "respuesta_hilo",
     // que puede crearla cualquier usuario logueado porque se
     // dispara cuando OTRO usuario (no el admin) responde un
     // mensaje en un hilo del chat. Se exige además que la
@@ -273,38 +273,6 @@ service cloud.firestore {
         && canAccessRoom(request.resource.data.roomId);
       allow update: if false;
       allow delete: if isOwner(resource.data.uid) || isAdmin();
-    }
-
-    // ───────────────────────────────────────────────────────
-    // CLASES EN VIVO
-    // ───────────────────────────────────────────────────────
-    match /live_classes/{sessionId} {
-      allow read: if isSignedIn();
-      allow create, update: if isAdmin();
-      allow delete: if isAdmin();
-
-      match /steps/{stepId} {
-        allow read: if isSignedIn();
-        allow create, update, delete: if isAdmin();
-      }
-    }
-
-    match /live_progress/{progressId} {
-      allow read: if isSignedIn();
-
-      allow create: if isSignedIn()
-        && request.resource.data.uid == request.auth.uid
-        && progressId == request.resource.data.sessionId + '_' + request.auth.uid;
-
-      allow update: if isAdmin() || (
-        isSignedIn() &&
-        resource.data.uid == request.auth.uid &&
-        request.resource.data.uid == resource.data.uid &&
-        request.resource.data.sessionId == resource.data.sessionId &&
-        request.resource.data.unlockedStep >= resource.data.unlockedStep
-      );
-
-      allow delete: if isAdmin();
     }
 
     // ───────────────────────────────────────────────────────
