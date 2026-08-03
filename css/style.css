@@ -133,7 +133,7 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   font-size: 17px;
-  line-height: 1.7;
+  line-height: 1.75;
   min-height: 100dvh;
   overflow-x: hidden;
   padding-bottom: var(--tabbar-h);
@@ -245,6 +245,13 @@ summary:focus-visible,
 /* ── Botón de menú (siempre a la izquierda) ── */
 .navbar__toggle {
   position: relative;
+  /* Debe quedar por ENCIMA de .navbar__links (z-index 260): ese panel
+     de menú es pantalla completa (inset:0) y, si este botón no tuviera
+     un z-index mayor, el panel lo taparía apenas se abre el menú y no
+     se podría volver a tocar para cerrarlo. Con esto, las "tres rayas"
+     quedan visibles y tocables (convertidas en "X") también con el
+     menú abierto, para cerrarlo desde el mismo botón. */
+  z-index: 261;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,6 +304,14 @@ body.nav-open .navbar__toggle span:nth-child(3) { transform: translateY(0) rotat
 }
 .navbar__links.open { transform: translateX(0); }
 body.nav-open { overflow: hidden; }
+
+/* Mientras el menú de navegación está abierto, ocultamos los elementos
+   flotantes (barra de IA, burbuja de chat, botón de ayuda) para que no
+   tapen las últimas opciones del menú (ej. "Registrarte"). */
+body.nav-open #ia-widget,
+body.nav-open #chat-widget-fab,
+body.nav-open #chat-widget-panel,
+body.nav-open .help-fab { display: none !important; }
 
 .navbar__links a {
   color: var(--text);
@@ -460,6 +475,12 @@ body.ia-dock-active .help-fab { bottom: calc(var(--ia-dock-h) + 0.75rem); }
 main { min-height: calc(100dvh - var(--nav-h)); }
 .section { padding: var(--gap-2xl) 0; }
 .section + .section { border-top: 1px solid var(--border-muted); }
+
+/* ── ESPACIADO DE TEXTO ESTILO CLAUDE ──
+   Da aire entre párrafos sueltos (los que no traen su propio
+   margen por clase o estilo inline, que siempre tienen prioridad). */
+main p { margin-bottom: 1em; }
+main p:last-child { margin-bottom: 0; }
 
 /* ── HERO ── */
 .hero {
@@ -2369,7 +2390,7 @@ tbody tr:last-child td { border-bottom: none; }
    con la sala General del chat en tiempo real — para poder
    escribirle a la comunidad sin salir de una clase de Termux,
    un curso, etc. — con un enlace directo al chat completo
-   (salas, hilos, clases en vivo) para lo que este mini-panel
+   (salas, hilos) para lo que este mini-panel
    no cubre.
    ============================================================ */
 #chat-widget-fab {
