@@ -284,8 +284,10 @@
         try {
           const snap = await getDoc(doc(db, 'users', user.uid));
           if (snap.exists() && snap.data().estado === 'aprobado') {
-            const panel = snap.data().rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html';
-            inicioLinks.forEach(a => { a.href = panel; a.textContent = 'Mi Panel'; });
+            const esAdmin = snap.data().rol === 'administrador';
+            const panel = esAdmin ? 'panel-admin.html' : 'panel-usuario.html';
+            const etiqueta = esAdmin ? '🛠️ Panel Admin' : 'Mi Panel';
+            inicioLinks.forEach(a => { a.href = panel; a.textContent = etiqueta; });
             return;
           }
         } catch(e) {}
