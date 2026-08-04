@@ -240,6 +240,17 @@ export function requireAdmin(redirectTo = 'index.html') {
   return new Promise((resolve) => {
     onSessionChange((profile) => {
       if (!profile || profile.estado !== ESTADOS.APROBADO || profile.rol !== ROLES.ADMINISTRADOR) {
+        // --- DIAGNÓSTICO TEMPORAL ---
+        // Muestra por qué te está echando del panel admin. Borrar
+        // este alert() una vez resuelto el problema.
+        alert(
+          'DIAGNÓSTICO PANEL ADMIN\n' +
+          'perfil encontrado: ' + (profile ? 'sí' : 'NO (no hay sesión o no existe el documento en Firestore)') + '\n' +
+          (profile ? 'estado: ' + profile.estado + ' (debe ser "aprobado")\n' : '') +
+          (profile ? 'rol: ' + profile.rol + ' (debe ser "administrador")\n' : '') +
+          'origen actual: ' + window.location.origin + window.location.pathname
+        );
+        // --- FIN DIAGNÓSTICO ---
         window.location.href = redirectTo;
         resolve(null);
         return;
