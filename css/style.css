@@ -2020,6 +2020,7 @@ tbody tr:last-child td { border-bottom: none; }
   }
 
   .sidebar { display: none; }
+  #admin-more-btn { display: flex !important; }
   .dashboard { flex-direction: column; }
   .panel-content { padding: var(--gap-md) var(--gap-md) calc(var(--tabbar-h) + var(--ia-dock-h) + var(--gap-2xl)); }
   .panel-header { margin-bottom: var(--gap-lg); padding-bottom: var(--gap-md); }
