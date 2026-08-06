@@ -130,6 +130,13 @@
     </button>
 
     <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
+
+    <button id="admin-more-btn" type="button" aria-label="Menú de administración" style="display:none;margin-left:auto;z-index:261;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;background:none;border:none;border-radius:var(--radius);cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative">
+      <span style="position:absolute;width:19px;height:2px;background:var(--text);border-radius:1px;transform:translateY(-6px)"></span>
+      <span style="position:absolute;width:19px;height:2px;background:var(--text);border-radius:1px"></span>
+      <span style="position:absolute;width:19px;height:2px;background:var(--text);border-radius:1px;transform:translateY(6px)"></span>
+      <span id="admin-more-badge" style="display:none;position:absolute;top:2px;right:0;background:var(--danger);color:#fff;border-radius:999px;font-size:0.6rem;font-weight:800;padding:1px 5px;line-height:1.3"></span>
+    </button>
         <nav class="navbar__links">
       <a href="index.html" title="Ir a la página principal">Inicio</a>
       <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
@@ -143,7 +150,7 @@
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <!-- Admin "Más" mini-menu -->
-  <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 1rem);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:220px;max-height:70vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
+  <div id="admin-more-menu" style="display:none;position:fixed;top:calc(var(--nav-h) + 0.5rem);right:0.75rem;background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:220px;max-height:75vh;overflow-y:auto;box-shadow:0 12px 32px rgba(0,0,0,0.35)">
     <a href="#resumen" data-tab="resumen" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📊 Resumen</a>
     <a href="#solicitudes" data-tab="solicitudes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📥 Solicitudes <span id="more-solicitudes-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#miembros" data-tab="miembros" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">👥 Miembros</a>
@@ -187,8 +194,6 @@
     </aside>
 
     <section class="panel-content">
-
-      <button id="admin-more-btn" type="button" aria-label="Más opciones del panel" style="display:none;width:100%;margin-bottom:1.25rem;background:var(--color-accent-emphasis);color:#fff;border:none;border-radius:10px;padding:0.85rem 1.25rem;font-family:var(--font-heading);font-weight:700;font-size:0.95rem;box-shadow:var(--shadow);cursor:pointer;align-items:center;justify-content:center;gap:0.4rem">☰ Menú admin</button>
 
       <!-- RESUMEN -->
       <div class="tab-section" id="resumen">
@@ -797,9 +802,16 @@
 
         // Badge de solicitudes pendientes en el menú "Más" (mobile)
         const moreSolicitudesBadge = document.getElementById('more-solicitudes-badge');
-        if (moreSolicitudesBadge && pendientes.length > 0) {
-          moreSolicitudesBadge.textContent = pendientes.length;
-          moreSolicitudesBadge.style.display = 'inline';
+        const adminMoreBadge = document.getElementById('admin-more-badge');
+        if (pendientes.length > 0) {
+          if (moreSolicitudesBadge) {
+            moreSolicitudesBadge.textContent = pendientes.length;
+            moreSolicitudesBadge.style.display = 'inline';
+          }
+          if (adminMoreBadge) {
+            adminMoreBadge.textContent = pendientes.length;
+            adminMoreBadge.style.display = 'inline';
+          }
         }
       } catch (err) {
         console.error('Error cargando usuarios:', err);
