@@ -510,6 +510,19 @@
       <h1 class="section-title">Nuestros <span class="accent">Cursos</span></h1>
       <p class="section-subtitle">Rutas de aprendizaje en informática, ciberseguridad, hacking ético y privacidad digital.</p>
 
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-cursos-panel" style="display:none;margin-bottom:1.5rem" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+          <h2 class="section-title" style="margin:0;font-size:1.05rem">🛠️ Modo administrador</h2>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn--outline btn--small" id="btn-toggle-admin-cursos">Ocultar lista</button>
+            <button class="btn btn--primary btn--small" id="btn-nueva-clase-inline">+ Nueva clase</button>
+          </div>
+        </div>
+        <p class="section-subtitle" style="margin:0 0 1rem">Solo vos ves este panel. Creá, editá, publicá/ocultá o borrá clases sin ir al Panel Admin.</p>
+        <div id="admin-cursos-lista"><p class="section-subtitle">Cargando...</p></div>
+      </div>
+
       <div id="cursos-stats" class="cursos-stats"></div>
 
       <!-- Guía rápida para quien no está familiarizado con la página -->
@@ -1258,6 +1271,237 @@
       }
     });
   </script>
+  <!-- MODAL CLASE (admin) -->
+  <div id="clase-modal-inline" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1001;align-items:center;justify-content:center;">
+    <div class="card" style="width:90%;max-width:500px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="clase-modal-inline-title" class="section-title" style="margin:0">Crear curso</h2>
+        <button id="clase-modal-inline-close" class="btn btn--small btn--danger">&#10005;</button>
+      </div>
+      <form id="clase-form-inline">
+        <div class="field"><label>Título</label><input type="text" name="titulo" placeholder="Ej: Clase 1 - Introducción a Linux" /></div>
+        <div class="field"><label>Carpeta / Categoría</label><input type="text" name="categoria" placeholder="Ej: Hacking Ético, Linux, WhatsApp..." /></div>
+        <div class="field"><label>Orden dentro de la carpeta</label><input type="number" name="orden" placeholder="1, 2, 3..." min="1" value="1" /></div>
+        <div class="field"><label>Nivel</label>
+          <select name="nivel">
+            <option value="Básico">Básico</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
+          </select>
+        </div>
+        <div class="field"><label>Descripción / Contenido de la clase</label><textarea name="descripcion" rows="5" placeholder="Escribe el contenido completo de la clase aquí..."></textarea></div>
+        <div class="field"><label>Material (texto o URL)</label><input type="text" name="material" placeholder="Ej: PDF adjunto, link de drive..." /></div>
+        <div class="field"><label>Enlace de la clase (YouTube, Drive, etc.)</label><input type="text" name="enlace" placeholder="https://..." /></div>
+        <div class="field"><label>Enlace de descarga</label><input type="text" name="descarga" placeholder="https://..." /></div>
+
+        <!-- COMANDOS TERMUX -->
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+            <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:var(--color-success-fg);margin:0">💻 COMANDOS TERMUX</p>
+            <button type="button" id="btn-add-cmd-inline" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--color-success-fg);font-size:0.75rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer">+ Agregar</button>
+          </div>
+          <p style="font-size:0.77rem;color:var(--text-muted);margin:0 0 0.75rem;line-height:1.5">Comandos que los miembros podrán copiar con un clic.</p>
+          <div id="termux-cmds-container-inline"></div>
+        </div>
+
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="clase-inline-publicado" checked />
+          <label for="clase-inline-publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem">Guardar clase</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const panelAdmin   = document.getElementById('admin-cursos-panel');
+    const listaAdmin   = document.getElementById('admin-cursos-lista');
+    const modal        = document.getElementById('clase-modal-inline');
+    const form         = document.getElementById('clase-form-inline');
+    const modalTitle   = document.getElementById('clase-modal-inline-title');
+    const termuxWrap   = document.getElementById('termux-cmds-container-inline');
+    let editingId = null;
+    let cursosCache = [];
+
+    function escapeHtml(str) {
+      return (str || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function addCmdBlock(data) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:0.85rem;margin-bottom:0.65rem;position:relative';
+      wrap.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.5rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
+        <div class="field" style="margin-bottom:0.5rem">
+          <label style="font-size:0.75rem;color:var(--text-muted)">Etiqueta (título corto)</label>
+          <input type="text" class="cmd-etiqueta" placeholder="Ej: Actualizar paquetes" value="${(data?.etiqueta||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border-color:var(--border);font-size:0.85rem" />
+        </div>
+        <div class="field" style="margin-bottom:0.5rem">
+          <label style="font-size:0.75rem;color:var(--text-muted)">Descripción / para qué sirve</label>
+          <input type="text" class="cmd-desc" placeholder="Ej: Actualiza la lista de paquetes disponibles en Termux" value="${(data?.descripcion||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border-color:var(--border);font-size:0.85rem" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label style="font-size:0.75rem;color:var(--color-success-fg)">Comando <span style="color:var(--text-muted)">(lo que se copia)</span></label>
+          <input type="text" class="cmd-comando" placeholder="Ej: pkg update && pkg upgrade -y" value="${(data?.comando||'').replace(/"/g,'&quot;')}" style="background:var(--color-canvas-inset);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text)" />
+        </div>`;
+      termuxWrap.appendChild(wrap);
+    }
+    function loadTermuxCmds(cmds) { termuxWrap.innerHTML = ''; (cmds || []).forEach(c => addCmdBlock(c)); }
+    function getTermuxCmds() {
+      return Array.from(termuxWrap.children).map(w => ({
+        etiqueta: w.querySelector('.cmd-etiqueta')?.value?.trim() || '',
+        descripcion: w.querySelector('.cmd-desc')?.value?.trim() || '',
+        comando: w.querySelector('.cmd-comando')?.value?.trim() || '',
+      })).filter(c => c.comando);
+    }
+    document.getElementById('btn-add-cmd-inline').addEventListener('click', () => addCmdBlock(null));
+
+    function abrirModal() { modal.style.display = 'flex'; }
+    function cerrarModal() { modal.style.display = 'none'; }
+
+    document.getElementById('btn-nueva-clase-inline').addEventListener('click', () => {
+      editingId = null;
+      modalTitle.textContent = 'Crear curso';
+      form.reset();
+      loadTermuxCmds([]);
+      abrirModal();
+    });
+    document.getElementById('clase-modal-inline-close').addEventListener('click', cerrarModal);
+
+    document.getElementById('btn-toggle-admin-cursos').addEventListener('click', (e) => {
+      const oculto = listaAdmin.style.display === 'none';
+      listaAdmin.style.display = oculto ? 'block' : 'none';
+      e.target.textContent = oculto ? 'Ocultar lista' : 'Mostrar lista';
+    });
+
+    async function cargarListaAdmin() {
+      listaAdmin.innerHTML = '<p class="section-subtitle">Cargando...</p>';
+      try {
+        const snap = await getDocs(collection(db, 'courses'));
+        cursosCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (cursosCache.length === 0) {
+          listaAdmin.innerHTML = '<p class="section-subtitle">Aún no hay cursos creados.</p>';
+          return;
+        }
+
+        const grupos = {};
+        cursosCache.forEach(c => {
+          const cat = c.categoria || 'General';
+          if (!grupos[cat]) grupos[cat] = [];
+          grupos[cat].push(c);
+        });
+
+        listaAdmin.innerHTML = Object.entries(grupos).map(([cat, clases]) => `
+          <div style="margin-bottom:1.25rem">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--color-border-muted)">
+              <span>📁</span><strong style="color:var(--text)">${escapeHtml(cat)}</strong>
+              <span style="color:var(--text-muted);font-size:0.8rem">${clases.length} clase${clases.length !== 1 ? 's' : ''}</span>
+            </div>
+            ${clases.sort((a,b) => (a.orden||1)-(b.orden||1)).map(c => `
+              <div data-course-id="${c.id}" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;padding:0.6rem 0;border-bottom:1px solid var(--color-border-muted)">
+                <div>
+                  <span style="color:var(--text-muted);font-size:0.75rem">Clase ${c.orden || 1} · ${c.nivel || 'Básico'}</span>
+                  <p style="margin:0.15rem 0;font-size:0.92rem;font-weight:600">${escapeHtml(c.titulo || 'Sin título')} ${c.publicado ? '✅' : '⛔ borrador'}</p>
+                </div>
+                <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+                  <button data-action="editar" class="btn btn--small btn--outline">Editar</button>
+                  <button data-action="toggle" class="btn btn--small btn--ghost">${c.publicado ? 'Ocultar' : 'Publicar'}</button>
+                  <button data-action="eliminar" class="btn btn--small btn--danger">🗑</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+
+        listaAdmin.querySelectorAll('[data-action]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const wrap = btn.closest('[data-course-id]');
+            const id = wrap.dataset.courseId;
+            const c = cursosCache.find(x => x.id === id);
+            const action = btn.dataset.action;
+
+            if (action === 'editar') {
+              editingId = id;
+              modalTitle.textContent = 'Editar clase';
+              form.titulo.value = c.titulo || '';
+              form.categoria.value = c.categoria || '';
+              form.orden.value = c.orden || 1;
+              form.nivel.value = c.nivel || 'Básico';
+              form.descripcion.value = c.descripcion || '';
+              form.material.value = c.material || '';
+              form.enlace.value = c.enlace || '';
+              form.descarga.value = c.descarga || '';
+              form.publicado.checked = c.publicado !== false;
+              loadTermuxCmds(c.termux_comandos || []);
+              abrirModal();
+            }
+            if (action === 'toggle') {
+              await updateDoc(doc(db, 'courses', id), { publicado: !c.publicado });
+              location.reload(); // refresca lista de admin y la vista pública de cursos
+            }
+            if (action === 'eliminar') {
+              if (confirm('¿Eliminar este curso?')) {
+                await deleteDoc(doc(db, 'courses', id));
+                location.reload();
+              }
+            }
+          });
+        });
+      } catch (err) {
+        console.error('Error cargando cursos (admin):', err);
+        listaAdmin.innerHTML = '<p class="section-subtitle">Ocurrió un error al cargar los cursos.</p>';
+      }
+    }
+
+    function normalizarLink(v) {
+      v = (v || '').trim();
+      if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+      return v;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: form.titulo.value.trim() || 'Clase sin título',
+        categoria: form.categoria.value.trim() || 'General',
+        orden: parseInt(form.orden.value) || 1,
+        nivel: form.nivel.value.trim(),
+        descripcion: form.descripcion.value.trim(),
+        material: form.material.value.trim(),
+        enlace: normalizarLink(form.enlace.value),
+        descarga: normalizarLink(form.descarga.value),
+        publicado: form.publicado.checked,
+        termux_comandos: getTermuxCmds(),
+      };
+      try {
+        if (editingId) {
+          await updateDoc(doc(db, 'courses', editingId), data);
+        } else {
+          await addDoc(collection(db, 'courses'), { ...data, creadoEn: serverTimestamp() });
+        }
+        cerrarModal();
+        editingId = null;
+        location.reload(); // refresca lista de admin y la vista pública de cursos
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        panelAdmin.style.display = 'block';
+        cargarListaAdmin();
+      }
+    });
+  </script>
+
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>

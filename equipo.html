@@ -99,6 +99,40 @@
       <h1 class="section-title">Nuestro <span class="accent">equipo</span></h1>
       <p class="section-subtitle">Las personas que lideran y sostienen la comunidad de Academia Indrhack.</p>
 
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-equipo-panel" style="display:none;margin-bottom:2rem" class="card">
+        <h2 class="section-title" style="margin:0 0 0.4rem;font-size:1.05rem">🛠️ Modo administrador</h2>
+        <p class="section-subtitle" style="margin:0 0 1.25rem">
+          Elegí quién aparece como líder, administrador o miembro destacado, sin ir al Panel Admin.
+          Hacer administrador a alguien también le da permisos reales; "destacado" es solo una vitrina pública.
+        </p>
+
+        <div class="card" style="max-width:640px;margin-bottom:1.25rem">
+          <h3>🔎 Buscar usuario registrado</h3>
+          <p class="section-subtitle">Buscá por nombre de usuario, nombre visible o número de teléfono.</p>
+          <input type="search" id="admin-equipo-buscar" placeholder="Nombre, usuario o teléfono..." class="field" style="width:100%;margin-bottom:0.75rem" />
+          <div id="admin-equipo-resultados" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto"></div>
+        </div>
+
+        <div class="card" style="max-width:640px;margin-bottom:1.25rem">
+          <h3>👑 Líder</h3>
+          <p class="section-subtitle">Una sola persona. Buscala arriba y tocá "Hacer líder".</p>
+          <div id="admin-equipo-lider-actual"><p class="section-subtitle">Nadie asignado todavía.</p></div>
+        </div>
+
+        <div class="card" style="max-width:640px;margin-bottom:1.25rem">
+          <h3>🛡️ Administradores</h3>
+          <p class="section-subtitle">Tienen acceso completo al panel de administración.</p>
+          <div id="admin-equipo-admins-actual"><p class="section-subtitle">Cargando...</p></div>
+        </div>
+
+        <div class="card" style="max-width:640px">
+          <h3>⭐ Miembros destacados</h3>
+          <p class="section-subtitle">Aparecen acá abajo, en la página pública "Equipo".</p>
+          <div id="admin-equipo-destacados-actual"><p class="section-subtitle">Nadie asignado todavía.</p></div>
+        </div>
+      </div>
+
       <div class="equipo-seccion">
         <h2>👑 Líder</h2>
         <div id="equipo-lider" class="equipo-grid"></div>
@@ -203,6 +237,202 @@
       }
     });
   </script>
+  <!-- Panel de administrador inline: líder, administradores, destacados -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const panelAdmin    = document.getElementById('admin-equipo-panel');
+    const buscarInput   = document.getElementById('admin-equipo-buscar');
+    const resultadosEl  = document.getElementById('admin-equipo-resultados');
+    const liderEl       = document.getElementById('admin-equipo-lider-actual');
+    const adminsEl      = document.getElementById('admin-equipo-admins-actual');
+    const destacadosEl  = document.getElementById('admin-equipo-destacados-actual');
+
+    let miProfile = null;
+    let allUsers = [];
+    let equipo = { lider: null, administradores: [], destacados: [] };
+
+    function personaAPublico(u) {
+      return {
+        uid: u.uid,
+        nombre: u.displayName || u.username || 'Sin nombre',
+        username: u.username || '',
+        foto: u.photoURL || '',
+        bio: (u.sobreMi || '').trim(),
+      };
+    }
+
+    function avatarHtml(p) {
+      const src = p.foto || 'assets/img/avatar-placeholder.svg';
+      return `<img src="${src}" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid var(--border)" />`;
+    }
+
+    async function cargarTodo() {
+      const [usersSnap, equipoSnap] = await Promise.all([
+        getDocs(collection(db, 'users')),
+        getDoc(doc(db, 'config', 'equipo')),
+      ]);
+      allUsers = usersSnap.docs
+        .map(d => ({ uid: d.id, ...d.data() }))
+        .filter(u => u.estado === 'aprobado')
+        .sort((a, b) => (a.username || '').localeCompare(b.username || ''));
+
+      equipo = equipoSnap.exists()
+        ? { lider: null, administradores: [], destacados: [], ...equipoSnap.data() }
+        : { lider: null, administradores: [], destacados: [] };
+
+      pintarLider();
+      pintarAdmins();
+      pintarDestacados();
+      pintarResultados();
+    }
+
+    async function guardarEquipo() {
+      await setDoc(doc(db, 'config', 'equipo'), equipo, { merge: false });
+    }
+
+    function pintarLider() {
+      if (!equipo.lider) {
+        liderEl.innerHTML = '<p class="section-subtitle">Nadie asignado todavía.</p>';
+        return;
+      }
+      const p = equipo.lider;
+      liderEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0">
+          ${avatarHtml(p)}
+          <span style="flex:1;font-size:0.9rem">${p.nombre}${p.username ? ' · @' + p.username : ''}</span>
+          <button type="button" class="btn btn--outline btn--small" data-quitar-lider>Quitar</button>
+        </div>`;
+      liderEl.querySelector('[data-quitar-lider]').addEventListener('click', async () => {
+        equipo.lider = null;
+        await guardarEquipo();
+        pintarLider();
+        pintarResultados();
+      });
+    }
+
+    function pintarAdmins() {
+      const admins = allUsers.filter(u => u.rol === 'administrador');
+      if (admins.length === 0) {
+        adminsEl.innerHTML = '<p class="section-subtitle">No hay administradores todavía.</p>';
+        return;
+      }
+      adminsEl.innerHTML = admins.map(u => {
+        const p = personaAPublico(u);
+        return `<div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;border-bottom:1px solid var(--border-muted)">
+          ${avatarHtml(p)}
+          <span style="flex:1;font-size:0.9rem">${p.nombre}${p.username ? ' · @' + p.username : ''}</span>
+          <button type="button" class="btn btn--outline btn--small" data-quitar-admin="${u.uid}" ${u.uid === miProfile.uid ? 'disabled title="No podés quitarte a vos mismo desde acá"' : ''}>Quitar</button>
+        </div>`;
+      }).join('');
+      adminsEl.querySelectorAll('[data-quitar-admin]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('¿Quitarle el rol de administrador a esta persona?')) return;
+          const uid = btn.dataset.quitarAdmin;
+          await updateDoc(doc(db, 'users', uid), { rol: 'usuario' });
+          equipo.administradores = (equipo.administradores || []).filter(p => p.uid !== uid);
+          await guardarEquipo();
+          await cargarTodo();
+        });
+      });
+    }
+
+    function pintarDestacados() {
+      const lista = equipo.destacados || [];
+      if (lista.length === 0) {
+        destacadosEl.innerHTML = '<p class="section-subtitle">Nadie asignado todavía.</p>';
+        return;
+      }
+      destacadosEl.innerHTML = lista.map(p => `
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;border-bottom:1px solid var(--border-muted)">
+          ${avatarHtml(p)}
+          <span style="flex:1;font-size:0.9rem">${p.nombre}${p.username ? ' · @' + p.username : ''}</span>
+          <button type="button" class="btn btn--outline btn--small" data-quitar-destacado="${p.uid}">Quitar</button>
+        </div>`).join('');
+      destacadosEl.querySelectorAll('[data-quitar-destacado]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          equipo.destacados = (equipo.destacados || []).filter(p => p.uid !== btn.dataset.quitarDestacado);
+          await guardarEquipo();
+          pintarDestacados();
+          pintarResultados();
+        });
+      });
+    }
+
+    function pintarResultados() {
+      const term = (buscarInput.value || '').trim().toLowerCase();
+      if (!term) { resultadosEl.innerHTML = ''; return; }
+
+      const filtrados = allUsers.filter(u =>
+        (u.username || '').toLowerCase().includes(term) ||
+        (u.displayName || '').toLowerCase().includes(term) ||
+        (u.phone || '').toLowerCase().includes(term)
+      ).slice(0, 20);
+
+      if (filtrados.length === 0) {
+        resultadosEl.innerHTML = '<p class="section-subtitle">Sin resultados para esa búsqueda.</p>';
+        return;
+      }
+
+      resultadosEl.innerHTML = filtrados.map(u => {
+        const esAdmin = u.rol === 'administrador';
+        const esLider = equipo.lider && equipo.lider.uid === u.uid;
+        const esDestacado = (equipo.destacados || []).some(p => p.uid === u.uid);
+        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;border:1px solid var(--border);border-radius:8px;flex-wrap:wrap">
+          <span style="flex:1;min-width:160px;font-size:0.86rem">
+            ${u.displayName || u.username}${u.username ? ' · @' + u.username : ''}${u.phone ? ' · 📱 ' + u.phone : ''}
+          </span>
+          <button type="button" class="btn btn--small ${esLider ? 'btn--primary' : 'btn--outline'}" data-accion="lider" data-uid="${u.uid}">${esLider ? '👑 Es líder' : 'Hacer líder'}</button>
+          <button type="button" class="btn btn--small ${esAdmin ? 'btn--primary' : 'btn--outline'}" data-accion="admin" data-uid="${u.uid}" ${esAdmin ? 'disabled' : ''}>${esAdmin ? '🛡️ Ya es admin' : 'Hacer administrador'}</button>
+          <button type="button" class="btn btn--small ${esDestacado ? 'btn--primary' : 'btn--outline'}" data-accion="destacado" data-uid="${u.uid}">${esDestacado ? '⭐ Destacado' : 'Marcar destacado'}</button>
+        </div>`;
+      }).join('');
+
+      resultadosEl.querySelectorAll('[data-accion]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const uid = btn.dataset.uid;
+          const u = allUsers.find(x => x.uid === uid);
+          if (!u) return;
+          const p = personaAPublico(u);
+
+          if (btn.dataset.accion === 'lider') {
+            equipo.lider = p;
+            await guardarEquipo();
+            pintarLider();
+          } else if (btn.dataset.accion === 'admin') {
+            await updateDoc(doc(db, 'users', uid), { rol: 'administrador' });
+            equipo.administradores = [...(equipo.administradores || []).filter(x => x.uid !== uid), p];
+            await guardarEquipo();
+            await cargarTodo();
+            buscarInput.value = '';
+            resultadosEl.innerHTML = '';
+            return;
+          } else if (btn.dataset.accion === 'destacado') {
+            const yaEsta = (equipo.destacados || []).some(x => x.uid === uid);
+            equipo.destacados = yaEsta
+              ? equipo.destacados.filter(x => x.uid !== uid)
+              : [...(equipo.destacados || []), p];
+            await guardarEquipo();
+            pintarDestacados();
+          }
+          pintarResultados();
+        });
+      });
+    }
+
+    buscarInput.addEventListener('input', pintarResultados);
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        miProfile = profile;
+        panelAdmin.style.display = 'block';
+        cargarTodo();
+      }
+    });
+  </script>
+
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>

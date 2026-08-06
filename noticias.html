@@ -53,11 +53,59 @@
       <h1 class="section-title">Noticias y <span class="accent">Novedades</span></h1>
       <p class="section-subtitle">Enterate de las últimas clases, eventos y anuncios importantes de la academia.</p>
 
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-noticias-panel" style="display:none;margin:1.5rem 0" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+          <h2 class="section-title" style="margin:0;font-size:1.05rem">🛠️ Modo administrador</h2>
+          <button class="btn btn--primary btn--small" id="btn-nueva-noticia-inline">+ Nueva noticia</button>
+        </div>
+        <p class="section-subtitle" style="margin:0 0 1rem">Solo vos ves este panel. Creá, editá o borrá noticias sin ir al Panel Admin.</p>
+        <div id="admin-noticias-lista"><p class="section-subtitle">Cargando...</p></div>
+      </div>
+
       <div id="noticias-grid" style="margin-top:2rem">
         <p class="section-subtitle">Cargando noticias...</p>
       </div>
     </div>
   </main>
+
+  <!-- MODAL NOTICIA (admin) -->
+  <div id="noticia-modal-inline" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="noticia-modal-inline-title" class="section-title" style="margin:0;font-size:1.1rem">Nueva noticia</h2>
+        <button id="noticia-modal-inline-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="noticia-form-inline">
+        <div class="field">
+          <label>Título</label>
+          <input type="text" name="titulo" required placeholder="Ej: Nueva clase de Linux este viernes" />
+        </div>
+        <div class="field">
+          <label>Categoría</label>
+          <select name="categoria">
+            <option value="anuncio">Anuncio</option>
+            <option value="clase">Clase</option>
+            <option value="evento">Evento</option>
+            <option value="importante">⚠️ Importante</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Contenido</label>
+          <textarea name="contenido" rows="5" required placeholder="Escribe el contenido de la noticia..."></textarea>
+        </div>
+        <div class="field">
+          <label>Enlace (opcional)</label>
+          <input type="url" name="enlace" placeholder="https://..." />
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="noticia-inline-publicado" checked />
+          <label for="noticia-inline-publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar noticia</button>
+      </form>
+    </div>
+  </div>
 
   <footer class="footer">
     ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
@@ -145,6 +193,128 @@
       }
     });
   </script>
+  <!-- Panel de administrador inline: crear/editar/borrar noticias sin ir al Panel Admin -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const CATEGORIA_LABEL = { anuncio: 'Anuncio', clase: 'Clase', evento: 'Evento', importante: '⚠️ Importante' };
+
+    const panel   = document.getElementById('admin-noticias-panel');
+    const lista   = document.getElementById('admin-noticias-lista');
+    const modal   = document.getElementById('noticia-modal-inline');
+    const form    = document.getElementById('noticia-form-inline');
+    const title   = document.getElementById('noticia-modal-inline-title');
+    let editId = null;
+
+    function abrirModal() { modal.style.display = 'flex'; }
+    function cerrarModal() { modal.style.display = 'none'; }
+
+    document.getElementById('btn-nueva-noticia-inline').addEventListener('click', () => {
+      editId = null;
+      form.reset();
+      title.textContent = 'Nueva noticia';
+      abrirModal();
+    });
+    document.getElementById('noticia-modal-inline-close').addEventListener('click', cerrarModal);
+
+    async function cargarListaAdmin() {
+      lista.innerHTML = '<p class="section-subtitle">Cargando...</p>';
+      try {
+        const snap = await getDocs(query(collection(db, 'noticias'), orderBy('fecha', 'desc')));
+        if (snap.empty) {
+          lista.innerHTML = '<p class="section-subtitle">No hay noticias creadas aún.</p>';
+          return;
+        }
+        lista.innerHTML = snap.docs.map(d => {
+          const n = { id: d.id, ...d.data() };
+          const fecha = n.fecha?.toDate ? n.fecha.toDate().toLocaleDateString('es-MX') : '—';
+          return `<div class="card" style="margin-bottom:0.75rem;padding:1rem">
+            <h3 style="margin:0 0 0.25rem;font-size:1rem">${n.titulo || ''}</h3>
+            <p style="color:var(--text-soft);font-size:0.78rem;margin:0 0 0.6rem">
+              ${CATEGORIA_LABEL[n.categoria] || n.categoria || ''} · ${fecha} · ${n.publicado ? '✅ Publicada' : '⏳ Borrador'}
+            </p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button data-editar="${d.id}" class="btn btn--small btn--outline">✏️ Editar</button>
+              <button data-borrar="${d.id}" class="btn btn--small btn--danger">🗑 Eliminar</button>
+            </div>
+          </div>`;
+        }).join('');
+
+        lista.querySelectorAll('[data-editar]').forEach(btn => btn.addEventListener('click', () => editarNoticia(btn.dataset.editar)));
+        lista.querySelectorAll('[data-borrar]').forEach(btn => btn.addEventListener('click', () => eliminarNoticia(btn.dataset.borrar)));
+      } catch (err) {
+        console.error('Error cargando noticias (admin):', err);
+        lista.innerHTML = '<p class="section-subtitle">Ocurrió un error al cargar las noticias.</p>';
+      }
+    }
+
+    async function editarNoticia(id) {
+      try {
+        const snap = await getDocs(query(collection(db, 'noticias')));
+        const docSnap = snap.docs.find(d => d.id === id);
+        if (!docSnap) return;
+        const n = docSnap.data();
+        form.titulo.value = n.titulo || '';
+        form.categoria.value = n.categoria || 'anuncio';
+        form.contenido.value = n.contenido || '';
+        form.enlace.value = n.enlace || '';
+        form.publicado.checked = !!n.publicado;
+        editId = id;
+        title.textContent = 'Editar noticia';
+        abrirModal();
+      } catch (err) {
+        console.error('Error al abrir noticia para editar:', err);
+        alert('No se pudo cargar la noticia.');
+      }
+    }
+
+    async function eliminarNoticia(id) {
+      if (!confirm('¿Eliminar esta noticia?')) return;
+      try {
+        await deleteDoc(doc(db, 'noticias', id));
+        location.reload(); // refresca lista de admin y el listado público de arriba
+      } catch (err) {
+        console.error('Error al eliminar noticia:', err);
+        alert('No se pudo eliminar la noticia.');
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: form.titulo.value.trim(),
+        categoria: form.categoria.value,
+        contenido: form.contenido.value.trim(),
+        enlace: form.enlace.value.trim(),
+        publicado: form.publicado.checked,
+      };
+      try {
+        if (editId) {
+          await updateDoc(doc(db, 'noticias', editId), data);
+        } else {
+          await addDoc(collection(db, 'noticias'), { ...data, fecha: new Date() });
+        }
+        cerrarModal();
+        editId = null;
+        location.reload(); // refresca lista de admin y el listado público de arriba
+      } catch (err) {
+        console.error('Error al guardar noticia:', err);
+        alert('No se pudo guardar la noticia. Revisá la consola para más detalles.');
+      }
+    });
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        panel.style.display = 'block';
+        cargarListaAdmin();
+      }
+    });
+  </script>
+
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>

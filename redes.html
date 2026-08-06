@@ -66,6 +66,35 @@
       <h1 class="section-title">Redes sociales <span class="accent">Academia Indrhack</span></h1>
       <p class="section-subtitle">Todos los cursos y clases son públicos, sin necesidad de cuenta. Estos son los canales para sumarte a la comunidad.</p>
 
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-redes-panel" style="display:none;max-width:560px;margin-bottom:2rem" class="card">
+        <h2 class="section-title" style="margin:0 0 0.4rem;font-size:1.05rem">🛠️ Modo administrador</h2>
+        <p class="section-subtitle" style="margin:0 0 1rem">Editá los enlaces de esta página sin ir al Panel Admin.</p>
+
+        <form id="admin-redes-form">
+          <div class="field">
+            <label for="admin-cfg-wa-canal">Canal de WhatsApp</label>
+            <input type="url" id="admin-cfg-wa-canal" name="whatsappCanal" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label for="admin-cfg-facebook">Enlace de Facebook</label>
+            <input type="url" id="admin-cfg-facebook" name="facebook" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label for="admin-cfg-wa-grupo">Enlace del grupo general de WhatsApp</label>
+            <small style="color:var(--text-muted);display:block;margin-bottom:0.4rem">Lo ve cada persona apenas se aprueba su cuenta.</small>
+            <input type="url" id="admin-cfg-wa-grupo" name="whatsappGrupo" placeholder="https://chat.whatsapp.com/..." />
+          </div>
+          <div class="field">
+            <label for="admin-cfg-wa-proyecto">Grupo de WhatsApp del equipo de desarrollo</label>
+            <small style="color:var(--text-muted);display:block;margin-bottom:0.4rem">Se comparte solo con quienes se les aprueba la solicitud en "Participar en la comunidad".</small>
+            <input type="url" id="admin-cfg-wa-proyecto" name="whatsappProyecto" placeholder="https://chat.whatsapp.com/..." />
+          </div>
+          <button type="submit" class="btn btn--primary btn--small">Guardar cambios</button>
+          <div class="form-message" id="admin-redes-message"></div>
+        </form>
+      </div>
+
       <div class="card-grid">
         <div class="card social-card">
           <span class="social-card__icon">◈ Canal de WhatsApp</span>
@@ -155,6 +184,55 @@
       }
     });
   </script>
+  <!-- Panel de administrador inline: editar enlaces de redes -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const panelAdmin = document.getElementById('admin-redes-panel');
+    const form = document.getElementById('admin-redes-form');
+    const msg  = document.getElementById('admin-redes-message');
+
+    async function cargarValores() {
+      try {
+        const snap = await getDoc(doc(db, 'config', 'site'));
+        const data = snap.exists() ? snap.data() : {};
+        form.whatsappCanal.value = data.whatsappCanal || '';
+        form.facebook.value = data.facebook || '';
+        form.whatsappGrupo.value = data.whatsappGrupo || '';
+        form.whatsappProyecto.value = data.whatsappProyecto || '';
+      } catch (err) {
+        console.error('Error cargando configuración del sitio:', err);
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'form-message';
+      try {
+        await setDoc(doc(db, 'config', 'site'), {
+          whatsappCanal: form.whatsappCanal.value.trim(),
+          facebook: form.facebook.value.trim(),
+          whatsappGrupo: form.whatsappGrupo.value.trim(),
+          whatsappProyecto: form.whatsappProyecto.value.trim(),
+        }, { merge: true });
+        msg.textContent = '✅ Guardado. Recargá la página para ver los enlaces actualizados.';
+        msg.className = 'form-message show form-message--success';
+      } catch (err) {
+        msg.textContent = '❌ ' + (err.message || 'No se pudieron guardar los cambios.');
+        msg.className = 'form-message show form-message--error';
+      }
+    });
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        panelAdmin.style.display = 'block';
+        cargarValores();
+      }
+    });
+  </script>
+
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>

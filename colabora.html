@@ -55,6 +55,21 @@
       <h1 class="section-title">Participar en la <span class="accent">comunidad</span></h1>
       <p class="section-subtitle" style="margin-bottom:0.6rem">Hay dos formas de sumarte. Elegí la que más te representa — podés cambiar de idea después.</p>
 
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-colabora-panel" style="display:none;max-width:640px;margin-bottom:1.5rem" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+          <h2 class="section-title" style="margin:0;font-size:1.05rem">🛠️ Modo administrador — Solicitudes</h2>
+        </div>
+        <p class="section-subtitle" style="margin:0 0 0.75rem">Aceptá o rechazá a quienes piden sumarse al equipo de desarrollo, sin ir al Panel Admin.</p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
+          <button class="btn btn--small btn--primary" data-admin-cfilter="pendiente">⏳ Pendientes <span id="admin-c-count-pendiente" style="background:rgba(0,0,0,0.15);padding:1px 7px;border-radius:10px;font-size:0.72rem;margin-left:4px">—</span></button>
+          <button class="btn btn--small btn--outline" data-admin-cfilter="aprobado">✅ Aprobados</button>
+          <button class="btn btn--small btn--outline" data-admin-cfilter="rechazado">❌ Rechazados</button>
+          <button class="btn btn--small btn--outline" data-admin-cfilter="todos">👁 Todos</button>
+        </div>
+        <div id="admin-colabora-list"><p class="section-subtitle">Seleccioná un filtro para ver las solicitudes…</p></div>
+      </div>
+
       <!-- Explicación de cómo funciona participar en la comunidad -->
       <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(37,211,102,0.35);background:rgba(37,211,102,0.05)">
         <h2 class="section-title" style="font-size:1rem;margin-bottom:0.5rem">📲 ¿Cómo funciona participar acá?</h2>
@@ -362,6 +377,157 @@
             btn.textContent = 'Enviar solicitud';
           }
         });
+      }
+    });
+  </script>
+
+  <!-- MODAL REVISAR SOLICITUD (admin) -->
+  <div id="admin-colabora-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem">
+    <div class="card" style="width:100%;max-width:600px;margin:auto;position:relative">
+      <button id="admin-colabora-modal-close" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.5rem">✕</button>
+      <div id="admin-colabora-modal-content"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      collection, getDocs, doc, getDoc, updateDoc, query, where, orderBy, Timestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { crearNotificacion, TIPOS_NOTIF } from './js/notificaciones.js';
+
+    const NIVEL_TEXTO = { experimentado: '💻 Con experiencia programando', algo: '🌱 Algo de experiencia', principiante: '🆕 Principiante total', '': '— No indicado' };
+    const AREA_TEXTO = { frontend: 'Frontend', backend: 'Backend / Firebase', diseno: 'Diseño UI/UX', testing: 'Testing y errores', ideas: 'Ideas y contenido', otro: 'Otro' };
+
+    const panel = document.getElementById('admin-colabora-panel');
+    const listEl = document.getElementById('admin-colabora-list');
+    const cModal = document.getElementById('admin-colabora-modal');
+    const cModalContent = document.getElementById('admin-colabora-modal-content');
+    document.getElementById('admin-colabora-modal-close').onclick = () => cModal.style.display = 'none';
+
+    let cache = null;
+
+    async function cargarLista(estado) {
+      listEl.innerHTML = '<p class="section-subtitle">Cargando…</p>';
+      try {
+        const snap = await getDocs(query(collection(db, 'voluntarios_dev'), orderBy('fecha', 'desc')));
+        let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (estado !== 'todos') docs = docs.filter(s => s.estado === estado);
+        cache = docs;
+
+        if (estado === 'pendiente') {
+          const badge = document.getElementById('admin-c-count-pendiente');
+          if (badge) badge.textContent = cache.length;
+        }
+
+        if (cache.length === 0) {
+          listEl.innerHTML = '<p class="section-subtitle">No hay solicitudes en este estado.</p>';
+          return;
+        }
+
+        const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
+        const estadoIcon  = { pendiente: '⏳', aprobado: '✅', rechazado: '❌' };
+
+        listEl.innerHTML = `
+          <div class="table-wrap"><table><thead><tr>
+            <th>Usuario</th><th>Nivel</th><th>Áreas</th><th>Enviado</th><th>Estado</th><th>Acción</th>
+          </tr></thead><tbody>
+            ${cache.map(s => {
+              const fecha = s.fecha?.toDate ? s.fecha.toDate().toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '—';
+              const color = estadoColor[s.estado] || 'var(--text-muted)';
+              const icon  = estadoIcon[s.estado]  || '?';
+              const areas = (s.areas || []).map(a => AREA_TEXTO[a] || a).join(', ') || '—';
+              return `<tr>
+                <td><strong>@${s.username || s.uid?.substring(0,8)}</strong><br><span style="color:var(--text-muted);font-size:0.75rem">${s.displayName || ''}</span></td>
+                <td style="font-size:0.8rem">${NIVEL_TEXTO[s.nivelProgramacion] || '—'}</td>
+                <td style="font-size:0.8rem;max-width:180px">${areas}</td>
+                <td style="font-size:0.78rem;color:var(--text-muted)">${fecha}</td>
+                <td><span style="color:${color};font-weight:700">${icon} ${s.estado}</span></td>
+                <td><button class="btn btn--small btn--outline" onclick="window.verSolicitudInline('${s.id}')">👁 Revisar</button></td>
+              </tr>`;
+            }).join('')}
+          </tbody></table></div>`;
+      } catch (e) {
+        listEl.innerHTML = `<p style="color:var(--color-danger-fg);overflow-wrap:anywhere">Error: ${e.message}</p>`;
+      }
+    }
+
+    document.querySelectorAll('[data-admin-cfilter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-admin-cfilter]').forEach(b => b.className = 'btn btn--small btn--outline');
+        btn.className = 'btn btn--small btn--primary';
+        cargarLista(btn.dataset.adminCfilter);
+      });
+    });
+
+    window.verSolicitudInline = function (subId) {
+      const sub = cache?.find(s => s.id === subId);
+      if (!sub) return;
+      const areas = (sub.areas || []).map(a => AREA_TEXTO[a] || a).join(', ') || '—';
+      const estadoColor = { pendiente: 'var(--gold)', aprobado: 'var(--color-success-fg)', rechazado: 'var(--color-danger-fg)' };
+
+      cModalContent.innerHTML = `
+        <h2 style="margin:0 0 0.25rem;padding-right:2rem;font-size:1.1rem">Solicitud de @${sub.username || '—'}</h2>
+        <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 1.25rem">${sub.displayName || ''}</p>
+        <p style="font-size:0.85rem;margin:0 0 0.4rem"><strong>Nivel técnico:</strong> ${NIVEL_TEXTO[sub.nivelProgramacion] || '—'}</p>
+        <p style="font-size:0.85rem;margin:0 0 0.75rem"><strong>Áreas de interés:</strong> ${areas}</p>
+        <div style="background:var(--color-canvas-inset);border-radius:8px;padding:0.75rem;font-size:0.875rem;line-height:1.6;white-space:pre-wrap;margin-bottom:1rem">${sub.mensaje || '<em style="color:var(--text-muted)">Sin mensaje.</em>'}</div>
+        ${sub.estado === 'pendiente' ? `
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+            <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 0.5rem">Motivo si lo rechazás (opcional):</p>
+            <textarea id="admin-colabora-feedback" placeholder="Ej: Por ahora no hay lugar en esa área, ¡probá más adelante!" style="width:100%;min-height:70px;background:var(--color-canvas-inset);border:1px solid var(--color-border-default);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.65rem;resize:vertical;box-sizing:border-box;font-family:inherit"></textarea>
+            <div style="display:flex;gap:0.75rem;margin-top:1rem">
+              <button class="btn btn--primary" style="flex:1" onclick="window.aprobarSolicitudInline('${sub.id}', '${sub.uid}')">✅ APROBAR y avisarle</button>
+              <button class="btn btn--outline" style="flex:1;border-color:var(--color-accent-fg);color:var(--color-accent-fg)" onclick="window.rechazarSolicitudInline('${sub.id}', '${sub.uid}')">❌ RECHAZAR</button>
+            </div>
+          </div>
+        ` : `
+          <div style="background:${estadoColor[sub.estado]}11;border:1px solid ${estadoColor[sub.estado]}44;border-radius:8px;padding:0.75rem;color:${estadoColor[sub.estado]};font-size:0.875rem">
+            ${sub.estado === 'aprobado' ? '✅ Aprobado — ya se le avisó con el enlace del grupo.' : `❌ Rechazado.${sub.feedback ? ' Motivo: ' + sub.feedback : ''}`}
+          </div>
+        `}`;
+      cModal.style.display = 'flex';
+      cModal.scrollTop = 0;
+    };
+
+    window.aprobarSolicitudInline = async function (subId, uid) {
+      try {
+        const btn = cModal.querySelector('.btn--primary');
+        if (btn) { btn.disabled = true; btn.textContent = 'Procesando…'; }
+        const cfgSnap = await getDoc(doc(db, 'config', 'site'));
+        const linkGrupo = cfgSnap.exists() ? (cfgSnap.data().whatsappProyecto || '') : '';
+        await updateDoc(doc(db, 'voluntarios_dev', subId), { estado: 'aprobado', fechaRevision: Timestamp.now() });
+        await crearNotificacion({
+          uid, tipo: TIPOS_NOTIF.COLABORADOR_APROBADO,
+          titulo: '🚀 ¡Bienvenido/a al equipo de desarrollo!',
+          mensaje: linkGrupo ? `Tu solicitud fue aprobada. Sumate al grupo de trabajo acá: ${linkGrupo}` : 'Tu solicitud fue aprobada. En breve te compartimos el enlace del grupo de trabajo.',
+          link: 'colabora.html',
+        });
+        alert('✅ Solicitud aprobada. Se le notificó con el enlace del grupo.');
+        cModal.style.display = 'none';
+        const activeFilter = document.querySelector('[data-admin-cfilter].btn--primary')?.dataset?.adminCfilter || 'pendiente';
+        cargarLista(activeFilter);
+      } catch (e) { alert('Error: ' + e.message); }
+    };
+
+    window.rechazarSolicitudInline = async function (subId, uid) {
+      const feedback = document.getElementById('admin-colabora-feedback')?.value?.trim() || 'Por ahora no fue posible sumarte al equipo.';
+      try {
+        await updateDoc(doc(db, 'voluntarios_dev', subId), { estado: 'rechazado', feedback, fechaRevision: Timestamp.now() });
+        await crearNotificacion({ uid, tipo: TIPOS_NOTIF.SISTEMA, titulo: 'Tu solicitud al equipo de desarrollo', mensaje: feedback, link: 'colabora.html' });
+        alert('❌ Solicitud rechazada.');
+        cModal.style.display = 'none';
+        const activeFilter = document.querySelector('[data-admin-cfilter].btn--primary')?.dataset?.adminCfilter || 'pendiente';
+        cargarLista(activeFilter);
+      } catch (e) { alert('Error: ' + e.message); }
+    };
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        panel.style.display = 'block';
+        document.querySelector('[data-admin-cfilter="pendiente"]').className = 'btn btn--small btn--primary';
+        cargarLista('pendiente');
       }
     });
   </script>
