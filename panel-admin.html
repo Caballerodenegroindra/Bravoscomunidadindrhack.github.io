@@ -143,7 +143,14 @@
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <!-- Admin "Más" mini-menu -->
-  <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 8px);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:200px;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
+  <button id="admin-more-btn" type="button" aria-label="Más opciones del panel" style="display:none;position:fixed;left:50%;bottom:calc(var(--tabbar-h) + 1rem);transform:translateX(-50%);z-index:301;background:var(--color-accent-emphasis);color:#fff;border:none;border-radius:999px;padding:0.7rem 1.25rem;font-family:var(--font-heading);font-weight:700;font-size:0.9rem;box-shadow:var(--shadow);cursor:pointer;align-items:center;gap:0.4rem">☰ Menú admin</button>
+
+  <div id="admin-more-menu" style="display:none;position:fixed;bottom:calc(var(--tabbar-h) + 4.25rem);left:50%;transform:translateX(-50%);background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:220px;max-height:70vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(0,0,0,0.6)">
+    <a href="#resumen" data-tab="resumen" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📊 Resumen</a>
+    <a href="#solicitudes" data-tab="solicitudes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📥 Solicitudes <span id="more-solicitudes-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
+    <a href="#miembros" data-tab="miembros" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">👥 Miembros</a>
+    <a href="#presencia" data-tab="presencia" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🟢 Presencia</a>
+    <a href="#cursos" data-tab="cursos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📚 Cursos</a>
     <a href="chat.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">💬 Chat</a>
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
     <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
@@ -783,9 +790,17 @@
       let users = [];
       try {
         users = await fetchAllUsers();
-        renderRequests(users.filter((u) => u.estado === ESTADOS.PENDIENTE));
+        const pendientes = users.filter((u) => u.estado === ESTADOS.PENDIENTE);
+        renderRequests(pendientes);
         renderMembers(users);
         setupSyncWhatsApp(users);
+
+        // Badge de solicitudes pendientes en el menú "Más" (mobile)
+        const moreSolicitudesBadge = document.getElementById('more-solicitudes-badge');
+        if (moreSolicitudesBadge && pendientes.length > 0) {
+          moreSolicitudesBadge.textContent = pendientes.length;
+          moreSolicitudesBadge.style.display = 'inline';
+        }
       } catch (err) {
         console.error('Error cargando usuarios:', err);
       }
