@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.indrhack.academia",
+    "sha256_cert_fingerprints": ["F0:78:12:AA:B8:C4:4E:9A:61:33:DF:18:B2:E4:E0:98:34:87:19:68:5F:C7:02:C3:3A:60:25:CE:D9:40:27:7D"]
+  }
+}]
