@@ -50,11 +50,14 @@ jobs:
           }
           CFG
 
+      - name: Generar el proyecto Android desde twa-manifest.json
+        run: npx --yes @bubblewrap/cli update --manifest=./twa-manifest.json --skipVersionUpgrade
+
       - name: Compilar el APK firmado
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: yes "" | npx --yes @bubblewrap/cli build --manifest=./twa-manifest.json --skipPwaValidation
+        run: npx --yes @bubblewrap/cli build --manifest=./twa-manifest.json --skipPwaValidation
 
       - name: Subir el APK como artefacto descargable
         uses: actions/upload-artifact@v4
