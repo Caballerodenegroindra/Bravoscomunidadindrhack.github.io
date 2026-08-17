@@ -41,7 +41,14 @@ jobs:
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android-release.keystore
 
       - name: Configurar Bubblewrap (rutas de JDK/SDK)
-        run: npx --yes @bubblewrap/cli updateConfig --jdkPath="$JAVA_HOME" --androidSdkPath="$ANDROID_HOME"
+        run: |
+          mkdir -p ~/.bubblewrap
+          cat > ~/.bubblewrap/config.json << CFG
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          CFG
 
       - name: Compilar el APK firmado
         env:
