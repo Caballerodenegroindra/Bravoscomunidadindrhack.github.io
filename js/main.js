@@ -156,3 +156,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+/* ── PWA: Service Worker (app instalable + offline) ─────────
+   Registra sw.js en todas las páginas. Si detecta una versión
+   nueva ya descargada, muestra un banner para que el usuario
+   decida cuándo recargar — no se fuerza la recarga para no
+   interrumpirlo a mitad de algo (escribiendo en el chat, etc).
+   ──────────────────────────────────────────────────────────*/
+function mostrarBannerActualizacionPWA(registration) {
+  if (document.querySelector('.pwa-banner[data-update]')) return;
+  const banner = document.createElement('div');
+  banner.className = 'pwa-banner';
+  banner.setAttribute('data-update', '');
+  banner.innerHTML = `
+    <img src="/assets/img/icons/icon-192.png" alt="" class="pwa-banner__icon" />
+    <div class="pwa-banner__text">
+      <p class="pwa-banner__title">Hay una versión nueva</p>
+      <p class="pwa-banner__desc">Actualizá para ver los últimos cambios.</p>
+    </div>
+    <div class="pwa-banner__actions">
+      <button class="btn btn--primary btn--small" type="button">Actualizar</button>
+    </div>
+  `;
+  document.body.appendChild(banner);
+  requestAnimationFrame(() => banner.classList.add('is-visible'));
+  banner.querySelector('button').addEventListener('click', () => {
+    if (registration.waiting) registration.waiting.postMessage('SKIP_WAITING');
+  });
+}
+
+function initServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+
+      // Puede que ya haya una versión nueva esperando desde otra pestaña.
+      if (registration.waiting && navigator.serviceWorker.controller) {
+        mostrarBannerActualizacionPWA(registration);
+      }
+
+      registration.addEventListener('updatefound', () => {
+        const nuevoWorker = registration.installing;
+        if (!nuevoWorker) return;
+        nuevoWorker.addEventListener('statechange', () => {
+          if (nuevoWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            mostrarBannerActualizacionPWA(registration);
+          }
+        });
+      });
+    } catch (err) {
+      console.warn('No se pudo registrar el service worker:', err);
+    }
+  });
+
+  // Cuando el nuevo SW toma el control (tras "Actualizar"), recargamos
+  // una sola vez para que la página use el código nuevo.
+  let yaRecargando = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (yaRecargando) return;
+    yaRecargando = true;
+    window.location.reload();
+  });
+}
+
+initServiceWorker();

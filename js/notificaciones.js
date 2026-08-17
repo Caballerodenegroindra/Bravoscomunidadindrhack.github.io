@@ -176,24 +176,45 @@ export async function pedirPermisoNotificaciones() {
 
 /**
  * Muestra una notificación nativa del sistema operativo (fuera de la
- * página/app). Requiere permiso concedido previamente.
+ * página/app, pero con la app/pestaña todavía abierta en segundo
+ * plano). Requiere permiso concedido previamente.
+ *
+ * Preferimos pasar por el Service Worker (registration.showNotification)
+ * porque es lo que exigen la mayoría de los navegadores en Android y lo
+ * que hace que el toque sobre el aviso se pueda manejar desde sw.js
+ * (evento 'notificationclick') incluso con la app instalada. Si no hay
+ * Service Worker disponible, caemos al Notification API directo.
  */
-export function mostrarNotificacionNavegador(titulo, opciones = {}) {
+export async function mostrarNotificacionNavegador(titulo, opciones = {}) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  const config = {
+    icon: 'assets/img/icons/icon-192.png',
+    badge: 'assets/img/icons/icon-192.png',
+    tag: opciones.tag,
+    body: opciones.body,
+    data: { link: opciones.link || '' },
+  };
+
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      await registration.showNotification(titulo, config);
+      return;
+    } catch (e) {
+      // Sigue abajo al fallback si el SW no está listo o falla.
+    }
+  }
+
   try {
-    const notif = new Notification(titulo, {
-      icon: 'assets/img/logo-indrhack.png',
-      badge: 'assets/img/logo-indrhack.png',
-      ...opciones,
-    });
+    const notif = new Notification(titulo, { ...config, icon: config.icon });
     notif.onclick = () => {
       window.focus();
       if (opciones.link) window.location.href = opciones.link;
       notif.close();
     };
   } catch (e) {
-    // Algunos navegadores móviles exigen un Service Worker para esto;
-    // si falla, simplemente no se muestra el aviso nativo (la campanita
-    // dentro de la app sigue funcionando igual).
+    // Si también falla esto, simplemente no se muestra el aviso nativo
+    // (la campanita dentro de la app sigue funcionando igual).
   }
 }

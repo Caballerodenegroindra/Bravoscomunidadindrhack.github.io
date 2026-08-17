@@ -2610,3 +2610,54 @@ body.ia-dock-active #chat-widget-panel { bottom: calc(var(--tabbar-h) + var(--ia
   gap: 0.75rem;
   flex-wrap: wrap;
 }
+
+/* ====================== PWA: INSTALAR APP / ACTUALIZACIÓN ======================
+   Banner inferior compartido para "instalá la app" (Android/desktop con
+   beforeinstallprompt, iOS con instrucciones manuales) y para avisar que
+   hay una versión nueva descargada. Ver js/pwa-install.js y js/main.js. */
+.pwa-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translate(-50%, 8px);
+  width: calc(100% - 2rem);
+  max-width: 420px;
+  background: var(--color-canvas-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 0.9rem 1rem;
+  padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0));
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 240;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.pwa-banner.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+.pwa-banner__icon { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; object-fit: cover; }
+.pwa-banner__text { flex: 1; min-width: 0; }
+.pwa-banner__title { font-weight: 700; font-size: 0.85rem; color: var(--text); margin: 0 0 0.15rem; }
+.pwa-banner__desc { font-size: 0.78rem; color: var(--text-soft); margin: 0; line-height: 1.35; }
+.pwa-banner__actions { display: flex; flex-shrink: 0; }
+.pwa-banner__close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.3rem;
+}
+.pwa-banner__close:hover { color: var(--text); }
+body.ia-dock-active .pwa-banner { bottom: calc(var(--ia-dock-h) + 1rem); }
+@media (min-width: 641px) { .pwa-banner { left: 1.5rem; transform: translate(0, 8px); bottom: 1.5rem; } .pwa-banner.is-visible { transform: translate(0, 0); } }

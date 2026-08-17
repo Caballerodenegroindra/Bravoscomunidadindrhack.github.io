@@ -1,0 +1,43 @@
+{
+  "packageId": "com.indrhack.academia",
+  "host": "bravoscomunidadindrhack.github.io",
+  "name": "Academia Indrhack",
+  "launcherName": "Indrhack",
+  "display": "standalone",
+  "themeColor": "#F6F5F1",
+  "themeColorDark": "#F6F5F1",
+  "navigationColor": "#F6F5F1",
+  "navigationColorDark": "#F6F5F1",
+  "navigationDividerColor": "#F6F5F1",
+  "navigationDividerColorDark": "#F6F5F1",
+  "backgroundColor": "#F6F5F1",
+  "enableNotifications": true,
+  "startUrl": "/?fuente=pwa",
+  "iconUrl": "https://bravoscomunidadindrhack.github.io/assets/img/icons/icon-512.png",
+  "maskableIconUrl": "https://bravoscomunidadindrhack.github.io/assets/img/icons/icon-maskable-512.png",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://bravoscomunidadindrhack.github.io/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://bravoscomunidadindrhack.github.io/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "splashScreenFadeOutDuration": 300,
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android-release.keystore",
+    "alias": "indrhack"
+  }
+}
