@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════
 // REGLAS DE FIRESTORE — Colecciones de Chat
-// Academia Indrhack
+// Academia Indra
 //
 // ⚠️ Si ya estás usando "firestore.rules" (el archivo con TODAS las
 // reglas del proyecto), ese archivo ya incluye todo lo de aquí más

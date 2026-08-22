@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Matrix Rain Effect (Light Theme)
+   ACADEMIA INDRA — Matrix Rain Effect (Light Theme)
    Números binarios cayendo, fondo blanco, color gris suave
    ============================================================ */
 

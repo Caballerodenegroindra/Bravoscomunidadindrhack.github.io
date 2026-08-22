@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Registro liviano de actividad del usuario
+   ACADEMIA INDRA — Registro liviano de actividad del usuario
    ============================================================
    Guarda en localStorage (por dispositivo) qué secciones ya visitó
    el usuario mientras navega la academia. No es un dato crítico ni

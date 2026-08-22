@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — "Novedades" del panel principal
+   ACADEMIA INDRA — "Novedades" del panel principal
    ============================================================
    Distinto de "Noticias" (que es un anuncio que escribe un admin
    a mano): esto detecta automáticamente lo que se publicó hace

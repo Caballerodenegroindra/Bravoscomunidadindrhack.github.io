@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Banner "Instalar app"
+   ACADEMIA INDRA — Banner "Instalar app"
    ============================================================
    - Android / desktop (Chrome, Edge, Samsung Internet, etc.):
      escucha 'beforeinstallprompt' y muestra un banner. Al
@@ -50,7 +50,7 @@ function crearBannerInstalacion({ descripcion, textoBoton, onAceptar }) {
     <button class="pwa-banner__close" type="button" aria-label="Cerrar">✕</button>
     <img src="/assets/img/icons/icon-192.png" alt="" class="pwa-banner__icon" />
     <div class="pwa-banner__text">
-      <p class="pwa-banner__title">Instalá Academia Indrhack</p>
+      <p class="pwa-banner__title">Instalá Academia Indra</p>
       <p class="pwa-banner__desc">${descripcion}</p>
     </div>
     <div class="pwa-banner__actions">

@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Campanita de notificaciones (global)
+   ACADEMIA INDRA — Campanita de notificaciones (global)
    ============================================================
    Se incluye en todas las páginas internas de la app. Se encarga de:
    1. Escuchar la sesión activa.

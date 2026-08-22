@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Tendencias de preguntas (público, anónimo)
+   ACADEMIA INDRA — Tendencias de preguntas (público, anónimo)
    ============================================================
    Objetivo: mostrar en la portada, ANTES de iniciar sesión, qué
    está preguntando la comunidad a la IA — y que eso cambie según
@@ -227,7 +227,7 @@ export async function obtenerFraseTendencias(items, pais) {
 
   const plantilla = blurbTemplate([...items], pais);
   try {
-    const prompt = `Sos el asistente de Academia Indrhack. Estos son los temas que más está preguntando la comunidad ${pais?.nombre && pais.code !== 'GLOBAL' ? `en ${pais.nombre}` : 'en general'} en los últimos días: ${items.map((i) => i.label).join(', ')}.
+    const prompt = `Sos el asistente de Academia Indra. Estos son los temas que más está preguntando la comunidad ${pais?.nombre && pais.code !== 'GLOBAL' ? `en ${pais.nombre}` : 'en general'} en los últimos días: ${items.map((i) => i.label).join(', ')}.
 Escribí UNA sola frase corta (máximo 26 palabras), en español, tono cercano y con energía, invitando a un visitante nuevo (que todavía no se registró) a sumarse a la academia a partir de esos temas. No uses comillas ni markdown ni emojis.`;
     const frase = await askIA(prompt, [{ role: 'user', content: 'Dame la frase.' }]);
     const limpia = frase.trim().replace(/^"|"$/g, '');

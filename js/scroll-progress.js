@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Indicador de scroll
+   ACADEMIA INDRA — Indicador de scroll
    ============================================================
    Una barra fina y fija en el borde derecho de la pantalla que
    muestra cuánto se puede seguir bajando (o subiendo): el "riel"

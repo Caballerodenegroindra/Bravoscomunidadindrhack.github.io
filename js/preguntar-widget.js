@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — "Preguntar": IA o WhatsApp de la comunidad
+   ACADEMIA INDRA — "Preguntar": IA o WhatsApp de la comunidad
    ============================================================
    Reemplaza a la vieja sección de chat interno de la página
    (chat.html / burbuja flotante de chat). Ahora, para resolver

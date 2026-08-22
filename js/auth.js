@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Autenticación y sistema de aprobación
+   ACADEMIA INDRA — Autenticación y sistema de aprobación
    ============================================================
    Reglas del proyecto:
    - El registro NO activa la cuenta automáticamente.

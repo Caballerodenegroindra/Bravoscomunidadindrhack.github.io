@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Panel administrador — Academia Indrhack</title>
-  <meta name="description" content="Panel de administración de Academia Indrhack." />
+  <title>Panel administrador — Academia Indra</title>
+  <meta name="description" content="Panel de administración de Academia Indra." />
   <meta name="theme-color" content="#F6F5F1" />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
@@ -13,7 +13,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Indrhack" />
+  <meta name="apple-mobile-web-app-title" content="Indra" />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -136,7 +136,7 @@
       <span></span><span></span><span></span>
     </button>
 
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indrhack"> ACADEMIA INDRHACK</a>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indra"> ACADEMIA INDRA</a>
 
     <button id="admin-more-btn" type="button" aria-label="Menú de administración" style="display:none;margin-left:auto;z-index:261;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;background:none;border:none;border-radius:var(--radius);cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative">
       <span style="position:absolute;width:19px;height:2px;background:var(--text);border-radius:1px;transform:translateY(-6px)"></span>
@@ -153,7 +153,7 @@
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
       <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
-      <a href="equipo.html" title="Conocé al equipo de Academia Indrhack">Equipo</a>
+      <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
 <!-- Admin "Más" mini-menu -->
@@ -207,7 +207,7 @@
         <div class="panel-header">
           <div>
             <h1 class="section-title">Resumen <span class="accent">Admin</span></h1>
-            <p class="section-subtitle">Vista general de Academia Indrhack.</p>
+            <p class="section-subtitle">Vista general de Academia Indra.</p>
           </div>
           <span class="badge badge--aprobado">Administrador</span>
         </div>
@@ -576,7 +576,7 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que completaron este proyecto y asigna una puntuación del 1 al 10. Aparecerá en su ficha como logro.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Responsable del proyecto</label>
-        <input type="text" id="proyecto-instructor-select" list="proyecto-instructor-list" placeholder="Ej: Indrhack" />
+        <input type="text" id="proyecto-instructor-select" list="proyecto-instructor-list" placeholder="Ej: Indra" />
         <datalist id="proyecto-instructor-list"></datalist>
       </div>
       <div class="field" style="margin-bottom:0.75rem">
@@ -613,7 +613,7 @@
       <form id="convocatoria-form">
         <div class="field">
           <label>Título del proyecto</label>
-          <input type="text" name="titulo" required placeholder="Ej: App de Academia Indrhack" />
+          <input type="text" name="titulo" required placeholder="Ej: App de Academia Indra" />
         </div>
         <div class="field">
           <label>Descripción</label>
@@ -682,7 +682,7 @@
       <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Marca los miembros que aprobaron este curso y asigna una nota del 1 al 10.</p>
       <div class="field" style="margin-bottom:1rem">
         <label>Instructor / Maestro de esta clase</label>
-        <input type="text" id="curso-instructor-select" list="curso-instructor-list" placeholder="Ej: Indrhack" />
+        <input type="text" id="curso-instructor-select" list="curso-instructor-list" placeholder="Ej: Indra" />
         <datalist id="curso-instructor-list"></datalist>
       </div>
       <div class="field" style="margin-bottom:0.75rem">
@@ -740,7 +740,7 @@
   </div>
 
   <footer class="footer">
-    ACADEMIA INDRHACK — Formación en Informática, Ciberseguridad y Hacking Ético
+    ACADEMIA INDRA — Formación en Informática, Ciberseguridad y Hacking Ético
     <br />
     <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
   </footer>
@@ -2155,7 +2155,7 @@
       });
 
       listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
-      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
+      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indra');
 
       const searchBox = document.getElementById('curso-buscar-miembro');
       searchBox.value = '';
@@ -2283,7 +2283,7 @@
       });
 
       listEl.innerHTML = admins.map(a => '<option value="' + (a.displayName || a.username) + '"></option>').join('');
-      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indrhack');
+      inputEl.value = instructorActual || (admins[0]?.displayName || admins[0]?.username || 'Indra');
 
       const searchBox = document.getElementById('proyecto-buscar-miembro');
       searchBox.value = '';
@@ -2325,7 +2325,7 @@
 
   <script type="module">
     /* =====================================================
-       ACADEMIA INDRHACK — Equipo de desarrollo (Admin)
+       ACADEMIA INDRA — Equipo de desarrollo (Admin)
        Revisión de solicitudes para colaborar en el proyecto
        de la app (colección voluntarios_dev).
        ===================================================== */
@@ -2903,6 +2903,6 @@
     });
   </script>
 
-  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indrhack" title="¿Necesitás ayuda? Tocá acá">?</a>
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indra" title="¿Necesitás ayuda? Tocá acá">?</a>
 </body>
 </html>

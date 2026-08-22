@@ -1,5 +1,5 @@
 // ============================================================
-// ACADEMIA INDRHACK — Cambio de tema (claro / oscuro)
+// ACADEMIA INDRA — Cambio de tema (claro / oscuro)
 // Se guarda la preferencia en localStorage y se aplica en toda la web.
 // ============================================================
 (function () {
@@ -27,5 +27,5 @@
     });
   });
 
-  window.IndrhackTheme = { toggle: toggleTheme, apply: applyTheme, current: currentTheme };
+  window.IndraTheme = { toggle: toggleTheme, apply: applyTheme, current: currentTheme };
 })();

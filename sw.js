@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Service Worker
+   ACADEMIA INDRA — Service Worker
    ============================================================
    Qué hace:
    1. Permite instalar el sitio como app (junto con manifest.json).

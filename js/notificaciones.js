@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Sistema de notificaciones
+   ACADEMIA INDRA — Sistema de notificaciones
    ============================================================
    Colección Firestore: "notificaciones"
    Documento: {

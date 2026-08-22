@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Confirmar salida al tocar "Atrás"
+   ACADEMIA INDRA — Confirmar salida al tocar "Atrás"
    ============================================================
    Problema que resuelve: en el celular, al usar el botón/gesto
    "Atrás" del sistema estando en una pantalla "principal" de la
@@ -60,7 +60,7 @@
         <div style="font-size:2rem; margin-bottom:0.5rem">👋</div>
         <h3 style="margin:0 0 0.4rem; color:var(--text,#eee); font-size:1.05rem">¿Querés salir de la app?</h3>
         <p style="margin:0 0 1.25rem; color:var(--text-muted,#999); font-size:0.85rem">
-          Vas a cerrar Academia Indrhack.
+          Vas a cerrar Academia Indra.
         </p>
         <div style="display:flex; gap:0.6rem">
           <button id="indrhack-exit-no" style="flex:1; padding:0.65rem; border-radius:8px; border:1px solid var(--border,#333);

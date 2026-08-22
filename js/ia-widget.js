@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Dock del asistente IA (global, siempre visible)
+   ACADEMIA INDRA — Dock del asistente IA (global, siempre visible)
    ============================================================
    Se incluye en TODAS las páginas del sitio (salvo el chat de
    página completa, ia-asistente.html, para no duplicar). A
@@ -126,7 +126,7 @@ function initWidget() {
       <div id="ia-widget-header">
         <span id="ia-widget-header-title">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3C8.4 3 5.8 5.8 5.8 9.4c0 1.9.6 3.3 1.15 4.5L4 20.5h16L17.05 13.9c.55-1.2 1.15-2.6 1.15-4.5C18.2 5.8 15.6 3 12 3z"/><path d="M9.3 13.6c-.35-1.7-.2-3.1.35-4.2M14.7 13.6c.35-1.7.2-3.1-.35-4.2"/><circle cx="9.7" cy="12.2" r="0.9" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12.2" r="0.9" fill="currentColor" stroke="none"/></svg>
-          Asistente Indrhack
+          Asistente Indra
         </span>
         <div id="ia-widget-header-actions">
           <a href="ia-asistente.html" id="ia-widget-expand" title="Abrir chat completo" aria-label="Abrir chat completo">

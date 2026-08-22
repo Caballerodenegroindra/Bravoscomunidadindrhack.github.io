@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Selector de app de WhatsApp
+   ACADEMIA INDRA — Selector de app de WhatsApp
    Antes de abrir un enlace de "unirme al grupo", pregunta con qué
    WhatsApp abrirlo (normal o Business), para gente que tiene las
    dos apps instaladas en el mismo teléfono.

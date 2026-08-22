@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Script compartido de navegación
+   ACADEMIA INDRA — Script compartido de navegación
    Controla el menú móvil, muestra estado de sesión,
    y registra presencia (online / lastSeen) en Firestore.
    ============================================================ */

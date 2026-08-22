@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Lógica del panel administrador
+   ACADEMIA INDRA — Lógica del panel administrador
    ============================================================
    Nota importante:
    Eliminar una cuenta de Firebase Authentication desde el

@@ -1,5 +1,5 @@
 /* ============================================================
-   ACADEMIA INDRHACK — Núcleo del asistente de IA (vía OpenRouter)
+   ACADEMIA INDRA — Núcleo del asistente de IA (vía OpenRouter)
    ============================================================
    Módulo compartido usado por:
    - ia-asistente.html   (chat de página completa)
@@ -167,7 +167,7 @@ export function buildSystemPrompt({ userInfo, cursosCtx, paginaCtx, configCtx })
     ? `El usuario está logueado: ${userInfo.displayName || userInfo.username || 'usuario'}. ${nivelCtx}`
     : 'El usuario no ha iniciado sesión.';
 
-  return `Eres el asistente oficial de Academia Indrhack, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora, etc. No esperes a que pregunten algo genérico: si el contexto de la página da pie a una sugerencia útil, ofrecela vos.
+  return `Eres el asistente oficial de Academia Indra, una plataforma de formación en ciberseguridad, hacking ético e informática. No sos un chat aparte: sos parte fija de la interfaz, estás presente en TODAS las páginas del sitio a través de una barra siempre visible, así que podés (y debés) ayudar con cualquier cosa del flujo: dudas de una clase puntual, cómo usar tal sección, por qué algo no le aparece, qué le conviene hacer ahora, etc. No esperes a que pregunten algo genérico: si el contexto de la página da pie a una sugerencia útil, ofrecela vos.
 
 CONTEXTO DEL USUARIO:
 ${userCtx}
@@ -229,7 +229,7 @@ Ahora no te está escribiendo el usuario: sos vos quien abre la charla apenas lo
 - Lo salude por su nombre si lo tenés en el contexto.
 - Suene espontáneo, natural y DISTINTO cada vez: variá las palabras, el orden y el tono. No repitas siempre la misma fórmula de saludo ni el mismo cierre.
 - Cerrá casi siempre con una pregunta corta y genuina que invite a responder: cómo está, qué clase va a ver hoy, si sigue con tal tema, si retoma donde lo dejó, etc. — variá cuál usás en cada ocasión.
-- Nada de listas, nada de negrita en exceso, nada de firmas tipo "— Asistente Indrhack".
+- Nada de listas, nada de negrita en exceso, nada de firmas tipo "— Asistente Indra".
 - Máximo 40 palabras.`;
 }
 
@@ -253,7 +253,7 @@ export async function askIA(systemPrompt, history) {
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         // Opcionales pero recomendados por OpenRouter para identificar el sitio:
         'HTTP-Referer': 'https://academiaindra.com',
-        'X-Title': 'Academia Indrhack',
+        'X-Title': 'Academia Indra',
       },
       body: JSON.stringify({
         model: IA_MODEL,

@@ -1,8 +1,8 @@
 {
   "packageId": "com.indrhack.academia",
   "host": "academiaindra.com",
-  "name": "Academia Indrhack",
-  "launcherName": "Indrhack",
+  "name": "Academia Indra",
+  "launcherName": "Indra",
   "display": "standalone",
   "themeColor": "#F6F5F1",
   "themeColorDark": "#F6F5F1",
