@@ -11,4 +11,4 @@ Disallow: /clase.html
 Disallow: /titulos.html
 Disallow: /ia-asistente.html
 
-Sitemap: https://bravoscomunidadindrhack.github.io/sitemap.xml
+Sitemap: https://academiaindra.com/sitemap.xml
