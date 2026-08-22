@@ -252,7 +252,7 @@ export async function askIA(systemPrompt, history) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         // Opcionales pero recomendados por OpenRouter para identificar el sitio:
-        'HTTP-Referer': 'https://bravoscomunidadindrhack.github.io',
+        'HTTP-Referer': 'https://academiaindra.com',
         'X-Title': 'Academia Indrhack',
       },
       body: JSON.stringify({
