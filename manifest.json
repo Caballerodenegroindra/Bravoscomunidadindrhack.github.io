@@ -1,7 +1,7 @@
 {
   "name": "Academia Indra",
   "short_name": "Indra",
-  "description": "Formación gratuita en informática, ciberseguridad y hacking ético. Cursos, chat comunitario y una comunidad activa.",
+  "description": "Formación gratuita en ciberseguridad, vulnerabilidades y desarrollo de apps, nacida en las comunidades de WhatsApp que la hicieron crecer.",
   "id": "/",
   "start_url": "/?fuente=pwa",
   "scope": "/",
