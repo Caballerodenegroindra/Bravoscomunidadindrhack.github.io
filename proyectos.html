@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Proyectos — Academia Indra</title>
+  <meta name="description" content="Apps y herramientas creadas por la comunidad de Academia Indra." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Indra" />
+  <link rel="canonical" href="https://academiaindra.com/proyectos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Proyectos — Academia Indra" />
+  <meta property="og:description" content="Apps y herramientas creadas por la comunidad de Academia Indra." />
+  <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <meta property="og:url" content="https://academiaindra.com/proyectos.html" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Proyectos — Academia Indra" />
+  <meta name="twitter:description" content="Apps y herramientas creadas por la comunidad de Academia Indra." />
+  <meta name="twitter:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='index.html';}" aria-label="Volver" title="Volver">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indra"> ACADEMIA INDRA</a>
+        <nav class="navbar__links">
+      <a href="index.html" title="Ir a la página principal">Inicio</a>
+      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
+      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
+      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
+      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
+      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
+      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
+      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
+      <a href="proyectos.html" class="active" title="Ver los proyectos y apps creadas por la comunidad">Proyectos</a>
+      <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
+      <div class="navbar__session" data-session-slot></div>
+    </nav></header>
+<main>
+    <div class="container section reveal">
+      <h1 class="section-title">Proyectos <span class="accent">creados por la comunidad</span></h1>
+      <p class="section-subtitle">Apps, bots y herramientas que construimos entre todos — incluida esta misma app. ¿Querés sumarte a construir la próxima? Pasate por <a href="colabora.html">Participar en la comunidad</a>.</p>
+
+      <!-- Panel de administrador (solo visible para vos) -->
+      <div id="admin-proyectos-panel" style="display:none;margin:1.5rem 0" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+          <h2 class="section-title" style="margin:0;font-size:1.05rem">🛠️ Modo administrador</h2>
+          <button class="btn btn--primary btn--small" id="btn-nuevo-proyecto-inline">+ Nuevo proyecto</button>
+        </div>
+        <p class="section-subtitle" style="margin:0 0 1rem">Solo vos ves este panel. Agregá, editá o borrá proyectos de la vitrina sin ir al Panel Admin.</p>
+        <div id="admin-proyectos-lista"><p class="section-subtitle">Cargando...</p></div>
+      </div>
+
+      <div id="proyectos-grid" class="card-grid" style="margin-top:2rem">
+        <p class="section-subtitle">Cargando proyectos...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL PROYECTO (admin) -->
+  <div id="proyecto-modal-inline" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="proyecto-modal-inline-title" class="section-title" style="margin:0;font-size:1.1rem">Nuevo proyecto</h2>
+        <button id="proyecto-modal-inline-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="proyecto-form-inline">
+        <div class="field">
+          <label>Nombre del proyecto</label>
+          <input type="text" name="titulo" required placeholder="Ej: App de Academia Indra" />
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="4" required placeholder="Qué hace, para qué sirve, con qué se hizo..."></textarea>
+        </div>
+        <div class="field">
+          <label>Imagen / captura (opcional)</label>
+          <input type="url" name="imagen" placeholder="https://..." />
+        </div>
+        <div class="field">
+          <label>Enlace del proyecto (opcional)</label>
+          <input type="url" name="enlace" placeholder="https://..." />
+        </div>
+        <div class="field">
+          <label>Etiquetas (opcional, separadas por coma)</label>
+          <input type="text" name="tags" placeholder="Web, Firebase, Bot de WhatsApp..." />
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="publicado" id="proyecto-inline-publicado" checked />
+          <label for="proyecto-inline-publicado">Publicar inmediatamente</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar proyecto</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    ACADEMIA INDRA — Ciberseguridad, Vulnerabilidades y Desarrollo de Apps · Para las comunidades de WhatsApp
+    <br />
+    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  </footer>
+
+  <script src="js/particles.js"></script>
+  <script src="js/reveal.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/pwa-install.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const grid = document.getElementById('proyectos-grid');
+
+    (async () => {
+      try {
+        // Un solo "where" (sin combinarlo con "orderBy" en la misma consulta)
+        // no necesita índice compuesto en Firestore, así que esto funciona
+        // igual con o sin sesión, ya que la colección es de lectura pública.
+        const q = query(collection(db, 'proyectos_publicos'), where('publicado', '==', true));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          grid.innerHTML = '<p class="section-subtitle">Todavía no hay proyectos publicados. ¡El primero puede ser el tuyo — sumate en <a href="colabora.html">Participar en la comunidad</a>!</p>';
+          return;
+        }
+
+        const docs = snap.docs
+          .map(d => d.data())
+          .sort((a, b) => (b.fecha?.toMillis?.() || 0) - (a.fecha?.toMillis?.() || 0));
+
+        grid.innerHTML = docs.map(p => {
+          const tags = (p.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+          return `
+            <div class="card">
+              ${p.imagen ? `<img src="${p.imagen}" alt="${p.titulo || ''}" style="width:100%;border-radius:var(--radius);margin-bottom:0.75rem;object-fit:cover;max-height:180px" loading="lazy" />` : ''}
+              <h3 style="margin:0 0 0.5rem">${p.titulo || ''}</h3>
+              <p class="section-subtitle" style="white-space:pre-wrap">${p.descripcion || ''}</p>
+              ${tags.length ? `<div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.6rem">${tags.map(t => `<span class="badge badge--info">${t}</span>`).join('')}</div>` : ''}
+              ${p.enlace ? `<a href="${p.enlace}" target="_blank" rel="noopener" class="btn btn--small btn--outline" style="margin-top:0.9rem">Ver proyecto →</a>` : ''}
+            </div>`;
+        }).join('');
+      } catch (err) {
+        console.error('Error cargando proyectos:', err);
+        grid.innerHTML = '<p class="section-subtitle">Error al cargar los proyectos.</p>';
+      }
+    })();
+  </script>
+
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { db } from './js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // Smart inicio link - redirect to panel if logged in
+    onAuthStateChanged(auth, async (user) => {
+      const inicioLinks = document.querySelectorAll('a[href="index.html"]');
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists() && snap.data().estado === 'aprobado') {
+            const esAdmin = snap.data().rol === 'administrador';
+            const panel = esAdmin ? 'panel-admin.html' : 'panel-usuario.html';
+            const etiqueta = esAdmin ? '🛠️ Panel Admin' : 'Mi Panel';
+            inicioLinks.forEach(a => { a.href = panel; a.textContent = etiqueta; });
+            return;
+          }
+        } catch(e) {}
+      }
+    });
+  </script>
+
+  <!-- Panel de administrador inline: crear/editar/borrar proyectos sin ir al Panel Admin -->
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { onSessionChange, ESTADOS, ROLES } from './js/auth.js';
+    import {
+      collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const panel = document.getElementById('admin-proyectos-panel');
+    const lista = document.getElementById('admin-proyectos-lista');
+    const modal = document.getElementById('proyecto-modal-inline');
+    const form  = document.getElementById('proyecto-form-inline');
+    const title = document.getElementById('proyecto-modal-inline-title');
+    let editId = null;
+
+    function abrirModal() { modal.style.display = 'flex'; }
+    function cerrarModal() { modal.style.display = 'none'; }
+
+    document.getElementById('btn-nuevo-proyecto-inline').addEventListener('click', () => {
+      editId = null;
+      form.reset();
+      form.publicado.checked = true;
+      title.textContent = 'Nuevo proyecto';
+      abrirModal();
+    });
+    document.getElementById('proyecto-modal-inline-close').addEventListener('click', cerrarModal);
+
+    async function cargarListaAdmin() {
+      lista.innerHTML = '<p class="section-subtitle">Cargando...</p>';
+      try {
+        const snap = await getDocs(query(collection(db, 'proyectos_publicos'), orderBy('fecha', 'desc')));
+        if (snap.empty) {
+          lista.innerHTML = '<p class="section-subtitle">No hay proyectos creados aún.</p>';
+          return;
+        }
+        lista.innerHTML = snap.docs.map(d => {
+          const p = { id: d.id, ...d.data() };
+          return `<div class="card" style="margin-bottom:0.75rem;padding:1rem">
+            <h3 style="margin:0 0 0.25rem;font-size:1rem">${p.titulo || ''}</h3>
+            <p style="color:var(--text-soft);font-size:0.78rem;margin:0 0 0.6rem">
+              ${p.publicado ? '✅ Publicado' : '⏳ Borrador'}
+            </p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button data-editar="${d.id}" class="btn btn--small btn--outline">✏️ Editar</button>
+              <button data-borrar="${d.id}" class="btn btn--small btn--danger">🗑 Eliminar</button>
+            </div>
+          </div>`;
+        }).join('');
+
+        lista.querySelectorAll('[data-editar]').forEach(btn => btn.addEventListener('click', () => editarProyecto(btn.dataset.editar)));
+        lista.querySelectorAll('[data-borrar]').forEach(btn => btn.addEventListener('click', () => eliminarProyecto(btn.dataset.borrar)));
+      } catch (err) {
+        console.error('Error cargando proyectos (admin):', err);
+        lista.innerHTML = '<p class="section-subtitle">Ocurrió un error al cargar los proyectos.</p>';
+      }
+    }
+
+    async function editarProyecto(id) {
+      try {
+        const snap = await getDocs(query(collection(db, 'proyectos_publicos')));
+        const docSnap = snap.docs.find(d => d.id === id);
+        if (!docSnap) return;
+        const p = docSnap.data();
+        form.titulo.value = p.titulo || '';
+        form.descripcion.value = p.descripcion || '';
+        form.imagen.value = p.imagen || '';
+        form.enlace.value = p.enlace || '';
+        form.tags.value = p.tags || '';
+        form.publicado.checked = !!p.publicado;
+        editId = id;
+        title.textContent = 'Editar proyecto';
+        abrirModal();
+      } catch (err) {
+        console.error('Error al abrir proyecto para editar:', err);
+        alert('No se pudo cargar el proyecto.');
+      }
+    }
+
+    async function eliminarProyecto(id) {
+      if (!confirm('¿Eliminar este proyecto?')) return;
+      try {
+        await deleteDoc(doc(db, 'proyectos_publicos', id));
+        location.reload(); // refresca lista de admin y la vitrina pública de arriba
+      } catch (err) {
+        console.error('Error al eliminar proyecto:', err);
+        alert('No se pudo eliminar el proyecto.');
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: form.titulo.value.trim(),
+        descripcion: form.descripcion.value.trim(),
+        imagen: form.imagen.value.trim(),
+        enlace: form.enlace.value.trim(),
+        tags: form.tags.value.trim(),
+        publicado: form.publicado.checked,
+      };
+      try {
+        if (editId) {
+          await updateDoc(doc(db, 'proyectos_publicos', editId), data);
+        } else {
+          await addDoc(collection(db, 'proyectos_publicos'), { ...data, fecha: new Date() });
+        }
+        cerrarModal();
+        editId = null;
+        location.reload(); // refresca lista de admin y la vitrina pública de arriba
+      } catch (err) {
+        console.error('Error al guardar proyecto:', err);
+        alert('No se pudo guardar el proyecto. Revisá la consola para más detalles.');
+      }
+    });
+
+    onSessionChange((profile) => {
+      if (profile && profile.estado === ESTADOS.APROBADO && profile.rol === ROLES.ADMINISTRADOR) {
+        panel.style.display = 'block';
+        cargarListaAdmin();
+      }
+    });
+  </script>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indra" title="¿Necesitás ayuda? Tocá acá">?</a>
+</body>
+</html>

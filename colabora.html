@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
   <title>Participá en la comunidad — Academia Indra</title>
-  <meta name="description" content="Sumate al chat general de la comunidad o al equipo que desarrolla la app de Academia Indra." />
+  <meta name="description" content="Sumate al grupo y canal de WhatsApp de la comunidad, o al equipo que desarrolla la app de Academia Indra." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180.png" />
@@ -41,6 +41,7 @@
       <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
       <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
       <a href="colabora.html" class="active" title="Participar en la comunidad">Participar en la comunidad</a>
+      <a href="proyectos.html" title="Ver los proyectos y apps creadas por la comunidad">Proyectos</a>
       <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
       <div class="navbar__session" data-session-slot></div>
     </nav></header>
@@ -59,7 +60,7 @@
 
     <section class="panel-content">
       <h1 class="section-title">Participar en la <span class="accent">comunidad</span></h1>
-      <p class="section-subtitle" style="margin-bottom:0.6rem">Hay dos formas de sumarte. Elegí la que más te representa — podés cambiar de idea después.</p>
+      <p class="section-subtitle" style="margin-bottom:0.6rem">Todo pasa por WhatsApp: sumate al grupo para conversar, seguí el canal para no perderte ningún aviso, o anotate para ayudar a construir la app. Elegí la que más te representa — podés cambiar de idea después.</p>
 
       <!-- Panel de administrador (solo visible para vos) -->
       <div id="admin-colabora-panel" style="display:none;max-width:640px;margin-bottom:1.5rem" class="card">
@@ -80,24 +81,27 @@
       <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(37,211,102,0.35);background:rgba(37,211,102,0.05)">
         <h2 class="section-title" style="font-size:1rem;margin-bottom:0.5rem">📲 ¿Cómo funciona participar acá?</h2>
         <p style="margin:0 0 0.6rem;font-size:0.88rem;color:var(--text-soft);line-height:1.65">
-          Todo el chat de la Academia pasa por <strong>WhatsApp</strong>: ahí está el grupo general para conversar con
-          otros estudiantes, hacer preguntas y enterarte de novedades. El equipo de programadores que desarrolla esta
-          misma app también se coordina en WhatsApp, en un grupo aparte, específico para el trabajo de desarrollo.
+          Todo pasa por <strong>WhatsApp</strong>: el <strong>grupo</strong> general es para conversar con otros
+          estudiantes y hacer preguntas, y el <strong>canal</strong> es solo para avisos oficiales de la academia.
+          El equipo de programadores que desarrolla esta misma app también se coordina en WhatsApp, en un grupo
+          aparte, específico para el trabajo de desarrollo.
         </p>
         <p style="margin:0;font-size:0.88rem;color:var(--text-soft);line-height:1.65">
-          Para escribir en cualquiera de esos grupos necesitás tener una cuenta <strong>registrada y aceptada</strong>
+          Para escribir en el grupo o seguir el canal necesitás tener una cuenta <strong>registrada y aceptada</strong>
           por un administrador. Mientras eso pasa (o si todavía no querés registrarte), podés preguntarle lo que
-          necesites al <strong>asistente de IA</strong> en cualquier momento, sin restricciones.
+          necesites al <strong>asistente de IA</strong> en cualquier momento, sin restricciones. Y si lo que buscás
+          es ver las apps y herramientas que ya construyó la comunidad, pasate por <a href="proyectos.html">Proyectos</a>.
         </p>
       </div>
 
-      <!-- Elegir camino: chat general vs equipo de desarrollo -->
+      <!-- Elegir camino: grupo/canal de WhatsApp vs equipo de desarrollo -->
       <div class="card-grid" style="max-width:640px;margin-bottom:2rem;grid-template-columns:1fr;gap:0.9rem">
         <div id="opcion-chat" class="card" style="border-color:rgba(20,20,18,0.3)">
-          <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">💬 Chat general de la comunidad</h2>
+          <h2 class="section-title" style="font-size:1.05rem;margin-bottom:0.4rem">💬 Grupo y canal de WhatsApp</h2>
           <p style="margin:0 0 0.9rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
-            Quiero hablar con otros estudiantes, hacer preguntas, enterarme de novedades y conversar sobre los cursos.
-            Ideal si estás aprendiendo o recién estás empezando.
+            Quiero hablar con otros estudiantes, hacer preguntas, enterarme de novedades y conversar sobre los cursos
+            en el grupo, o solo seguir los avisos oficiales en el canal. Ideal si estás aprendiendo o recién estás
+            empezando.
           </p>
           <div id="opcion-chat-opciones">Cargando…</div>
         </div>
@@ -115,11 +119,12 @@
         <!-- Proyectos activos publicados (convocatorias) -->
         <div id="convocatorias-lista" style="max-width:640px;margin-bottom:1.5rem"></div>
 
-        <!-- Explicación del proyecto -->
+        <!-- Explicación del equipo de desarrollo -->
         <div class="card" style="max-width:640px;margin-bottom:1.5rem;border-color:rgba(20,20,18,0.3);background:rgba(20,20,18,0.04)">
-          <h2 class="section-title" style="font-size:1.05rem">📱 El proyecto: la app de Academia Indra</h2>
+          <h2 class="section-title" style="font-size:1.05rem">🛠️ Sumate al equipo que construye la app</h2>
           <p style="margin:0 0 0.75rem;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
-            Todo lo que estás usando ahora mismo — cursos, chat, asistente IA — es un desarrollo en constante evolución. Se mejora con web (HTML, CSS, JavaScript) y Firebase, y siempre hay funciones nuevas por construir, errores por corregir y ideas por probar.
+            Esta misma app es un desarrollo en constante evolución. Se mejora con web (HTML, CSS, JavaScript) y Firebase, y siempre hay funciones nuevas por construir, errores por corregir y ideas por probar.
+            ¿Querés ver primero qué se construyó hasta ahora? Mirá la <a href="proyectos.html">vitrina de proyectos</a>.
           </p>
           <p style="margin:0;font-size:0.9rem;color:var(--text-soft);line-height:1.6">
             Buscamos sumar gente a un <strong>grupo de trabajo aparte</strong> (por WhatsApp) donde se coordina el desarrollo: no hace falta ser un experto, con ganas de aportar y aprender alcanza.
@@ -159,6 +164,8 @@
   <script type="module">
     import { renderOpcionesPreguntar, activarCopiaPregunta } from './js/preguntar-widget.js';
     import { activarSelectorWhatsApp } from './js/whatsapp-picker.js';
+    import { cargarConfigSitio } from './js/ia-core.js';
+    import { onSessionChange, ESTADOS } from './js/auth.js';
 
     (async () => {
       const cont = document.getElementById('opcion-chat-opciones');
@@ -166,6 +173,32 @@
       cont.innerHTML = await renderOpcionesPreguntar();
       activarSelectorWhatsApp(cont);
       activarCopiaPregunta(cont);
+    })();
+
+    // Botón aparte para seguir el CANAL de WhatsApp (solo avisos,
+    // distinto del grupo para conversar). Mismo criterio de acceso:
+    // cuenta registrada y aceptada por un administrador.
+    (async () => {
+      const cont = document.getElementById('opcion-chat-opciones');
+      if (!cont) return;
+      const config = await cargarConfigSitio();
+      const linkCanal = config.whatsappCanal || '';
+      if (!linkCanal) return;
+
+      onSessionChange((profile) => {
+        document.getElementById('opcion-canal-btn')?.remove();
+        const wrap = document.createElement('div');
+        wrap.style.marginTop = '0.6rem';
+        if (profile && profile.estado === ESTADOS.APROBADO) {
+          wrap.id = 'opcion-canal-btn';
+          wrap.innerHTML = `<a href="${linkCanal}" data-wa-picker class="btn btn--outline" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%">📢 Seguir el canal de WhatsApp</a>`;
+        } else {
+          wrap.id = 'opcion-canal-btn';
+          wrap.innerHTML = `<p style="font-size:0.82rem;color:var(--text-soft);margin:0">🔒 El canal de avisos también requiere cuenta registrada y aceptada.</p>`;
+        }
+        cont.appendChild(wrap);
+        activarSelectorWhatsApp(cont);
+      });
     })();
   </script>
 

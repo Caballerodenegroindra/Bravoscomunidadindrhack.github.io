@@ -32,13 +32,14 @@ export const MAPA_SITIO = `- Registro: el usuario se registra en registro.html c
 - Perfil: en perfil.html el usuario puede cambiar nombre visible, bio y foto.
 - Mi ficha: en ficha.html se ven los datos del usuario.
 - Títulos: en titulos.html aparecen los certificados y badges obtenidos.
-- Chat: en chat.html el usuario aprobado tiene un chat interno con canales generales, hilos por clase y mensajes directos. También puede preguntarle directamente a este asistente de IA (siempre disponible), o participar del chat general de la comunidad por WhatsApp (grupo enlazado en config.whatsappGrupo / redes.html). Para usar cualquiera de los dos chats hace falta tener la cuenta registrada y aceptada por un administrador; si todavía no lo está, recomendale registrarse en registro.html y mientras tanto seguir preguntando acá.
+- Preguntas y chat: la Academia no tiene un chat interno propio. El usuario puede preguntarle directamente a este asistente de IA (siempre disponible, con o sin cuenta aprobada), o participar del chat general de la comunidad por WhatsApp (grupo enlazado en config.whatsappGrupo) y seguir los avisos oficiales por el canal de WhatsApp (config.whatsappCanal). Para escribir en el grupo o seguir el canal de WhatsApp hace falta tener la cuenta registrada y aceptada por un administrador; si todavía no lo está, recomendale registrarse en registro.html y mientras tanto seguir preguntando acá.
 - Noticias: en noticias.html se publican anuncios y novedades.
 - Redes: en redes.html están los links a las redes sociales de la academia.
+- Proyectos: en proyectos.html se muestra la vitrina pública de apps y herramientas que construyó la comunidad (por ejemplo, esta misma app).
 - Configuración: en configuracion.html el usuario puede cambiar contraseña y ajustes.
 - Panel admin: solo accesible para administradores, en panel-admin.html gestionan usuarios, clases y noticias.
 - Notificaciones: en notificaciones.html (y la campanita del navbar) se ven avisos de cuenta aprobada, respuestas en hilos, etc.
-- Colaborá con el proyecto: en colabora.html se explica que la propia app/plataforma de la academia es un proyecto en desarrollo, y cualquier usuario que sepa programar (o quiera aprender colaborando) puede anotarse para sumarse al equipo que la construye. Completa un formulario corto (en qué área quiere ayudar y un mensaje) y un administrador lo revisa; si lo aprueba, recibe una notificación con el enlace al grupo de WhatsApp de trabajo del equipo de desarrollo (separado del grupo general de la comunidad). Si el usuario pregunta cómo ayudar a construir la app, cómo sumarse al equipo de desarrollo, o algo similar, mandalo a colabora.html.`;
+- Participar en la comunidad: en colabora.html el usuario encuentra los enlaces para sumarse al grupo y al canal de WhatsApp de la comunidad, y también puede anotarse para sumarse al equipo que desarrolla la app (completa un formulario corto sobre en qué área quiere ayudar y un mensaje; un administrador lo revisa y, si lo aprueba, recibe una notificación con el enlace al grupo de WhatsApp de trabajo del equipo de desarrollo, separado del grupo general). Si el usuario pregunta cómo sumarse a la comunidad, a los grupos/canales de WhatsApp, o cómo ayudar a construir la app, mandalo a colabora.html.`;
 
 /* ── Nombres "lindos" de página para dar contexto de dónde está el usuario ── */
 const NOMBRES_PAGINA = {
@@ -49,8 +50,8 @@ const NOMBRES_PAGINA = {
   'perfil.html': 'la edición de su perfil',
   'ficha.html': 'su ficha personal',
   'titulos.html': 'sus títulos y certificados',
-  'chat.html': 'el chat de la comunidad',
   'noticias.html': 'las noticias/anuncios de la academia',
+  'proyectos.html': 'la vitrina de proyectos y apps creadas por la comunidad',
   'redes.html': 'las redes sociales de la academia',
   'configuracion.html': 'la configuración de su cuenta',
   'notificaciones.html': 'su bandeja de notificaciones',
@@ -77,8 +78,8 @@ const CONSEJOS_PAGINA = {
   'perfil.html': '¿Necesitás una mano para completar tu perfil?',
   'ficha.html': 'Si algo de tu ficha no cierra, decime y lo vemos.',
   'titulos.html': '¿Vemos qué te falta para tu próximo título?',
-  'chat.html': '¿Buscás resolver una duda de un curso? Preguntame acá o pedime el enlace al chat de WhatsApp de la comunidad.',
   'noticias.html': '¿Te resumo las últimas novedades de la academia?',
+  'proyectos.html': '¿Querés que te cuente más sobre alguno de estos proyectos?',
   'redes.html': '¿Buscás algún canal o grupo en particular?',
   'configuracion.html': '¿Necesitás ayuda con algún ajuste de tu cuenta?',
   'notificaciones.html': '¿Querés que te explique alguno de tus avisos?',

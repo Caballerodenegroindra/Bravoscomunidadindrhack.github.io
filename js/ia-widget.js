@@ -29,17 +29,13 @@ import { registrarPreguntaIA } from './tema-stats.js';
 // funciona tanto si está en la raíz como en una subcarpeta).
 const BASE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
 
-// En el chat de página completa ya está la IA a pantalla completa,
-// así que ahí no mostramos el dock para no duplicar. Tampoco en
+// En ia-asistente.html ya está la IA a pantalla completa, así que
+// ahí no mostramos el dock para no duplicar. Tampoco en
 // registro/login: esas páginas ya tienen su propio formulario con
 // campos pegados abajo, y la barra fija de la IA queda encima
 // generando una "doble barra de escribir" confusa en mobile.
-// chat.html tampoco: ese layout ya ocupa toda la altura disponible
-// (100dvh - navbar - tabbar) con su propia caja de texto pegada
-// abajo, y el dock de la IA quedaba flotando encima tapándola / dando
-// la sensación de "dos teclados" superpuestos.
 const ARCHIVO_ACTUAL = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
-const PAGINAS_SIN_DOCK_IA = ['ia-asistente.html', 'registro.html', 'login.html', 'chat.html'];
+const PAGINAS_SIN_DOCK_IA = ['ia-asistente.html', 'registro.html', 'login.html'];
 if (!PAGINAS_SIN_DOCK_IA.includes(ARCHIVO_ACTUAL)) {
   document.addEventListener('DOMContentLoaded', initWidget);
 }

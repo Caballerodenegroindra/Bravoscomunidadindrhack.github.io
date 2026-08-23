@@ -171,6 +171,13 @@ service cloud.firestore {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }
+    // Vitrina pública de proyectos/apps creadas por la comunidad
+    // (distinto de la colección "proyectos", que son los logros
+    // asignados a cada miembro en su ficha).
+    match /proyectos_publicos/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
     match /config/{docId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();

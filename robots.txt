@@ -2,7 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /panel-usuario.html
 Disallow: /panel-admin.html
-Disallow: /chat.html
 Disallow: /perfil.html
 Disallow: /configuracion.html
 Disallow: /notificaciones.html
