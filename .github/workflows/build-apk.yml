@@ -1,0 +1,97 @@
+name: Compilar APK y AAB (TWA)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'twa-manifest.json'
+      - 'manifest.json'
+      - 'assets/img/icons/**'
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar paquetes del SDK necesarios
+        run: sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Play Store rechaza subir dos veces el mismo versionCode.
+      # Usamos el número de ejecución del workflow: siempre sube de a uno.
+      - name: Subir el número de versión automáticamente
+        run: |
+          VERSION_CODE=${{ github.run_number }}
+          VERSION_NAME="1.0.${{ github.run_number }}"
+          jq --argjson vc "$VERSION_CODE" --arg vn "$VERSION_NAME" \
+            '.appVersionCode = $vc | .appVersionName = $vn' \
+            twa-manifest.json > tmp.json && mv tmp.json twa-manifest.json
+          echo "versionCode = $VERSION_CODE / versionName = $VERSION_NAME"
+
+      - name: Restaurar la llave de firma desde el secreto
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android-release.keystore
+
+      - name: Configurar Bubblewrap (rutas de JDK/SDK)
+        run: |
+          mkdir -p ~/.bubblewrap
+          cat > ~/.bubblewrap/config.json << CFG
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          CFG
+
+      - name: Generar el proyecto Android desde twa-manifest.json
+        run: npx --yes @bubblewrap/cli update --manifest=./twa-manifest.json --skipVersionUpgrade
+
+      - name: Compilar el APK y el AAB firmados
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: npx --yes @bubblewrap/cli build --manifest=./twa-manifest.json --skipPwaValidation
+
+      - name: Ver qué archivos se generaron
+        run: ls -lh *.apk *.aab || true
+
+      - name: Subir el AAB (esto es lo que va a Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: academia-indra-aab
+          path: app-release-bundle.aab
+          if-no-files-found: error
+
+      - name: Subir el APK (para instalar y probar en tu celular)
+        uses: actions/upload-artifact@v4
+        with:
+          name: academia-indra-apk
+          path: app-release-signed.apk
+          if-no-files-found: warn
+
+      - name: Publicar todo como Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "Academia Indra (build ${{ github.run_number }})"
+          files: |
+            app-release-bundle.aab
+            app-release-signed.apk
