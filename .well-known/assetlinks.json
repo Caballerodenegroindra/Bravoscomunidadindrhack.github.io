@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.indrhack.academia",
       "sha256_cert_fingerprints": [
-        "FC:3E:C3:B2:14:43:B5:DD:74:6D:F4:6C:F5:30:9D:B0:9F:08:40:17:9B:2C:91:86:04:FC:DC:E1:10:E3:C7:3A"
+        "FC:3E:C3:B2:14:43:B5:DD:74:6D:F4:6C:F5:30:9D:B0:9F:08:40:17:9B:2C:91:86:04:FC:DC:E1:10:E3:C7:3A",
+        "68:21:8B:4B:92:F4:00:E0:20:A3:1B:89:4F:0D:7D:74:C0:A1:ED:88:74:C5:4F:9C:CF:EC:C1:95:FD:28:38:74"
       ]
     }
   }
