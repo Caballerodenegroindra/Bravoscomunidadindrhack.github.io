@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>Retos y CTF — Academia Indra</title>
+  <meta name="description" content="Desafíos cortos de ciberseguridad, uno por semana. Resolvés, sumás puntos y comparás con el resto de la comunidad." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href="https://academiaindra.com/retos.html" />
+  <meta property="og:title" content="Retos y CTF — Academia Indra" />
+  <meta property="og:description" content="Desafíos cortos de ciberseguridad, uno por semana. Sumá puntos y compará con la comunidad." />
+  <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=2" />
+</head>
+<body class="v2">
+  <script>
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
+  </script>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group" open>
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="retos.html">Retos y CTF</a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap" style="position:relative;z-index:1;max-width:52rem">
+        <span class="v2-kicker v2-kicker--live">Práctica</span>
+        <h1 style="font-size:clamp(2rem,6vw,3.2rem);margin:.5rem 0 .8rem">Retos <span class="v2-accent">y CTF</span></h1>
+        <p class="hero-v2__sub" style="max-width:none">
+          Desafíos cortos para poner en práctica lo de las rutas. Uno nuevo por semana,
+          de dificultad variada. Resolvés, mandás la respuesta en el grupo de WhatsApp y
+          sumás puntos.
+        </p>
+        <div class="hero-v2__actions">
+          <a href="rutas.html" class="btn btn--outline btn--large">Ver las rutas primero</a>
+          <a href="colabora.html" class="btn btn--primary btn--large">Entrar al grupo</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Activos</span>
+          <h2>Retos <span class="v2-accent">abiertos</span></h2>
+          <p>Los que se pueden resolver ahora. Cuando cierra uno, entra el siguiente.</p>
+        </div>
+        <div id="retos-mount" class="v2-grid v2-grid--2">
+          <p class="trend-v2__loading">Cargando los retos…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Cómo participar</span>
+          <h2>Sencillo</h2>
+        </div>
+        <div class="steps-v2" data-reveal>
+          <div class="step-v2"><h3>Elegí un reto abierto</h3><p>Cada uno dice de qué ruta es y cuánta dificultad tiene.</p></div>
+          <div class="step-v2"><h3>Resolvelo</h3><p>Podés usar el asistente de IA para orientarte, pero la respuesta la encontrás vos.</p></div>
+          <div class="step-v2"><h3>Enviá la respuesta</h3><p>En el grupo de WhatsApp de la comunidad, con el formato que pide el reto. Sumás puntos si es correcta.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap" style="padding-bottom:5rem">
+      <div class="cta-v2" data-reveal>
+        <h2>¿Todavía no estás en la comunidad?</h2>
+        <p>Los retos se juegan en el grupo de WhatsApp. Registrate y pedí el acceso.</p>
+        <div class="cta-v2__actions">
+          <a href="registro.html" class="btn btn--primary btn--large">Crear mi cuenta</a>
+          <a href="colabora.html" class="btn btn--outline btn--large">Cómo sumarse</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
+  </footer>
+
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="¿Necesitás ayuda?">?</a>
+
+  <script src="js/theme.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+      var io = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -8% 0px' })
+        : null;
+      document.querySelectorAll('[data-reveal]').forEach(function (e) { io ? io.observe(e) : e.classList.add('is-visible'); });
+    })();
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const mount = document.getElementById('retos-mount');
+    const el = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
+    const tsToMs = (v) => !v ? 0 : (typeof v.toDate === 'function' ? v.toDate().getTime() : (typeof v.seconds === 'number' ? v.seconds * 1000 : 0));
+    const DIF = { facil: ['b', 'Fácil'], medio: ['i', 'Media'], dificil: ['a', 'Difícil'] };
+
+    function card(r) {
+      const c = el('div', 'v2-card');
+      const top = el('div');
+      top.style.cssText = 'display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem';
+      const dif = DIF[(r.dificultad || 'medio').toLowerCase()] || DIF.medio;
+      top.append(el('span', 'lvl lvl--' + dif[0], dif[1]));
+      if (r.ruta) top.append(el('span', 'route-row__code', r.ruta));
+      if (r.puntos) { const p = el('span', 'route-row__meta', r.puntos + ' pts'); p.style.marginLeft = 'auto'; top.append(p); }
+      c.append(top);
+      c.append(el('h3', null, r.titulo || 'Reto'));
+      c.append(el('p', null, (r.descripcion || '').slice(0, 240)));
+      if (r.cierra) {
+        const ms = tsToMs(r.cierra);
+        if (ms) {
+          const d = Math.max(0, Math.ceil((ms - Date.now()) / 86400000));
+          const f = el('p', null, d > 0 ? `Cierra en ${d} día${d === 1 ? '' : 's'}` : 'Cierra hoy');
+          f.style.cssText = 'font-family:var(--v2-font-mono);font-size:11px;color:var(--v2-live);margin:.6rem 0 0';
+          c.append(f);
+        }
+      }
+      if (r.enlace) {
+        const a = el('a', 'v2-card__more', 'Abrir el reto →');
+        a.href = r.enlace; a.target = '_blank'; a.rel = 'noopener';
+        c.append(a);
+      }
+      return c;
+    }
+
+    (async function () {
+      let retos = [];
+      try {
+        const snap = await getDocs(collection(db, 'retos'));
+        retos = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((r) => r.activo !== false);
+        retos.sort((a, b) => tsToMs(b.publicado) - tsToMs(a.publicado));
+      } catch (e) { /* mostramos estado vacío */ }
+
+      mount.replaceChildren();
+      if (!retos.length) {
+        mount.className = '';
+        const box = el('div', 'v2-card');
+        box.style.cssText = 'text-align:center;padding:2.5rem';
+        box.append(el('h3', null, '🧩 Todavía no hay retos abiertos'));
+        const p = el('p', null, 'Estamos preparando el primero. Mientras tanto, avanzá con las rutas — así llegás listo.');
+        p.style.cssText = 'color:var(--v2-text-soft);margin:.5rem 0 1rem';
+        box.append(p);
+        const a = el('a', 'btn btn--primary', 'Ir a las rutas'); a.href = 'rutas.html';
+        box.append(a);
+        mount.append(box);
+        return;
+      }
+      retos.forEach((r) => mount.append(card(r)));
+    })();
+  </script>
+</body>
+</html>
