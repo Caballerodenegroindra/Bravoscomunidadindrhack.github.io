@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#04060a" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Academia Indra — Ciberseguridad y construcción de herramientas, nacida en WhatsApp</title>
   <meta name="description" content="Escuela gratuita de ciberseguridad, análisis de vulnerabilidades y desarrollo de apps. De cero a avanzado, a tu ritmo. Todo lo que construimos vuelve a las comunidades de WhatsApp." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
-  <link rel="stylesheet" href="css/v2.css?v=1" />
+  <link rel="stylesheet" href="css/v2.css?v=2" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -41,11 +41,8 @@
 </head>
 <body class="v2">
   <script>
-    /* Aplica el tema guardado antes de pintar, para que no haya parpadeo. */
-    try {
-      var t = localStorage.getItem('indrhack-theme');
-      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-    } catch (e) {}
+    /* Tema: claro por defecto (fondo blanco). Oscuro solo si el usuario lo eligió. */
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
   </script>
 
   <!-- ================= NAVBAR ================= -->
