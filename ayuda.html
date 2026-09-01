@@ -2,219 +2,173 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Ayuda — Cómo usar Academia Indra</title>
-  <meta name="description" content="Guía de uso de Academia Indra: cómo navegar la plataforma, ver clases y participar en la comunidad." />
+  <meta name="description" content="Guía simple de Academia Indra: cómo mirar las rutas, crear tu cuenta, participar en la comunidad y usar el asistente." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
-  <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180.png" />
   <link rel="manifest" href="/manifest.json" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Indra" />
   <link rel="canonical" href="https://academiaindra.com/ayuda.html" />
-  <meta property="og:type" content="website" />
   <meta property="og:title" content="Ayuda — Cómo usar Academia Indra" />
-  <meta property="og:description" content="Guía de uso de Academia Indra: cómo navegar la plataforma, ver clases y participar en la comunidad." />
+  <meta property="og:description" content="Guía simple: rutas, cuenta, comunidad y asistente." />
   <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
-  <meta property="og:url" content="https://academiaindra.com/ayuda.html" />
-  <meta property="og:locale" content="es_AR" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Ayuda — Cómo usar Academia Indra" />
-  <meta name="twitter:description" content="Guía de uso de Academia Indra: cómo navegar la plataforma, ver clases y participar en la comunidad." />
-  <meta name="twitter:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=2" />
 </head>
-<body>
+<body class="v2">
+  <script>
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
+  </script>
 
-  <!-- TOPBAR -->
   <header class="navbar">
-    <button class="navbar__toggle" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
-
-    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-    </button>
-    <a href="index.html" class="navbar__brand">
-      <img src="assets/img/logo-indrhack.png" alt="Academia Indra"> ACADEMIA INDRA
-    </a>
-        <nav class="navbar__links">
-      <a href="index.html" title="Ir a la página principal">Inicio</a>
-      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
-      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
-      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
-      <a href="ayuda.html" class="active" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
-      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
-      <a href="proyectos.html" title="Ver los proyectos y apps creadas por la comunidad">Proyectos</a>
-      <a href="https://bot.academiaindra.com" title="Activar tu propio bot de WhatsApp" target="_blank" rel="noopener">🤖 Mi Bot</a>
-      <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group" open>
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="retos.html">Retos y CTF</a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
       <div class="navbar__session" data-session-slot></div>
-    </nav></header>
+    </nav>
+  </header>
 
-  <!-- TABBAR (móvil) -->
-<main>
-    <section class="guide-hero">
-      <div style="font-size:3rem;margin-bottom:0.5rem">👋</div>
-      <h1 class="guide-hero__title">Bienvenido a la guía de ayuda</h1>
-      <p class="guide-hero__desc">
-        Acá te explicamos, paso a paso y con palabras simples, cómo usar la Academia Indra.
-        Si tenés dudas, leé esta página con calma. No hace falta apurarse.
-      </p>
+  <main>
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap" style="position:relative;z-index:1;max-width:48rem">
+        <div style="font-size:2.5rem">👋</div>
+        <h1 style="font-size:clamp(1.9rem,5vw,2.8rem);margin:.4rem 0 .7rem">Cómo usar <span class="v2-accent">Academia Indra</span></h1>
+        <p class="hero-v2__sub" style="max-width:none">
+          Con palabras simples y sin apuro. Si sos nuevo, leé esta página con calma —
+          en un rato te movés por todo sin problema.
+        </p>
+      </div>
     </section>
 
-    <section class="container section reveal" style="padding-top:0">
-      <h2 class="section-title">Primeros pasos</h2>
-      <p class="section-subtitle">Seguí estos pasos en orden la primera vez que entrás a la página.</p>
-
-      <div class="guide-step">
-        <div class="guide-step__number">1</div>
-        <div>
-          <div class="guide-step__title">Creá tu cuenta</div>
-          <div class="guide-step__desc">
-            Tocá el botón <strong>"Registrarse"</strong> en la página de Inicio. Vas a completar tu nombre,
-            un correo electrónico y una contraseña. Con eso ya tenés tu cuenta creada.
-          </div>
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Lo primero</span>
+          <h2>¿Necesito cuenta para mirar?</h2>
         </div>
-      </div>
-
-      <div class="guide-step">
-        <div class="guide-step__number">2</div>
-        <div>
-          <div class="guide-step__title">Iniciá sesión</div>
-          <div class="guide-step__desc">
-            Una vez que ya tenés cuenta, tocá <strong>"Iniciar sesión"</strong>, escribí tu correo y tu
-            contraseña, y vas a entrar a tu panel personal.
-          </div>
-        </div>
-      </div>
-
-      <div class="guide-step">
-        <div class="guide-step__number">3</div>
-        <div>
-          <div class="guide-step__title">Esperá la aprobación</div>
-          <div class="guide-step__desc">
-            Por seguridad, un administrador revisa las cuentas nuevas antes de habilitarlas del todo.
-            Es normal que tengas que esperar un poco la primera vez.
-          </div>
-        </div>
-      </div>
-
-      <div class="guide-step">
-        <div class="guide-step__number">4</div>
-        <div>
-          <div class="guide-step__title">Explorá los cursos</div>
-          <div class="guide-step__desc">
-            Tocá <strong>"Cursos"</strong> en el menú de arriba para ver todo lo que podés aprender.
-            Elegí uno y entrá para ver las clases.
-          </div>
+        <div class="v2-card" data-reveal style="max-width:44rem">
+          <p style="margin:0 0 .6rem;color:var(--v2-text-soft)"><strong>No.</strong> Podés recorrer las <a href="rutas.html">rutas</a>, el <a href="cursos.html">catálogo</a>, los <a href="proyectos.html">proyectos</a> y hablar con el <a href="ia-asistente.html">asistente</a> sin registrarte.</p>
+          <p style="margin:0;color:var(--v2-text-soft)">La cuenta hace falta para <strong>ver el contenido dentro de cada clase</strong> y para el <strong>chat de la comunidad</strong>. Y una cuenta nueva queda pendiente hasta que un administrador la aprueba.</p>
         </div>
       </div>
     </section>
 
-    <section class="container section reveal" style="padding-top:0">
-      <h2 class="section-title">¿Qué significa cada botón del menú?</h2>
-      <p class="section-subtitle">Estos son los botones que vas a ver siempre arriba de la página (o abajo, si usás el celular).</p>
-
-      <div class="card-grid">
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">🏠</div>
-          <div>
-            <div class="guide-menu-card__title">Inicio</div>
-            <div class="guide-menu-card__desc">Te lleva a la página principal de la Academia.</div>
-          </div>
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Paso a paso</span>
+          <h2>Primeros pasos</h2>
+          <p>Seguilos en orden la primera vez.</p>
         </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">📚</div>
-          <div>
-            <div class="guide-menu-card__title">Cursos</div>
-            <div class="guide-menu-card__desc">Acá están todas las clases disponibles para aprender.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">📰</div>
-          <div>
-            <div class="guide-menu-card__title">Noticias</div>
-            <div class="guide-menu-card__desc">Novedades y avisos importantes de la Academia.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">🌐</div>
-          <div>
-            <div class="guide-menu-card__title">Redes</div>
-            <div class="guide-menu-card__desc">Nuestras redes sociales, por si querés seguirnos ahí también.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">💬</div>
-          <div>
-            <div class="guide-menu-card__title">Participar en la comunidad</div>
-            <div class="guide-menu-card__desc">Para dudas de los cursos, preguntale a la IA (siempre disponible) o entrá al chat general de WhatsApp — este último solo si tu cuenta ya está registrada y aceptada por un administrador.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">🤖</div>
-          <div>
-            <div class="guide-menu-card__title">IA (Asistente)</div>
-            <div class="guide-menu-card__desc">Un asistente que responde tus preguntas sobre los cursos.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">⚙️</div>
-          <div>
-            <div class="guide-menu-card__title">Configuración</div>
-            <div class="guide-menu-card__desc">Para cambiar tus datos personales o tu contraseña.</div>
-          </div>
-        </div>
-        <div class="guide-menu-card">
-          <div class="guide-menu-card__icon">❓</div>
-          <div>
-            <div class="guide-menu-card__title">Ayuda</div>
-            <div class="guide-menu-card__desc">Esta misma página, siempre disponible con el botón "?".</div>
-          </div>
+        <div class="route-map" data-reveal>
+          <div class="route-row" style="grid-template-columns:2.5rem 1fr"><span class="route-row__code">1</span><div class="route-row__body"><h3>Mirá y elegí</h3><p>Entrá a Rutas y fijate por dónde te gustaría empezar. Si dudás, preguntale al asistente.</p></div></div>
+          <div class="route-row" style="grid-template-columns:2.5rem 1fr"><span class="route-row__code">2</span><div class="route-row__body"><h3>Creá tu cuenta</h3><p>Botón <strong>Empezar gratis</strong>. Completás usuario, correo y contraseña.</p></div></div>
+          <div class="route-row" style="grid-template-columns:2.5rem 1fr"><span class="route-row__code">3</span><div class="route-row__body"><h3>Esperá la aprobación</h3><p>Un administrador revisa las cuentas nuevas. Es normal esperar un poco la primera vez.</p></div></div>
+          <div class="route-row" style="grid-template-columns:2.5rem 1fr"><span class="route-row__code">4</span><div class="route-row__body"><h3>Entrá a tu primera clase</h3><p>Ya aprobado, abrís una clase de tu ruta y arrancás. Tu progreso queda guardado.</p></div></div>
         </div>
       </div>
     </section>
 
-    <section class="container section reveal" style="padding-top:0">
-      <h2 class="section-title">Cambiar el tema claro u oscuro</h2>
-      <p class="section-subtitle" style="margin-bottom:1rem">
-        Si te cuesta ver la letra en fondo oscuro, podés cambiarlo por un fondo blanco.
-        Tocá el botón redondo con el sol o la luna, que está arriba a la derecha, al lado del menú.
-      </p>
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">El menú</span>
+          <h2>Qué hay en cada sección</h2>
+        </div>
+        <div class="v2-grid v2-grid--2" data-reveal>
+          <div class="v2-card"><h3>📚 Aprender</h3><p>Las rutas ordenadas, el catálogo completo de clases, los retos y la guía. Es el corazón de la academia.</p></div>
+          <div class="v2-card"><h3>🛠️ Proyectos</h3><p>Las apps y bots que hizo la comunidad (Argyra, Indra Bot, Indra Asistente), con la explicación de cómo se construyeron.</p></div>
+          <div class="v2-card"><h3>💬 Comunidad</h3><p>El grupo y el canal de WhatsApp, el equipo, y el formulario para sumarte a construir la app.</p></div>
+          <div class="v2-card"><h3>🤖 Asistente IA</h3><p>Un asistente que conoce todas las clases y te responde al instante, tengas cuenta o no. También aparece como una barra abajo en todas las páginas.</p></div>
+        </div>
+      </div>
     </section>
 
-    <section class="container section reveal" style="padding-top:0">
-      <h2 class="section-title">¿Algo no funciona o no entendés algo?</h2>
-      <p class="section-subtitle">
-        No te preocupes, le puede pasar a cualquiera. Podés volver a esta página de Ayuda tocando el botón
-        <strong>"?"</strong> que siempre está flotando abajo a la derecha de la pantalla, en cualquier parte de la web.
-      </p>
-      <div style="text-align:center;margin-top:1.5rem">
-        <a href="index.html" class="btn btn--primary">Volver al Inicio</a>
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Detalles</span>
+          <h2>Un par de cosas útiles</h2>
+        </div>
+        <div class="faq-v2" data-reveal>
+          <details><summary><span>·</span><span>Cambiar entre fondo claro y oscuro</span></summary><div class="faq-v2__a">Tocá el botón redondo <strong>◐</strong> que está arriba a la derecha, al lado del menú. La preferencia se recuerda en tu dispositivo.</div></details>
+          <details><summary><span>·</span><span>El botón "?" flotante</span></summary><div class="faq-v2__a">Está siempre abajo a la derecha, en cualquier página. Te trae de vuelta acá.</div></details>
+          <details><summary><span>·</span><span>Instalar la academia como app</span></summary><div class="faq-v2__a">En el celular, el navegador te va a ofrecer "Agregar a pantalla de inicio". Queda como una app más y funciona incluso con conexión floja.</div></details>
+          <details><summary><span>·</span><span>Algo no funciona o no se entiende</span></summary><div class="faq-v2__a">Le pasa a cualquiera. Preguntale al asistente de IA, o escribí en el grupo de WhatsApp cuando tu cuenta esté aprobada.</div></details>
+        </div>
+        <div style="text-align:center;margin-top:2rem" data-reveal>
+          <a href="index.html" class="btn btn--primary btn--large">Volver al inicio</a>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    ACADEMIA INDRA — Ciberseguridad, Vulnerabilidades y Desarrollo de Apps · Para las comunidades de WhatsApp
-    <br />
-    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
   </footer>
 
-  <script src="js/reveal.js"></script>
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+
+  <script src="js/theme.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/pwa-install.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
-  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="Ya estás en la página de ayuda" style="opacity:0.5;pointer-events:none;">?</a>
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+      var io = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -8% 0px' })
+        : null;
+      document.querySelectorAll('[data-reveal]').forEach(function (e) { io ? io.observe(e) : e.classList.add('is-visible'); });
+    })();
+  </script>
 </body>
 </html>
