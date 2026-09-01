@@ -8,6 +8,5 @@ Disallow: /notificaciones.html
 Disallow: /ficha.html
 Disallow: /clase.html
 Disallow: /titulos.html
-Disallow: /ia-asistente.html
 
 Sitemap: https://academiaindra.com/sitemap.xml

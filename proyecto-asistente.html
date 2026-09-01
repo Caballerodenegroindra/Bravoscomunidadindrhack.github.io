@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#04060a" />
+  <title>Indra Asistente — Proyecto de Academia Indra</title>
+  <meta name="description" content="App Android para programar y automatizar envíos de mensajes. Armás la lista, elegís cuándo, y la app se encarga. No está afiliada a WhatsApp ni a Meta." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href="https://academiaindra.com/proyecto-asistente.html" />
+  <meta property="og:title" content="Indra Asistente — Proyecto de Academia Indra" />
+  <meta property="og:description" content="App Android para programar y automatizar envíos de mensajes." />
+  <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=1" />
+</head>
+<body class="v2">
+  <script>try { var t = localStorage.getItem('indrhack-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group">
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="#" data-soon>Retos y CTF <span class="soon">pronto</span></a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group" open>
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap" style="position:relative;z-index:1;max-width:56rem">
+        <a href="proyectos.html" style="font-family:var(--v2-font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--v2-text-faint)">← Proyectos</a>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0 .6rem">
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">App</span>
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">Android</span>
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">Kotlin</span>
+        </div>
+        <h1 style="font-size:clamp(2rem,6vw,3.4rem)">Indra <span class="v2-accent">Asistente</span></h1>
+        <p class="hero-v2__sub" style="max-width:none">
+          App Android para <strong>programar y automatizar envíos de mensajes</strong>. Armás
+          la lista de destinatarios, elegís cuándo, y la app se encarga en orden, con historial
+          y registro de cada envío. Pensada para gestionar la comunicación de comunidades.
+        </p>
+        <p style="font-size:.82rem;color:var(--v2-text-faint);margin:.6rem 0 0;max-width:46rem">
+          Aplicación independiente. No está afiliada, asociada ni respaldada por WhatsApp ni por Meta,
+          y no se presenta como una app oficial de terceros.
+        </p>
+        <div class="hero-v2__actions">
+          <a href="#" data-soon class="btn btn--primary btn--large">Descargar el APK</a>
+          <a href="#construido" class="btn btn--outline btn--large">Cómo se construyó</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-grid v2-grid--2" style="gap:2.5rem;align-items:start">
+          <div>
+            <div class="v2-section__head" style="margin-bottom:1.5rem">
+              <span class="v2-kicker">Qué hace</span>
+              <h2 style="font-size:clamp(1.5rem,4vw,2rem);margin:.4rem 0 .6rem">Programás una vez, se envía solo</h2>
+            </div>
+            <div class="route-map">
+              <div class="route-row" style="grid-template-columns:1fr auto"><div class="route-row__body"><h3>Mis grupos</h3><p>Alta, baja y activar/desactivar; importación de la lista por accesibilidad.</p></div><span class="route-row__meta">CRUD</span></div>
+              <div class="route-row" style="grid-template-columns:1fr auto"><div class="route-row__body"><h3>Programación</h3><p>Con alarmas del sistema y una cola en serie: los envíos salen ordenados, uno por uno.</p></div><span class="route-row__meta">cola</span></div>
+              <div class="route-row" style="grid-template-columns:1fr auto"><div class="route-row__body"><h3>Envío inmediato</h3><p>"Enviar ahora" y "seleccionar todos los grupos" para lo urgente.</p></div><span class="route-row__meta">manual</span></div>
+              <div class="route-row" style="grid-template-columns:1fr auto"><div class="route-row__body"><h3>Historial y log técnico</h3><p>Qué se envió, cuándo y con qué resultado. Si algo falla, queda registrado — no se dice "enviado" sin confirmarlo.</p></div><span class="route-row__meta">registro</span></div>
+            </div>
+          </div>
+
+          <aside class="v2-card" style="background:var(--v2-surface-2);position:sticky;top:calc(var(--v2-nav-h) + 1rem)">
+            <p style="font-family:var(--v2-font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--v2-text-faint);margin:0 0 .8rem">Ficha técnica</p>
+            <dl style="display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;font-size:.88rem;margin:0">
+              <dt style="color:var(--v2-text-faint)">Plataforma</dt><dd style="margin:0">Android (Kotlin + Compose)</dd>
+              <dt style="color:var(--v2-text-faint)">Datos</dt><dd style="margin:0">Room (local) + Firebase para la cuenta</dd>
+              <dt style="color:var(--v2-text-faint)">Programación</dt><dd style="margin:0">AlarmManager + servicio en primer plano</dd>
+              <dt style="color:var(--v2-text-faint)">Cuenta</dt><dd style="margin:0">Opcional — se usa todo sin registrarse</dd>
+              <dt style="color:var(--v2-text-faint)">Control remoto</dt><dd style="margin:0">Interruptor global y versión mínima desde Firestore</dd>
+              <dt style="color:var(--v2-text-faint)">Build</dt><dd style="margin:0">GitHub Actions (APK en Artifacts)</dd>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section" id="construido">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Cómo se construyó</span>
+          <h2>Notas de <span class="v2-accent">desarrollo</span></h2>
+          <p>Material de la ruta <a href="rutas.html?ruta=T7">T7 · Construcción de herramientas</a>.</p>
+        </div>
+        <div class="faq-v2" data-reveal>
+          <details><summary><span>01</span><span>El escáner de grupos que nunca terminaba</span></summary><div class="faq-v2__a">Tenía un tope de 40 scrolls que necesitaba 68 segundos, contra un límite que lo cortaba a los 60: nunca llegaba. Se cambió el corte para que mida inactividad (mientras encuentre grupos, sigue), se subió el tope y ya no se pierde lo leído.</div></details>
+          <details><summary><span>02</span><span>El servicio en primer plano que se cerraba</span></summary><div class="faq-v2__a">En Android 12+ hay reglas estrictas para arrancar un servicio en primer plano desde segundo plano. Se movió <code>startForeground</code> al primer paso de todos los caminos y se capturan los casos en que el sistema lo rechaza, marcando la tarea como fallida en vez de que la app se cierre.</div></details>
+          <details><summary><span>03</span><span>Carrera al recuperar envíos interrumpidos</span></summary><div class="faq-v2__a">Al arrancar, la app marcaba como fallida cualquier tarea "enviando" — y a veces alcanzaba a una que se estaba enviando en ese momento. Se le puso un corte temporal fijado al inicio del proceso: solo toca lo que quedó de una ejecución anterior.</div></details>
+          <details><summary><span>04</span><span>Registro opcional y aviso de independencia</span></summary><div class="faq-v2__a">La app abre con una presentación de qué es y por qué se creó; se usa todo sin cuenta, y el registro pasó a Configuración. En el login se avisa de forma visible que no es una app oficial de WhatsApp ni de Meta.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap" style="padding-bottom:5rem">
+      <div class="cta-v2" data-reveal>
+        <h2>Probá Indra Asistente</h2>
+        <p>Descargá el APK, armá tu primera programación y dejá que la app se encargue.</p>
+        <div class="cta-v2__actions">
+          <a href="#" data-soon class="btn btn--primary btn--large">Descargar el APK</a>
+          <a href="colabora.html" class="btn btn--outline btn--large">Sumarme al equipo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
+  </footer>
+
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="¿Necesitás ayuda?">?</a>
+
+  <script src="js/theme.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+      var io = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -8% 0px' })
+        : null;
+      document.querySelectorAll('[data-reveal]').forEach(function (e) { io ? io.observe(e) : e.classList.add('is-visible'); });
+    })();
+  </script>
+</body>
+</html>

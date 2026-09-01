@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#04060a" />
+  <title>Rutas de aprendizaje — Academia Indra</title>
+  <meta name="description" content="Nueve rutas de ciberseguridad, vulnerabilidades, privacidad y desarrollo, de lo más básico a lo avanzado. Empezá donde estés." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href="https://academiaindra.com/rutas.html" />
+  <meta property="og:title" content="Rutas de aprendizaje — Academia Indra" />
+  <meta property="og:description" content="Nueve rutas, de cero a avanzado. Ciberseguridad, vulnerabilidades, privacidad y construcción de herramientas." />
+  <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=1" />
+</head>
+<body class="v2">
+  <script>
+    try { var t = localStorage.getItem('indrhack-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group" open>
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="#" data-soon>Retos y CTF <span class="soon">pronto</span></a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap" style="position:relative;z-index:1;max-width:52rem">
+        <span class="v2-kicker">El temario</span>
+        <h1 style="font-size:clamp(2rem,6vw,3.2rem);margin:.5rem 0 .8rem">Rutas de <span class="v2-accent">aprendizaje</span></h1>
+        <p class="hero-v2__sub" style="max-width:none">
+          Nueve rutas, de lo más básico a lo avanzado. No hace falta seguirlas en orden —
+          pero si arrancás de cero, <strong>empezá por Fundamentos</strong>. Cada ruta reúne
+          las clases del catálogo que le corresponden.
+        </p>
+        <div class="hero-v2__actions">
+          <a href="registro.html" class="btn btn--primary btn--large">Empezar gratis</a>
+          <a href="cursos.html" class="btn btn--outline btn--large">Ver el catálogo completo</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap" style="padding-top:1rem">
+      <div class="stat-v2" data-reveal>
+        <div><b id="st-rutas">9</b><span>Rutas</span></div>
+        <div><b id="st-clases">—</b><span>Clases publicadas</span></div>
+        <div><b>3</b><span>Niveles</span></div>
+        <div><b>100%</b><span>Gratis</span></div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div id="rutas-mount" class="route-map">
+          <p class="trend-v2__loading">Cargando las clases de cada ruta…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap" style="padding-bottom:5rem">
+      <div class="cta-v2" data-reveal>
+        <h2>¿No sabés por dónde empezar?</h2>
+        <p>Contale al asistente qué te interesa y tu nivel, y te arma el orden de las primeras clases.</p>
+        <div class="cta-v2__actions">
+          <a href="ia-asistente.html" class="btn btn--primary btn--large">Preguntarle al asistente</a>
+          <a href="registro.html" class="btn btn--outline btn--large">Crear mi cuenta</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
+  </footer>
+
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="¿Necesitás ayuda?">?</a>
+
+  <script src="js/theme.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+    })();
+  </script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    /* Las 9 rutas. `match` = fragmentos que, si aparecen en la categoría
+       (o en el campo `ruta` de la clase), la ubican en esta ruta. */
+    const RUTAS = [
+      { code: 'T0', titulo: 'Fundamentos',                    desc: 'Internet, redes, sistemas, línea de comandos, máquinas virtuales y seguridad de tu propia cuenta.', lvl: ['b','Básico'],        match: ['t0','fundamento','introduc','basico','básico','general'] },
+      { code: 'T1', titulo: 'Termux & Linux de bolsillo',      desc: 'Convertir el celular en un laboratorio: paquetes, scripts y práctica sin depender de una PC.',       lvl: ['b','Básico'],        match: ['t1','termux','linux'] },
+      { code: 'T2', titulo: 'OSINT e investigación',           desc: 'Huella digital, búsqueda y verificación de información, y cómo proteger tu propia identidad.',        lvl: ['b','Básico → Int.'], match: ['t2','osint','investig','inteligencia'] },
+      { code: 'T3', titulo: 'Hacking web',                     desc: 'OWASP Top 10 en la práctica, laboratorios legales (DVWA, PortSwigger) y cómo se reporta una falla.',  lvl: ['i','Intermedio'],    match: ['t3','web','owasp','http','xss','sql'] },
+      { code: 'T4', titulo: 'Redes y Wi-Fi',                   desc: 'Captura y lectura de tráfico, seguridad de redes domésticas y dispositivos conectados.',             lvl: ['i','Intermedio'],    match: ['t4','red','wifi','wi-fi','network','tráfico','trafico'] },
+      { code: 'T5', titulo: 'Privacidad y anti-abuso',         desc: 'Cifrado, mensajería, defensa contra estafas y phishing, y seguridad de comunidades de WhatsApp.',    lvl: ['b','Básico → Int.'], match: ['t5','privacidad','anti-abuso','phishing','estafa','whatsapp','cifrado'] },
+      { code: 'T6', titulo: 'Defensa / Blue team',             desc: 'Endurecer sistemas, detectar, responder a incidentes e higiene de contraseñas y accesos.',           lvl: ['a','Int. → Avanzado'], match: ['t6','blue','defensa','hardening','forense','soc'] },
+      { code: 'T7', titulo: 'Construcción de herramientas',    desc: 'Bots de WhatsApp con Baileys, automatización y cómo publicar tu propio proyecto.',                   lvl: ['i','Intermedio'],    match: ['t7','bot','desarrollo','app','automatiz','baileys','codigo','código','script'] },
+      { code: 'T8', titulo: 'Carrera y ética',                 desc: 'Marco legal, divulgación responsable, cómo seguir y qué certificaciones externas apuntar.',          lvl: ['b','Todos'],         match: ['t8','ética','etica','legal','carrera','certif'] },
+    ];
+
+    const norm = (s) => (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+
+    function rutaDe(curso) {
+      const explicit = norm(curso.ruta);
+      if (explicit) {
+        const r = RUTAS.find((x) => norm(x.code) === explicit || explicit.includes(norm(x.code)));
+        if (r) return r.code;
+      }
+      const cat = norm(curso.categoria || 'general');
+      for (const r of RUTAS) if (r.match.some((m) => cat.includes(norm(m)))) return r.code;
+      return null;
+    }
+
+    (async function () {
+      const mount = document.getElementById('rutas-mount');
+      let cursos = [];
+      try {
+        const snap = await getDocs(collection(db, 'courses'));
+        cursos = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((c) => c.publicado !== false);
+      } catch (e) { /* seguimos: mostramos las rutas vacías */ }
+
+      const porRuta = {};
+      const otras = [];
+      cursos.forEach((c) => {
+        const code = rutaDe(c);
+        if (code) { (porRuta[code] = porRuta[code] || []).push(c); }
+        else otras.push(c);
+      });
+      Object.values(porRuta).forEach((arr) => arr.sort((a, b) => (a.orden || 1) - (b.orden || 1)));
+
+      document.getElementById('st-clases').textContent = cursos.length || '—';
+
+      mount.replaceChildren();
+      RUTAS.forEach((r) => {
+        const clases = porRuta[r.code] || [];
+        const sec = el('div');
+        sec.id = 'ruta-' + r.code.toLowerCase();
+        sec.style.cssText = 'margin-bottom:1.6rem';
+
+        const head = el('div');
+        head.style.cssText = 'display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem';
+        head.append(el('span', 'route-row__code', r.code));
+        const h = el('h3', null, r.titulo); h.style.fontSize = '1.15rem';
+        head.append(h);
+        const lvl = el('span', 'lvl lvl--' + r.lvl[0], r.lvl[1]);
+        head.append(lvl);
+        const count = el('span', 'route-row__meta', clases.length ? (clases.length + (clases.length === 1 ? ' clase' : ' clases')) : 'en armado');
+        count.style.marginLeft = 'auto';
+        head.append(count);
+        sec.append(head);
+
+        const desc = el('p', null, r.desc);
+        desc.style.cssText = 'color:var(--v2-text-faint);font-size:.9rem;margin:0 0 .7rem';
+        sec.append(desc);
+
+        if (clases.length) {
+          const list = el('div');
+          list.style.cssText = 'display:grid;gap:.5rem';
+          clases.forEach((c) => {
+            const a = el('a', 'route-row');
+            a.href = 'clase.html?id=' + encodeURIComponent(c.id);
+            a.style.gridTemplateColumns = '1fr auto';
+            const body = el('div', 'route-row__body');
+            body.append(el('h3', null, c.titulo || 'Clase'));
+            if (c.descripcion) { const p = el('p', null, (c.descripcion || '').slice(0, 120)); body.append(p); }
+            a.append(body);
+            a.append(el('span', 'route-row__meta', (c.nivel || 'Básico')));
+            list.append(a);
+          });
+          sec.append(list);
+        } else {
+          const empty = el('p');
+          empty.style.cssText = 'font-size:.86rem;color:var(--v2-text-faint);border:1px dashed var(--v2-border-strong);border-radius:var(--v2-r);padding:.8rem 1rem;margin:0';
+          empty.textContent = 'Todavía no hay clases cargadas en esta ruta. Se van sumando.';
+          sec.append(empty);
+        }
+        mount.append(sec);
+      });
+
+      if (otras.length) {
+        const sec = el('div');
+        sec.style.cssText = 'margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--v2-border)';
+        sec.append(el('h3', null, 'Otras clases'));
+        const p = el('p', null, 'Clases del catálogo que todavía no están asignadas a una ruta.');
+        p.style.cssText = 'color:var(--v2-text-faint);font-size:.9rem;margin:.3rem 0 .8rem';
+        sec.append(p);
+        const list = el('div'); list.style.cssText = 'display:grid;gap:.5rem';
+        otras.forEach((c) => {
+          const a = el('a', 'route-row'); a.href = 'clase.html?id=' + encodeURIComponent(c.id);
+          a.style.gridTemplateColumns = '1fr auto';
+          const body = el('div', 'route-row__body'); body.append(el('h3', null, c.titulo || 'Clase'));
+          a.append(body); a.append(el('span', 'route-row__meta', c.categoria || 'General'));
+          list.append(a);
+        });
+        sec.append(list); mount.append(sec);
+      }
+
+      // Deep-link ?ruta=T3
+      const target = new URLSearchParams(location.search).get('ruta');
+      if (target) { const n = document.getElementById('ruta-' + target.toLowerCase()); if (n) n.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    })();
+  </script>
+</body>
+</html>

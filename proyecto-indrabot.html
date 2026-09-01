@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#04060a" />
+  <title>Indra Bot — Proyecto de Academia Indra</title>
+  <meta name="description" content="Bot multifunción para WhatsApp: juegos, moderación de grupos, stickers, IA y comandos multimedia. Con un panel web donde cada persona prende su propio bot." />
+  <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href="https://academiaindra.com/proyecto-indrabot.html" />
+  <meta property="og:title" content="Indra Bot — Proyecto de Academia Indra" />
+  <meta property="og:description" content="Bot multifunción para WhatsApp con panel web multi-usuario." />
+  <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=1" />
+</head>
+<body class="v2">
+  <script>try { var t = localStorage.getItem('indrhack-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+
+  <header class="navbar">
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group">
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="#" data-soon>Retos y CTF <span class="soon">pronto</span></a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group" open>
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
+      <div class="navbar__session" data-session-slot></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap" style="position:relative;z-index:1;max-width:56rem">
+        <a href="proyectos.html" style="font-family:var(--v2-font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--v2-text-faint)">← Proyectos</a>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0 .6rem">
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">Bot</span>
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">WhatsApp</span>
+          <span class="trend-v2__tag" style="background:var(--v2-primary-subtle);color:var(--v2-primary)">Panel web multi-usuario</span>
+        </div>
+        <h1 style="font-size:clamp(2rem,6vw,3.4rem)">Indra <span class="v2-accent">Bot</span></h1>
+        <p class="hero-v2__sub" style="max-width:none">
+          Bot multifunción para WhatsApp, en constante evolución: juegos, moderación de grupos,
+          stickers, IA y comandos multimedia. Y un panel web donde <strong>cada persona prende
+          y apaga su propio bot</strong> desde el navegador, con un límite configurable de bots
+          encendidos a la vez.
+        </p>
+        <div class="hero-v2__actions">
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener" class="btn btn--primary btn--large">Abrir el panel</a>
+          <a href="#construido" class="btn btn--outline btn--large">Cómo se construyó</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-grid v2-grid--2" style="gap:2.5rem;align-items:start">
+          <div>
+            <div class="v2-section__head" style="margin-bottom:1.5rem">
+              <span class="v2-kicker">Qué trae</span>
+              <h2 style="font-size:clamp(1.5rem,4vw,2rem);margin:.4rem 0 .6rem">Un bot, muchas funciones</h2>
+            </div>
+            <div class="v2-grid v2-grid--2" style="gap:.8rem">
+              <div class="v2-card"><h3 style="font-size:1rem;margin:0 0 .3rem">🎮 Juegos</h3><p style="font-size:.88rem">Ahorcado, trivias, pokémon, apuestas y más, con economía interna.</p></div>
+              <div class="v2-card"><h3 style="font-size:1rem;margin:0 0 .3rem">🛡️ Moderación</h3><p style="font-size:.88rem">Anti-enlace gradual, warns unificados, silenciar, purga y horarios.</p></div>
+              <div class="v2-card"><h3 style="font-size:1rem;margin:0 0 .3rem">🖼️ Stickers y multimedia</h3><p style="font-size:.88rem">Convertí imágenes, videos y audios; descargas de YouTube.</p></div>
+              <div class="v2-card"><h3 style="font-size:1rem;margin:0 0 .3rem">🤖 IA integrada</h3><p style="font-size:.88rem">Respuestas y utilidades con modelos de lenguaje.</p></div>
+            </div>
+          </div>
+
+          <aside class="v2-card" style="background:var(--v2-surface-2);position:sticky;top:calc(var(--v2-nav-h) + 1rem)">
+            <p style="font-family:var(--v2-font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--v2-text-faint);margin:0 0 .8rem">Ficha técnica</p>
+            <dl style="display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;font-size:.88rem;margin:0">
+              <dt style="color:var(--v2-text-faint)">Base</dt><dd style="margin:0">Baileys (Node.js)</dd>
+              <dt style="color:var(--v2-text-faint)">Origen</dt><dd style="margin:0">Fork del proyecto Íris (MIT), traducido y ampliado</dd>
+              <dt style="color:var(--v2-text-faint)">Panel</dt><dd style="margin:0">Multi-usuario, con cupo de bots simultáneos</dd>
+              <dt style="color:var(--v2-text-faint)">Vinculación</dt><dd style="margin:0">QR o código de emparejamiento</dd>
+              <dt style="color:var(--v2-text-faint)">Integración</dt><dd style="margin:0">Peticiones POST + función <code>Indexer</code></dd>
+              <dt style="color:var(--v2-text-faint)">Dónde</dt><dd style="margin:0"><a href="https://bot.academiaindra.com" target="_blank" rel="noopener">bot.academiaindra.com</a></dd>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">El panel web</span>
+          <h2>Tu propio bot en un par de clics</h2>
+        </div>
+        <div class="steps-v2" data-reveal>
+          <div class="step-v2"><h3>Te registrás</h3><p>Usuario y contraseña. El primer registrado queda como administrador del panel.</p></div>
+          <div class="step-v2"><h3>Vinculás WhatsApp</h3><p>Escaneás el QR (o usás código de emparejamiento con tu número).</p></div>
+          <div class="step-v2"><h3>Prendés y apagás</h3><p>Controlás tu bot desde el navegador. Hay un límite de bots encendidos a la vez para no saturar.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section" id="construido">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Cómo se construyó</span>
+          <h2>Notas de <span class="v2-accent">desarrollo</span></h2>
+          <p>Material de la ruta <a href="rutas.html?ruta=T7">T7 · Construcción de herramientas</a>.</p>
+        </div>
+        <div class="faq-v2" data-reveal>
+          <details><summary><span>01</span><span>De proyecto único a plataforma multi-usuario</span></summary><div class="faq-v2__a">El bot original corría para un solo número. Se le agregó un panel (<code>panel/</code>) con registro, sesiones y un gestor que arranca y frena instancias por usuario, con un tope configurable de bots simultáneos.</div></details>
+          <details><summary><span>02</span><span>Reconexión sin procesos zombies</span></summary><div class="faq-v2__a">Las reconexiones dejaban procesos colgados. Se rehízo el ciclo de vida de cada sesión para que una caída de WhatsApp se recupere sola sin duplicar procesos ni perder el estado.</div></details>
+          <details><summary><span>03</span><span>Prioridad entre varios números y pausa por grupo</span></summary><div class="faq-v2__a">Se sumó un comando de pausa por grupo y una regla de prioridad cuando hay varios números del bot en el mismo grupo, para que no respondan todos a la vez.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap" style="padding-bottom:5rem">
+      <div class="cta-v2" data-reveal>
+        <h2>Probá Indra Bot</h2>
+        <p>Entrá al panel, vinculá tu WhatsApp y tené tu bot andando en minutos.</p>
+        <div class="cta-v2__actions">
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener" class="btn btn--primary btn--large">Abrir el panel</a>
+          <a href="colabora.html" class="btn btn--outline btn--large">Sumarme al equipo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
+  </footer>
+
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda" title="¿Necesitás ayuda?">?</a>
+
+  <script src="js/theme.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/notif-widget.js"></script>
+  <script type="module" src="js/ia-widget.js?v=2"></script>
+  <script type="module" src="js/back-confirm.js"></script>
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+      var io = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }); }, { rootMargin: '0px 0px -8% 0px' })
+        : null;
+      document.querySelectorAll('[data-reveal]').forEach(function (e) { io ? io.observe(e) : e.classList.add('is-visible'); });
+    })();
+  </script>
+</body>
+</html>
