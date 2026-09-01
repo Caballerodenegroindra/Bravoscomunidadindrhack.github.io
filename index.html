@@ -2,348 +2,575 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-  <title>Academia Indra — Ciberseguridad, Vulnerabilidades y Apps para tu Comunidad de WhatsApp</title>
-  <meta name="description" content="Formación gratuita en ciberseguridad, vulnerabilidades y desarrollo de apps, nacida en las comunidades de WhatsApp que la hicieron crecer. Todo lo que construimos es para ellas." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#04060a" />
+  <title>Academia Indra — Ciberseguridad y construcción de herramientas, nacida en WhatsApp</title>
+  <meta name="description" content="Escuela gratuita de ciberseguridad, análisis de vulnerabilidades y desarrollo de apps. De cero a avanzado, a tu ritmo. Todo lo que construimos vuelve a las comunidades de WhatsApp." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180.png" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Indra" />
   <link rel="canonical" href="https://academiaindra.com/index.html" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Academia Indra — Ciberseguridad, Vulnerabilidades y Apps para tu Comunidad de WhatsApp" />
-  <meta property="og:description" content="Formación gratuita en ciberseguridad, vulnerabilidades y desarrollo de apps, nacida en las comunidades de WhatsApp que la hicieron crecer. Todo lo que construimos es para ellas." />
+  <meta property="og:title" content="Academia Indra — Ciberseguridad y construcción de herramientas, nacida en WhatsApp" />
+  <meta property="og:description" content="Escuela gratuita de ciberseguridad, vulnerabilidades y desarrollo de apps. De cero a avanzado, a tu ritmo. Todo lo que construimos vuelve a la comunidad." />
   <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
   <meta property="og:url" content="https://academiaindra.com/index.html" />
   <meta property="og:locale" content="es_AR" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Academia Indra — Ciberseguridad, Vulnerabilidades y Apps para tu Comunidad de WhatsApp" />
-  <meta name="twitter:description" content="Formación gratuita en ciberseguridad, vulnerabilidades y desarrollo de apps, nacida en las comunidades de WhatsApp que la hicieron crecer. Todo lo que construimos es para ellas." />
+  <meta name="twitter:title" content="Academia Indra" />
+  <meta name="twitter:description" content="Ciberseguridad y construcción de herramientas, nacida en WhatsApp. Formación gratuita, de cero a avanzado." />
   <meta name="twitter:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=1" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     "name": "Academia Indra",
-    "description": "Formación en ciberseguridad, vulnerabilidades y desarrollo de apps, para las comunidades de WhatsApp.",
+    "description": "Formación en ciberseguridad, análisis de vulnerabilidades y desarrollo de apps, para las comunidades de WhatsApp.",
     "url": "https://academiaindra.com/",
     "logo": "https://academiaindra.com/assets/img/logo-indrhack.png"
   }
   </script>
 </head>
-<body>
-  <canvas id="particle-canvas"></canvas>
+<body class="v2">
+  <script>
+    /* Aplica el tema guardado antes de pintar, para que no haya parpadeo. */
+    try {
+      var t = localStorage.getItem('indrhack-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
 
-  <!-- TOPBAR -->
+  <!-- ================= NAVBAR ================= -->
   <header class="navbar">
-    <button class="navbar__toggle" aria-label="Abrir menú">
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
 
     <a href="index.html" class="navbar__brand">
-      <img src="assets/img/logo-indrhack.png" alt="Academia Indra"> ACADEMIA INDRA
+      <img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA
     </a>
-        <nav class="navbar__links">
-      <a href="index.html" class="active" title="Ir a la página principal">Inicio</a>
-      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
-      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="redes.html" title="Ver nuestras redes sociales">Redes</a>
-      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
-      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
-      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
-      <a href="proyectos.html" title="Ver los proyectos y apps creadas por la comunidad">Proyectos</a>
-      <a href="https://bot.academiaindra.com" title="Activar tu propio bot de WhatsApp" target="_blank" rel="noopener">🤖 Mi Bot</a>
-      <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
+
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group">
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="#" data-soon>Rutas de aprendizaje <span class="soon">pronto</span></a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="#" data-soon>Retos y CTF <span class="soon">pronto</span></a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+
+      <details class="nav-group">
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="#" data-soon>Argyra Guardian <span class="soon">pronto</span></a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="#" data-soon>Indra Asistente <span class="soon">pronto</span></a>
+          <a href="#" data-soon>Cómo se construyó <span class="soon">pronto</span></a>
+        </div>
+      </details>
+
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+          <a href="#" data-soon>Sala de situación <span class="soon">pronto</span></a>
+        </div>
+      </details>
+
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema claro u oscuro" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
+
       <div class="navbar__session" data-session-slot></div>
-    </nav></header>
+    </nav>
+  </header>
 
-  <!-- TABBAR (móvil) -->
-<main>
-    <!-- HERO -->
-    <section class="hero">
-      <span class="hero__eyebrow">SALA DE SITUACIÓN · COMUNIDAD ACTIVA</span>
-      <img src="assets/img/logo-indrhack.png" alt="Academia Indra" class="hero__logo-img" />
-      <h1 class="hero__logo">ACADEMIA <span class="mark">INDRA</span></h1>
-      <p class="hero__subtitle">Ciberseguridad · Vulnerabilidades · Desarrollo de Apps — para las comunidades de WhatsApp</p>
-      <p class="hero__motto">⚘ EL CONOCIMIENTO ES LA BASE ⚘</p>
-    </section>
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero-v2">
+      <div class="hero-v2__grid" aria-hidden="true"></div>
+      <div class="v2-wrap hero-v2__inner">
+        <div>
+          <span class="hero-v2__eyebrow">
+            <span class="hero-v2__dot" aria-hidden="true"></span>
+            <span class="v2-kicker">Comunidad activa · en vivo</span>
+          </span>
+          <h1>ACADEMIA <span class="mark">INDRA</span></h1>
+          <p class="hero-v2__sub">
+            La escuela de ciberseguridad y construcción de herramientas que nació en WhatsApp.
+            De cero a avanzado, gratis y a tu ritmo — y todo lo que se construye vuelve a la comunidad.
+          </p>
+          <div class="hero-v2__actions">
+            <a href="registro.html" class="btn btn--primary btn--large">Empezar gratis</a>
+            <a href="cursos.html" class="btn btn--outline btn--large">Ver las clases</a>
+            <a href="login.html" class="btn btn--ghost">Ya tengo cuenta</a>
+          </div>
+          <p class="hero-v2__motto">⚘ El conocimiento es la base ⚘</p>
+        </div>
 
-    <!-- TENDENCIAS: lo que más pregunta la comunidad a la IA,
-         según el país del visitante. Se completa por JS (ver
-         script de tendencias más abajo); arranca en un estado
-         de carga discreto para no dar saltos de layout. -->
-    <section class="container reveal" style="padding-top:var(--gap-xl)">
-      <div id="tendencias-ia" class="trend-panel" aria-live="polite">
-        <p class="trend-panel__loading">Consultando qué está preguntando la comunidad…</p>
-      </div>
-    </section>
-
-    <!-- FRANJA DE ESTADÍSTICAS -->
-    <section class="container reveal" style="padding-top:var(--gap-xl)">
-      <div class="stat-strip">
-        <div class="stat-strip__item">
-          <span class="stat-strip__num">100%</span>
-          <span class="stat-strip__label">Formación gratuita</span>
-        </div>
-        <div class="stat-strip__item">
-          <span class="stat-strip__num">0</span>
-          <span class="stat-strip__label">Experiencia previa necesaria</span>
-        </div>
-        <div class="stat-strip__item">
-          <span class="stat-strip__num">24/7</span>
-          <span class="stat-strip__label">Comunidad activa</span>
-        </div>
-        <div class="stat-strip__item">
-          <span class="stat-strip__num">+</span>
-          <span class="stat-strip__label">Cursos y clases</span>
+        <div class="trend-v2" id="tendencias-ia" aria-live="polite">
+          <p class="trend-v2__loading">Consultando qué está preguntando la comunidad…</p>
         </div>
       </div>
     </section>
 
-    <!-- SECCIÓN INFORMATIVA -->
-    <section class="container section reveal">
-      <h2 class="section-title" style="text-align:center;margin-bottom:0.6rem">
-        ¿Qué es <span class="accent">Academia Indra</span>?
-      </h2>
-      <p class="section-subtitle" style="text-align:center;margin:0 auto 2.5rem;max-width:560px">
-        Comunidad nacida y sostenida en grupos y canales de WhatsApp, dedicada a la formación en ciberseguridad, análisis de vulnerabilidades y desarrollo de apps. Desde cero hasta niveles avanzados, a tu propio ritmo — todo lo que construimos es para esas comunidades.
-      </p>
+    <!-- ================= STATS ================= -->
+    <section class="v2-wrap" style="padding-top:1rem">
+      <div class="stat-v2" data-reveal>
+        <div><b>100%</b><span>Gratis</span></div>
+        <div><b>0</b><span>Experiencia previa</span></div>
+        <div><b>24/7</b><span>Comunidad</span></div>
+        <div><b>9</b><span>Rutas</span></div>
+      </div>
+    </section>
 
-      <div class="card-grid reveal-stagger">
-        <div class="card">
-          <h3 style="margin-bottom:0.6rem">🛡️ Ciberseguridad</h3>
-          <p class="section-subtitle" style="margin:0">Aprendé a proteger sistemas, redes y datos contra amenazas reales.</p>
+    <!-- ================= 3 PILARES ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Cómo se vive la academia</span>
+          <h2>Tres formas de <span class="v2-accent">estar acá</span></h2>
+          <p>No es solo mirar clases. Se aprende, se construye y se sostiene una comunidad — y las tres cosas se alimentan entre sí.</p>
         </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.6rem">🔓 Vulnerabilidades</h3>
-          <p class="section-subtitle" style="margin:0">Pensamiento ofensivo y defensivo aplicado a sistemas reales, siempre de forma legal y ética.</p>
-        </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.6rem">📱 Desarrollo de apps</h3>
-          <p class="section-subtitle" style="margin:0">Creamos aplicaciones, automatizamos procesos y acompañamos a quien lo necesita.</p>
-        </div>
-        <div class="card">
-          <h3 style="margin-bottom:0.6rem">💬 Comunidad en WhatsApp</h3>
-          <p class="section-subtitle" style="margin:0">Crecemos día a día en grupos y canales de WhatsApp: el punto de encuentro de toda la academia.</p>
+        <div class="v2-grid v2-grid--3" data-reveal>
+          <a href="cursos.html" class="v2-card v2-card--link">
+            <div class="v2-card__ico">📚</div>
+            <h3>Aprender</h3>
+            <p>Rutas ordenadas de ciberseguridad, vulnerabilidades, privacidad y desarrollo. Empezás donde estés y avanzás a tu ritmo.</p>
+            <span class="v2-card__more">Ver rutas →</span>
+          </a>
+          <a href="proyectos.html" class="v2-card v2-card--link">
+            <div class="v2-card__ico">🛠️</div>
+            <h3>Construir</h3>
+            <p>Bots, apps y herramientas reales que la comunidad usa todos los días. Cada una tiene su bitácora de cómo se hizo.</p>
+            <span class="v2-card__more">Ver proyectos →</span>
+          </a>
+          <a href="colabora.html" class="v2-card v2-card--link">
+            <div class="v2-card__ico">💬</div>
+            <h3>Comunidad</h3>
+            <p>Todo pasa por WhatsApp: el grupo para conversar, el canal para los avisos, y un equipo abierto a quien quiera sumar.</p>
+            <span class="v2-card__more">Sumarme →</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CÓMO EMPEZAR -->
-    <section class="container section reveal">
-      <h2 class="section-title" style="text-align:center;margin-bottom:0.6rem">
-        ¿Cómo <span class="accent">empezar</span>?
-      </h2>
-      <p class="section-subtitle" style="text-align:center;margin:0 auto 2.5rem;max-width:560px">
-        Tres pasos simples, pensados para que cualquier persona —tenga la edad o la experiencia que tenga— pueda sumarse sin complicaciones.
-      </p>
-
-      <div class="steps reveal-stagger">
-        <div class="step">
-          <span class="step__num">01</span>
-          <h3 class="step__title">Registrate gratis</h3>
-          <p class="step__desc">Creá tu cuenta en un par de minutos. No hace falta ninguna tarjeta ni conocimiento previo.</p>
+    <!-- ================= RUTAS ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">El temario</span>
+          <h2>Rutas de <span class="v2-accent">aprendizaje</span></h2>
+          <p>Nueve rutas, de lo más básico a lo avanzado. No hace falta seguirlas en orden, pero si arrancás de cero, empezá por <strong>Fundamentos</strong>.</p>
         </div>
-        <div class="step">
-          <span class="step__num">02</span>
-          <h3 class="step__title">Elegí tu curso</h3>
-          <p class="step__desc">Explorá los cursos disponibles y arrancá por el que más te interese, a tu propio ritmo.</p>
+        <div class="route-map" data-reveal>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T0</span>
+            <div class="route-row__body"><h3>Fundamentos</h3><p>Internet, redes, sistemas, línea de comandos, máquinas virtuales y seguridad de tu propia cuenta.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--b">Básico</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T1</span>
+            <div class="route-row__body"><h3>Termux &amp; Linux de bolsillo</h3><p>Convertir el celular en un laboratorio: paquetes, scripts y práctica sin depender de una PC.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--b">Básico</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T2</span>
+            <div class="route-row__body"><h3>OSINT e investigación</h3><p>Huella digital, búsqueda y verificación de información, y cómo proteger tu propia identidad.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--b">Básico → Int.</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T3</span>
+            <div class="route-row__body"><h3>Hacking web</h3><p>OWASP Top 10 en la práctica, laboratorios legales (DVWA, PortSwigger) y cómo se reporta una falla.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--i">Intermedio</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T4</span>
+            <div class="route-row__body"><h3>Redes y Wi-Fi</h3><p>Captura y lectura de tráfico, seguridad de redes domésticas y dispositivos conectados.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--i">Intermedio</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T5</span>
+            <div class="route-row__body"><h3>Privacidad y anti-abuso</h3><p>Cifrado, mensajería, defensa contra estafas y phishing, y seguridad de comunidades de WhatsApp.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--b">Básico → Int.</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T6</span>
+            <div class="route-row__body"><h3>Defensa / Blue team</h3><p>Endurecer sistemas, detectar, responder a incidentes e higiene de contraseñas y accesos.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--a">Int. → Avanzado</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T7</span>
+            <div class="route-row__body"><h3>Construcción de herramientas</h3><p>Bots de WhatsApp con Baileys, automatización y cómo publicar tu propio proyecto.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--i">Intermedio</span></span>
+          </a>
+          <a href="cursos.html" class="route-row">
+            <span class="route-row__code">T8</span>
+            <div class="route-row__body"><h3>Carrera y ética</h3><p>Marco legal, divulgación responsable, cómo seguir y qué certificaciones externas apuntar.</p></div>
+            <span class="route-row__meta"><span class="lvl lvl--b">Todos</span></span>
+          </a>
         </div>
-        <div class="step">
-          <span class="step__num">03</span>
-          <h3 class="step__title">Sumate a la comunidad</h3>
-          <p class="step__desc">Participá del chat y resolvé dudas junto a otras personas que están aprendiendo.</p>
-        </div>
-      </div>
-
-      <div style="text-align:center;margin-top:var(--gap-xl)">
-        <a href="registro.html" class="btn btn--primary btn--large">Unirme a la academia</a>
       </div>
     </section>
 
-    <!-- SECCIÓN MISIÓN -->
-    <section class="container section reveal">
-      <h2 class="section-title" style="text-align:center;margin-bottom:0.6rem">
-        Nuestra <span class="accent">misión</span>
-      </h2>
-      <p class="section-subtitle" style="text-align:center;margin:0 auto 2.5rem;max-width:640px">
-        Crecimos gracias a las comunidades de WhatsApp que nos acompañaron desde el primer día. Devolverles eso, en forma de ciberseguridad, vulnerabilidades y apps hechas para ellas, es nuestra misión.
-      </p>
+    <!-- ================= OUTCOMES ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Después de un tiempo acá</span>
+          <h2>Qué vas a <span class="v2-accent">poder hacer</span></h2>
+          <p>Objetivos concretos, no una lista de temas. Cada uno se apoya en una o varias rutas.</p>
+        </div>
+        <div class="v2-grid v2-grid--2" data-reveal>
+          <div class="v2-card"><h3>🧪 Montar tu propio laboratorio</h3><p>En Termux o en una máquina virtual, para practicar sin riesgo y sin gastar en hardware.</p></div>
+          <div class="v2-card"><h3>🔎 Encontrar y reportar una vulnerabilidad web</h3><p>Identificar una falla del OWASP Top 10 en un entorno legal y escribir un reporte que se entienda.</p></div>
+          <div class="v2-card"><h3>🤖 Publicar tu primer bot</h3><p>Un bot de WhatsApp funcionando, con comandos propios, subido y andando.</p></div>
+          <div class="v2-card"><h3>🛡️ Blindar el WhatsApp de tu grupo</h3><p>Configurar protección anti-abuso de administradores y explicarle al resto cómo cuidarse de estafas.</p></div>
+        </div>
+      </div>
+    </section>
 
-      <div class="dossier" style="max-width:780px;margin:0 auto">
-        <div class="dossier__row">
-          <span class="dossier__tag">PRINCIPIO 01</span>
-          <div class="dossier__body">
-            <h3>Conocé para defenderte</h3>
-            <p>Entendemos cómo funcionan las amenazas y vulnerabilidades reales para anticiparnos a ellas, siempre con un enfoque legal y ético.</p>
+    <!-- ================= PROYECTOS ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Construir</span>
+          <h2>Lo que construye <span class="v2-accent">la comunidad</span></h2>
+          <p>Herramientas reales, hechas entre todos, que además sirven de material de estudio. ¿Querés sumarte a la próxima? Pasá por <a href="colabora.html">Colaborá</a>.</p>
+        </div>
+        <div class="proj" data-reveal>
+
+          <article class="proj-card">
+            <div class="proj-card__top">
+              <span class="proj-card__tag">Bot · WhatsApp · Node</span>
+              <h3>Argyra Guardian</h3>
+            </div>
+            <div class="proj-card__body">
+              <p>Protección automática contra abusos de administradores en grupos de WhatsApp. Vinculás tu número, elegís grupo por grupo, y el bot revierte los cambios no autorizados sin escribir un mensaje.</p>
+              <ul>
+                <li>Deshace expulsiones y ascensos indebidos al instante</li>
+                <li>Restaura nombre y descripción del grupo</li>
+                <li>Quien activa la protección nunca es expulsado</li>
+              </ul>
+            </div>
+            <div class="proj-card__actions">
+              <a href="#" data-soon class="btn btn--primary btn--small">Usar Argyra</a>
+              <a href="#" data-soon class="btn btn--ghost btn--small">Cómo se construyó</a>
+            </div>
+          </article>
+
+          <article class="proj-card">
+            <div class="proj-card__top">
+              <span class="proj-card__tag">Bot · WhatsApp · Panel web</span>
+              <h3>Indra Bot</h3>
+            </div>
+            <div class="proj-card__body">
+              <p>Bot multifunción para WhatsApp: juegos, moderación, stickers, IA y comandos multimedia. Con un panel web donde cada persona prende y apaga su propio bot desde el navegador.</p>
+              <ul>
+                <li>Decenas de comandos, en constante evolución</li>
+                <li>Panel multi-usuario con límite de bots simultáneos</li>
+                <li>Se integra con otros sistemas por peticiones POST</li>
+              </ul>
+            </div>
+            <div class="proj-card__actions">
+              <a href="https://bot.academiaindra.com" target="_blank" rel="noopener" class="btn btn--primary btn--small">Abrir el panel</a>
+              <a href="#" data-soon class="btn btn--ghost btn--small">Cómo se construyó</a>
+            </div>
+          </article>
+
+          <article class="proj-card">
+            <div class="proj-card__top">
+              <span class="proj-card__tag">App · Android</span>
+              <h3>Indra Asistente</h3>
+            </div>
+            <div class="proj-card__body">
+              <p>App Android para programar y automatizar envíos de mensajes: armás la lista, elegís cuándo, y la app se encarga. Pensada para gestionar comunicación de comunidades.</p>
+              <ul>
+                <li>Programación con cola y control de estado</li>
+                <li>Historial y registro técnico de cada envío</li>
+                <li>Se usa con o sin cuenta</li>
+              </ul>
+            </div>
+            <div class="proj-card__actions">
+              <a href="#" data-soon class="btn btn--primary btn--small">Ver la app</a>
+              <a href="#" data-soon class="btn btn--ghost btn--small">Cómo se construyó</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ASISTENTE IA ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-grid v2-grid--2" data-reveal style="align-items:center;gap:2.5rem">
+          <div>
+            <span class="v2-kicker">Tu tutor 24/7</span>
+            <h2 style="font-size:clamp(1.6rem,4.2vw,2.4rem);margin:.5rem 0 .7rem">El asistente de <span class="v2-accent">Academia Indra</span></h2>
+            <p style="color:var(--v2-text-soft);margin:0 0 1rem">
+              Está en todas las páginas, siempre a mano. Conoce el catálogo real de clases,
+              te recomienda por dónde seguir según tu nivel, y responde dudas en el momento —
+              tengas cuenta o no.
+            </p>
+            <ul style="margin:0 0 1.4rem;padding-left:1.1rem;color:var(--v2-text-faint);font-size:.95rem">
+              <li>Sabe qué clases hay y te pasa el enlace exacto</li>
+              <li>Se adapta a si arrancás de cero o ya programás</li>
+              <li>No inventa: si no sabe algo, te lo dice</li>
+            </ul>
+            <a href="ia-asistente.html" class="btn btn--primary">Abrir el asistente</a>
+          </div>
+          <div class="v2-card" style="background:var(--v2-surface-2)">
+            <p style="font-family:var(--v2-font-mono);font-size:11px;color:var(--v2-text-faint);text-transform:uppercase;letter-spacing:.1em;margin:0 0 .8rem">Ejemplo</p>
+            <p style="margin:.2rem 0;color:var(--v2-text-soft)"><strong>Vos:</strong> arranco de cero, ¿por dónde empiezo?</p>
+            <p style="margin:.6rem 0 0;color:var(--v2-text)"><strong>Asistente:</strong> Metele a <strong>Fundamentos (T0)</strong> primero — te deja la base de redes y línea de comandos. Cuando termines eso, <strong>Termux (T1)</strong> te va a resultar fácil. ¿Querés que te arme el orden de las primeras 3 clases?</p>
           </div>
         </div>
-        <div class="dossier__row">
-          <span class="dossier__tag">PRINCIPIO 02</span>
-          <div class="dossier__body">
-            <h3>Educación sin barreras</h3>
-            <p>Formación 100% gratuita, porque el conocimiento de seguridad digital no debería ser un privilegio.</p>
-          </div>
+      </div>
+    </section>
+
+    <!-- ================= SALA DE SITUACIÓN ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker v2-kicker--live">En vivo</span>
+          <h2>Sala de <span class="v2-accent">situación</span></h2>
+          <p>Un pulso de la comunidad, sin cuentas ni datos personales.</p>
         </div>
-        <div class="dossier__row">
-          <span class="dossier__tag">PRINCIPIO 03</span>
-          <div class="dossier__body">
-            <h3>Construimos herramientas reales</h3>
-            <p>Además de enseñar, desarrollamos apps y automatizaciones que la propia comunidad usa todos los días.</p>
-          </div>
-        </div>
-        <div class="dossier__row">
-          <span class="dossier__tag">PRINCIPIO 04</span>
-          <div class="dossier__body">
-            <h3>Todo es para las comunidades de WhatsApp</h3>
-            <p>Ahí nacimos y ahí crecemos: grupos y canales de WhatsApp son el punto de encuentro diario, y el motivo por el que hacemos todo esto.</p>
-          </div>
+        <div class="sit" data-reveal>
+          <div class="sit-tile"><b>9</b><span>Rutas de aprendizaje</span></div>
+          <div class="sit-tile"><b>3</b><span>Proyectos activos</span></div>
+          <div class="sit-tile sit-tile--live"><b id="sit-consultas">—</b><span>Consultas a la IA (total)</span></div>
+          <div class="sit-tile"><b>100%</b><span>Formación gratuita</span></div>
         </div>
       </div>
     </section>
 
-    <!-- PREGUNTAS FRECUENTES -->
-    <section class="container section reveal">
-      <h2 class="section-title" style="text-align:center;margin-bottom:0.6rem">
-        Preguntas <span class="accent">frecuentes</span>
-      </h2>
-      <p class="section-subtitle" style="text-align:center;margin:0 auto 2.5rem;max-width:560px">
-        Si tenés dudas antes de empezar, seguramente ya alguien las tuvo también.
-      </p>
-
-      <div class="faq">
-        <details class="faq-item">
-          <summary><span class="faq-item__q">Q01</span><span class="faq-item__text">¿Necesito experiencia previa en informática?</span></summary>
-          <div class="faq-item__body">No, para nada. Los cursos están pensados para arrancar desde cero, con explicaciones paso a paso.</div>
-        </details>
-        <details class="faq-item">
-          <summary><span class="faq-item__q">Q02</span><span class="faq-item__text">¿Tiene algún costo?</span></summary>
-          <div class="faq-item__body">No. La formación en Academia Indra es 100% gratuita.</div>
-        </details>
-        <details class="faq-item">
-          <summary><span class="faq-item__q">Q03</span><span class="faq-item__text">¿Hay un límite de edad para sumarme?</span></summary>
-          <div class="faq-item__body">No. La comunidad está abierta a personas de todas las edades que quieran aprender.</div>
-        </details>
-        <details class="faq-item">
-          <summary><span class="faq-item__q">Q04</span><span class="faq-item__text">¿Cómo resuelvo mis dudas mientras aprendo?</span></summary>
-          <div class="faq-item__body">Podés preguntarle al asistente de IA en cualquier momento, o sumarte al chat y al grupo de WhatsApp de la comunidad una vez que tu cuenta esté aprobada.</div>
-        </details>
+    <!-- ================= CÓMO EMPEZAR ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Sin vueltas</span>
+          <h2>Cómo <span class="v2-accent">empezar</span></h2>
+          <p>Podés mirar todo el sitio sin registrarte. La cuenta solo hace falta para el contenido de las clases y el chat de la comunidad.</p>
+        </div>
+        <div class="steps-v2" data-reveal>
+          <div class="step-v2"><h3>Mirá y elegí</h3><p>Recorré las rutas y el catálogo sin cuenta. Preguntale al asistente si no sabés por dónde empezar.</p></div>
+          <div class="step-v2"><h3>Registrate gratis</h3><p>Un par de minutos. Tu cuenta queda pendiente hasta que un administrador la aprueba.</p></div>
+          <div class="step-v2"><h3>Sumate a la comunidad</h3><p>Ya aprobado, entrás al grupo y al canal de WhatsApp y arrancás con tu primera clase.</p></div>
+        </div>
+        <div style="text-align:center;margin-top:2.5rem" data-reveal>
+          <a href="registro.html" class="btn btn--primary btn--large">Unirme a la academia</a>
+        </div>
       </div>
     </section>
 
-    <!-- CTA FINAL -->
-    <section class="container" style="padding-bottom:var(--gap-2xl)">
-      <div class="cta-banner reveal">
-        <h2 class="section-title accent">⚘ El conocimiento es la base ⚘</h2>
-        <p>Sumate hoy a una comunidad que aprende ciberseguridad en conjunto, desde cero y sin costo.</p>
-        <div class="hero__actions">
-          <a href="registro.html" class="btn btn--primary">Registrarse</a>
-          <a href="login.html" class="btn btn--outline">Iniciar sesión</a>
+    <!-- ================= FAQ ================= -->
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Antes de arrancar</span>
+          <h2>Preguntas <span class="v2-accent">frecuentes</span></h2>
+        </div>
+        <div class="faq-v2" data-reveal>
+          <details><summary><span>Q01</span><span>¿Puedo mirar el contenido sin registrarme?</span></summary><div class="faq-v2__a">Sí. Las rutas, el catálogo, los proyectos y el asistente de IA se ven sin cuenta. Solo el contenido dentro de cada clase y el chat de la comunidad piden estar registrado y aprobado.</div></details>
+          <details><summary><span>Q02</span><span>¿Necesito experiencia previa en informática?</span></summary><div class="faq-v2__a">No. Las rutas están pensadas para arrancar desde cero, paso a paso. La ruta de Fundamentos existe justamente para eso.</div></details>
+          <details><summary><span>Q03</span><span>¿Tiene algún costo?</span></summary><div class="faq-v2__a">No. La formación en Academia Indra es 100% gratuita.</div></details>
+          <details><summary><span>Q04</span><span>¿Hay un límite de edad?</span></summary><div class="faq-v2__a">No. La comunidad está abierta a personas de todas las edades que quieran aprender.</div></details>
+          <details><summary><span>Q05</span><span>¿Cómo resuelvo dudas mientras aprendo?</span></summary><div class="faq-v2__a">Preguntale al asistente de IA en cualquier momento, o al chat y al grupo de WhatsApp una vez que tu cuenta esté aprobada.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA ================= -->
+    <section class="v2-wrap" style="padding-bottom:5rem">
+      <div class="cta-v2" data-reveal>
+        <h2>⚘ El conocimiento es la base ⚘</h2>
+        <p>Sumate a una comunidad que aprende ciberseguridad en conjunto, desde cero y sin costo.</p>
+        <div class="cta-v2__actions">
+          <a href="registro.html" class="btn btn--primary btn--large">Registrarse</a>
+          <a href="login.html" class="btn btn--outline btn--large">Iniciar sesión</a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    ACADEMIA INDRA — Ciberseguridad, Vulnerabilidades y Desarrollo de Apps · Para las comunidades de WhatsApp
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
     <br />
-    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+    <a href="privacidad.html">Privacidad y datos</a>
   </footer>
 
-  <script src="js/particles.js"></script>
-  <script src="js/reveal.js"></script>
+  <!-- ================= TAB BAR (móvil) ================= -->
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="cursos.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+      Aprender
+    </a>
+    <a href="proyectos.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>
+      Proyectos
+    </a>
+    <a href="colabora.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>
+      Comunidad
+    </a>
+    <a href="ia-asistente.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      IA
+    </a>
+    <a href="login.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+      Perfil
+    </a>
+  </nav>
+
+  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar Academia Indra" title="¿Necesitás ayuda?">?</a>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="js/theme.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/pwa-install.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
 
+  <!-- Reveal on scroll (autónomo, respeta prefers-reduced-motion) -->
+  <script>
+    (function () {
+      var els = document.querySelectorAll('[data-reveal]');
+      if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(function (e) { e.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+      els.forEach(function (e) { io.observe(e); });
+    })();
+  </script>
+
+  <!-- Menús desplegables del navbar: uno por vez, y se cierran al tocar afuera -->
+  <script>
+    (function () {
+      var groups = Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return window.matchMedia('(min-width: 1025px)').matches; };
+      groups.forEach(function (g) {
+        g.addEventListener('toggle', function () {
+          if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; });
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!isDesktop()) return;
+        if (e.target.closest('.nav-group')) return;
+        groups.forEach(function (g) { g.open = false; });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; });
+      });
+    })();
+  </script>
+
+  <!-- Enlaces "pronto": avisan en lugar de llevar a un 404 -->
+  <script>
+    (function () {
+      var toast;
+      function ping(msg) {
+        clearTimeout(ping._t);
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.style.cssText = 'position:fixed;left:50%;bottom:calc(var(--v2-tab-h) + 1.2rem);transform:translateX(-50%) translateY(1rem);background:var(--v2-surface);color:var(--v2-text);border:1px solid var(--v2-border-strong);border-radius:12px;padding:.7rem 1.1rem;font:600 .85rem/1.4 var(--v2-font-body);box-shadow:var(--v2-shadow-lg);z-index:400;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;max-width:88vw;text-align:center';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        requestAnimationFrame(function () { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; });
+        ping._t = setTimeout(function () { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(1rem)'; }, 2600);
+      }
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[data-soon]');
+        if (!a) return;
+        e.preventDefault();
+        ping('Lo estamos armando — muy pronto.');
+      });
+    })();
+  </script>
+
+  <!-- Tendencias en vivo (construcción segura del DOM: sin innerHTML de datos externos) -->
   <script type="module">
     import { detectarPais, obtenerTendencias, obtenerFraseTendencias } from './js/tema-stats.js';
 
-    (async function renderTendencias() {
-      const host = document.getElementById('tendencias-ia');
+    const host = document.getElementById('tendencias-ia');
+    const sitConsultas = document.getElementById('sit-consultas');
+
+    function el(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function fill(nodes) { host.replaceChildren(...nodes); }
+
+    (async function () {
       if (!host) return;
       try {
         const pais = await detectarPais();
         const { items } = await obtenerTendencias(pais);
 
         if (!items.length) {
-          host.innerHTML = `
-            <p class="trend-panel__title">📡 Todavía no hay suficientes preguntas registradas</p>
-            <p class="trend-panel__empty">Sé de los primeros en preguntarle algo a la IA de la academia — cada pregunta ayuda a mostrar acá lo que le interesa a la comunidad.</p>`;
+          fill([
+            el('p', 'trend-v2__title', '📡 Todavía no hay suficientes preguntas'),
+            el('p', 'trend-v2__empty', 'Sé de los primeros en preguntarle algo al asistente — cada consulta ayuda a mostrar acá lo que le interesa a la comunidad.'),
+          ]);
           return;
         }
 
-        const donde = pais?.nombre && pais.code !== 'GLOBAL' ? pais.nombre : 'la comunidad';
-        const tagsHtml = items.map((it) => `<span class="trend-panel__tag">${it.label}</span>`).join('');
+        const donde = (pais && pais.nombre && pais.code !== 'GLOBAL') ? pais.nombre : 'la comunidad';
+        const eyebrow = el('div', 'trend-v2__eyebrow');
+        eyebrow.append(el('span', 'v2-kicker v2-kicker--live', 'En vivo · según ' + donde));
 
-        host.innerHTML = `
-          <p class="trend-panel__eyebrow">EN VIVO · SEGÚN ${donde.toUpperCase()}</p>
-          <p class="trend-panel__title">Lo que más pregunta la comunidad</p>
-          <div class="trend-panel__tags">${tagsHtml}</div>
-          <p class="trend-panel__blurb" id="tendencias-ia-blurb"></p>`;
+        const tags = el('div', 'trend-v2__tags');
+        items.slice(0, 3).forEach((it) => tags.append(el('span', 'trend-v2__tag', it.label)));
 
-        obtenerFraseTendencias(items, pais).then((frase) => {
-          const el = document.getElementById('tendencias-ia-blurb');
-          if (el && frase) el.textContent = frase;
-        });
+        const blurb = el('p', 'trend-v2__blurb', '');
+
+        fill([eyebrow, el('p', 'trend-v2__title', 'Lo que más pregunta la comunidad'), tags, blurb]);
+
+        obtenerFraseTendencias(items, pais).then((frase) => { if (frase) blurb.textContent = frase; });
       } catch (e) {
-        console.warn('No se pudieron cargar las tendencias:', e);
-        host.innerHTML = `
-          <p class="trend-panel__title">📡 Preguntale lo que quieras a la IA</p>
-          <p class="trend-panel__empty">Abrí el asistente de acá abajo y contale qué te gustaría aprender.</p>`;
+        fill([
+          el('p', 'trend-v2__title', '📡 Preguntale lo que quieras al asistente'),
+          el('p', 'trend-v2__empty', 'Abrí el asistente acá abajo y contale qué te gustaría aprender.'),
+        ]);
       }
     })();
-  </script>
 
-  <script type="module">
-    import { auth } from './js/firebase-config.js';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { db } from './js/firebase-config.js';
-    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    const hero = document.querySelector('.hero');
-    if (hero) hero.style.opacity = '0';
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const snap = await getDoc(doc(db, 'users', user.uid));
-          if (snap.exists()) {
-            const profile = snap.data();
-            if (profile.estado === 'aprobado') {
-              window.location.replace(profile.rol === 'administrador' ? 'panel-admin.html' : 'panel-usuario.html');
-              return;
-            }
-          }
-        } catch(e) {}
-      }
-      if (hero) { hero.style.transition = 'opacity 0.3s'; hero.style.opacity = '1'; }
-    });
-  </script>
-  <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indra" title="¿Necesitás ayuda? Tocá acá">?</a>
-<script>
-    // Cierra el menú "Más" del navbar al elegir un enlace o al tocar afuera.
-    (function () {
-      var more = document.querySelector('.navbar__more');
-      if (!more) return;
-      document.addEventListener('click', function (e) {
-        if (more.open && !more.contains(e.target)) more.open = false;
-      });
-      more.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', function () { more.open = false; });
-      });
+    // Tile "sala de situación": total de consultas (dato agregado, público)
+    (async function () {
+      if (!sitConsultas) return;
+      try {
+        const { db } = await import('./js/firebase-config.js');
+        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const snap = await getDoc(doc(db, 'tema_stats', 'global'));
+        const total = snap.exists() ? (snap.data().total || 0) : 0;
+        sitConsultas.textContent = total > 0 ? new Intl.NumberFormat('es').format(total) : '—';
+      } catch (e) { /* queda en "—" */ }
     })();
   </script>
 </body>
