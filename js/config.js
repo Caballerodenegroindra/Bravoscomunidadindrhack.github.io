@@ -7,12 +7,12 @@
    ============================================================ */
 
 /* Proxy de administracion y de IA (Cloudflare Worker).
-   - En produccion: el dominio propio del Worker.
-   - Mientras no tengas el dominio, poné la URL workers.dev:
-       https://academiaindra-proxy.<tu-subdominio>.workers.dev
+   - Ahora: la URL workers.dev del Worker desplegado.
+   - Si mas adelante activas el dominio propio (admin.academiaindra.com),
+     cambia solo esta linea.
    El asistente de IA (js/ia-core.js) y el Centro de Control del
    panel admin llaman a esta base. */
-export const PROXY_BASE_URL = 'https://admin.academiaindra.com';
+export const PROXY_BASE_URL = 'https://academiaindra-proxy.indrhack010101moderador.workers.dev';
 
 /* Deriva las rutas concretas. */
 export const IA_CHAT_URL = `${PROXY_BASE_URL}/ia/chat`;
