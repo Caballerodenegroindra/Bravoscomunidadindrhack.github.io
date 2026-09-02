@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
-  <link rel="stylesheet" href="css/v2.css?v=3" />
+  <link rel="stylesheet" href="css/v2.css?v=4" />
   <style>
     /* ── BOTÓN FLOTANTE: preguntar en el chat del curso ── */
     .clase-chat-fab {
@@ -91,14 +91,17 @@
 
     /* ── HERO ── */
     .clase-hero {
-      background: linear-gradient(135deg, #0d0d14 0%, #111 100%);
-      border: 1px solid #0f1d38;
+      background: linear-gradient(135deg, var(--v2-primary-subtle) 0%, var(--v2-surface-2) 100%);
+      border: 1px solid var(--v2-border);
       border-radius: 16px;
       padding: 1.75rem;
       margin-bottom: 1.5rem;
       position: relative;
       overflow: hidden;
     }
+    .clase-hero h1 { color: var(--text); font-family: var(--v2-font-display); letter-spacing: -0.01em; }
+    .clase-hero p  { color: var(--text-soft) !important; }
+    .clase-hero p svg { stroke: var(--text-muted) !important; }
     .clase-hero::before {
       content: '';
       position: absolute;
@@ -118,31 +121,34 @@
     }
     .nivel-basico   { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-subtle); }
     .nivel-intermedio { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-subtle); }
-    .nivel-avanzado { background: var(--color-accent-emphasis)22; color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-emphasis)44; }
+    .nivel-avanzado { background: var(--color-accent-subtle); color: var(--color-accent-emphasis); border: 1px solid var(--color-accent-subtle); }
 
     /* ── CONTENT BLOCK ── */
     .content-block {
-      background: #0c0c14;
-      border: 1px solid #0a1428;
+      background: var(--v2-surface);
+      border: 1px solid var(--v2-border);
       border-radius: 14px;
       padding: 1.5rem;
       margin-bottom: 1.25rem;
-      color: #c8c8d8;
+      color: var(--text-soft);
       line-height: 1.85;
       font-size: 0.93rem;
+      box-shadow: var(--v2-shadow);
     }
     .content-block .desc-titulo {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      color: #fff;
+      color: var(--text);
+      font-family: var(--v2-font-display);
+      font-weight: 700;
       font-size: 1.02rem;
       margin: 1.1rem 0 0.5rem;
     }
     .content-block .desc-titulo:first-child { margin-top: 0; }
     .content-block .desc-num {
-      background: var(--color-accent, #e0245e);
-      color: #fff;
+      background: var(--color-accent-emphasis);
+      color: var(--v2-primary-ink);
       font-size: 0.78rem;
       font-weight: 700;
       width: 1.6rem;
@@ -159,19 +165,19 @@
     }
     .content-block .desc-lista li { margin-bottom: 0.35rem; }
     .content-block .desc-parrafo { margin: 0 0 0.6rem; }
-    .content-block strong { color: #fff; }
+    .content-block strong { color: var(--text); }
     .content-block pre {
-      background: #05050a;
-      border: 1px solid #1a1a2e;
+      background: var(--v2-surface-2);
+      border: 1px solid var(--v2-border);
       border-radius: 8px;
       padding: 0.85rem 1rem;
       overflow-x: auto;
       margin: 0.6rem 0 0.9rem;
     }
     .content-block pre code {
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-family: var(--v2-font-mono);
       font-size: 0.82rem;
-      color: #8ee08e;
+      color: var(--text);
       white-space: pre-wrap;
       word-break: break-word;
     }
@@ -191,17 +197,18 @@
       flex-shrink: 0;
     }
     .section-header-icon--green { background: var(--color-success-subtle); border: 1px solid var(--color-success-subtle); }
-    .section-header-icon--red   { background: var(--color-accent-emphasis)14; border: 1px solid var(--color-accent-emphasis)30; }
+    .section-header-icon--red   { background: var(--color-accent-subtle); border: 1px solid var(--color-accent-subtle); }
     .section-header h3 { margin: 0; font-size: 1rem; color: var(--text); }
     .section-header p  { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-muted); }
 
     /* ── TERMUX COMMANDS SECTION ── */
     .termux-section {
-      background: #080c10;
-      border: 1px solid #0f1d38;
+      background: var(--v2-surface);
+      border: 1px solid var(--v2-border);
       border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
+      box-shadow: var(--v2-shadow);
     }
     .termux-section-top {
       display: flex;
@@ -209,35 +216,35 @@
       gap: 0.75rem;
       margin-bottom: 1.25rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid #0f1d38;
+      border-bottom: 1px solid var(--v2-border);
     }
     .termux-logo {
       width: 38px; height: 38px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #0d2b1a, #0f1d38);
-      border: 1px solid #24365c;
+      background: rgba(21,128,61,0.12);
+      border: 1px solid rgba(21,128,61,0.22);
       display: flex; align-items: center; justify-content: center;
       font-size: 1.2rem;
       flex-shrink: 0;
     }
-    .termux-title { margin: 0; font-size: 1rem; color: var(--color-success-fg); font-family: var(--font-body); font-weight: 700; letter-spacing: 0.05em; }
-    .termux-subtitle { margin: 0.15rem 0 0; font-size: 0.78rem; color: #5c6c8c; }
+    .termux-title { margin: 0; font-size: 1rem; color: var(--color-success-fg); font-family: var(--v2-font-display); font-weight: 700; letter-spacing: 0.03em; }
+    .termux-subtitle { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--text-muted); }
 
     /* Command card */
     .cmd-card {
-      background: #06100c;
-      border: 1px solid #0d2218;
+      background: var(--v2-surface-2);
+      border: 1px solid var(--v2-border);
       border-radius: 12px;
       padding: 1rem 1rem 0.75rem;
       margin-bottom: 0.75rem;
       transition: border-color 0.2s;
     }
     .cmd-card:last-child { margin-bottom: 0; }
-    .cmd-card:hover { border-color: #24365c; }
+    .cmd-card:hover { border-color: var(--v2-border-strong); }
 
     .cmd-label {
       font-size: 0.73rem;
-      color: #5c6c8c;
+      color: var(--text-muted);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -245,7 +252,7 @@
     }
     .cmd-description {
       font-size: 0.85rem;
-      color: #9999aa;
+      color: var(--text-soft);
       line-height: 1.55;
       margin-bottom: 0.6rem;
     }
@@ -253,24 +260,24 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: #030706;
-      border: 1px solid #0a1428;
+      background: var(--v2-inset);
+      border: 1px solid var(--v2-border);
       border-radius: 8px;
       padding: 0.6rem 0.75rem;
       overflow: hidden;
     }
     .cmd-prompt {
       color: var(--color-success-fg);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--v2-font-mono);
       font-size: 0.82rem;
       font-weight: 700;
       flex-shrink: 0;
       user-select: none;
     }
     .cmd-text {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--v2-font-mono);
       font-size: 0.83rem;
-      color: #d0f0d8;
+      color: var(--text);
       flex: 1;
       overflow-x: auto;
       white-space: nowrap;
@@ -278,8 +285,8 @@
     }
     .cmd-copy-btn {
       flex-shrink: 0;
-      background: #0f1d38;
-      border: 1px solid #24365c;
+      background: var(--v2-surface);
+      border: 1px solid var(--v2-border-strong);
       border-radius: 6px;
       color: var(--color-success-fg);
       font-size: 0.72rem;
@@ -291,9 +298,9 @@
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      font-family: var(--font-body);
+      font-family: var(--v2-font-body);
     }
-    .cmd-copy-btn:hover { background: #0f1d38; border-color: var(--color-success-fg); }
+    .cmd-copy-btn:hover { border-color: var(--color-success-fg); }
     .cmd-copy-btn.copied { background: var(--color-success-subtle); border-color: var(--color-success-fg); color: var(--color-success-fg); }
     .cmd-copy-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 
@@ -308,9 +315,9 @@
       font-size: 0.67rem;
       padding: 1px 7px;
       border-radius: 4px;
-      background: #0a1428;
-      color: #5c6c8c;
-      border: 1px solid #0f1d38;
+      background: var(--v2-surface);
+      color: var(--text-muted);
+      border: 1px solid var(--v2-border);
       font-weight: 500;
     }
 
@@ -322,7 +329,7 @@
       border-radius: 14px;
       overflow: hidden;
       margin-bottom: 1.25rem;
-      border: 1px solid #0a1428;
+      border: 1px solid var(--v2-border);
       user-select: none;
     }
     .vp-wrap video { width: 100%; display: block; max-height: 75vw; object-fit: contain; }
@@ -347,7 +354,7 @@
     .vp-side-fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--color-success-fg); transition: height 0.1s; }
     .vp-bright-bar { position: absolute; left: 0.6rem; bottom: 3.5rem; width: 4px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
     .vp-bright-fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--gold); transition: height 0.1s; }
-    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid #0a1428; }
+    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid var(--v2-border); }
     .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
     /* ── MATERIAL BTN ── */
@@ -355,11 +362,11 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: #0a1428;
-      border: 1px solid #0f1d38;
+      background: var(--v2-surface-2);
+      border: 1px solid var(--v2-border);
       border-radius: 10px;
       padding: 0.7rem 1.1rem;
-      color: #aaa;
+      color: var(--text-soft);
       text-decoration: none;
       font-size: 0.875rem;
       transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -369,19 +376,19 @@
 
     /* ── PROGRESS STEPS ── */
     .progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.25rem; }
-    .step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #444; white-space: nowrap; }
+    .step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
     .step.active { color: var(--color-accent-emphasis); }
     .step.done { color: var(--color-success-fg); }
-    .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #222; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+    .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--v2-border-strong); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
     .step.active .step-dot { border-color: var(--color-accent-emphasis); color: var(--color-accent-emphasis); }
     .step.done .step-dot { border-color: var(--color-success-fg); color: var(--color-success-fg); background: var(--color-success-subtle); }
-    .step-line { width: 30px; height: 2px; background: #1a1a28; flex-shrink: 0; }
+    .step-line { width: 30px; height: 2px; background: var(--v2-border); flex-shrink: 0; }
     .step.done + .step .step-line { background: var(--color-success-subtle); }
 
     /* ── DIVIDER ── */
     .section-divider {
       height: 1px;
-      background: linear-gradient(90deg, transparent, #0f1d38, transparent);
+      background: linear-gradient(90deg, transparent, var(--v2-border-strong), transparent);
       margin: 1.5rem 0;
     }
   </style>
@@ -648,8 +655,8 @@
             <span class="nivel-badge ${nivelClass[curso.nivel] || 'nivel-basico'}">${curso.nivel || 'Básico'}</span>
           </div>
           <h1 style="margin:0 0 0.65rem;font-size:clamp(1.1rem,4vw,1.55rem);line-height:1.3">${curso.titulo}</h1>
-          <p style="color:#666;font-size:0.85rem;margin:0;display:flex;align-items:center;gap:0.4rem">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          <p style="color:var(--text-soft);font-size:0.85rem;margin:0;display:flex;align-items:center;gap:0.4rem">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
             ${curso.categoria || 'General'}
           </p>
         </div>

@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
-  <link rel="stylesheet" href="css/v2.css?v=3" />
+  <link rel="stylesheet" href="css/v2.css?v=4" />
 </head>
 <body class="v2">
   <script>
@@ -81,10 +81,10 @@
 
       <!-- Info del perfil -->
       <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
-        <img id="foto-perfil" src="assets/img/avatar-placeholder.svg" alt="Foto" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #333" />
+        <img id="foto-perfil" src="assets/img/avatar-placeholder.svg" alt="Foto" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border)" />
         <div>
-          <p style="margin:0;color:#aaa;font-size:0.85rem">Miembro desde: <strong id="info-fecha">—</strong></p>
-          <p style="margin:0;color:#aaa;font-size:0.85rem">Teléfono: <strong id="info-phone">—</strong></p>
+          <p style="margin:0;color:var(--text-soft);font-size:0.85rem">Miembro desde: <strong id="info-fecha">—</strong></p>
+          <p style="margin:0;color:var(--text-soft);font-size:0.85rem">Teléfono: <strong id="info-phone">—</strong></p>
         </div>
       </div>
 
@@ -113,13 +113,13 @@
 
           <div class="field">
             <label for="sobre-mi">📝 Descripción (sobre mí)</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">Contá en pocas líneas quién sos. Esto es lo que otros miembros ven de vos en la comunidad.</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">Contá en pocas líneas quién sos. Esto es lo que otros miembros ven de vos en la comunidad.</small>
             <textarea id="sobre-mi" name="sobreMi" rows="3" placeholder="Ej: Estudiante de sistemas, me interesa la ciberseguridad y ayudo con la documentación del proyecto."></textarea>
           </div>
 
           <div class="field">
             <label for="nivel-programacion">¿Sos programador o tenés experiencia técnica?</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">Usamos esto para personalizar las recomendaciones que te hace la IA y la academia.</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">Usamos esto para personalizar las recomendaciones que te hace la IA y la academia.</small>
             <select id="nivel-programacion" name="nivelProgramacion">
               <option value="">Prefiero no decirlo todavía</option>
               <option value="experimentado">Sí, tengo experiencia programando</option>
@@ -130,13 +130,13 @@
 
           <div class="field">
             <label for="lo-que-se">Lo que sé</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué conocimientos tienes actualmente? (Cuéntanos qué sabes o qué te gusta hacer)</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Qué conocimientos tienes actualmente? (Cuéntanos qué sabes o qué te gusta hacer)</small>
             <textarea id="lo-que-se" name="loQueSe" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="ayuda-futuros-proyectos">¿Ayudarías a la comunidad en futuros proyectos?</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">A veces surgen proyectos para construir entre todos (como esta misma app). Podés cambiar tu respuesta cuando quieras.</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">A veces surgen proyectos para construir entre todos (como esta misma app). Podés cambiar tu respuesta cuando quieras.</small>
             <select id="ayuda-futuros-proyectos" name="ayudaFuturosProyectos">
               <option value="">Prefiero no decirlo todavía</option>
               <option value="si">🙌 Sí, contá conmigo</option>
@@ -147,43 +147,43 @@
 
           <div class="field">
             <label for="experiencia">Experiencia</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿En qué proyectos o cosas has trabajado? (Programación, servidores, diseño, hardware, estudio, etc.)</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿En qué proyectos o cosas has trabajado? (Programación, servidores, diseño, hardware, estudio, etc.)</small>
             <textarea id="experiencia" name="experiencia" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="intereses">Intereses</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué temas te interesan dentro de la informática?</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Qué temas te interesan dentro de la informática?</small>
             <textarea id="intereses" name="intereses" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="aprendizaje">Aprendizaje</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Qué te gustaría aprender aquí?</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Qué te gustaría aprender aquí?</small>
             <textarea id="aprendizaje" name="aprendizaje" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="objetivo">Objetivo</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Cuál es tu objetivo dentro de Indra?</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Cuál es tu objetivo dentro de Indra?</small>
             <textarea id="objetivo" name="objetivo" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="compartir">Compartir conocimiento</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Hay algo que te gustaría enseñar a otros miembros?</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Hay algo que te gustaría enseñar a otros miembros?</small>
             <textarea id="compartir" name="compartir" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="estilo">Estilo de trabajo</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">¿Cómo te gusta trabajar o aprender?</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">¿Cómo te gusta trabajar o aprender?</small>
             <textarea id="estilo" name="estilo" rows="2"></textarea>
           </div>
 
           <div class="field">
             <label for="extra">Extra</label>
-            <small style="color:#888;display:block;margin-bottom:0.4rem">Cuéntanos algo sobre ti que te represente</small>
+            <small style="color:var(--text-soft);display:block;margin-bottom:0.4rem">Cuéntanos algo sobre ti que te represente</small>
             <textarea id="extra" name="extra" rows="2"></textarea>
           </div>
 
@@ -220,21 +220,21 @@
             <label for="pwd-actual">Contraseña actual</label>
             <div style="position:relative">
               <input type="password" id="pwd-actual" name="actual" required placeholder="Tu contraseña actual" style="padding-right:2.5rem" />
-              <button type="button" onclick="togglePwd('pwd-actual')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+              <button type="button" onclick="togglePwd('pwd-actual')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:1rem">👁</button>
             </div>
           </div>
           <div class="field">
             <label for="pwd-nueva">Nueva contraseña</label>
             <div style="position:relative">
               <input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" style="padding-right:2.5rem" />
-              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:1rem">👁</button>
             </div>
           </div>
           <div class="field">
             <label for="pwd-confirmar">Confirmar nueva contraseña</label>
             <div style="position:relative">
               <input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la nueva contraseña" style="padding-right:2.5rem" />
-              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem">👁</button>
+              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:1rem">👁</button>
             </div>
           </div>
           <button type="submit" class="btn btn--primary">Cambiar contraseña</button>
@@ -305,13 +305,13 @@
 
       function pintarTelefonos() {
         if (telefonos.length === 0) {
-          telListaEl.innerHTML = '<p style="margin:0;color:#888;font-size:0.82rem">Todavía no agregaste otros números.</p>';
+          telListaEl.innerHTML = '<p style="margin:0;color:var(--text-soft);font-size:0.82rem">Todavía no agregaste otros números.</p>';
           return;
         }
         telListaEl.innerHTML = telefonos.map((num, i) => `
           <div style="display:flex;gap:0.5rem;align-items:center">
             <input type="tel" data-tel-idx="${i}" value="${(num || '').replace(/"/g, '&quot;')}" placeholder="Ej: +54 9 11 1234-5678" style="flex:1" />
-            <button type="button" data-tel-quitar="${i}" style="background:none;border:1px solid var(--border);color:#aaa;border-radius:6px;width:36px;height:36px;cursor:pointer;flex-shrink:0" aria-label="Quitar este número">✕</button>
+            <button type="button" data-tel-quitar="${i}" style="background:none;border:1px solid var(--border);color:var(--text-soft);border-radius:6px;width:36px;height:36px;cursor:pointer;flex-shrink:0" aria-label="Quitar este número">✕</button>
           </div>
         `).join('');
 

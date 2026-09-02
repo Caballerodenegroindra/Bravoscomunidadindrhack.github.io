@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
-  <link rel="stylesheet" href="css/v2.css?v=3" />
+  <link rel="stylesheet" href="css/v2.css?v=4" />
   <style>
     /* ---- Card para descargar ---- */
     #ficha-wrapper {
@@ -42,7 +42,7 @@
     }
 
     .ficha-header {
-      background: linear-gradient(135deg, var(--bg-card) 0%, #0A1A33 100%);
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--v2-surface-2) 100%);
       padding: 1.5rem 1.5rem 1rem;
       border-bottom: 1px solid var(--gold-subtle);
       position: relative;
@@ -61,7 +61,7 @@
     .ficha-logo {
       font-family: var(--font-body);
       font-size: 0.7rem;
-      color: #0D6EFD;
+      color: var(--v2-primary);
       letter-spacing: 4px;
       opacity: 0.8;
       margin-bottom: 0.25rem;
@@ -71,7 +71,7 @@
       font-family: var(--font-body);
       font-size: 1.3rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--text);
       letter-spacing: 2px;
     }
 
@@ -88,7 +88,7 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      border: 2px solid #0D6EFD;
+      border: 2px solid var(--v2-primary);
       object-fit: cover;
       box-shadow: 0 0 12px rgba(13,110,253,0.27);
     }
@@ -103,13 +103,13 @@
       font-family: var(--font-body);
       font-size: 1.1rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       margin: 0 0 0.2rem;
     }
 
     .ficha-label {
       font-size: 0.65rem;
-      color: #555;
+      color: var(--text-soft);
       letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 0.15rem;
@@ -117,7 +117,7 @@
 
     .ficha-value {
       font-size: 0.85rem;
-      color: #0D6EFD;
+      color: var(--v2-primary);
     }
 
     .ficha-divider {
@@ -143,7 +143,7 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 0.8rem;
-      color: #aaa;
+      color: var(--text-soft);
     }
 
     .ficha-curso-item::before {
@@ -162,7 +162,7 @@
 
     .ficha-footer-text {
       font-size: 0.65rem;
-      color: #333;
+      color: var(--text-soft);
       letter-spacing: 1px;
     }
 
@@ -176,7 +176,7 @@
     /* Circuit decoration lines */
     .circuit-line {
       position: absolute;
-      background: #0D6EFD;
+      background: var(--v2-primary);
       opacity: 0.15;
     }
 
@@ -186,7 +186,7 @@
     }
 
     #loading-msg {
-      color: #888;
+      color: var(--text-soft);
       font-size: 0.9rem;
     }
   </style>

@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
-  <link rel="stylesheet" href="css/v2.css?v=3" />
+  <link rel="stylesheet" href="css/v2.css?v=4" />
 </head>
 <body class="v2">
   <script>
@@ -143,14 +143,14 @@
             <label for="pwd-nueva">Nueva contraseña</label>
             <div class="pwd-wrap" style="position:relative">
               <input type="password" id="pwd-nueva" name="nueva" minlength="8" required placeholder="Mínimo 8 caracteres" />
-              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
+              <button type="button" onclick="togglePwd('pwd-nueva')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
             </div>
           </div>
           <div class="field">
             <label for="pwd-confirmar">Confirmar nueva contraseña</label>
             <div class="pwd-wrap" style="position:relative">
               <input type="password" id="pwd-confirmar" name="confirmar" minlength="8" required placeholder="Repite la contraseña" />
-              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
+              <button type="button" onclick="togglePwd('pwd-confirmar')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:1rem;padding:0;line-height:1">👁</button>
             </div>
           </div>
           <button type="submit" class="btn btn--primary">Cambiar contraseña</button>

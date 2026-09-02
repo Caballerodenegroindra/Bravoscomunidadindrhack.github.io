@@ -133,6 +133,17 @@ body.v2 {
   --color-accent-emphasis: var(--v2-primary);
   --color-accent-hover: var(--v2-primary-hover);
   --color-accent-subtle: var(--v2-primary-subtle);
+  --primary: var(--v2-primary);
+  --primary-emphasis: var(--v2-primary-hover);
+  --signal: var(--v2-primary);
+  --signal-subtle: var(--v2-primary-subtle);
+  --danger: var(--v2-danger);
+  --color-danger-fg: var(--v2-danger);
+  --success: var(--v2-ok);
+  --color-success-fg: var(--v2-ok);
+  --color-success-subtle: rgba(21,128,61,.12);
+  --warning: var(--v2-live);
+  --color-attention-fg: var(--v2-live);
   --shadow-lg: var(--v2-shadow-lg);
 }
 
