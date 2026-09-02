@@ -559,3 +559,40 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
   border: 1px solid var(--v2-border-strong); box-shadow: var(--v2-shadow);
 }
 @media (min-width: 1025px) { .v2 .help-fab { bottom: 1.5rem; } }
+
+/* ============================================================
+   CONTENIDO HEREDADO — páginas de contenido todavía en migración
+   (proyectos, colabora, equipo, noticias, cursos, redes, perfil,
+   paneles...). Reestiliza las clases viejas de style.css para que
+   se lean bien sobre fondo blanco mientras se migran una a una.
+   Todo scopeado a .v2 para no tocar las páginas sin migrar.
+   ============================================================ */
+.v2 .container { max-width: var(--v2-max); margin: 0 auto; padding-inline: clamp(1rem, 4vw, 2.25rem); }
+.v2 .section { padding-block: clamp(2.5rem, 7vw, 4rem); }
+.v2 .section-title {
+  font-family: var(--v2-font-display); font-weight: 700; letter-spacing: -.02em;
+  color: var(--v2-text); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.15;
+}
+.v2 .section-title .accent, .v2 .accent { color: var(--v2-primary); }
+.v2 .section-subtitle { color: var(--v2-text-soft); font-size: 1rem; line-height: 1.65; }
+.v2 .card, .v2 .card-grid > .card {
+  background: var(--v2-surface); border: 1px solid var(--v2-border);
+  border-radius: var(--v2-r); padding: 1.4rem; box-shadow: var(--v2-shadow);
+  color: var(--v2-text);
+}
+.v2 .card h1, .v2 .card h2, .v2 .card h3 { color: var(--v2-text); font-family: var(--v2-font-display); }
+.v2 .card p { color: var(--v2-text-soft); }
+.v2 .card-grid { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.v2 .badge {
+  display: inline-block; font-size: .74rem; font-weight: 600; padding: .18rem .55rem;
+  border-radius: var(--v2-r-pill); font-family: var(--v2-font-mono);
+  background: var(--v2-surface-2); color: var(--v2-text-soft);
+}
+.v2 .badge--info { background: var(--v2-primary-subtle); color: var(--v2-primary); }
+.v2 .badge--success { background: rgba(21,128,61,.12); color: var(--v2-ok); }
+.v2 .badge--warning, .v2 .badge--pending { background: var(--v2-live-subtle); color: var(--v2-live); }
+.v2 .btn--danger { --_bg: var(--v2-danger-subtle); --_fg: var(--v2-danger); --_bd: transparent; }
+.v2 .btn--danger:hover { --_bg: var(--v2-danger); --_fg: #fff; }
+.v2 .empty-state, .v2 .muted, .v2 .text-muted { color: var(--v2-text-faint); }
+.v2 hr { border: none; border-top: 1px solid var(--v2-border); margin: 1.5rem 0; }
+.v2 .guide-hero, .v2 .auth-card.reveal { opacity: 1; }

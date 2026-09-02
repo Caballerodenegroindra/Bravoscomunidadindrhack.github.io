@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Redes — Academia Indra</title>
   <meta name="description" content="Seguí a Academia Indra en redes sociales y sumate a la comunidad." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
@@ -27,8 +27,9 @@
   <meta name="twitter:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=3" />
   <style>
     .social-card {
       display: flex;
@@ -43,32 +44,48 @@
     }
   </style>
 </head>
-<body>
-  <canvas id="particle-canvas"></canvas>
-
+<body class="v2">
+  <script>
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
+  </script>
+  
   <header class="navbar">
-    <button class="navbar__toggle" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
-
-    <button type="button" class="navbar__back" onclick="if(document.referrer && document.referrer.indexOf(location.host)!==-1){history.back();}else{location.href='panel-usuario.html';}" aria-label="Volver" title="Volver">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-    </button>
-    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="Academia Indra"> ACADEMIA INDRA</a>
-        <nav class="navbar__links">
-      <a href="index.html" title="Ir a la página principal">Inicio</a>
-      <a href="cursos.html" title="Ver todos los cursos disponibles">Cursos</a>
-      <a href="noticias.html" title="Ver noticias y novedades">Noticias</a>
-      <a href="redes.html" class="active" title="Ver nuestras redes sociales">Redes</a>
-      <a href="notificaciones.html" title="Ver tus notificaciones">Notificaciones</a>
-      <a href="configuracion.html" title="Configurar tu cuenta">Configuración</a>
-      <a href="ayuda.html" title="Guía de uso: cómo funciona la Academia">Ayuda</a>
-      <a href="colabora.html" title="Participar en la comunidad">Participar en la comunidad</a>
-      <a href="proyectos.html" title="Ver los proyectos y apps creadas por la comunidad">Proyectos</a>
-      <a href="https://bot.academiaindra.com" title="Activar tu propio bot de WhatsApp" target="_blank" rel="noopener">🤖 Mi Bot</a>
-      <a href="equipo.html" title="Conocé al equipo de Academia Indra">Equipo</a>
+    <button class="navbar__toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a href="index.html" class="navbar__brand"><img src="assets/img/logo-indrhack.png" alt="" /> ACADEMIA INDRA</a>
+    <nav class="navbar__links" aria-label="Principal">
+      <details class="nav-group">
+        <summary>Aprender</summary>
+        <div class="nav-group__menu">
+          <a href="rutas.html">Rutas de aprendizaje</a>
+          <a href="cursos.html">Catálogo de clases</a>
+          <a href="retos.html">Retos y CTF</a>
+          <a href="#" data-soon>Laboratorios <span class="soon">pronto</span></a>
+          <a href="ayuda.html">Cómo funciona</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Proyectos</summary>
+        <div class="nav-group__menu">
+          <a href="proyectos.html">Vitrina de la comunidad</a>
+          <a href="proyecto-argyra.html">Argyra Guardian</a>
+          <a href="https://bot.academiaindra.com" target="_blank" rel="noopener">Indra Bot <small>bot.academiaindra.com</small></a>
+          <a href="proyecto-asistente.html">Indra Asistente</a>
+        </div>
+      </details>
+      <details class="nav-group">
+        <summary>Comunidad</summary>
+        <div class="nav-group__menu">
+          <a href="colabora.html">WhatsApp: grupo y canal</a>
+          <a href="equipo.html">Equipo</a>
+          <a href="colabora.html">Colaborá con la app</a>
+          <a href="noticias.html">Novedades</a>
+        </div>
+      </details>
+      <a href="ia-asistente.html" class="nav-flat nav-flat--ia">Asistente IA</a>
+      <button type="button" class="nav-flat" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema" style="background:none;border:1px solid var(--v2-border-strong);border-radius:var(--v2-r-sm)">◐</button>
       <div class="navbar__session" data-session-slot></div>
-    </nav></header>
+    </nav>
+  </header>
 <main>
     <div class="container section reveal">
       <h1 class="section-title">Redes sociales <span class="accent">Academia Indra</span></h1>
@@ -131,14 +148,13 @@
     </div>
   </main>
 
-  <footer class="footer">
-    ACADEMIA INDRA — Ciberseguridad, Vulnerabilidades y Desarrollo de Apps · Para las comunidades de WhatsApp
-    <br />
-    <a href="privacidad.html" style="color:inherit;text-decoration:underline;">Privacidad y datos</a>
+  <footer class="footer-v2">
+    ACADEMIA INDRA — Ciberseguridad · Vulnerabilidades · Desarrollo de apps · Para las comunidades de WhatsApp
+    <br /><a href="privacidad.html">Privacidad y datos</a>
   </footer>
 
-  <script src="js/particles.js"></script>
   <script src="js/reveal.js"></script>
+  <script src="js/theme.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/pwa-install.js"></script>
   <script type="module" src="js/notif-widget.js"></script>
@@ -243,5 +259,23 @@
   </script>
 
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indra" title="¿Necesitás ayuda? Tocá acá">?</a>
+
+  <nav class="v2-tabbar" aria-label="Navegación rápida">
+    <a href="rutas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Aprender</a>
+    <a href="proyectos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Proyectos</a>
+    <a href="colabora.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 20v-2a4 4 0 0 0-3-3.87"/></svg>Comunidad</a>
+    <a href="ia-asistente.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>IA</a>
+    <a href="login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>Perfil</a>
+  </nav>
+  <script>
+    (function () {
+      var groups = [].slice.call(document.querySelectorAll('.nav-group'));
+      var isDesktop = function () { return matchMedia('(min-width:1025px)').matches; };
+      groups.forEach(function (g) { g.addEventListener('toggle', function () { if (g.open && isDesktop()) groups.forEach(function (o) { if (o !== g) o.open = false; }); }); });
+      document.addEventListener('click', function (e) { if (isDesktop() && !e.target.closest('.nav-group')) groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') groups.forEach(function (g) { g.open = false; }); });
+      document.addEventListener('click', function (e) { var a = e.target.closest('a[data-soon]'); if (a) { e.preventDefault(); alert('Lo estamos armando — muy pronto.'); } });
+    })();
+  </script>
 </body>
 </html>
