@@ -1,28 +1,24 @@
 /* ============================================================
-   ACADEMIA INDRA — Núcleo del asistente de IA (vía OpenRouter)
+   ACADEMIA INDRA — Núcleo del asistente de IA
    ============================================================
    Módulo compartido usado por:
    - ia-asistente.html   (chat de página completa)
    - js/ia-widget.js     (burbuja flotante presente en todo el sitio)
 
-   Acá vive TODO lo relacionado a la IA: la clave, el modelo, cómo se
-   arma el contexto (cursos + estructura del sitio) y cómo se llama
-   a la API. Si el día de mañana hay que
-   cambiar de modelo, de proveedor o el texto del prompt, se toca
-   este único archivo.
+   Acá vive cómo se arma el contexto (cursos + estructura del sitio)
+   y el system prompt. La llamada al modelo va al PROXY
+   (Cloudflare Worker, repo academiaindra-proxy): la clave de
+   OpenRouter y la elección de modelo ahora viven ahí como
+   secretos del servidor, NO en este JS público. (cierra WEB-01)
    ============================================================ */
 
 import { db } from './firebase-config.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { IA_CHAT_URL } from './config.js';
 
-// Clave gratuita de OpenRouter: https://openrouter.ai/keys (no pide tarjeta)
-// Usamos "openrouter/free": el auto-router propio de OpenRouter, que elige
-// automáticamente entre los modelos gratis disponibles en cada momento
-// (Llama, Qwen, GPT-OSS, etc). Esto evita que el asistente se rompa cuando
-// un modelo puntual (como pasó con Grok 4 Fast) se da de baja o deja de
-// ser gratis: el auto-router salta a otro modelo gratis sin tocar código.
-export const OPENROUTER_API_KEY = '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';
-export const IA_MODEL           = 'openrouter/free';
+// El modelo real lo decide el proxy (env IA_MODEL). Se deja acá solo
+// como referencia informativa para quien lea el código.
+export const IA_MODEL = 'openrouter/free (lo resuelve el proxy)';
 
 
 /* ── Mapa estático del sitio: qué hay y dónde ─────────────── */
@@ -234,7 +230,9 @@ Ahora no te está escribiendo el usuario: sos vos quien abre la charla apenas lo
 - Máximo 40 palabras.`;
 }
 
-/* ── Llamada a la API de IA (vía OpenRouter, formato OpenAI) ──
+/* ── Llamada a la IA vía el proxy propio ────────────────────
+   El proxy (academiaindra-proxy) agrega la clave, elige el modelo
+   y limita por IP. Acá solo mandamos los mensajes.
    history: [{role:'user'|'assistant', content:string}, ...]   */
 export async function askIA(systemPrompt, history) {
   const messages = [
@@ -247,23 +245,13 @@ export async function askIA(systemPrompt, history) {
 
   let res;
   try {
-    res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    res = await fetch(IA_CHAT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        // Opcionales pero recomendados por OpenRouter para identificar el sitio:
-        'HTTP-Referer': 'https://academiaindra.com',
-        'X-Title': 'Academia Indra',
-      },
-      body: JSON.stringify({
-        model: IA_MODEL,
-        messages,
-        max_tokens: 1000,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages, max_tokens: 1000 }),
     });
   } catch (netErr) {
-    // No llegó a golpear la API (sin internet, DNS, bloqueo de un adblock/VPN, CORS, etc.)
+    // No llegó a golpear el proxy (sin internet, DNS, proxy no desplegado, adblock/VPN, etc.)
     throw new Error(`RED: ${netErr.message}`);
   }
 
@@ -275,10 +263,9 @@ export async function askIA(systemPrompt, history) {
   }
 
   if (!res.ok || data.error) {
-    const motivo = data.error?.message || `HTTP ${res.status}`;
-    const codigo = data.error?.code || res.status;
-    throw new Error(`API ${codigo}: ${motivo}`);
+    const motivo = data.error || `HTTP ${res.status}`;
+    throw new Error(`IA ${res.status}: ${motivo}`);
   }
 
-  return data.choices?.[0]?.message?.content || 'Sin respuesta.';
+  return data.content || 'Sin respuesta.';
 }

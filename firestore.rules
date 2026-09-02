@@ -27,6 +27,29 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // Cuenta con sesion Y estado == 'aprobado'. La verificacion de
+    // aprobado estaba SOLO en el cliente (loginUser desloguea): quien
+    // llamara a signInWithEmailAndPassword desde la consola obtenia
+    // una sesion valida estando "pendiente" y accedia a todo lo que
+    // solo pedia isSignedIn(). Ahora las colecciones sensibles exigen
+    // esto en las reglas. (WEB-03)
+    function isApproved() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        myProfile().estado == 'aprobado';
+    }
+
+    // Temas validos para tema_stats/conteos (debe coincidir con
+    // TEMAS en js/tema-stats.js). Cierra el XSS almacenado de la
+    // portada: un atacante ya no puede meter una clave arbitraria
+    // (p.ej. "<img src=x onerror=...>") como nombre de tema. (WEB-02/07)
+    function temasValidos() {
+      return [
+        'hacking_etico', 'ciberseguridad', 'termux', 'cursos',
+        'chat', 'cuenta', 'certificados', 'redes', 'general'
+      ];
+    }
+
     function canAccessRoom(roomId) {
       let roomPath = /databases/$(database)/documents/chat_rooms/$(roomId);
       return !exists(roomPath) ||
@@ -102,10 +125,30 @@ service cloud.firestore {
     // notificación sea para otra persona, nunca para uno mismo.
     match /notificaciones/{docId} {
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      // "respuesta_hilo" la crea un usuario para OTRO cuando responde
+      // su mensaje en un hilo. Antes: cualquier sesion (incluso sin
+      // aprobar) podia crear una notif para cualquier uid con titulo,
+      // cuerpo y enlace libres -> spam / phishing (el enlace se abre
+      // desde el service worker al tocar la notif). Ahora: solo cuentas
+      // aprobadas, con longitudes acotadas y el enlace restringido a
+      // rutas internas del sitio. (WEB-05)
       allow create: if isAdmin() || (
-        isSignedIn() &&
+        isApproved() &&
         request.resource.data.tipo == 'respuesta_hilo' &&
-        request.resource.data.uid != request.auth.uid
+        request.resource.data.uid != request.auth.uid &&
+        request.resource.data.titulo is string &&
+        request.resource.data.titulo.size() <= 120 &&
+        request.resource.data.cuerpo is string &&
+        request.resource.data.cuerpo.size() <= 500 &&
+        (
+          !('enlace' in request.resource.data) ||
+          request.resource.data.enlace == null ||
+          (
+            request.resource.data.enlace is string &&
+            request.resource.data.enlace.size() <= 200 &&
+            request.resource.data.enlace.matches('^/[A-Za-z0-9/_.?=&%#-]*$')
+          )
+        )
       );
       allow update: if isSignedIn() && resource.data.uid == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['leida']);
@@ -115,22 +158,23 @@ service cloud.firestore {
     // ───────────────────────────────────────────────────────
     // CLASES DE TERMUX
     // ───────────────────────────────────────────────────────
+    // Contenido de clase: detras de aprobacion, no solo de sesion. (WEB-03)
     match /clases_termux/{docId} {
-      allow read: if isSignedIn();
+      allow read: if isApproved();
       allow create, update, delete: if isAdmin();
     }
 
     match /cursos_aprobados/{docId} {
-      allow read: if isSignedIn();
+      allow read: if isApproved();
       allow create, update, delete: if isAdmin();
     }
 
     match /proyectos_base/{docId} {
-      allow read: if isSignedIn();
+      allow read: if isApproved();
       allow create, update, delete: if isAdmin();
     }
     match /proyectos/{docId} {
-      allow read: if isSignedIn();
+      allow read: if isApproved();
       allow create, update, delete: if isAdmin();
     }
 
@@ -144,14 +188,14 @@ service cloud.firestore {
     match /voluntarios_dev/{docId} {
       allow read: if isSignedIn() &&
         (resource.data.uid == request.auth.uid || isAdmin());
-      allow create: if isSignedIn()
+      allow create: if isApproved()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.estado == 'pendiente';
       allow update, delete: if isAdmin();
     }
 
     match /user_titles/{docId} {
-      allow read: if isSignedIn();
+      allow read: if isApproved() || isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
@@ -198,7 +242,18 @@ service cloud.firestore {
       allow create, update: if
         docId.matches('^(global|pais_[A-Z]{2})$') &&
         request.resource.data.diff(resource == null ? {} : resource.data)
-          .affectedKeys().hasOnly(['conteos', 'total', 'actualizado', 'nombre']);
+          .affectedKeys().hasOnly(['conteos', 'total', 'actualizado', 'nombre']) &&
+        // El contenido de "conteos" tambien se valida: sus claves solo
+        // pueden ser temas conocidos. Sin esto, cualquiera escribia
+        // conteos: { "<img onerror=...>": 999 } y la portada lo renderizaba. (WEB-02/07)
+        (
+          !('conteos' in request.resource.data) ||
+          request.resource.data.conteos.keys().hasOnly(temasValidos())
+        ) &&
+        (
+          !('nombre' in request.resource.data) ||
+          (request.resource.data.nombre is string && request.resource.data.nombre.size() <= 60)
+        );
       allow delete: if isAdmin();
     }
 
@@ -206,10 +261,10 @@ service cloud.firestore {
     // CHAT
     // ───────────────────────────────────────────────────────
     match /chat_rooms/{roomId} {
-      allow read: if isSignedIn() &&
+      allow read: if isApproved() &&
         (resource == null || resource.data.type != 'dm' || request.auth.uid in resource.data.participants);
 
-      allow create: if isSignedIn() && (
+      allow create: if isApproved() && (
         request.resource.data.type != 'dm' ||
         (request.auth.uid in request.resource.data.participants &&
          request.resource.data.participants.size() == 2)
@@ -233,8 +288,8 @@ service cloud.firestore {
     }
 
     match /chat_messages/{msgId} {
-      allow read: if isSignedIn() && canAccessRoom(resource.data.roomId);
-      allow create: if isSignedIn()
+      allow read: if isApproved() && canAccessRoom(resource.data.roomId);
+      allow create: if isApproved()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 2000
@@ -253,8 +308,8 @@ service cloud.firestore {
     }
 
     match /chat_replies/{replyId} {
-      allow read: if isSignedIn() && canAccessRoom(resource.data.roomId);
-      allow create: if isSignedIn()
+      allow read: if isApproved() && canAccessRoom(resource.data.roomId);
+      allow create: if isApproved()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 1000
@@ -267,12 +322,27 @@ service cloud.firestore {
     // PRESENCIA POR SALA
     // ───────────────────────────────────────────────────────
     match /room_presence/{presenceId} {
-      allow read: if isSignedIn();
-      allow create, update: if isSignedIn()
+      allow read: if isApproved();
+      allow create, update: if isApproved()
         && request.resource.data.uid == request.auth.uid
         && presenceId == request.resource.data.roomId + '_' + request.auth.uid;
       allow delete: if isSignedIn() &&
         (presenceId == resource.data.roomId + '_' + request.auth.uid || isAdmin());
+    }
+
+    // ───────────────────────────────────────────────────────
+    // REGISTRO DE AUDITORIA DEL PANEL ADMIN
+    // Cada accion sobre el ecosistema (aprobar, suspender,
+    // apagar un bot, kill-switch del asistente, cambiar cupo...)
+    // deja una fila aca. Append-only: nadie edita ni borra.
+    // ───────────────────────────────────────────────────────
+    match /admin_audit/{docId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.accion is string
+        && request.resource.data.accion.size() <= 80;
+      allow update, delete: if false;
     }
   }
 }

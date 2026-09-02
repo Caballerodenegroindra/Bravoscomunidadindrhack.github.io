@@ -164,6 +164,7 @@
 <!-- Admin "Más" mini-menu -->
   <div id="admin-more-menu" style="display:none;position:fixed;top:calc(var(--nav-h) + 0.5rem);right:0.75rem;background:var(--color-canvas-subtle);border:1px solid var(--color-border-default);border-radius:12px;padding:0.5rem;z-index:300;min-width:220px;max-height:75vh;overflow-y:auto;box-shadow:0 12px 32px rgba(0,0,0,0.35)">
     <a href="#resumen" data-tab="resumen" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📊 Resumen</a>
+    <a href="#ecosistema" data-tab="ecosistema" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🛰️ Centro de Control</a>
     <a href="#solicitudes" data-tab="solicitudes" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">📥 Solicitudes <span id="more-solicitudes-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#miembros" data-tab="miembros" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">👥 Miembros</a>
     <a href="#presencia" data-tab="presencia" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🟢 Presencia</a>
@@ -183,6 +184,7 @@
       <p class="sidebar__title">Administrador</p>
       <nav class="sidebar__links">
         <a href="#resumen" class="active" data-tab="resumen">📊 Resumen</a>
+        <a href="#ecosistema" data-tab="ecosistema">🛰️ Centro de Control</a>
         <a href="#solicitudes" data-tab="solicitudes">📥 Solicitudes</a>
         <a href="#miembros" data-tab="miembros">👥 Miembros</a>
         <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
@@ -448,6 +450,114 @@
             <button type="submit" class="btn btn--outline btn--small" style="margin-top:0.5rem">Guardar</button>
             <div class="form-message" id="app-update-config-message"></div>
           </form>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           CENTRO DE CONTROL — estado y acciones del ecosistema
+           (Academia · Argyra · Indra Bot · Indra Asistente)
+           Ver ADMIN-CONTROL-CENTER.md. Argyra e Indra Bot pasan
+           por el proxy (js/config.js -> PROXY_BASE_URL); Academia
+           y Asistente se leen/escriben directo en Firestore.
+           ═══════════════════════════════════════════════════ -->
+      <style>
+        #ecosistema .eco-strip { display:flex; flex-direction:column; gap:0; padding:0; overflow:hidden; }
+        #ecosistema .eco-row { display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; border-bottom:1px solid var(--border); }
+        #ecosistema .eco-row:last-child { border-bottom:0; }
+        #ecosistema .eco-dot { width:10px; height:10px; border-radius:50%; background:var(--text-muted); flex-shrink:0; }
+        #ecosistema .eco-dot.ok { background:#1f9d55; }
+        #ecosistema .eco-dot.warn { background:#d9a400; }
+        #ecosistema .eco-dot.down { background:var(--danger); }
+        #ecosistema .eco-name { font-weight:700; min-width:140px; }
+        #ecosistema .eco-detail { color:var(--text-muted); font-size:0.85rem; flex:1; }
+        #ecosistema .eco-svc-card { margin-top:1.25rem; }
+        #ecosistema .eco-sesiones { margin-top:0.75rem; display:flex; flex-direction:column; gap:0.4rem; }
+        #ecosistema .eco-sesion { display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; padding:0.5rem 0.7rem; border:1px solid var(--border); border-radius:8px; }
+        #ecosistema .eco-sesion .mono { font-family:ui-monospace,Menlo,Consolas,monospace; }
+        #ecosistema .eco-actions { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.75rem; }
+      </style>
+      <div class="tab-section hidden" id="ecosistema">
+        <div class="panel-header">
+          <div>
+            <h1 class="section-title">Centro de <span class="accent">Control</span></h1>
+            <p class="section-subtitle">Estado y acciones de todo el ecosistema, sin entrar a la consola de cada servicio.</p>
+          </div>
+          <button id="eco-refresh" class="btn btn--outline btn--small">↻ Actualizar</button>
+        </div>
+
+        <!-- Tira de estado -->
+        <div class="card eco-strip" id="eco-strip">
+          <div class="eco-row" data-svc="academia">
+            <span class="eco-dot" id="eco-dot-academia"></span>
+            <span class="eco-name">Academia</span>
+            <span class="eco-detail" id="eco-detail-academia">cargando…</span>
+          </div>
+          <div class="eco-row" data-svc="argyra">
+            <span class="eco-dot" id="eco-dot-argyra"></span>
+            <span class="eco-name">Argyra Guardian</span>
+            <span class="eco-detail" id="eco-detail-argyra">cargando…</span>
+          </div>
+          <div class="eco-row" data-svc="indrabot">
+            <span class="eco-dot" id="eco-dot-indrabot"></span>
+            <span class="eco-name">Indra Bot</span>
+            <span class="eco-detail" id="eco-detail-indrabot">cargando…</span>
+          </div>
+          <div class="eco-row" data-svc="asistente">
+            <span class="eco-dot" id="eco-dot-asistente"></span>
+            <span class="eco-name">Indra Asistente</span>
+            <span class="eco-detail" id="eco-detail-asistente">cargando…</span>
+          </div>
+        </div>
+        <p class="section-subtitle" id="eco-proxy-note" style="margin-top:0.6rem"></p>
+
+        <!-- Argyra -->
+        <div class="card eco-svc-card">
+          <h3>🛡️ Argyra Guardian</h3>
+          <p class="section-subtitle" id="argyra-note">Protección anti-abuso de administradores en grupos de WhatsApp.</p>
+          <div id="argyra-body"></div>
+          <div class="eco-actions" id="argyra-actions" hidden>
+            <button class="btn btn--outline btn--small" data-eco="argyra-sesiones">Ver sesiones</button>
+            <button class="btn btn--outline btn--small" data-eco="argyra-cap">Cambiar cupo</button>
+          </div>
+          <div class="eco-sesiones" id="argyra-sesiones"></div>
+        </div>
+
+        <!-- Indra Bot -->
+        <div class="card eco-svc-card">
+          <h3>🤖 Indra Bot</h3>
+          <p class="section-subtitle" id="indrabot-note">Panel multi-usuario: cada persona prende su propio bot.</p>
+          <div id="indrabot-body"></div>
+          <div class="eco-actions" id="indrabot-actions" hidden>
+            <button class="btn btn--outline btn--small" data-eco="indrabot-sesiones">Ver bots encendidos</button>
+            <button class="btn btn--outline btn--small" data-eco="indrabot-max">Cambiar máximo</button>
+          </div>
+          <div class="eco-sesiones" id="indrabot-sesiones"></div>
+        </div>
+
+        <!-- Indra Asistente -->
+        <div class="card eco-svc-card">
+          <h3>📱 Indra Asistente</h3>
+          <p class="section-subtitle">Kill-switch global de la automatización de envíos y versión mínima obligatoria. Se guarda en Firestore (config/global), la app lo lee al abrir.</p>
+          <form id="eco-asistente-form">
+            <label style="display:flex;align-items:center;gap:0.6rem;font-weight:600;margin:0.5rem 0">
+              <input type="checkbox" id="eco-asis-auto" name="automatizacionActiva" style="width:auto" />
+              Automatización de envíos ACTIVA
+            </label>
+            <p class="section-subtitle" style="margin-top:0">Destildá para <b>pausar toda la automatización</b> de forma remota en todos los dispositivos.</p>
+            <div class="field" style="max-width:260px">
+              <label for="eco-asis-min">Código de versión mínimo obligatorio</label>
+              <input type="number" id="eco-asis-min" name="minVersionCode" min="0" step="1" />
+            </div>
+            <button type="submit" class="btn btn--outline btn--small" style="margin-top:0.5rem">Guardar</button>
+            <div class="form-message" id="eco-asistente-message"></div>
+          </form>
+        </div>
+
+        <!-- Auditoría -->
+        <div class="card eco-svc-card">
+          <h3>📋 Últimas acciones</h3>
+          <p class="section-subtitle">Registro de auditoría: qué admin hizo qué y cuándo (colección admin_audit).</p>
+          <div class="eco-sesiones" id="eco-audit"></div>
         </div>
       </div>
 
@@ -3108,6 +3218,280 @@
 
       await cargarTodo();
     });
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════
+       CENTRO DE CONTROL — lógica de la pestaña "Ecosistema"
+       ═══════════════════════════════════════════════════ -->
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { requireAdmin } from './js/auth.js';
+    import { CONTROL_URL, PROXY_BASE_URL } from './js/config.js';
+    import {
+      collection, getDocs, getDoc, doc, setDoc, addDoc, query, orderBy, limit, serverTimestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    requireAdmin('index.html').then((admin) => {
+      if (!admin) return;
+      initEcosistema(admin);
+    });
+
+    function initEcosistema(admin) {
+      const $ = (id) => document.getElementById(id);
+      const proxyNote = $('eco-proxy-note');
+
+      function setDot(svc, cls) {
+        const d = $(`eco-dot-${svc}`);
+        if (d) d.className = 'eco-dot' + (cls ? ' ' + cls : '');
+      }
+      function setDetail(svc, txt) {
+        const el = $(`eco-detail-${svc}`);
+        if (el) el.textContent = txt;
+      }
+      function esc(s) {
+        return String(s ?? '').replace(/[&<>"']/g, (c) => (
+          { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+      }
+
+      /* Registro de auditoría (append-only, colección admin_audit). */
+      async function logAudit(accion, detalle) {
+        try {
+          await addDoc(collection(db, 'admin_audit'), {
+            actorUid: admin.uid,
+            actor: admin.displayName || admin.username || admin.uid,
+            accion: String(accion).slice(0, 80),
+            detalle: detalle ? String(detalle).slice(0, 500) : '',
+            fecha: serverTimestamp(),
+          });
+        } catch (e) {
+          console.warn('No se pudo registrar en admin_audit:', e);
+        }
+        cargarAudit();
+      }
+
+      /* fetch al proxy con el ID token del admin. */
+      async function proxyFetch(path, opts = {}) {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${CONTROL_URL}${path}`, {
+          ...opts,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            ...(opts.headers || {}),
+          },
+          signal: AbortSignal.timeout(12000),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        return data;
+      }
+
+      /* ── ACADEMIA: directo de Firestore ── */
+      async function cargarAcademia() {
+        try {
+          const snap = await getDocs(collection(db, 'users'));
+          let pend = 0, online = 0;
+          const corte = Date.now() - 5 * 60 * 1000;
+          snap.forEach((d) => {
+            const u = d.data();
+            if (u.estado === 'pendiente') pend++;
+            const ls = u.lastSeen?.toMillis ? u.lastSeen.toMillis() : 0;
+            if (u.isOnline || ls > corte) online++;
+          });
+          setDot('academia', pend > 0 ? 'warn' : 'ok');
+          setDetail('academia', `operativa · ${pend} pendiente${pend === 1 ? '' : 's'} · ${online} online`);
+        } catch (e) {
+          setDot('academia', 'down');
+          setDetail('academia', 'no se pudo leer Firestore: ' + e.message);
+        }
+      }
+
+      /* ── ASISTENTE: directo de Firestore (config/global) ── */
+      const asisForm = $('eco-asistente-form');
+      const asisMsg = $('eco-asistente-message');
+      async function cargarAsistente() {
+        try {
+          const snap = await getDoc(doc(db, 'config', 'global'));
+          const c = snap.exists() ? snap.data() : {};
+          const activa = c.automatizacionActiva !== false;
+          $('eco-asis-auto').checked = activa;
+          $('eco-asis-min').value = c.minVersionCode ?? 0;
+          setDot('asistente', activa ? 'ok' : 'warn');
+          setDetail('asistente', activa
+            ? `automatización activa · v.min ${c.minVersionCode ?? 0}`
+            : `⚠ automatización PAUSADA · v.min ${c.minVersionCode ?? 0}`);
+        } catch (e) {
+          setDot('asistente', 'down');
+          setDetail('asistente', 'no se pudo leer config/global: ' + e.message);
+        }
+      }
+      asisForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        asisMsg.className = 'form-message';
+        const activa = $('eco-asis-auto').checked;
+        const minV = parseInt($('eco-asis-min').value, 10) || 0;
+        if (!activa && !window.confirm('Vas a PAUSAR toda la automatización de Indra Asistente en todos los dispositivos. ¿Confirmás?')) return;
+        try {
+          await setDoc(doc(db, 'config', 'global'), {
+            automatizacionActiva: activa,
+            minVersionCode: minV,
+          }, { merge: true });
+          await logAudit(activa ? 'asistente: automatización ON' : 'asistente: automatización OFF', `v.min=${minV}`);
+          asisMsg.textContent = '✅ Guardado. Se aplica la próxima vez que cada usuario abra la app.';
+          asisMsg.className = 'form-message show form-message--success';
+          cargarAsistente();
+        } catch (err) {
+          asisMsg.textContent = '❌ ' + (err.message || 'No se pudo guardar.');
+          asisMsg.className = 'form-message show form-message--error';
+        }
+      });
+
+      /* ── ARGYRA / INDRA BOT: vía proxy ── */
+      function pintarServicioProxy(svc, info) {
+        const body = $(`${svc}-body`);
+        const actions = $(`${svc}-actions`);
+        if (!info || info.configured === false) {
+          setDot(svc, '');
+          setDetail(svc, 'no conectado — falta configurar el proxy');
+          body.innerHTML = '<p class="section-subtitle">Este servicio todavía no está conectado. Ver <b>academiaindra-proxy/README.md</b> para cargar sus credenciales.</p>';
+          actions.hidden = true;
+          return;
+        }
+        if (info.status === 'error') {
+          setDot(svc, 'down');
+          setDetail(svc, 'error: ' + (info.error || 'desconocido'));
+          body.innerHTML = `<p class="section-subtitle" style="color:var(--danger)">${esc(info.error || 'error')}</p>`;
+          actions.hidden = true;
+          return;
+        }
+        const up = info.status === 'operativa';
+        setDot(svc, up ? 'ok' : 'down');
+        const bits = [up ? 'operativa' : 'caída'];
+        if (svc === 'argyra' && info.capacity) {
+          const cap = info.capacity;
+          bits.push(`${cap.activos ?? cap.active ?? '?'}/${cap.cupo ?? cap.limit ?? '?'} activos`);
+          if (cap.gruposProtegidos != null) bits.push(`${cap.gruposProtegidos} grupos`);
+        }
+        if (svc === 'indrabot' && info.bots != null) bits.push(`${info.bots} bot${info.bots === 1 ? '' : 's'} encendido${info.bots === 1 ? '' : 's'}`);
+        setDetail(svc, bits.join(' · '));
+        body.innerHTML = '';
+        actions.hidden = !info.canAct;
+        if (!info.canAct) {
+          body.innerHTML = '<p class="section-subtitle">Conectado en modo lectura. Cargá sus credenciales de admin en el proxy para poder operar.</p>';
+        }
+      }
+
+      async function cargarProxy() {
+        // ¿El proxy está siquiera puesto?
+        if (!PROXY_BASE_URL || PROXY_BASE_URL.includes('admin.academiaindra.com')) {
+          proxyNote.textContent = 'Proxy: ' + PROXY_BASE_URL + ' — si todavía no lo desplegaste, Argyra e Indra Bot van a figurar como "no conectado". Ver academiaindra-proxy/README.md.';
+        } else {
+          proxyNote.textContent = 'Proxy: ' + PROXY_BASE_URL;
+        }
+        try {
+          const ov = await proxyFetch('/overview');
+          pintarServicioProxy('argyra', ov.argyra);
+          pintarServicioProxy('indrabot', ov.indrabot);
+        } catch (e) {
+          for (const svc of ['argyra', 'indrabot']) {
+            setDot(svc, '');
+            setDetail(svc, 'proxy no disponible');
+            $(`${svc}-body`).innerHTML = `<p class="section-subtitle">No se pudo contactar al proxy (<code>${esc(e.message)}</code>). Desplegá <b>academiaindra-proxy</b> y ajustá <code>PROXY_BASE_URL</code> en <code>js/config.js</code>.</p>`;
+            $(`${svc}-actions`).hidden = true;
+          }
+        }
+      }
+
+      /* ── Acciones ── */
+      document.getElementById('ecosistema').addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-eco]');
+        if (!btn) return;
+        const act = btn.dataset.eco;
+        try {
+          if (act === 'argyra-sesiones' || act === 'indrabot-sesiones') {
+            const svc = act.split('-')[0];
+            const cont = $(`${svc}-sesiones`);
+            cont.innerHTML = '<p class="section-subtitle">Cargando…</p>';
+            const data = await proxyFetch(`/${svc}/sessions`);
+            const lista = data.sessions || data.sesiones || data.bots || [];
+            if (!lista.length) { cont.innerHTML = '<p class="section-subtitle">Sin sesiones activas.</p>'; return; }
+            cont.innerHTML = lista.map((s) => {
+              const id = s.sessionId || s.id || s.userId || s.telefono || '?';
+              const etq = s.telefono || s.userId || s.username || id;
+              const estado = s.estado || s.status || '';
+              const accion = svc === 'argyra' ? 'argyra-disconnect' : 'indrabot-stop';
+              const txt = svc === 'argyra' ? 'Desconectar' : 'Apagar';
+              return `<div class="eco-sesion"><span class="mono">${esc(etq)}</span><span class="eco-detail">${esc(estado)}</span>` +
+                `<button class="btn btn--outline btn--small" data-eco="${accion}" data-id="${esc(id)}">${txt}</button></div>`;
+            }).join('');
+          } else if (act === 'argyra-cap') {
+            const v = window.prompt('Nuevo cupo de números con protección activa:');
+            if (v == null || v === '') return;
+            await proxyFetch('/argyra/cap', { method: 'POST', body: JSON.stringify({ valor: Number(v) }) });
+            await logAudit('argyra: cambiar cupo', `valor=${v}`);
+            cargarProxy();
+          } else if (act === 'indrabot-max') {
+            const v = window.prompt('Nuevo límite de bots simultáneos:');
+            if (v == null || v === '') return;
+            await proxyFetch('/indrabot/max', { method: 'POST', body: JSON.stringify({ valor: Number(v) }) });
+            await logAudit('indrabot: cambiar máximo', `valor=${v}`);
+            cargarProxy();
+          } else if (act === 'argyra-disconnect') {
+            const id = btn.dataset.id;
+            if (!window.confirm(`Desvincular el número/sesión ${id} de Argyra y liberar el cupo. ¿Confirmás?`)) return;
+            await proxyFetch('/argyra/disconnect', { method: 'POST', body: JSON.stringify({ sessionId: id }) });
+            await logAudit('argyra: desconectar sesión', id);
+            document.querySelector('[data-eco="argyra-sesiones"]')?.click();
+          } else if (act === 'indrabot-stop') {
+            const id = btn.dataset.id;
+            if (!window.confirm(`Apagar el bot del usuario ${id}. ¿Confirmás?`)) return;
+            await proxyFetch('/indrabot/stop', { method: 'POST', body: JSON.stringify({ userId: id }) });
+            await logAudit('indrabot: apagar bot', id);
+            document.querySelector('[data-eco="indrabot-sesiones"]')?.click();
+          }
+        } catch (err) {
+          alert('No se pudo completar la acción:\n' + (err.message || err));
+        }
+      });
+
+      /* ── Auditoría ── */
+      async function cargarAudit() {
+        const cont = $('eco-audit');
+        try {
+          const q = query(collection(db, 'admin_audit'), orderBy('fecha', 'desc'), limit(15));
+          const snap = await getDocs(q);
+          if (snap.empty) { cont.innerHTML = '<p class="section-subtitle">Sin acciones registradas todavía.</p>'; return; }
+          cont.innerHTML = snap.docs.map((d) => {
+            const a = d.data();
+            const f = a.fecha?.toDate ? a.fecha.toDate().toLocaleString('es') : '';
+            return `<div class="eco-sesion"><span class="eco-detail" style="flex:0 0 130px">${esc(f)}</span>` +
+              `<span class="mono">${esc(a.actor || a.actorUid)}</span>` +
+              `<span class="eco-detail">${esc(a.accion)}${a.detalle ? ' — ' + esc(a.detalle) : ''}</span></div>`;
+          }).join('');
+        } catch (e) {
+          cont.innerHTML = `<p class="section-subtitle">No se pudo leer el registro: ${esc(e.message)}</p>`;
+        }
+      }
+
+      function refrescar() {
+        cargarAcademia();
+        cargarAsistente();
+        cargarProxy();
+        cargarAudit();
+      }
+      $('eco-refresh').addEventListener('click', refrescar);
+
+      // Primera carga: al abrir la pestaña (evita golpear el proxy si el admin nunca entra).
+      let cargado = false;
+      const tabLinks = document.querySelectorAll('[data-tab="ecosistema"]');
+      tabLinks.forEach((t) => t.addEventListener('click', () => {
+        if (!cargado) { cargado = true; refrescar(); }
+      }));
+      if ((window.location.hash || '').replace('#', '') === 'ecosistema') {
+        cargado = true; refrescar();
+      }
+    }
   </script>
 
   <a href="ayuda.html" class="help-fab" aria-label="Ayuda: cómo usar la Academia Indra" title="¿Necesitás ayuda? Tocá acá">?</a>
