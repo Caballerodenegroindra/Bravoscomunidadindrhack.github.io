@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Panel administrador — Academia Indra</title>
   <meta name="description" content="Panel de administración de Academia Indra." />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" href="assets/img/logo-indrhack.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180.png" />
@@ -17,8 +17,9 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Chivo+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/v2.css?v=3" />
   <style>
     /* ── PRESENCIA ── */
     /* Mobile-first: tarjeta de 2 líneas (evita que "Última conexión"
@@ -128,8 +129,10 @@
     }
   </style>
 </head>
-<body>
-  <canvas id="particle-canvas"></canvas>
+<body class="v2-lite">
+  <script>
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
+  </script>
 
   <header class="navbar">
     <button class="navbar__toggle" aria-label="Abrir menú">
@@ -785,9 +788,8 @@
       </form>
     </div>
   </div>
-
-  <script src="js/particles.js"></script>
   <script src="js/reveal.js"></script>
+  <script src="js/theme.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/pwa-install.js"></script>
   <script type="module" src="js/notif-widget.js"></script>

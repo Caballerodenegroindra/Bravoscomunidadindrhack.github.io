@@ -596,3 +596,30 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
 .v2 .empty-state, .v2 .muted, .v2 .text-muted { color: var(--v2-text-faint); }
 .v2 hr { border: none; border-top: 1px solid var(--v2-border); margin: 1.5rem 0; }
 .v2 .guide-hero, .v2 .auth-card.reveal { opacity: 1; }
+
+/* ============================================================
+   v2-lite — solo re-tematiza (fondo blanco) sin cambiar la
+   navegación ni los componentes. Para páginas con su propia
+   UI compleja: panel-admin.html.
+   ============================================================ */
+body.v2-lite {
+  background: var(--v2-canvas);
+  color: var(--v2-text);
+  --bg: var(--v2-canvas); --bg-card: var(--v2-surface); --bg-elevated: var(--v2-surface-2);
+  --color-canvas-default: var(--v2-canvas); --color-canvas-subtle: var(--v2-surface); --color-canvas-inset: var(--v2-inset);
+  --text: var(--v2-text); --text-soft: var(--v2-text-soft); --text-muted: var(--v2-text-faint);
+  --color-fg-default: var(--v2-text); --color-fg-muted: var(--v2-text-soft); --color-fg-subtle: var(--v2-text-faint);
+  --border: var(--v2-border-strong); --border-muted: var(--v2-border);
+  --color-border-default: var(--v2-border-strong); --color-border-muted: var(--v2-border);
+  --gold: var(--v2-primary); --gold-bright: var(--v2-primary-hover); --gold-subtle: var(--v2-primary-subtle);
+  --primary: var(--v2-primary); --primary-emphasis: var(--v2-primary-hover);
+  --color-accent-fg: var(--v2-primary); --color-accent-emphasis: var(--v2-primary);
+  --color-accent-hover: var(--v2-primary-hover); --color-accent-subtle: var(--v2-primary-subtle);
+  --signal: var(--v2-primary); --signal-subtle: var(--v2-primary-subtle);
+  --danger: var(--v2-danger); --color-danger-fg: var(--v2-danger);
+  --success: var(--v2-ok); --color-success-fg: var(--v2-ok);
+  --warning: var(--v2-live); --color-attention-fg: var(--v2-live);
+  --chrome-bg: rgba(255,255,255,0.9); --chrome-bg-solid: #ffffff; --chrome-bg-strong: #ffffff;
+  font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+body.v2-lite .navbar__brand { font-family: 'Chivo', system-ui, sans-serif; }
