@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
-  <title>Retos y CTF — Academia Indra</title>
-  <meta name="description" content="Desafíos cortos de ciberseguridad, uno por semana. Resolvés, sumás puntos y comparás con el resto de la comunidad." />
+  <title>Laboratorios — Academia Indra</title>
+  <meta name="description" content="Prácticas guiadas paso a paso: montás el entorno, seguís las instrucciones y terminás con algo funcionando. Todo en entornos legales y controlados." />
   <link rel="icon" type="image/png" href="assets/img/logo-indrhack.png" />
   <link rel="manifest" href="/manifest.json" />
-  <link rel="canonical" href="https://academiaindra.com/retos.html" />
-  <meta property="og:title" content="Retos y CTF — Academia Indra" />
-  <meta property="og:description" content="Desafíos cortos de ciberseguridad, uno por semana. Sumá puntos y compará con la comunidad." />
+  <link rel="canonical" href="https://academiaindra.com/laboratorios.html" />
+  <meta property="og:title" content="Laboratorios — Academia Indra" />
+  <meta property="og:description" content="Prácticas guiadas paso a paso, en entornos legales y controlados. Distinto de una clase: acá se hace." />
   <meta property="og:image" content="https://academiaindra.com/assets/img/logo-indrhack.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,6 +20,7 @@
 </head>
 <body class="v2">
   <script>
+    /* Tema: claro por defecto (fondo blanco). Oscuro solo si el usuario lo eligió. */
     try { document.documentElement.setAttribute('data-theme', localStorage.getItem('indrhack-theme') === 'dark' ? 'dark' : 'light'); } catch (e) {}
   </script>
 
@@ -65,16 +66,17 @@
     <section class="hero-v2">
       <div class="hero-v2__grid" aria-hidden="true"></div>
       <div class="v2-wrap" style="position:relative;z-index:1;max-width:52rem">
-        <span class="v2-kicker v2-kicker--live">Práctica</span>
-        <h1 style="font-size:clamp(2rem,6vw,3.2rem);margin:.5rem 0 .8rem">Retos <span class="v2-accent">y CTF</span></h1>
+        <span class="v2-kicker">Práctica guiada</span>
+        <h1 style="font-size:clamp(2rem,6vw,3.2rem);margin:.5rem 0 .8rem">Laboratorios</h1>
         <p class="hero-v2__sub" style="max-width:none">
-          Desafíos cortos para poner en práctica lo de las rutas. Uno nuevo por semana,
-          de dificultad variada. Resolvés, mandás la respuesta en el grupo de WhatsApp y
-          sumás puntos.
+          Una clase te explica <em>cómo</em> funciona algo. Un laboratorio te sienta a
+          <strong>hacerlo</strong>: montás el entorno, seguís los pasos y terminás con algo
+          funcionando y algo aprendido. Siempre en entornos <strong>legales y aislados</strong>
+          — máquinas virtuales, Termux o plataformas de práctica pensadas para eso.
         </p>
         <div class="hero-v2__actions">
           <a href="rutas.html" class="btn btn--outline btn--large">Ver las rutas primero</a>
-          <a href="colabora.html" class="btn btn--primary btn--large">Entrar al grupo</a>
+          <a href="registro.html" class="btn btn--primary btn--large">Crear mi cuenta</a>
         </div>
       </div>
     </section>
@@ -82,12 +84,12 @@
     <section class="v2-section">
       <div class="v2-wrap">
         <div class="v2-section__head" data-reveal>
-          <span class="v2-kicker">Activos</span>
-          <h2>Retos <span class="v2-accent">abiertos</span></h2>
-          <p>Los que se pueden resolver ahora. Cuando cierra uno, entra el siguiente.</p>
+          <span class="v2-kicker">Disponibles</span>
+          <h2>Laboratorios <span class="v2-accent">publicados</span></h2>
+          <p>Cada uno indica de qué ruta es, la dificultad y cuánto lleva. Se van sumando de a poco.</p>
         </div>
-        <div id="retos-mount" class="v2-grid v2-grid--2">
-          <p class="trend-v2__loading">Cargando los retos…</p>
+        <div id="labs-mount" class="v2-grid v2-grid--2">
+          <p class="trend-v2__loading">Cargando los laboratorios…</p>
         </div>
       </div>
     </section>
@@ -95,24 +97,59 @@
     <section class="v2-section">
       <div class="v2-wrap">
         <div class="v2-section__head" data-reveal>
-          <span class="v2-kicker">Cómo participar</span>
+          <span class="v2-kicker">En qué se diferencia</span>
+          <h2>Clase, reto y laboratorio</h2>
+        </div>
+        <div class="v2-grid v2-grid--3" data-reveal>
+          <div class="v2-card">
+            <h3>📖 Clase</h3>
+            <p>Explica un tema: qué es, para qué sirve, cómo encaja. Podés mirarla sin abrir una terminal.</p>
+          </div>
+          <div class="v2-card">
+            <h3>🧪 Laboratorio</h3>
+            <p>Guía práctica de principio a fin. Preparás el entorno, ejecutás cada paso y comprobás el resultado. Sos vos con las manos en el teclado.</p>
+          </div>
+          <div class="v2-card">
+            <h3>🧩 Reto / CTF</h3>
+            <p>Sin guion. Te dan un objetivo y lo resolvés como puedas, con lo que ya sabés. Suma puntos en la comunidad.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section">
+      <div class="v2-wrap">
+        <div class="v2-section__head" data-reveal>
+          <span class="v2-kicker">Cómo se hace</span>
           <h2>Sencillo</h2>
         </div>
         <div class="steps-v2" data-reveal>
-          <div class="step-v2"><h3>Elegí un reto abierto</h3><p>Cada uno dice de qué ruta es y cuánta dificultad tiene.</p></div>
-          <div class="step-v2"><h3>Resolvelo</h3><p>Podés usar el asistente de IA para orientarte, pero la respuesta la encontrás vos.</p></div>
-          <div class="step-v2"><h3>Enviá la respuesta</h3><p>En el grupo de WhatsApp de la comunidad, con el formato que pide el reto. Sumás puntos si es correcta.</p></div>
+          <div class="step-v2"><h3>Preparás el entorno</h3><p>El laboratorio te dice qué necesitás: una máquina virtual, Termux, una cuenta en una plataforma de práctica. Nada se hace sobre sistemas ajenos.</p></div>
+          <div class="step-v2"><h3>Seguís los pasos</h3><p>Cada paso trae el comando o la acción y qué deberías ver. Si algo no coincide, ahí está la pista para corregirlo.</p></div>
+          <div class="step-v2"><h3>Comprobás y anotás</h3><p>Al final verificás que salió y guardás lo que aprendiste. Si te trabaste, preguntá en el grupo o al asistente de IA.</p></div>
         </div>
+      </div>
+    </section>
+
+    <section class="v2-wrap">
+      <div class="v2-card" data-reveal style="border-left:3px solid var(--v2-live)">
+        <h3 style="margin-top:0">⚠️ Solo entornos propios y legales</h3>
+        <p style="margin-bottom:0;color:var(--v2-text-soft)">
+          Todo lo que se practica acá se hace sobre máquinas tuyas, entornos aislados o plataformas
+          que autorizan la prueba (DVWA, PortSwigger, TryHackMe y similares). Probar estas técnicas
+          sobre sistemas, redes o cuentas de terceros sin permiso escrito es ilegal. La ruta
+          <a href="rutas.html?ruta=T8">Carrera y ética</a> cubre el marco legal y la divulgación responsable.
+        </p>
       </div>
     </section>
 
     <section class="v2-wrap" style="padding-bottom:5rem">
       <div class="cta-v2" data-reveal>
-        <h2>¿Todavía no estás en la comunidad?</h2>
-        <p>Los retos se juegan en el grupo de WhatsApp. Registrate y pedí el acceso.</p>
+        <h2>¿Se te ocurre un laboratorio?</h2>
+        <p>Si armaste una práctica que le sirvió a alguien, se puede publicar acá. Contanos en la comunidad.</p>
         <div class="cta-v2__actions">
-          <a href="registro.html" class="btn btn--primary btn--large">Crear mi cuenta</a>
-          <a href="colabora.html" class="btn btn--outline btn--large">Cómo sumarse</a>
+          <a href="colabora.html" class="btn btn--primary btn--large">Proponer uno</a>
+          <a href="ia-asistente.html" class="btn btn--outline btn--large">Preguntarle al asistente</a>
         </div>
       </div>
     </section>
@@ -138,6 +175,7 @@
   <script type="module" src="js/notif-widget.js"></script>
   <script type="module" src="js/ia-widget.js?v=2"></script>
   <script type="module" src="js/back-confirm.js"></script>
+
   <script>
     (function () {
       var groups = [].slice.call(document.querySelectorAll('.nav-group'));
@@ -157,54 +195,47 @@
     import { db } from './js/firebase-config.js';
     import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    const mount = document.getElementById('retos-mount');
+    const mount = document.getElementById('labs-mount');
     const el = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
     const tsToMs = (v) => !v ? 0 : (typeof v.toDate === 'function' ? v.toDate().getTime() : (typeof v.seconds === 'number' ? v.seconds * 1000 : 0));
     const DIF = { facil: ['b', 'Fácil'], medio: ['i', 'Media'], dificil: ['a', 'Difícil'] };
 
-    function card(r) {
+    function card(l) {
       const c = el('div', 'v2-card');
       const top = el('div');
       top.style.cssText = 'display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem';
-      const dif = DIF[(r.dificultad || 'medio').toLowerCase()] || DIF.medio;
+      const dif = DIF[(l.dificultad || 'medio').toLowerCase()] || DIF.medio;
       top.append(el('span', 'lvl lvl--' + dif[0], dif[1]));
-      if (r.ruta) top.append(el('span', 'route-row__code', r.ruta));
-      if (r.puntos) { const p = el('span', 'route-row__meta', r.puntos + ' pts'); p.style.marginLeft = 'auto'; top.append(p); }
+      if (l.ruta) top.append(el('span', 'route-row__code', String(l.ruta).toUpperCase()));
+      if (l.duracion) { const d = el('span', 'route-row__meta', l.duracion); d.style.marginLeft = 'auto'; top.append(d); }
       c.append(top);
-      c.append(el('h3', null, r.titulo || 'Reto'));
-      c.append(el('p', null, (r.descripcion || '').slice(0, 240)));
-      if (r.cierra) {
-        const ms = tsToMs(r.cierra);
-        if (ms) {
-          const d = Math.max(0, Math.ceil((ms - Date.now()) / 86400000));
-          const f = el('p', null, d > 0 ? `Cierra en ${d} día${d === 1 ? '' : 's'}` : 'Cierra hoy');
-          f.style.cssText = 'font-family:var(--v2-font-mono);font-size:11px;color:var(--v2-live);margin:.6rem 0 0';
-          c.append(f);
-        }
-      }
-      if (r.enlace) {
-        const a = el('a', 'v2-card__more', 'Abrir el reto →');
-        a.href = r.enlace; a.target = '_blank'; a.rel = 'noopener';
+      c.append(el('h3', null, l.titulo || 'Laboratorio'));
+      c.append(el('p', null, (l.descripcion || '').slice(0, 240)));
+      const href = l.enlace || (l.claseId ? 'clase.html?id=' + encodeURIComponent(l.claseId) : '');
+      if (href) {
+        const a = el('a', 'v2-card__more', 'Abrir el laboratorio →');
+        a.href = href;
+        if (/^https?:/i.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
         c.append(a);
       }
       return c;
     }
 
     (async function () {
-      let retos = [];
+      let labs = [];
       try {
-        const snap = await getDocs(collection(db, 'retos'));
-        retos = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((r) => r.activo !== false);
-        retos.sort((a, b) => tsToMs(b.publicado) - tsToMs(a.publicado));
-      } catch (e) { /* mostramos estado vacío */ }
+        const snap = await getDocs(collection(db, 'laboratorios'));
+        labs = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((l) => l.activo !== false && l.publicado !== false);
+        labs.sort((a, b) => (a.orden || 999) - (b.orden || 999) || tsToMs(b.creado) - tsToMs(a.creado));
+      } catch (e) { /* mostramos el estado vacío */ }
 
       mount.replaceChildren();
-      if (!retos.length) {
+      if (!labs.length) {
         mount.className = '';
         const box = el('div', 'v2-card');
         box.style.cssText = 'text-align:center;padding:2.5rem';
-        box.append(el('h3', null, '🧩 Todavía no hay retos abiertos'));
-        const p = el('p', null, 'Estamos preparando el primero. Mientras tanto, avanzá con las rutas — así llegás listo.');
+        box.append(el('h3', null, '🧪 Todavía no hay laboratorios publicados'));
+        const p = el('p', null, 'Estamos preparando los primeros — arrancan por Fundamentos y Termux. Mientras tanto, avanzá con las rutas y las clases.');
         p.style.cssText = 'color:var(--v2-text-soft);margin:.5rem 0 1rem';
         box.append(p);
         const a = el('a', 'btn btn--primary', 'Ir a las rutas'); a.href = 'rutas.html';
@@ -212,7 +243,7 @@
         mount.append(box);
         return;
       }
-      retos.forEach((r) => mount.append(card(r)));
+      labs.forEach((l) => mount.append(card(l)));
     })();
   </script>
 </body>
