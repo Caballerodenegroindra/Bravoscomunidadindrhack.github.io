@@ -169,6 +169,7 @@
     <a href="#presencia" data-tab="presencia" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🟢 Presencia</a>
     <a href="ia-asistente.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🤖 Asistente IA</a>
     <a href="panel-usuario.html" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🔁 Vista Usuario</a>
+    <a href="#laboratorios" data-tab="laboratorios" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🧪 Laboratorios</a>
     <a href="#proyectos" data-tab="proyectos" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🏆 Proyectos</a>
     <a href="#colabora-admin" data-tab="colabora-admin" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🚀 Equipo de desarrollo <span id="more-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:auto"></span></a>
     <a href="#equipo" data-tab="equipo" class="admin-more-item" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;color:var(--text);font-size:0.88rem;font-weight:500">🌟 Equipo destacado</a>
@@ -187,6 +188,7 @@
         <a href="#presencia" data-tab="presencia">🟢 Presencia</a>
         <a href="#cursos" data-tab="cursos">📚 Cursos</a>
         <a href="#noticias" data-tab="noticias">📰 Noticias</a>
+        <a href="#laboratorios" data-tab="laboratorios">🧪 Laboratorios</a>
         <a href="#proyectos" data-tab="proyectos">🏆 Proyectos</a>
         <a href="#colabora-admin" data-tab="colabora-admin">🚀 Equipo de desarrollo <span id="sidebar-colabora-badge" style="display:none;background:var(--danger);color:#fff;border-radius:999px;font-size:0.65rem;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></a>
         <a href="#equipo" data-tab="equipo">🌟 Equipo destacado</a>
@@ -510,6 +512,17 @@
         </div>
       </div>
 
+      <div class="tab-section hidden" id="laboratorios">
+        <div class="panel-header">
+          <h1 class="section-title">Laboratorios</h1>
+          <button class="btn btn--primary btn--small" id="btn-nuevo-lab">+ Nuevo laboratorio</button>
+        </div>
+        <p class="section-subtitle">Prácticas guiadas paso a paso. Se listan en <a href="laboratorios.html" target="_blank" rel="noopener">laboratorios.html</a> ordenadas por el campo «orden».</p>
+        <div id="labs-admin-grid">
+          <p class="section-subtitle">Toca la pestaña para cargar...</p>
+        </div>
+      </div>
+
       <div class="tab-section hidden" id="proyectos">
         <div class="panel-header">
           <h1 class="section-title">Proyectos</h1>
@@ -668,6 +681,70 @@
           <label for="noticia-publicado">Publicar inmediatamente</label>
         </div>
         <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar noticia</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL LABORATORIO -->
+  <div id="lab-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;">
+    <div class="card" style="width:92%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 id="lab-modal-title" class="section-title" style="margin:0;font-size:1.1rem">Nuevo laboratorio</h2>
+        <button id="lab-modal-close" class="btn btn--small btn--danger">✕</button>
+      </div>
+      <form id="lab-form">
+        <div class="field">
+          <label>Título</label>
+          <input type="text" name="titulo" required placeholder="Ej: Montar DVWA en una máquina virtual" />
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="4" required placeholder="Qué se hace y con qué se termina..."></textarea>
+        </div>
+        <div class="field">
+          <label>Dificultad</label>
+          <select name="dificultad">
+            <option value="facil">Fácil</option>
+            <option value="medio" selected>Media</option>
+            <option value="dificil">Difícil</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Ruta</label>
+          <select name="ruta">
+            <option value="">— sin ruta —</option>
+            <option value="T0">T0 · Fundamentos</option>
+            <option value="T1">T1 · Termux &amp; Linux de bolsillo</option>
+            <option value="T2">T2 · OSINT e investigación</option>
+            <option value="T3">T3 · Hacking web</option>
+            <option value="T4">T4 · Redes y Wi-Fi</option>
+            <option value="T5">T5 · Privacidad y anti-abuso</option>
+            <option value="T6">T6 · Defensa / Blue team</option>
+            <option value="T7">T7 · Construcción de herramientas</option>
+            <option value="T8">T8 · Carrera y ética</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Duración (opcional)</label>
+          <input type="text" name="duracion" placeholder="Ej: 45 min" />
+        </div>
+        <div class="field">
+          <label>Enlace (opcional)</label>
+          <input type="url" name="enlace" placeholder="https://... (guía externa)" />
+        </div>
+        <div class="field">
+          <label>ID de clase (opcional)</label>
+          <input type="text" name="claseId" placeholder="Se abre como clase.html?id=..." />
+        </div>
+        <div class="field">
+          <label>Orden</label>
+          <input type="number" name="orden" value="1" min="1" step="1" />
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:0.5rem">
+          <input type="checkbox" name="activo" id="lab-activo" checked />
+          <label for="lab-activo">Publicado (visible en el sitio)</label>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%;margin-top:0.5rem">Guardar laboratorio</button>
       </form>
     </div>
   </div>
@@ -2063,6 +2140,136 @@
     // Si la página carga directamente en #noticias, cargar de una vez
     if ((window.location.hash || '').replace('#', '') === 'noticias') {
       loadNoticias();
+    }
+
+    // ---- LABORATORIOS ----
+    const labsGrid = document.getElementById('labs-admin-grid');
+    const labModal = document.getElementById('lab-modal');
+    const labForm = document.getElementById('lab-form');
+    const labModalTitle = document.getElementById('lab-modal-title');
+    let labEditId = null;
+
+    const LAB_DIF = { facil: 'Fácil', medio: 'Media', dificil: 'Difícil' };
+
+    async function loadLabs() {
+      if (!labsGrid) return;
+      labsGrid.innerHTML = '<p class="section-subtitle">Cargando...</p>';
+      try {
+        const snap = await getDocs(collection(db, 'laboratorios'));
+        if (snap.empty) {
+          labsGrid.innerHTML = '<p class="section-subtitle">No hay laboratorios creados aún.</p>';
+          return;
+        }
+        const labs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.orden || 999) - (b.orden || 999));
+        labsGrid.innerHTML = labs.map(l => {
+          const meta = [
+            LAB_DIF[l.dificultad] || 'Media',
+            l.ruta ? String(l.ruta).toUpperCase() : null,
+            l.duracion || null,
+            l.activo === false ? '⏳ Borrador' : '✅ Publicado',
+          ].filter(Boolean).join(' · ');
+          const destino = l.enlace || (l.claseId ? 'clase.html?id=' + l.claseId : null);
+          return `<div class="card" style="margin-bottom:0.75rem;padding:1rem">
+            <div style="flex:1">
+              <h3 style="margin:0 0 0.25rem;font-size:1rem">#${l.orden || '?'} · ${l.titulo || ''}</h3>
+              <p style="color:var(--text-soft);font-size:0.78rem;margin:0 0 0.5rem">${meta}</p>
+              <p style="color:var(--text-soft);font-size:0.85rem;margin:0 0 0.5rem;white-space:pre-wrap">${l.descripcion || ''}</p>
+              ${destino ? `<p style="font-size:0.75rem;margin:0 0 0.75rem"><a href="${destino}" target="_blank" rel="noopener">${destino}</a></p>` : ''}
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <button onclick="editarLab('${l.id}')" class="btn btn--small btn--outline">✏️ Editar</button>
+                <button onclick="eliminarLab('${l.id}')" class="btn btn--small btn--danger">🗑 Eliminar</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (err) {
+        console.error('Error cargando laboratorios:', err);
+        labsGrid.innerHTML = '<p class="section-subtitle">Ocurrió un error al cargar los laboratorios.</p>';
+      }
+    }
+
+    const abrirModalLab = () => { if (labModal) labModal.style.display = 'flex'; };
+    const cerrarModalLab = () => { if (labModal) labModal.style.display = 'none'; };
+
+    document.getElementById('btn-nuevo-lab')?.addEventListener('click', () => {
+      labEditId = null;
+      labForm?.reset();
+      if (labModalTitle) labModalTitle.textContent = 'Nuevo laboratorio';
+      abrirModalLab();
+    });
+    document.getElementById('lab-modal-close')?.addEventListener('click', cerrarModalLab);
+
+    window.editarLab = async (id) => {
+      try {
+        const snap = await getDocs(collection(db, 'laboratorios'));
+        const docSnap = snap.docs.find(d => d.id === id);
+        if (!docSnap) return;
+        const l = docSnap.data();
+        labForm.titulo.value = l.titulo || '';
+        labForm.descripcion.value = l.descripcion || '';
+        labForm.dificultad.value = l.dificultad || 'medio';
+        labForm.ruta.value = l.ruta || '';
+        labForm.duracion.value = l.duracion || '';
+        labForm.enlace.value = l.enlace || '';
+        labForm.claseId.value = l.claseId || '';
+        labForm.orden.value = l.orden || 1;
+        labForm.activo.checked = l.activo !== false;
+        labEditId = id;
+        if (labModalTitle) labModalTitle.textContent = 'Editar laboratorio';
+        abrirModalLab();
+      } catch (err) {
+        console.error('Error al abrir laboratorio para editar:', err);
+        alert('No se pudo cargar el laboratorio.');
+      }
+    };
+
+    window.eliminarLab = async (id) => {
+      if (!confirm('¿Eliminar este laboratorio?')) return;
+      try {
+        await deleteDoc(doc(db, 'laboratorios', id));
+        loadLabs();
+      } catch (err) {
+        console.error('Error al eliminar laboratorio:', err);
+        alert('No se pudo eliminar el laboratorio.');
+      }
+    };
+
+    labForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        titulo: labForm.titulo.value.trim(),
+        descripcion: labForm.descripcion.value.trim(),
+        dificultad: labForm.dificultad.value,
+        ruta: labForm.ruta.value,
+        duracion: labForm.duracion.value.trim(),
+        enlace: labForm.enlace.value.trim(),
+        claseId: labForm.claseId.value.trim(),
+        orden: parseInt(labForm.orden.value, 10) || 1,
+        activo: labForm.activo.checked,
+      };
+      try {
+        if (labEditId) {
+          await updateDoc(doc(db, 'laboratorios', labEditId), data);
+          alert('✅ Laboratorio actualizado.');
+        } else {
+          await addDoc(collection(db, 'laboratorios'), { ...data, creado: new Date() });
+          alert('✅ Laboratorio creado.');
+        }
+        cerrarModalLab();
+        labEditId = null;
+        loadLabs();
+      } catch (err) {
+        console.error('Error al guardar laboratorio:', err);
+        alert('No se pudo guardar el laboratorio. Revisa la consola para más detalles.');
+      }
+    });
+
+    document.querySelectorAll('[data-tab="laboratorios"]').forEach(t => {
+      t.addEventListener('click', loadLabs);
+    });
+    if ((window.location.hash || '').replace('#', '') === 'laboratorios') {
+      loadLabs();
     }
   </script>
 

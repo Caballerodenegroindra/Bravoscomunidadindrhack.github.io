@@ -225,7 +225,7 @@
       let labs = [];
       try {
         const snap = await getDocs(collection(db, 'laboratorios'));
-        labs = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((l) => l.activo !== false && l.publicado !== false);
+        labs = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((l) => l.activo !== false);
         labs.sort((a, b) => (a.orden || 999) - (b.orden || 999) || tsToMs(b.creado) - tsToMs(a.creado));
       } catch (e) { /* mostramos el estado vacío */ }
 
