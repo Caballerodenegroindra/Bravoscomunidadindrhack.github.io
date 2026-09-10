@@ -1,12 +1,13 @@
 /* ============================================================
-   INDRHACK ACADEMIA — Identidad de Marca
-   Comunidad de ciberseguridad y desarrollo — estética oscura,
-   directa, tech. Paleta oficial (Manual de Marca 2026):
-   negro dominante, azul primario como acento, blanco y gris.
-   Tipografía: Poppins (títulos/logo) + Inter (texto general).
+   ACADEMIA INDRA — Identidad de Marca
+   Plataforma de servicios tecnológicos — estética institucional.
+   Paleta: azul marino profundo dominante, latón apagado como
+   acento de sello, blanco y gris.
+   Tipografía: Source Serif 4 (títulos/logo) + Public Sans (texto)
+   + IBM Plex Mono (datos/etiquetas).
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 :root {
   /* ============================================================
@@ -17,27 +18,27 @@
      sin degradés ni relieve 3D — igual que pedía el tema anterior,
      solo que ahora sobre fondo negro con acento azul de marca.
      ============================================================ */
-  --color-canvas-default:      #000000;   /* fondo de página — Negro de marca */
-  --color-canvas-subtle:       #0B0B0E;   /* tarjetas / superficies elevadas */
-  --color-canvas-inset:        #16161A;   /* superficies hundidas (inputs, código) */
-  --color-border-default:      rgba(255,255,255,0.12);
-  --color-border-muted:        rgba(255,255,255,0.08);
-  --color-border-subtle:       rgba(13,110,253,0.14);
+  --color-canvas-default:      #06101d;   /* fondo de página — marino profundo */
+  --color-canvas-subtle:       #0f2036;   /* tarjetas / superficies elevadas */
+  --color-canvas-inset:        #16283f;   /* superficies hundidas (inputs, código) */
+  --color-border-default:      rgba(150,180,220,0.14);
+  --color-border-muted:        rgba(150,180,220,0.09);
+  --color-border-subtle:       rgba(77,143,214,0.16);
 
-  --color-fg-default:          #FFFFFF;   /* Blanco de marca */
-  --color-fg-muted:            #9CA3AF;   /* Gris de marca */
-  --color-fg-subtle:           rgba(156,163,175,0.75);
-  --color-fg-on-emphasis:      #FFFFFF;
+  --color-fg-default:          #eaf0f8;   /* texto principal */
+  --color-fg-muted:            #a3b3c7;   /* texto secundario */
+  --color-fg-subtle:           rgba(163,179,199,0.75);
+  --color-fg-on-emphasis:      #06101d;
 
-  --color-accent-fg:           #0D6EFD;   /* Azul primario de marca */
-  --color-accent-emphasis:     #0D6EFD;
-  --color-accent-hover:        #3B82F6;   /* variante clara para hover sobre negro */
-  --color-accent-subtle:       rgba(13,110,253,0.12);
+  --color-accent-fg:           #4d8fd6;   /* Azul institucional */
+  --color-accent-emphasis:     #4d8fd6;
+  --color-accent-hover:        #6ba6e4;
+  --color-accent-subtle:       rgba(77,143,214,0.14);
 
-  /* ── Acento único de marca (azul) ── */
-  --signal:                    #0D6EFD;
-  --signal-subtle:             rgba(13,110,253,0.12);
-  --signal-glow:                0 0 0 3px rgba(13,110,253,0.25);
+  /* ── Acento único de marca (azul institucional) ── */
+  --signal:                    #4d8fd6;
+  --signal-subtle:             rgba(77,143,214,0.14);
+  --signal-glow:                0 0 0 3px rgba(77,143,214,0.28);
 
   --color-success-fg:          #22C55E;
   --color-success-emphasis:    #16A34A;
@@ -70,14 +71,14 @@
   --success:       var(--color-success-fg);
   --warning:       var(--color-attention-fg);
   --danger:        var(--color-danger-fg);
-  --gold:          var(--color-accent-fg);
-  --gold-bright:   var(--color-accent-hover);
-  --gold-subtle:   var(--color-accent-subtle);
+  --gold:          #b79b63;
+  --gold-bright:   #cbb27f;
+  --gold-subtle:   rgba(183,155,99,0.16);
 
   /* ── Tipografía de marca ── */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-heading: 'Source Serif 4', Georgia, "Times New Roman", serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* ── Espaciado ── */
   --gap-xs: 0.5rem;
@@ -115,9 +116,9 @@
   --lift-shadow-press:  var(--shadow-sm);
 
   /* ── Fondos de barras ── */
-  --chrome-bg:        rgba(0,0,0,0.85);
-  --chrome-bg-solid:  rgba(0,0,0,0.97);
-  --chrome-bg-strong: #000000;
+  --chrome-bg:        rgba(6,16,29,0.85);
+  --chrome-bg-solid:  rgba(6,16,29,0.97);
+  --chrome-bg-strong: #06101d;
 
   /* ── Movimiento (orquestado, discreto) ── */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);

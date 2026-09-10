@@ -1,65 +1,71 @@
 /* ============================================================
-   ACADEMIA INDRA — Sistema de diseño v2  (Fase A)
+   ACADEMIA INDRA — Sistema de diseño  (Plataforma de servicios)
    ------------------------------------------------------------
-   Se carga DESPUÉS de style.css y solo en las páginas migradas
-   (por ahora: index.html). Redeclara el chrome compartido
+   Se carga DESPUÉS de style.css. Redeclara el chrome compartido
    (navbar, botones, footer, body) y define los componentes
-   nuevos. El markup nuevo usa nombres de clase propios
-   (v2-*, nav-*, hero-*, etc.) para no chocar con lo viejo.
+   nuevos. El markup usa nombres de clase propios (v2-*, nav-*,
+   hero-*, etc.) para no chocar con lo viejo.
 
-   Tipografía: Chivo (display) + Chivo Mono (datos/etiquetas)
-   + Inter (texto).
-   Claro por defecto (fondo blanco, tipo Claude); el modo oscuro
-   es opcional y se activa con el toggle (data-theme="dark").
-   Señales: índigo (primario/acción) + ámbar (solo "en vivo").
+   Identidad: estética institucional / agencia. Azul marino
+   dominante, latón apagado como acento de sello, mucho blanco,
+   líneas rectas. Titulares con serif (Source Serif 4), cuerpo
+   en Public Sans, datos/etiquetas en IBM Plex Mono.
+   Claro por defecto; el modo oscuro ("night ops", marino
+   profundo) se activa con el toggle (data-theme="dark").
+   Señales: marino (primario/acción) · latón (--v2-gold, sellos y
+   palabras destacadas) · ámbar (--v2-live, SOLO "en vivo").
    ============================================================ */
 
 /* ---------- TOKENS · TEMA CLARO (por defecto) ---------- */
 :root {
   color-scheme: light;
 
-  --v2-canvas:        #fbfbfc;
+  --v2-canvas:        #f4f5f7;
   --v2-surface:       #ffffff;
-  --v2-surface-2:     #f2f3f6;
-  --v2-inset:         #eceef2;
-  --v2-border:        rgba(20,28,48,0.10);
-  --v2-border-strong: rgba(20,28,48,0.17);
+  --v2-surface-2:     #eaecf0;
+  --v2-inset:         #e0e3e9;
+  --v2-border:        rgba(10,37,64,0.12);
+  --v2-border-strong: rgba(10,37,64,0.22);
 
-  --v2-text:      #191c22;
-  --v2-text-soft: #4c5461;
-  --v2-text-faint:#7f8794;
+  --v2-text:      #12233b;
+  --v2-text-soft: #45566c;
+  --v2-text-faint:#77859a;
 
-  --v2-primary:        #4f46e5;
-  --v2-primary-hover:  #4338ca;
+  --v2-primary:        #0a2540;
+  --v2-primary-hover:  #14355a;
   --v2-primary-ink:    #ffffff;
-  --v2-primary-subtle: rgba(79,70,229,0.08);
-  --v2-primary-line:   rgba(79,70,229,0.26);
+  --v2-primary-subtle: rgba(10,37,64,0.06);
+  --v2-primary-line:   rgba(10,37,64,0.22);
 
-  --v2-live:         #b45309;   /* SOLO estados en vivo: tendencias, retos, "en directo" */
-  --v2-live-subtle:  rgba(245,158,11,0.14);
+  --v2-gold:         #8c7a4c;   /* latón apagado: sellos, filetes, palabras destacadas */
+  --v2-gold-subtle:  rgba(140,122,76,0.14);
+  --v2-gold-line:    rgba(140,122,76,0.42);
 
-  --v2-ok:      #15803d;
-  --v2-danger:  #dc2626;
-  --v2-danger-subtle: rgba(220,38,38,0.10);
+  --v2-live:         #9a6a12;   /* SOLO estados en vivo: tendencias, retos, "en directo" */
+  --v2-live-subtle:  rgba(154,106,18,0.13);
+
+  --v2-ok:      #1f6f43;
+  --v2-danger:  #b23b34;
+  --v2-danger-subtle: rgba(178,59,52,0.10);
   --v2-muted:   #6b7280;
 
-  --v2-font-display: 'Chivo', 'Segoe UI', system-ui, sans-serif;
-  --v2-font-mono:    'Chivo Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --v2-font-body:    'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --v2-font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --v2-font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --v2-font-body:    'Public Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   --v2-step: clamp(0.85rem, 2.4vw, 1rem);
-  --v2-r-sm: 8px;
-  --v2-r:    14px;
-  --v2-r-lg: 20px;
+  --v2-r-sm: 4px;
+  --v2-r:    6px;
+  --v2-r-lg: 10px;
   --v2-r-pill: 999px;
 
   --v2-nav-h: 60px;
   --v2-tab-h: 58px;
   --v2-max:   1160px;
 
-  --v2-shadow:    0 1px 2px rgba(16,24,40,.04), 0 12px 28px -14px rgba(16,24,40,.14);
-  --v2-shadow-lg: 0 24px 56px -20px rgba(16,24,40,.20);
-  --v2-ring:      0 0 0 3px rgba(79,70,229,.35);
+  --v2-shadow:    0 1px 2px rgba(10,23,41,.05), 0 12px 28px -14px rgba(10,23,41,.16);
+  --v2-shadow-lg: 0 24px 56px -20px rgba(10,23,41,.22);
+  --v2-ring:      0 0 0 3px rgba(27,79,138,.40);
 
   --v2-ease: cubic-bezier(.16,1,.3,1);
 }
@@ -68,34 +74,38 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --v2-canvas:        #0b0e14;
-  --v2-surface:       #131822;
-  --v2-surface-2:     #1a2030;
-  --v2-inset:         #222a3a;
-  --v2-border:        rgba(140,170,255,0.13);
-  --v2-border-strong: rgba(140,170,255,0.24);
+  --v2-canvas:        #0a1729;
+  --v2-surface:       #0f2440;
+  --v2-surface-2:     #16324f;
+  --v2-inset:         #1d3c5c;
+  --v2-border:        rgba(150,180,220,0.14);
+  --v2-border-strong: rgba(150,180,220,0.28);
 
-  --v2-text:      #eef1f6;
-  --v2-text-soft: #a4aec0;
-  --v2-text-faint:#6c7789;
+  --v2-text:      #e9f0f8;
+  --v2-text-soft: #a7b7cb;
+  --v2-text-faint:#71829a;
 
-  --v2-primary:        #8b93ff;
-  --v2-primary-hover:  #a6acff;
-  --v2-primary-ink:    #0b0e14;
-  --v2-primary-subtle: rgba(139,147,255,0.14);
-  --v2-primary-line:   rgba(139,147,255,0.42);
+  --v2-primary:        #4d8fd6;
+  --v2-primary-hover:  #6ba6e4;
+  --v2-primary-ink:    #06121f;
+  --v2-primary-subtle: rgba(77,143,214,0.16);
+  --v2-primary-line:   rgba(77,143,214,0.42);
 
-  --v2-live:         #ffb01f;
-  --v2-live-subtle:  rgba(255,176,31,0.14);
+  --v2-gold:         #c9b183;
+  --v2-gold-subtle:  rgba(201,177,131,0.16);
+  --v2-gold-line:    rgba(201,177,131,0.42);
+
+  --v2-live:         #f0b429;
+  --v2-live-subtle:  rgba(240,180,41,0.16);
 
   --v2-ok:      #3ddc97;
-  --v2-danger:  #ff5c5c;
-  --v2-danger-subtle: rgba(255,92,92,0.14);
+  --v2-danger:  #ff6b63;
+  --v2-danger-subtle: rgba(255,107,99,0.15);
   --v2-muted:   #7a8699;
 
-  --v2-shadow:    0 1px 2px rgba(0,0,0,.4), 0 12px 32px -14px rgba(0,0,0,.7);
-  --v2-shadow-lg: 0 24px 64px -20px rgba(0,0,0,.75);
-  --v2-ring:      0 0 0 3px rgba(139,147,255,.42);
+  --v2-shadow:    0 1px 2px rgba(0,0,0,.45), 0 12px 32px -14px rgba(0,0,0,.72);
+  --v2-shadow-lg: 0 24px 64px -20px rgba(0,0,0,.78);
+  --v2-ring:      0 0 0 3px rgba(109,166,228,.45);
 }
 
 /* ---------- BASE (reescribe lo compartido) ---------- */
@@ -126,9 +136,9 @@ body.v2 {
   --color-fg-on-emphasis: var(--v2-primary-ink);
   --border: var(--v2-border-strong);
   --border-muted: var(--v2-border);
-  --gold: var(--v2-primary);
-  --gold-bright: var(--v2-primary-hover);
-  --gold-subtle: var(--v2-primary-subtle);
+  --gold: var(--v2-gold);
+  --gold-bright: var(--v2-gold);
+  --gold-subtle: var(--v2-gold-subtle);
   --color-accent-fg: var(--v2-primary);
   --color-accent-emphasis: var(--v2-primary);
   --color-accent-hover: var(--v2-primary-hover);
@@ -171,8 +181,8 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
 .v2 h1, .v2 h2, .v2 h3, .v2 h4 {
   font-family: var(--v2-font-display);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  line-height: 1.14;
+  letter-spacing: -0.006em;
   text-wrap: balance;
   margin: 0;
 }
@@ -198,14 +208,14 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
 .v2-section__head { max-width: 46rem; margin-bottom: 2.5rem; }
 .v2-section__head h2 { font-size: clamp(1.6rem, 4.2vw, 2.4rem); margin: .5rem 0 .6rem; }
 .v2-section__head p { color: var(--v2-text-soft); font-size: 1.05rem; margin: 0; }
-.v2-accent { color: var(--v2-primary); }
+.v2-accent { color: var(--v2-gold); }
 
 /* ---------- BOTONES (usados también por main.js / pwa-install.js) ---------- */
 .v2 .btn, .btn.btn--v2 {
   --_bg: transparent; --_fg: var(--v2-text); --_bd: var(--v2-border-strong);
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   font-family: var(--v2-font-body); font-weight: 600; font-size: .95rem;
-  padding: .72rem 1.25rem; border-radius: var(--v2-r-pill);
+  padding: .72rem 1.25rem; border-radius: var(--v2-r-sm);
   background: var(--_bg); color: var(--_fg); border: 1px solid var(--_bd);
   cursor: pointer; transition: transform .12s var(--v2-ease), background .15s, border-color .15s, box-shadow .15s;
   white-space: nowrap;
@@ -390,7 +400,7 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
 .hero-v2__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--v2-live); box-shadow: 0 0 0 4px var(--v2-live-subtle); animation: v2-pulse 2.4s var(--v2-ease) infinite; }
 @keyframes v2-pulse { 50% { box-shadow: 0 0 0 9px transparent; } }
 .hero-v2 h1 { font-size: clamp(2.3rem, 7vw, 4rem); font-weight: 900; }
-.hero-v2 h1 .mark { color: var(--v2-primary); }
+.hero-v2 h1 .mark { color: var(--v2-gold); }
 .hero-v2__sub { margin: 1.1rem 0 0; font-size: clamp(1.02rem, 2.5vw, 1.22rem); color: var(--v2-text-soft); max-width: 34ch; }
 .hero-v2__actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.9rem; }
 .hero-v2__motto { margin-top: 1.6rem; font-family: var(--v2-font-mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--v2-text-faint); }
@@ -584,7 +594,7 @@ body.v2.ia-dock-active .pwa-banner { bottom: calc(var(--v2-tab-h) + var(--ia-doc
   font-family: var(--v2-font-display); font-weight: 700; letter-spacing: -.02em;
   color: var(--v2-text); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.15;
 }
-.v2 .section-title .accent, .v2 .accent { color: var(--v2-primary); }
+.v2 .section-title .accent, .v2 .accent { color: var(--v2-gold); }
 .v2 .section-subtitle { color: var(--v2-text-soft); font-size: 1rem; line-height: 1.65; }
 .v2 .card, .v2 .card-grid > .card {
   background: var(--v2-surface); border: 1px solid var(--v2-border);
@@ -622,7 +632,7 @@ body.v2-lite {
   --color-fg-default: var(--v2-text); --color-fg-muted: var(--v2-text-soft); --color-fg-subtle: var(--v2-text-faint);
   --border: var(--v2-border-strong); --border-muted: var(--v2-border);
   --color-border-default: var(--v2-border-strong); --color-border-muted: var(--v2-border);
-  --gold: var(--v2-primary); --gold-bright: var(--v2-primary-hover); --gold-subtle: var(--v2-primary-subtle);
+  --gold: var(--v2-gold); --gold-bright: var(--v2-gold); --gold-subtle: var(--v2-gold-subtle);
   --primary: var(--v2-primary); --primary-emphasis: var(--v2-primary-hover);
   --color-accent-fg: var(--v2-primary); --color-accent-emphasis: var(--v2-primary);
   --color-accent-hover: var(--v2-primary-hover); --color-accent-subtle: var(--v2-primary-subtle);
@@ -631,6 +641,6 @@ body.v2-lite {
   --success: var(--v2-ok); --color-success-fg: var(--v2-ok);
   --warning: var(--v2-live); --color-attention-fg: var(--v2-live);
   --chrome-bg: rgba(255,255,255,0.9); --chrome-bg-solid: #ffffff; --chrome-bg-strong: #ffffff;
-  font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
-body.v2-lite .navbar__brand { font-family: 'Chivo', system-ui, sans-serif; }
+body.v2-lite .navbar__brand { font-family: 'Source Serif 4', Georgia, serif; }
