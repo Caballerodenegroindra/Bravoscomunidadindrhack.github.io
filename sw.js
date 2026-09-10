@@ -21,7 +21,7 @@
    de CACHE_VERSION.
    ============================================================ */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `indrhack-${CACHE_VERSION}`;
 
 // Lo mínimo para que la app "prenda" offline. A propósito es una
